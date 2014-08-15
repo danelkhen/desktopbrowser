@@ -1,0 +1,348 @@
+﻿body {
+  padding-top: 60px;
+  padding-bottom: 30px;
+}
+
+.nav>li>a {
+    padding: 10px 4px;
+}
+
+#tbFilename
+{
+    font-size:200%;
+    width: 100%; 
+    border: none
+}
+#tbFolder
+{
+    width: 100%;
+    padding: 4px;
+}
+
+.navbar-nav > LI > A
+{
+    font-size:smaller;
+}
+.navbar-nav > LI > A:hover
+{
+    background-color:rgb(192, 220, 255) !important;
+}
+
+.navbar-nav > LI > A.Selected
+{
+    background-color: rgb(192, 220, 255) !important;
+}
+.nav > LI > A.Selected:hover
+{
+    background-color: rgb(135, 172, 219) !important;
+}
+
+.Container
+{
+    padding:0px 10px;
+}
+.navbar > .Container
+{
+    padding-top:10px;
+}
+
+.Footer
+{
+    font-size:70%;
+    text-align:center;
+    margin:10px;
+}
+.Footer A
+{
+    color: #1364C4;
+}
+
+#divClock .btn
+{
+    padding:2px 4px;
+    font-size:70%;
+    font-weight:bold;
+}
+.navbar-sm
+{
+    min-height:0;
+}
+/*#divClock
+{
+    position:relative;
+    top:-5px;
+}*/
+/*
+body
+{
+    cursor: default;
+    font-family: Arial; 
+    font-size: 18px;
+    margin:0px;
+    padding:75px 0px 0px 0px;
+}
+NAV
+{
+    position:fixed;
+    top:0px;
+    background-color:Gray;
+    width:100%;
+    padding:10px;
+}
+.Toolbars
+{
+    float:left;
+}
+INPUT
+{
+    font-size: inherit;
+    margin:0px;
+}
+BUTTON
+{
+    font-size: inherit;
+    border: solid 1px #C5DBEC;
+    border-radius: 5px;
+    color: #2E6E9E;
+}
+
+P
+{
+    margin:0px;
+}
+A
+{
+    text-decoration: none;
+    font-size: inherit;
+}
+
+
+.Button
+{
+    color: #1364C4;
+    text-decoration: none;
+}
+
+.Folder
+{
+    color: #1364C4;
+    text-decoration: none;
+}
+
+.File
+{
+    color: #335599;
+    text-decoration: none;
+}
+
+.Tools
+{
+        font-size:90%;
+}
+.Toolbar
+{
+    background: #5c9ccc;
+    border: solid 1px #4297D7;
+    border-radius: 5px;
+    display: inline-block;
+    padding-right: 5px;
+    font-size:90%;
+}
+.Toolbar A
+{
+    background: #dfeffc;
+    border: solid 1px #C5DBEC;
+    color: #2E6E9E;
+    display: inline-block;
+    padding: 4px 8px 4px 8px;
+    margin-right: -5px;
+    text-align: center;
+    min-width: 40px;
+    cursor: default;
+}
+
+.Toolbar A:first-child
+{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.Toolbar A:last-child
+{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.Toolbar A:hover
+{
+    border: 1px solid #79b7e7;
+    background: #d0e5f5;
+    color: #1d5987;
+}
+
+.Toolbar A.Selected
+{
+    border: 1px solid #fad42e;
+    background: #fbec88;
+    color: #363636;
+}
+.Toolbar A.Selected:hover
+{
+    border: 1px solid #fad42e;
+    background: #F9E24E;
+    color: #363636;
+}
+
+
+
+H1
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+
+#btnGo
+{
+    height: 100%;
+    width: 100%;
+}
+
+
+#divClock
+{
+    text-align: center;
+    border: 1px solid #fad42e;
+    background: #fbec88;
+    color: #363636;
+    padding: 5px 10px 5px 10px;
+    border-radius: 7px;
+    opacity: .8;
+    min-width:120px;
+    margin-right:20px;
+    float:right;
+}
+
+
+
+.Panel
+{
+    margin-top:6px;
+}
+*/
+
+
+
+.Grid
+{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.Grid .FindBar
+{
+    font-size:60%;
+}
+
+.Grid > THEAD > TR
+{
+}
+.Grid > THEAD > TR > TH
+{
+    text-align: left;
+    padding: 3px 8px 3px 8px;
+    background: #5c9ccc;
+    border: solid 1px #4297D7;
+    color: White;
+}
+.Grid > THEAD > TR > TH A
+{
+    color: White;
+}
+
+
+.Grid > TBODY > TR > TD
+{
+    padding: 3px 8px 3px 8px;
+    border: solid 1px #C5DBEC;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.Grid A:hover
+{
+    text-decoration: none !important;
+}
+
+.Grid > TBODY > TR:hover
+{
+    background-color: #d0e5f5;
+    color: #1d5987;
+}
+.Grid > TBODY > TR.Selected
+{
+    background-color: #fbec88;
+    color: #363636;
+}
+
+.Grid > TBODY > TR.Selected:hover
+{
+    background-color: #F9E24E;
+    color: #363636;
+}
+
+.Grid > THEAD .Selected
+{
+    color: #fbec88;
+}
+
+.Grid .SelectionHeader
+{
+    width: 20px;
+}
+
+.Grid .NameHeader
+{
+    width: 100%;
+}
+
+.Grid .ModifiedHeader
+{
+    width: 100px;
+}
+.Grid .SizeHeader
+{
+    width: 100px;
+}
+.Grid .ExtensionHeader
+{
+    width: 60px;
+}
+
+.Grid .NameCell
+{
+}
+
+.Grid .ModifiedCell
+{
+}
+.Grid .SizeCell
+{
+}
+.Grid .ExtensionCell
+{
+}
+
+
+
+.row-full
+{
+    margin-left:0px;
+    margin-right:0px;
+}
+
+.form-horizontal .form-group.row-full
+{
+    margin-left:0px;
+    margin-right:0px;
+}
