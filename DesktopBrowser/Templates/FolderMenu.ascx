@@ -13,6 +13,7 @@
 <a class="btn btn-default <%=req.IsRecursive.Active()%>" href="<%=req.Clone(t=>t.IsRecursive=!t.IsRecursive) %>"         title="Recursively shows all files">Recursive</a>
 <a class="btn btn-default <%=req.View=="ImageList" ? "Selected" : ""%>" href="<%=req.ToggleImageListView()%>"         title="Changes the view mode">Image View</a>
 <a class="btn btn-default" href="<%= GetSubtitleSearchLink() %>" target="_blank">Subs</a>
+<a class="btn btn-default" href="<%= GetGoogleSearchLink() %>" target="_blank">Imdb</a>
 <a class="btn btn-default" onclick="btnDelete_click(event);" title="Delete">Delete</a>
 <a class="btn btn-default" onclick="OpenFile(<%=req.Path.ToJavaScript().ToHtmlAttributeValue() %>);" title="Open folder in windows exlorer">Explore</a>
 </div>

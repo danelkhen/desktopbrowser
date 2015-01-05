@@ -27,9 +27,17 @@ namespace DesktopBrowser.Templates
             if (file == null)
                 return null;
             var s = GetFilenameForSearch(file.Name);
-
             return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s +" eng sub");
         }
+        public string GetGoogleSearchLink()
+        {
+            if (file == null)
+                return null;
+            var s = GetFilenameForSearch(file.Name);
+            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s);
+        }
+
+        
 
         string GetFilenameForSearch(string s)
         {

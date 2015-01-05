@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">    
     <link href="res/bootstrap-3.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="res/bootstrap-3.1.0/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="res/Site.css" rel="stylesheet" type="text/css" />
     <title><%=file.Name%> - Desktop Browser v0.95</title>
     <script>var Data = {};</script>
