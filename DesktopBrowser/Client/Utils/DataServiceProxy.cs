@@ -73,15 +73,16 @@ namespace DesktopBrowser.Client.Utils
                 if (t.status == 200)
                 {
                     var code = t.responseText;
-                    var func = new JsFunction(code).As<JsFunc<DataServiceResponse>>();
-                    try
-                    {
-                        res = func();
-                    }
-                    catch (JsError e)
-                    {
-                        res.Error = e.ToString();
-                    }
+                    res = JSON.parse(code).As<DataServiceResponse>();
+                    //var func = new JsFunction(code).As<JsFunc<DataServiceResponse>>();
+                    //try
+                    //{
+                    //    res = func();
+                    //}
+                    //catch (JsError e)
+                    //{
+                    //    res.Error = e.ToString();
+                    //}
                 }
                 else
                 {

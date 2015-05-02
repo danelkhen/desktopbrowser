@@ -27,7 +27,7 @@ namespace DesktopBrowser.Templates
             if (file == null)
                 return null;
             var s = GetFilenameForSearch(file.Name);
-            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s +" eng sub");
+            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s + " english subtitles subscene podnapisi");
         }
         public string GetGoogleSearchLink()
         {

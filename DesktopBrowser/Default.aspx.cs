@@ -82,8 +82,8 @@ namespace DesktopBrowser
     [JsType(JsMode.Global, Filename = "res/Default.js")]
     public class DefaultClient : jQueryContext
     {
-        [JsField(Export=false)]
-        static DefaultClientData Data;
+        [JsProperty(Export = false, NativeField=true)]
+        static DefaultClientData Data { get;set; }
         static Selector<HtmlElement> Selector;
         static SiteProxy SiteProxy;
         static DefaultClient()
@@ -283,7 +283,7 @@ namespace DesktopBrowser
         static void UpdateClock()
         {
             J("#divTime").text(new JsDate().format("h:MM tt"));
-            J("#divDate").text(new JsDate().format("dddd, mmm d"));
+            J("#divDate").text(new JsDate().format("ddd, mmm d"));
             window.setTimeout(UpdateClock, 5000);
         }
         static void Execute(JsString path)

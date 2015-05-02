@@ -12,7 +12,7 @@
         <div id="divClock" class="btn-group btn-group-sm pull-right">
         <div class="btn btn-default">
             <span id="divTime"><%=DateTime.Now.ToString("h:mm tt") %></span><br />
-            <span id="divDate"><%=DateTime.Now.ToString("dddd, MMM d")%></span>
+            <span id="divDate"><%=DateTime.Now.ToString("ddd, MMM d")%></span>
             </div>
         </div>
     </div>

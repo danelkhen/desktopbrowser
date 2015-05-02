@@ -146,14 +146,14 @@ namespace DesktopBrowser.Client.Utils
 
     }
 
-    [JsType(JsMode.Prototype, Name = "JSON", Export = false)]
-    public class JSON
-    {
-        public static string stringify(object obj)
-        {
-            return null;
-        }
-    }
+    //[JsType(JsMode.Prototype, Name = "JSON", Export = false)]
+    //public class JSON
+    //{
+    //    public static string stringify(object obj)
+    //    {
+    //        return null;
+    //    }
+    //}
 
 
 
