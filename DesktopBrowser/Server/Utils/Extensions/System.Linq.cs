@@ -56,7 +56,7 @@ namespace System.Linq
         /// <param name="suffix"></param>
         /// <returns></returns>
         //[DebuggerStepThrough]
-        public static string StringConcat(this IEnumerable<string> list, string prefix, string delim, string suffix)
+        public static string StringJoin(this IEnumerable<string> list, string prefix, string delim, string suffix)
         {
             StringBuilder sb = new StringBuilder();
             if (!String.IsNullOrEmpty(prefix))
@@ -86,9 +86,9 @@ namespace System.Linq
         /// <param name="delim"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public static string StringConcat(this IEnumerable<string> list, string delim)
+        public static string StringJoin(this IEnumerable<string> list, string delim)
         {
-            return StringConcat(list, null, delim, null);
+            return StringJoin(list, null, delim, null);
         }
 
         /// <summary>
