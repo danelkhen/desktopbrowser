@@ -15,58 +15,9 @@ using System.Configuration;
 namespace DesktopBrowser.Server
 {
 
-    interface ISiteService
-    {
-        void Execute(string filename);
-        File GetFile(string path);
-        FileRelativesInfo GetFileRelatives(string path);
-        IEnumerable<File> GetFiles(SiteRequest req);
-    }
+
     [DataService]
-    public class SiteService : ISiteService
-    {
-        public SiteService()
-        {
-            if (ConfigurationManager.AppSettings["IsDemo"] == "true")
-                Service = new DemoSiteService();
-            else
-                Service = new RealSiteService();
-        }
-        ISiteService Service;
-        public IEnumerable<File> GetFiles(SiteRequest req)
-        {
-            return Service.GetFiles(req);
-        }
-
-        public FileRelativesInfo GetFileRelatives(string path)
-        {
-            return Service.GetFileRelatives(path);
-        }
-
-        public File GetFile(string path)
-        {
-            return Service.GetFile(path);
-        }
-
-        public void Execute(string filename)
-        {
-            Service.Execute(filename);
-        }
-
-        public void Delete(string path)
-        {
-            if (System.IO.File.Exists(path))
-                System.IO.File.Delete(path);
-            else if (Directory.Exists(path))
-            {
-                if (path.Split('\\').Length <= 2)
-                    throw new Exception("Delete protection, cannot delete path so short, should be at least depth of 3 levels or more");
-                Directory.Delete(path, true);
-            }
-        }
-
-    }
-    public class RealSiteService : ISiteService
+    public class SiteService //: ISiteService
     {
         public virtual IEnumerable<File> GetFiles(SiteRequest req)
         {
@@ -160,6 +111,18 @@ namespace DesktopBrowser.Server
             //}
             if (process != null)
                 SetForegroundWindow(process.MainWindowHandle);
+        }
+
+        public void Delete(string path)
+        {
+            if (System.IO.File.Exists(path))
+                System.IO.File.Delete(path);
+            else if (Directory.Exists(path))
+            {
+                if (path.Split('\\').Length <= 2)
+                    throw new Exception("Delete protection, cannot delete path so short, should be at least depth of 3 levels or more");
+                Directory.Delete(path, true);
+            }
         }
 
         #region Utils
@@ -438,7 +401,7 @@ namespace DesktopBrowser.Server
     }
 
 
-    public class DemoSiteService : RealSiteService
+    public class DemoSiteService : SiteService
     {
         public DemoSiteService()
         {
@@ -477,3 +440,55 @@ namespace DesktopBrowser.Server
         }
     }
 }
+
+//interface ISiteService
+//{
+//    void Execute(string filename);
+//    File GetFile(string path);
+//    FileRelativesInfo GetFileRelatives(string path);
+//    IEnumerable<File> GetFiles(SiteRequest req);
+//}
+//[DataService]
+//public class SiteService //: ISiteService
+//{
+//    public SiteService()
+//    {
+//        if (ConfigurationManager.AppSettings["IsDemo"] == "true")
+//            Service = new DemoSiteService();
+//        else
+//            Service = new RealSiteService();
+//    }
+//    ISiteService Service;
+//    public IEnumerable<File> GetFiles(SiteRequest req)
+//    {
+//        return Service.GetFiles(req);
+//    }
+
+//    public FileRelativesInfo GetFileRelatives(string path)
+//    {
+//        return Service.GetFileRelatives(path);
+//    }
+
+//    public File GetFile(string path)
+//    {
+//        return Service.GetFile(path);
+//    }
+
+//    public void Execute(string filename)
+//    {
+//        Service.Execute(filename);
+//    }
+
+//    public void Delete(string path)
+//    {
+//        if (System.IO.File.Exists(path))
+//            System.IO.File.Delete(path);
+//        else if (Directory.Exists(path))
+//        {
+//            if (path.Split('\\').Length <= 2)
+//                throw new Exception("Delete protection, cannot delete path so short, should be at least depth of 3 levels or more");
+//            Directory.Delete(path, true);
+//        }
+//    }
+
+//}
