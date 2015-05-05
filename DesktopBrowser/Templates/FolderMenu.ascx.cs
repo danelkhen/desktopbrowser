@@ -17,24 +17,24 @@ namespace DesktopBrowser.Templates
         }
         public new Default Page { get; set; }
 
-        public SiteRequest req { get; set; }
+        public SiteRequest Req { get; set; }
 
-        public File prevSibling { get; set; }
-        public File parentFolder { get; set; }
-        public File nextSibling { get; set; }
+        public File PrevSibling { get; set; }
+        public File ParentFolder { get; set; }
+        public File NextSibling { get; set; }
 
         public string GetSubtitleSearchLink()
         {
-            if (file == null)
+            if (File == null)
                 return null;
-            var s = GetFilenameForSearch(file.Name);
+            var s = GetFilenameForSearch(File.Name);
             return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s + " eng subscene");
         }
         public string GetGoogleSearchLink()
         {
-            if (file == null)
+            if (File == null)
                 return null;
-            var s = GetFilenameForSearch(file.Name);
+            var s = GetFilenameForSearch(File.Name);
             return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s);
         }
 
@@ -76,7 +76,7 @@ namespace DesktopBrowser.Templates
             return x;
         }
 
-        public File file { get; set; }
+        public File File { get; set; }
 
 
         string Att(string name, object value)
@@ -87,7 +87,7 @@ namespace DesktopBrowser.Templates
                 name = "class";
             var sValue = value.ToString();
             var s = name;
-            s = name + "=\"" + HttpUtility.HtmlEncode(sValue) + "\"";
+            s = name + "=\"" + sValue.ToHtmlAttributeValue() + "\"";
             return s;
         }
 
@@ -104,21 +104,21 @@ namespace DesktopBrowser.Templates
         {
             Menu = new List<MenuItem>
             {
-                new MenuItem { href=parentFolder.IfNotNull(t=> t.GetHref(req)), title=parentFolder.IfNotNull(t=> t.Path), text="Up"},
-                new MenuItem { href=prevSibling.IfNotNull(t=> t.GetHref(req)) , title=prevSibling.IfNotNull(t=> t.Path), text="Prev"},
-                new MenuItem { href=nextSibling.IfNotNull(t=> t.GetHref(req)) , title=nextSibling.IfNotNull(t=> t.Path), text="Next"},
-                new MenuItem { className=req.HideFolders.Active(),                   href=req.Clone(t=>t.HideFolders=!t.HideFolders).GetHref(),               title="Shows or hides folders"                        , text="Folders"},
-                new MenuItem { className=req.HideFiles.Active(),                     href=req.Clone(t=>t.HideFiles=!t.HideFiles).GetHref(),                   title="Shows or hides files"                              , text="Files"},
-                new MenuItem { className=req.MixFilesAndFolders.Active(),            href=req.Clone(t=>t.MixFilesAndFolders=!t.MixFilesAndFolders).GetHref(), title="Disables Folder grouping"        , text="Mix"},
-                new MenuItem { className=req.FolderSize.Active(),                    href=req.Clone(t=>t.FolderSize=!t.FolderSize).GetHref(),                 title="Calculates folder sizes"                         , text="Folders Size"},
-                new MenuItem { className=req.KeepView.Active(),                      href=req.Clone(t=>t.KeepView=!t.KeepView).GetHref(),                     title="Keeps the same view when navigating to other folders", text="Keep View"},
-                new MenuItem { className=req.ShowHiddenFiles.Active(),               href=req.Clone(t=>t.ShowHiddenFiles=!t.ShowHiddenFiles).GetHref(),         title="Shows or hides hidden files"   , text="Hidden"},
-                new MenuItem { className=req.IsRecursive.Active(),                   href=req.Clone(t=>t.IsRecursive=!t.IsRecursive).GetHref(),         title="Recursively shows all files"           , text="Recursive"},
-                new MenuItem { className=req.View=="ImageList" ? "Selected" : "",    href=req.ToggleImageListView().GetHref(),         title="Changes the view mode"                                  , text="Image View"},
+                new MenuItem { href=ParentFolder.IfNotNull(t=> t.GetHref(Req)), title=ParentFolder.IfNotNull(t=> t.Path), text="Up"},
+                new MenuItem { href=PrevSibling.IfNotNull(t=> t.GetHref(Req)) , title=PrevSibling.IfNotNull(t=> t.Path), text="Prev"},
+                new MenuItem { href=NextSibling.IfNotNull(t=> t.GetHref(Req)) , title=NextSibling.IfNotNull(t=> t.Path), text="Next"},
+                new MenuItem { className=Req.HideFolders.Active(),                   href=Req.Clone(t=>t.HideFolders=!t.HideFolders).GetHref(),               title="Shows or hides folders"                        , text="Folders"},
+                new MenuItem { className=Req.HideFiles.Active(),                     href=Req.Clone(t=>t.HideFiles=!t.HideFiles).GetHref(),                   title="Shows or hides files"                              , text="Files"},
+                new MenuItem { className=Req.MixFilesAndFolders.Active(),            href=Req.Clone(t=>t.MixFilesAndFolders=!t.MixFilesAndFolders).GetHref(), title="Disables Folder grouping"        , text="Mix"},
+                new MenuItem { className=Req.FolderSize.Active(),                    href=Req.Clone(t=>t.FolderSize=!t.FolderSize).GetHref(),                 title="Calculates folder sizes"                         , text="Folders Size"},
+                new MenuItem { className=Req.KeepView.Active(),                      href=Req.Clone(t=>t.KeepView=!t.KeepView).GetHref(),                     title="Keeps the same view when navigating to other folders", text="Keep View"},
+                new MenuItem { className=Req.ShowHiddenFiles.Active(),               href=Req.Clone(t=>t.ShowHiddenFiles=!t.ShowHiddenFiles).GetHref(),         title="Shows or hides hidden files"   , text="Hidden"},
+                new MenuItem { className=Req.IsRecursive.Active(),                   href=Req.Clone(t=>t.IsRecursive=!t.IsRecursive).GetHref(),         title="Recursively shows all files"           , text="Recursive"},
+                new MenuItem { className=Req.View=="ImageList" ? "Selected" : "",    href=Req.ToggleImageListView().GetHref(),         title="Changes the view mode"                                  , text="Image View"},
                 new MenuItem {                                                       href=GetSubtitleSearchLink(), target="_blank"                                                          , text="Subs"},
                 new MenuItem {                                                       href=GetGoogleSearchLink(), target="_blank"                                                            , text="Imdb"},
                 new MenuItem { onclick="btnDelete_click(event);", title="Delete", text="Delete"},
-                new MenuItem { onclick="OpenFile("+req.Path.ToJavaScript().ToHtmlAttributeValue()+");", title="Open folder in windows exlorer", text="Explore"},
+                new MenuItem { onclick="OpenFile("+Req.Path.ToJavaScript()+");", title="Open folder in windows exlorer", text="Explore"},
             };
             Menu.ForEach(mi =>
             {

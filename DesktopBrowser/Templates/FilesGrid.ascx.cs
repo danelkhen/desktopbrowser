@@ -11,7 +11,7 @@ namespace DesktopBrowser.Templates
     public partial class FilesGrid : System.Web.UI.UserControl
     {
         public IEnumerable<File> Files { get; set; }
-        public SiteRequest req { get; set; }
+        public SiteRequest Req { get; set; }
         public bool DisableFind { get; set; }
         public bool MoreAvailable { get; set; }
     }

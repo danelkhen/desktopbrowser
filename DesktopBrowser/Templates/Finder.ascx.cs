@@ -15,7 +15,7 @@ namespace DesktopBrowser.Templates
 
         }
 
-        public SiteRequest req { get; set; }
+        public SiteRequest Req { get; set; }
 
     }
 }

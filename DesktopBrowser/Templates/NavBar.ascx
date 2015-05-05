@@ -8,7 +8,7 @@
         <%-- nav navbar-nav navbar-left --%>
         <uc:FolderMenu ID="FolderMenu1" runat="server" />
         <uc:Finder ID="Finder1" runat="server"/>
-        <%if (showGrid){ %><uc:Pager ID="Pager1" runat="server" /><%} %>
+        <%if (ShowGrid){ %><uc:Pager ID="Pager1" runat="server" /><%} %>
         <div id="divClock" class="btn-group btn-group-sm pull-right">
         <div class="btn btn-default">
             <span id="divTime"><%=DateTime.Now.ToString("h:mm tt") %></span><br />

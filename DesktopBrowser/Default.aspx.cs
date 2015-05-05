@@ -14,39 +14,39 @@ namespace DesktopBrowser
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            service = new SiteService();
-            req = SiteRequest.Load(Context.Request);
-            file = service.GetFile(req.Path);
-            req.Path = file.Path;
-            if (!file.IsFolder)
+            Service = new SiteService();
+            Req = SiteRequest.Load(Context.Request);
+            File = Service.GetFile(Req.Path);
+            Req.Path = File.Path;
+            if (!File.IsFolder)
             {
-                service.Execute(file.Path);
+                Service.Execute(File.Path);
             }
             else
             {
-                var folder = file;
-                relatives = service.GetFileRelatives(folder.Path);
-                FilesGrid1.req = req;
-                if (req.View == "ImageList")
+                var folder = File;
+                Relatives = Service.GetFileRelatives(folder.Path);
+                FilesGrid1.Req = Req;
+                if (Req.View == "ImageList")
                 {
-                    if (req.ImageListColumns == null)
-                        req.ImageListColumns = 5;
-                    if (req.ImageListRows == null)
-                        req.ImageListRows = 1;
-                    req.Take = req.ImageListRows.Value * req.ImageListColumns.Value;
-                    if (req.Skip == null)
-                        req.Skip = 0;
-                    Files = service.GetFiles(req);
+                    if (Req.ImageListColumns == null)
+                        Req.ImageListColumns = 5;
+                    if (Req.ImageListRows == null)
+                        Req.ImageListRows = 1;
+                    Req.Take = Req.ImageListRows.Value * Req.ImageListColumns.Value;
+                    if (Req.Skip == null)
+                        Req.Skip = 0;
+                    Files = Service.GetFiles(Req);
                     FilesImageList1.Files = Files;
-                    FilesImageList1.Columns = req.ImageListColumns.Value;
+                    FilesImageList1.Columns = Req.ImageListColumns.Value;
                 }
                 else
                 {
-                    if (req.Take == null)
-                        req.Take = 300;
-                    if (req.Skip == null)
-                        req.Skip = 0;
-                    Files = service.GetFiles(req);
+                    if (Req.Take == null)
+                        Req.Take = 300;
+                    if (Req.Skip == null)
+                        Req.Skip = 0;
+                    Files = Service.GetFiles(Req);
                     FilesGrid1.Files = Files;
                 }
 
@@ -54,13 +54,13 @@ namespace DesktopBrowser
         }
 
 
-        public SiteService service { get; set; }
+        public SiteService Service { get; set; }
 
-        public SiteRequest req { get; set; }
+        public SiteRequest Req { get; set; }
 
-        public File file { get; set; }
+        public File File { get; set; }
 
-        public FileRelativesInfo relatives { get; set; }
+        public FileRelativesInfo Relatives { get; set; }
     }
     [JsType(JsMode.Prototype)]
     public class Keys

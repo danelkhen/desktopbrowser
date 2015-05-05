@@ -13,14 +13,14 @@ namespace DesktopBrowser.Templates
         protected void Page_Load(object sender, EventArgs e)
         {
             Page = base.Page as Default;
-            foo();
+            Foo();
         }
         public string PreviousDisabled { get; set; }
         public new Default Page { get; set; }
 
         public SiteRequest SiteRequest { get; set; }
 
-        void foo()
+        void Foo()
         {
             if (SiteRequest.Skip == 0)
                 PreviousDisabled = " disabled";

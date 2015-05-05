@@ -12,21 +12,21 @@ namespace DesktopBrowser.Templates
         protected void Page_Load(object sender, EventArgs e)
         {
             Page = base.Page as Default;
-            if (Page.relatives != null)
+            if (Page.Relatives != null)
             {
-                FolderMenu1.parentFolder = Page.relatives.ParentFolder;
-                FolderMenu1.nextSibling = Page.relatives.NextSibling;
-                FolderMenu1.prevSibling = Page.relatives.PreviousSibling;
+                FolderMenu1.ParentFolder = Page.Relatives.ParentFolder;
+                FolderMenu1.NextSibling = Page.Relatives.NextSibling;
+                FolderMenu1.PrevSibling = Page.Relatives.PreviousSibling;
             }
-            FolderMenu1.file = Page.file;
-            FolderMenu1.req = Page.req;
-            Finder1.req = Page.req;
-            Pager1.SiteRequest = Page.req;
-            showGrid = Page.req.Take != null && Page.req.Skip != null;
+            FolderMenu1.File = Page.File;
+            FolderMenu1.Req = Page.Req;
+            Finder1.Req = Page.Req;
+            Pager1.SiteRequest = Page.Req;
+            ShowGrid = Page.Req.Take != null && Page.Req.Skip != null;
 
 
         }
-        public bool showGrid { get; set; }
+        public bool ShowGrid { get; set; }
         public new Default Page { get; set; }
     }
 }

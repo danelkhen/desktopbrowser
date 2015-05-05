@@ -5,20 +5,20 @@
             <th class="SelectionHeader" onmousedown="$('#grdFiles TBODY TR').toggleClass('Selected');">
             </th>
             <th class="NameHeader">
-                <a href="<%=req.SetSortBy("Name", false) %>" class="<%=(req.Sort.Contains("Name")).IfTrue("Selected")%>"
-                    oncontextmenu='window.location=<%=req.AddSortBy("Name", false).ToJavaScript() %>;return false;'
+                <a href="<%=Req.SetSortBy("Name", false) %>" class="<%=(Req.Sort.Contains("Name")).IfTrue("Selected")%>"
+                    oncontextmenu='window.location=<%=Req.AddSortBy("Name", false).ToJavaScript() %>;return false;'
                     title="Click to sort by Name">Name</a>
             </th>
-            <th class="ModifiedHeader"><a href="<%=req.SetSortBy("Modified", true) %>" class="<%=(req.Sort.Contains("Modified")).IfTrue("Selected")%>"
-            oncontextmenu='window.location=<%=req.AddSortBy("Modified", true).ToJavaScript() %>;return false;'
+            <th class="ModifiedHeader"><a href="<%=Req.SetSortBy("Modified", true) %>" class="<%=(Req.Sort.Contains("Modified")).IfTrue("Selected")%>"
+            oncontextmenu='window.location=<%=Req.AddSortBy("Modified", true).ToJavaScript() %>;return false;'
             title="Click to sort by Last Modified date">Modified</a>
             </th>
-            <th class="SizeHeader"><a href="<%=req.SetSortBy("Size", true) %>" class="<%=(req.Sort.Contains("Size")).IfTrue("Selected")%>"
-            oncontextmenu='window.location=<%=req.AddSortBy("Size", true).ToJavaScript() %>;return false;'
+            <th class="SizeHeader"><a href="<%=Req.SetSortBy("Size", true) %>" class="<%=(Req.Sort.Contains("Size")).IfTrue("Selected")%>"
+            oncontextmenu='window.location=<%=Req.AddSortBy("Size", true).ToJavaScript() %>;return false;'
             title="Click to sort by size">Size</a>
             </th>
-            <th class="ExtensionHeader"><a href="<%=req.SetSortBy("Extension", false) %>" class="<%=(req.Sort.Contains("Extension")).IfTrue("Selected")%>"
-            oncontextmenu='window.location=<%=req.AddSortBy("Extension", false).ToJavaScript() %>;return false;'
+            <th class="ExtensionHeader"><a href="<%=Req.SetSortBy("Extension", false) %>" class="<%=(Req.Sort.Contains("Extension")).IfTrue("Selected")%>"
+            oncontextmenu='window.location=<%=Req.AddSortBy("Extension", false).ToJavaScript() %>;return false;'
             title="Click to sort by extension">Ext</a>
             </th>
         </tr>
@@ -31,7 +31,7 @@
                 foreach (var file in Files)
                 {
                     taken++;
-                    if (req.Take != null && taken> req.Take.Value)
+                    if (Req.Take != null && taken> Req.Take.Value)
                     {
                         MoreAvailable = true;
                         break;
@@ -39,7 +39,7 @@
         %>
         <tr onmousedown="Selector.Select(this);return false;" ondblclick="SimulateClick($(this).find('a').get(0));return false;">
             <td>&nbsp;<input type="hidden" value="<%=file.Path %>" class="ihFilePath"/> </td>
-            <td class="NameCell"><a href="<%=file.GetHref(req) %>" class="FsElement <%=file.IsFolder.IfTrue("Folder", "File") %>"<%=file.IsFolder.IfFalse("target=\"_blank\"") %>><%=file.Name%></a>
+            <td class="NameCell"><a href="<%=file.GetHref(Req) %>" class="FsElement <%=file.IsFolder.IfTrue("Folder", "File") %>"<%=file.IsFolder.IfFalse("target=\"_blank\"") %>><%=file.Name%></a>
             </td>
             <td class="ModifiedCell">
                 <%=file.Modified.ToFriendlyRelative2()%>

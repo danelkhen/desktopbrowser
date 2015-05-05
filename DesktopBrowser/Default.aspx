@@ -11,11 +11,11 @@
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="res/Site.css" rel="stylesheet" type="text/css" />
-    <title><%=file.Name%> - Desktop Browser v0.95</title>
+    <title><%=File.Name%> - Desktop Browser v0.95</title>
     <script>var Data = {};</script>
 </head>
 <body>
-    <%if (!file.IsFolder)
+    <%if (!File.IsFolder)
       { %>
     <script>window.setTimeout(function () { window.close(); }, 3);</script>
     <%}
@@ -25,19 +25,19 @@
     <div>
         <div class="Panel row row-full">
             <div class="col-md-12">
-                <input type="text" id="tbFilename" value="<%=file.Name %>" readonly />
+                <input type="text" id="tbFilename" value="<%=File.Name %>" readonly />
             </div>
         </div>
         <form method="get" action="Default.aspx" class="form-horizontal">
             <div class="form-group row-full">
                 <div class="col-md-11">
-                    <input class="form-control" type="text" id="tbFolder" value="<%=req.Path.ToHtmlAttributeValue() %>" onkeydown="tbFolder_keydown(event);" name="p" /></div>
+                    <input class="form-control" type="text" id="tbFolder" value="<%=Req.Path.ToHtmlAttributeValue() %>" onkeydown="tbFolder_keydown(event);" name="p" /></div>
                 <div class="col-md-1">
                     <input class="form-control btn btn-default" type="submit" value="Go" /></div>
             </div>
-            <%if (req.KeepView)
+            <%if (Req.KeepView)
               {
-                  foreach (var pair in req.Serialize().Where(t => t.Key != "p"))
+                  foreach (var pair in Req.Serialize().Where(t => t.Key != "p"))
                   {
             %>
             <input type="hidden" name="<%=pair.Key %>" value="<%=pair.Value.ToHtmlAttributeValue() %>" />
@@ -47,7 +47,7 @@
         <div class="Panel">
             <uc:FilesGrid ID="FilesGrid1" runat="server" />
         </div>
-        <%if (req.View == "ImageList")
+        <%if (Req.View == "ImageList")
           { %>
         <div class="Panel">
             <uc:FilesImageList ID="FilesImageList1" runat="server" />

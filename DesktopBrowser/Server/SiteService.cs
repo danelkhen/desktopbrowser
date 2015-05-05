@@ -17,7 +17,7 @@ namespace DesktopBrowser.Server
 
 
     [DataService]
-    public class SiteService //: ISiteService
+    public class SiteService
     {
         public virtual IEnumerable<File> GetFiles(SiteRequest req)
         {
