@@ -9,6 +9,7 @@
     <title>Desktop Browser v1.0.0</title>
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="res/css/default.css" rel="stylesheet" type="text/css" />
     <link href="res/css/default2.css" rel="stylesheet" type="text/css" />
     <script src="res/libs/jquery/jquery-2.1.3.min.js"></script>
     <script src="res/libs/bootstrap-3.3.4/js/bootstrap.min.js"></script>
@@ -37,10 +38,10 @@
             </div>
         </form>
         <div class="Panel">
-            <uc:FilesGrid ID="FilesGrid1" runat="server" />
+<%--            <uc:FilesGrid ID="FilesGrid1" runat="server" />--%>
         </div>
         <div class="Panel">
-            <uc:FilesImageList ID="FilesImageList1" runat="server" />
+<%--            <uc:FilesImageList ID="FilesImageList1" runat="server" />--%>
         </div>
         <div class="Footer">
             <p><a href="https://github.com/danelkhen/desktopbrowser" target="_blank">DesktopBrowser</a> by Dan-el (Copyright &copy; all rights reserved 2011)</p>

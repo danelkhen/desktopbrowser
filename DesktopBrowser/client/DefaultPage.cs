@@ -299,4 +299,11 @@ namespace DesktopBrowser.client
         }
     }
 
+
+    [JsType(JsMode.Json)]
+    class DefaultClientData
+    {
+        public bool MoreAvailable { get; set; }
+    }
+
 }

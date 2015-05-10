@@ -11,23 +11,5 @@ namespace DesktopBrowser {
     
     
     public partial class Default2 {
-        
-        /// <summary>
-        /// FilesGrid1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DesktopBrowser.Templates.FilesGrid FilesGrid1;
-        
-        /// <summary>
-        /// FilesImageList1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DesktopBrowser.Templates.FilesImageList FilesImageList1;
     }
 }

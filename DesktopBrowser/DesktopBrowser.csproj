@@ -69,7 +69,9 @@
     <Content Include="Global.asax" />
     <Content Include="res\js\date.format.js" />
     <Content Include="res\js\default.js" />
+    <Content Include="res\js\default2.js" />
     <Content Include="res\js\desktopbrowser.js" />
+    <Content Include="res\js\grid.js" />
     <Content Include="res\js\sk.js" />
     <Content Include="res\libs\bootstrap-3.3.4\css\bootstrap-theme.css" />
     <Content Include="res\libs\bootstrap-3.3.4\css\bootstrap-theme.min.css" />
@@ -125,6 +127,7 @@
     <Compile Include="Server\Utils\CollectionHelper.cs" />
     <Compile Include="Server\Utils\KalikoImage.cs" />
     <Compile Include="Server\Utils\Parse.cs" />
+    <Compile Include="Server\SiteServiceHandler.cs" />
     <Compile Include="Server\Utils\Size.cs" />
     <Compile Include="Server\Utils\XmlHelper.cs" />
     <Compile Include="Server\Utils\XmlSerializer.cs" />
