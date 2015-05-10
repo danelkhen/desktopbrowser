@@ -1,4 +1,5 @@
 ﻿using DesktopBrowser.client;
+using DesktopBrowser.client.utils;
 using SharpKit.Html;
 using SharpKit.JavaScript;
 using SharpKit.jQuery;
@@ -9,37 +10,22 @@ using System.Web;
 
 namespace DesktopBrowser.client
 {
-    [JsType(JsMode.Prototype)]
-    public class Keys
-    {
-        public static JsNumber Enter = 13;
-        public static JsNumber PageUp = 33;
-        public static JsNumber PageDown = 34;
-        public static JsNumber End = 35;
-        public static JsNumber Home = 36;
-        public static JsNumber Up = 38;
-        public static JsNumber Down = 40;
-    }
 
-    [JsType(JsMode.Json)]
-    class DefaultClientData
+    [JsType(JsMode.Prototype, Filename = "~/res/js/default.js")]
+    public class DefaultPage
     {
-        public bool MoreAvailable { get; set; }
-    }
-    [JsType(JsMode.Global, Filename = "~/res/js/default.js")]
-    public class DefaultClient
-    {
-        static Window win;
-        [JsProperty(Export = false, NativeField = true)]
-        static DefaultClientData Data { get; set; }
-        static Selector<HtmlElement> Selector;
-        static SiteProxy SiteProxy;
-        static DefaultClient()
+        Window win;
+        DefaultClientData Data { get; set; }
+        Selector<HtmlElement> Selector;
+        SiteProxy SiteProxy;
+        public DefaultPage()
         {
             SiteProxy = new SiteProxy();
             win = HtmlContext.window;
+            Data = new DefaultClientData();
+            new jQuery(DefaultClient_Load);
         }
-        static void DefaultClient_Load()
+        void DefaultClient_Load()
         {
             if (Data.MoreAvailable.ExactEquals(false))
             {
@@ -94,17 +80,17 @@ namespace DesktopBrowser.client
 
         }
 
-        private static void WriteLine(object obj)
+        private void WriteLine(object obj)
         {
             win.document.body.appendChild(win.document.createTextNode(obj.As<JsString>()));
             win.document.body.appendChild(win.document.createElement("br"));
         }
 
-        static bool CanMoveSelection(int by)
+        bool CanMoveSelection(int by)
         {
             return MoveSelection(by);
         }
-        static bool MoveSelection(int by, bool preview = false)
+        bool MoveSelection(int by, bool preview = false)
         {
             var by2 = by;
             var row = Selector.SelectedItem.ToJ();
@@ -134,7 +120,7 @@ namespace DesktopBrowser.client
             return true;
         }
 
-        private static void Select(HtmlElement row)
+        private void Select(HtmlElement row)
         {
             Selector.Select(row);
             var pos = row.ToJ().offset();
@@ -148,17 +134,17 @@ namespace DesktopBrowser.client
                 row.scrollIntoView(false);
             }
         }
-        static int PageSize = 10;
-        private static bool PageDown()
+        int PageSize = 10;
+        private bool PageDown()
         {
             return MoveSelection(PageSize * 1);
         }
 
-        private static bool PageUp()
+        private bool PageUp()
         {
             return MoveSelection(PageSize * -1);
         }
-        static bool Enter()
+        bool Enter()
         {
             var anchor = Selector.SelectedItem.ToJ().find("a").get(0);
             if (anchor.nodeName == "A")
@@ -169,7 +155,7 @@ namespace DesktopBrowser.client
             return false;
         }
 
-        static bool SelectFirstItem()
+        bool SelectFirstItem()
         {
             var first = "grdFiles TBODY TR".ToJ().first().get(0);
             if (first != null)
@@ -180,21 +166,21 @@ namespace DesktopBrowser.client
             return false;
         }
 
-        private static bool Down()
+        private bool Down()
         {
             if (!MoveSelection(1))
                 return SelectFirstItem();
             return false;
         }
 
-        private static bool Up()
+        private bool Up()
         {
             if (!MoveSelection(-1))
                 return SelectFirstItem();
             return false;
         }
 
-        static void RestoreSelection()
+        void RestoreSelection()
         {
             var folder = "#tbFilename".ToJ().val().As<JsString>();
             var filename = GetStorageItem(folder);// jQueryCookie.cookie(folder);
@@ -213,15 +199,15 @@ namespace DesktopBrowser.client
 
         }
 
-        static JsString GetStorageItem(JsString key)
+        JsString GetStorageItem(JsString key)
         {
             return win.As<SharpKit.Html.Window>().localStorage.getItem(key).As<JsString>();
         }
-        static void SetStorageItem(JsString key, JsString value)
+        void SetStorageItem(JsString key, JsString value)
         {
             win.As<SharpKit.Html.Window>().localStorage.setItem(key, value);
         }
-        static void SaveSelection(JsString filename)
+        void SaveSelection(JsString filename)
         {
             var folder = "#tbFilename".ToJ().val().As<JsString>();
             var nextYear = new JsDate();
@@ -229,23 +215,23 @@ namespace DesktopBrowser.client
             SetStorageItem(folder, filename);
             //jQueryCookie.cookie(folder, filename, new jQueryCookieOptions { expires = nextYear });
         }
-        static void UpdateClock()
+        void UpdateClock()
         {
             "#divTime".ToJ().text(new JsDate().format("h:MM tt"));
             "#divDate".ToJ().text(new JsDate().format("ddd, mmm d"));
             win.setTimeout(UpdateClock, 5000);
         }
-        static void Execute(JsString path)
+        void Execute(JsString path)
         {
             new SiteProxy().Execute(path, null);
         }
-        static void OpenFile(JsString path)
+        void OpenFile(JsString path)
         {
             new SiteProxy().Execute(path, null);
         }
 
 
-        static JsString GetSelectedPath()
+        JsString GetSelectedPath()
         {
             if (Selector.SelectedItem == null)
                 return null;
@@ -254,7 +240,7 @@ namespace DesktopBrowser.client
             return filePath;// dir + "\\" + filename;
 
         }
-        static void btnDelete_click()
+        void btnDelete_click()
         {
             var path = GetSelectedPath();
             if (path == null)
@@ -264,13 +250,13 @@ namespace DesktopBrowser.client
             SiteProxy.Delete(path, t => win.location.reload());
         }
 
-        static void Filter(HtmlElement el, JsRegExp exp)
+        void Filter(HtmlElement el, JsRegExp exp)
         {
             var x = el.ToJ();
             x.parents("tr").first().toggle(x.text().search(exp) >= 0);
         }
 
-        static void tbFolder_keydown(DOMEvent e)
+        void tbFolder_keydown(DOMEvent e)
         {
             if (e.As<KeyboardEvent>().keyCode == 13)
             {
@@ -278,25 +264,25 @@ namespace DesktopBrowser.client
             }
         }
 
-        static void Go()
+        void Go()
         {
             var newPath = "#tbFolder".ToJ().val().As<JsString>();
             win.location.href = "?p=" + HtmlContext.encodeURIComponent(newPath);
         }
 
-        static void btnGo_click(DOMEvent e)
+        void btnGo_click(DOMEvent e)
         {
             Go();
         }
 
-        static void tbSearch_keyup(DOMEvent e)
+        void tbSearch_keyup(DOMEvent e)
         {
             var search = "#tbSearch".ToJ().val().As<JsString>();
             var exp = new JsRegExp(search.RegexEscape(), "i");
             "#grdFiles .NameCell A".ToJ().each((i, el) => Filter(el, exp));
         }
 
-        static void SimulateClick(HtmlAnchorElement anchor)
+        void SimulateClick(HtmlAnchorElement anchor)
         {
             var a = anchor.ToJ();
             a.trigger("click", null);
@@ -313,48 +299,9 @@ namespace DesktopBrowser.client
         }
     }
     [JsType(JsMode.Json)]
-    public class Point
+    class DefaultClientData
     {
-        public JsNumber Top { get; set; }
-        public JsNumber Left { get; set; }
-    }
-
-    [JsType(JsMode.Prototype)]
-    public static class ClientExtensions
-    {
-        public static string RegexEscape(this JsString text)
-        {
-            return text.replace(new JsRegExp("[-[\\]{}()*+?.,\\\\^$|#\\s]", "g"), "\\$&");
-        }
-        [JsMethod(ExtensionImplementedInInstance = true, Export = false)]
-        public static JsString format(this JsDate date, JsString format)
-        {
-            return null;
-        }
-    }
-
-
-    [JsType(JsMode.Prototype, Filename = "~/res/js/default.js", IgnoreGenericTypeArguments = true)]
-    public class Selector<T> where T : class
-    {
-        [JsMethod(IgnoreGenericArguments = true)]
-        public Selector()
-        {
-        }
-        public JsAction<T> Selected { get; set; }
-        public JsAction<T> UnSelected { get; set; }
-        public void Select(T el)
-        {
-            if (SelectedItem == el)
-                return;
-            var unselected = SelectedItem;
-            SelectedItem = el;
-            if (unselected != null && UnSelected != null)
-                UnSelected(unselected);
-            if (SelectedItem != null && Selected != null)
-                Selected(SelectedItem);
-        }
-        public T SelectedItem { get; set; }
+        public bool MoreAvailable { get; set; }
     }
 
 }

@@ -37,7 +37,7 @@
                         break;
                     }
         %>
-        <tr onmousedown="Selector.Select(this);return false;" ondblclick="SimulateClick($(this).find('a').get(0));return false;">
+        <tr onmousedown="_page.Selector.Select(this);return false;" ondblclick="_page.SimulateClick($(this).find('a').get(0));return false;">
             <td>&nbsp;<input type="hidden" value="<%=file.Path %>" class="ihFilePath"/> </td>
             <td class="NameCell"><a href="<%=file.GetHref(Req) %>" class="FsElement <%=file.IsFolder.IfTrue("Folder", "File") %>"<%=file.IsFolder.IfFalse("target=\"_blank\"") %>><%=file.Name%></a>
             </td>
@@ -54,7 +54,7 @@
         <%
                 }
                 %>
-                <script>Data.MoreAvailable = <%=MoreAvailable.ToString().ToLower()%>;</script><%
+                <script>$(function(){_page.Data.MoreAvailable = <%=MoreAvailable.ToString().ToLower()%>;});</script><%
                 
             } %>
     </tbody>

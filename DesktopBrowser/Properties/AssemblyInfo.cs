@@ -37,10 +37,12 @@ using SharpKit.JavaScript;
 
 [assembly: JsMergedFile(Filename = "res/js/all.js", Sources = new string[]
     {
+    "res/js/sk.js",
     "res/js/date.format.js",
     "res/js/desktopbrowser.js",
     "res/js/default.js"
     })]
 
 
-[assembly: JsExport(DefaultFilename="res/js/desktopbrowser.js")]
+[assembly: JsExport(DefaultFilename="res/js/desktopbrowser.js", CodeInjectionFilename="res/js/sk.js")]
+[assembly: JsNamespace(Namespace="DesktopBrowser.client", JsNamespace="dbr")]

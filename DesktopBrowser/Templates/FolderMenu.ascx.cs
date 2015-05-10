@@ -117,8 +117,8 @@ namespace DesktopBrowser.Templates
                 new MenuItem { className=Req.View=="ImageList" ? "Selected" : "",    href=Req.ToggleImageListView().GetHref(),         title="Changes the view mode"                                  , text="Image View"},
                 new MenuItem {                                                       href=GetSubtitleSearchLink(), target="_blank"                                                          , text="Subs"},
                 new MenuItem {                                                       href=GetGoogleSearchLink(), target="_blank"                                                            , text="Imdb"},
-                new MenuItem { onclick="btnDelete_click(event);", title="Delete", text="Delete"},
-                new MenuItem { onclick="OpenFile("+Req.Path.ToJavaScript()+");", title="Open folder in windows exlorer", text="Explore"},
+                new MenuItem { onclick="_page.btnDelete_click(event);", title="Delete", text="Delete"},
+                new MenuItem { onclick="_page.OpenFile("+Req.Path.ToJavaScript()+");", title="Open folder in windows exlorer", text="Explore"},
             };
             Menu.ForEach(mi =>
             {

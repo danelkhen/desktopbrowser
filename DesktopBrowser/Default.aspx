@@ -8,11 +8,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%=File.Name%> - Desktop Browser v1.0.0</title>
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="res/css/default.css" rel="stylesheet" type="text/css" />
-    <title><%=File.Name%> - Desktop Browser v1.0.0</title>
-    <script>var Data = {};</script>
+    <script src="res/libs/jquery/jquery-2.1.3.min.js"></script>
 </head>
 <body>
     <%if (!File.IsFolder)
@@ -59,9 +59,8 @@
             <p><a href="https://github.com/danelkhen/desktopbrowser/releases">Check for new version</a></p>
         </div>
     </div>
-    <script src="res/libs/jquery/jquery-2.1.3.min.js"></script>
     <script src="res/libs/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script src="res/js/all.js" type="text/javascript"></script>
-    <script>        $(DefaultClient_Load);</script>
+    <script>var _page = new dbr.DefaultPage();</script>
 </body>
 </html>

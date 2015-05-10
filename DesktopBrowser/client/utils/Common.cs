@@ -336,4 +336,63 @@ namespace DesktopBrowser.client.utils
         }
     }
 
+
+    [JsType(JsMode.Prototype)]
+    public class Keys
+    {
+        public static JsNumber Enter = 13;
+        public static JsNumber PageUp = 33;
+        public static JsNumber PageDown = 34;
+        public static JsNumber End = 35;
+        public static JsNumber Home = 36;
+        public static JsNumber Up = 38;
+        public static JsNumber Down = 40;
+    }
+
+    [JsType(JsMode.Json)]
+    public class Point
+    {
+        public JsNumber Top { get; set; }
+        public JsNumber Left { get; set; }
+    }
+
+    [JsType(JsMode.Prototype)]
+    public static class ClientExtensions
+    {
+        public static string RegexEscape(this JsString text)
+        {
+            return text.replace(new JsRegExp("[-[\\]{}()*+?.,\\\\^$|#\\s]", "g"), "\\$&");
+        }
+        [JsMethod(ExtensionImplementedInInstance = true, Export = false)]
+        public static JsString format(this JsDate date, JsString format)
+        {
+            return null;
+        }
+    }
+
+
+    [JsType(JsMode.Prototype, Filename = "~/res/js/default.js", IgnoreGenericTypeArguments = true)]
+    public class Selector<T> where T : class
+    {
+        [JsMethod(IgnoreGenericArguments = true)]
+        public Selector()
+        {
+        }
+        public JsAction<T> Selected { get; set; }
+        public JsAction<T> UnSelected { get; set; }
+        public void Select(T el)
+        {
+            if (SelectedItem == el)
+                return;
+            var unselected = SelectedItem;
+            SelectedItem = el;
+            if (unselected != null && UnSelected != null)
+                UnSelected(unselected);
+            if (SelectedItem != null && Selected != null)
+                Selected(SelectedItem);
+        }
+        public T SelectedItem { get; set; }
+    }
+
+
 }
