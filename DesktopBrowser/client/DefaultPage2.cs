@@ -11,14 +11,14 @@ using System.Web;
 namespace DesktopBrowser.client
 {
 
-    [JsType(JsMode.Prototype, Filename = "~/res/js/default.js")]
-    public class DefaultPage
+    [JsType(JsMode.Prototype, Filename = "~/res/js/default2.js")]
+    public class DefaultPage2
     {
         Window win;
         DefaultClientData Data { get; set; }
         Selector<HtmlElement> Selector;
         SiteProxy SiteProxy;
-        public DefaultPage()
+        public DefaultPage2()
         {
             SiteProxy = new SiteProxy();
             win = HtmlContext.window;
@@ -297,6 +297,11 @@ namespace DesktopBrowser.client
             }
 
         }
+    }
+    [JsType(JsMode.Json)]
+    class DefaultClientData
+    {
+        public bool MoreAvailable { get; set; }
     }
 
 }

@@ -65,11 +65,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Default2.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="res\js\all.js" />
     <Content Include="res\js\date.format.js" />
     <Content Include="res\js\default.js" />
     <Content Include="res\js\desktopbrowser.js" />
+    <Content Include="res\js\sk.js" />
     <Content Include="res\libs\bootstrap-3.3.4\css\bootstrap-theme.css" />
     <Content Include="res\libs\bootstrap-3.3.4\css\bootstrap-theme.min.css" />
     <Content Include="res\libs\bootstrap-3.3.4\css\bootstrap.css" />
@@ -94,7 +95,11 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="client\DefaultPage2.cs" />
     <Compile Include="client\DefaultPage.cs" />
+    <Compile Include="client\grid\Grid.cs" />
+    <Compile Include="client\grid\GridOptions.cs" />
+    <Compile Include="client\grid\Plugin.cs" />
     <Compile Include="client\utils\Common.cs" />
     <Compile Include="client\SiteProxy.cs" />
     <Compile Include="client\utils\CopyOptions.cs" />
@@ -104,6 +109,13 @@
     <Compile Include="client\utils\Utils.cs" />
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default2.aspx.cs">
+      <DependentUpon>Default2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default2.aspx.designer.cs">
+      <DependentUpon>Default2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Server\Common.cs" />
     <Compile Include="Server\SiteRequest.cs" />

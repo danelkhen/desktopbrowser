@@ -31,9 +31,11 @@
         <form method="get" action="Default.aspx" class="form-horizontal">
             <div class="form-group row-full">
                 <div class="col-md-11">
-                    <input class="form-control" type="text" id="tbFolder" value="<%=Req.Path.ToHtmlAttributeValue() %>" onkeydown="tbFolder_keydown(event);" name="p" /></div>
+                    <input class="form-control" type="text" id="tbFolder" value="<%=Req.Path.ToHtmlAttributeValue() %>" onkeydown="_page.tbFolder_keydown(event);" name="p" />
+                </div>
                 <div class="col-md-1">
-                    <input class="form-control btn btn-default" type="submit" value="Go" /></div>
+                    <input class="form-control btn btn-default" type="submit" value="Go" />
+                </div>
             </div>
             <%if (Req.KeepView)
               {
@@ -42,7 +44,7 @@
             %>
             <input type="hidden" name="<%=pair.Key %>" value="<%=pair.Value.ToHtmlAttributeValue() %>" />
             <%}
-      } %>
+              } %>
         </form>
         <div class="Panel">
             <uc:FilesGrid ID="FilesGrid1" runat="server" />
@@ -60,7 +62,10 @@
         </div>
     </div>
     <script src="res/libs/bootstrap-3.3.4/js/bootstrap.min.js"></script>
-    <script src="res/js/all.js" type="text/javascript"></script>
+    <script src="res/js/sk.js" type="text/javascript"></script>
+    <script src="res/js/date.format.js" type="text/javascript"></script>
+    <script src="res/js/desktopbrowser.js" type="text/javascript"></script>
+    <script src="res/js/default.js" type="text/javascript"></script>
     <script>var _page = new dbr.DefaultPage();</script>
 </body>
 </html>
