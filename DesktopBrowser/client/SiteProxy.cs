@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using SharpKit.JavaScript;
-using DesktopBrowser.Client.Utils;
+using DesktopBrowser.client.utils;
 using DesktopBrowser.Server.Utils;
 using DesktopBrowser.Server;
 using SharpKit.Html;
 
-namespace DesktopBrowser.Client
+namespace DesktopBrowser.client
 {
 
     [JsType(JsMode.Prototype)]
-    public class SiteProxy : HtmlContext
+    public class SiteProxy
     {
         public void Execute(string path, JsAction<object> callback)
         {
@@ -41,7 +41,7 @@ namespace DesktopBrowser.Client
             {
                 if (t.Error != null)
                 {
-                    alert(t.Error);
+                    HtmlContext.alert(t.Error);
                 }
                 else
                 {

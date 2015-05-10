@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="FilesGrid.ascx.cs" Inherits="DesktopBrowser.Templates.FilesGrid" %>
-<table id="grdFiles" class="Grid" cellpadding="0" cellspacing="0">
+<table id="grdFiles" class="Grid">
     <thead>
         <tr>
             <th class="SelectionHeader" onmousedown="$('#grdFiles TBODY TR').toggleClass('Selected');">

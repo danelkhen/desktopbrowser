@@ -283,47 +283,61 @@ function SmoothScrollToTop(){
 };
 if (typeof(DesktopBrowser) == "undefined")
     var DesktopBrowser = {};
-if (typeof(DesktopBrowser.Client) == "undefined")
-    DesktopBrowser.Client = {};
-if (typeof(DesktopBrowser.Client.Utils) == "undefined")
-    DesktopBrowser.Client.Utils = {};
-DesktopBrowser.Client.Utils.JsArrayEnumerator = function (array){
+if (typeof(DesktopBrowser.client) == "undefined")
+    DesktopBrowser.client = {};
+DesktopBrowser.client.Keys = function (){
+};
+DesktopBrowser.client.Keys.Enter = 13;
+DesktopBrowser.client.Keys.PageUp = 33;
+DesktopBrowser.client.Keys.PageDown = 34;
+DesktopBrowser.client.Keys.End = 35;
+DesktopBrowser.client.Keys.Home = 36;
+DesktopBrowser.client.Keys.Up = 38;
+DesktopBrowser.client.Keys.Down = 40;
+DesktopBrowser.client.ClientExtensions = function (){
+};
+DesktopBrowser.client.ClientExtensions.RegexEscape = function (text){
+    return text.replace(new RegExp("[-[\\]{}()*+?.,\\\\^$|#\\s]", "g"), "\\$&");
+};
+if (typeof(DesktopBrowser.client.utils) == "undefined")
+    DesktopBrowser.client.utils = {};
+DesktopBrowser.client.utils.JsArrayEnumerator = function (array){
     this.Array = null;
     this.Index = 0;
     this.Array = array;
     this.Index = -1;
 };
-DesktopBrowser.Client.Utils.JsArrayEnumerator.prototype.MoveNext = function (){
+DesktopBrowser.client.utils.JsArrayEnumerator.prototype.MoveNext = function (){
     this.Index++;
     return this.Index < this.Array.length;
 };
-DesktopBrowser.Client.Utils.JsArrayEnumerator.prototype.get_Current = function (){
+DesktopBrowser.client.utils.JsArrayEnumerator.prototype.get_Current = function (){
     return this.Array[this.Index];
 };
-DesktopBrowser.Client.Utils.JsArrayEnumerator.prototype.Dispose = function (){
+DesktopBrowser.client.utils.JsArrayEnumerator.prototype.Dispose = function (){
 };
-DesktopBrowser.Client.Utils.JsArrayEnumerator.prototype.Reset = function (){
+DesktopBrowser.client.utils.JsArrayEnumerator.prototype.Reset = function (){
     this.Index = -1;
 };
 Array.prototype.GetEnumerator = function (){
-    return new DesktopBrowser.Client.Utils.JsArrayEnumerator(this);
+    return new DesktopBrowser.client.utils.JsArrayEnumerator(this);
 };
 $Inherit(Array, Array);
-DesktopBrowser.Client.Utils.JsExtensions = function (){
+DesktopBrowser.client.utils.JsExtensions = function (){
 };
-DesktopBrowser.Client.Utils.JsExtensions.Trim = function (s){
+DesktopBrowser.client.utils.JsExtensions.Trim = function (s){
     return s.replace(new RegExp("^\\s*"), "").replace(new RegExp("\\s*$"), "");
 };
-DesktopBrowser.Client.Utils.JsExtensions.AsJsArray = function (list){
+DesktopBrowser.client.utils.JsExtensions.AsJsArray = function (list){
     throw $CreateException(new System.Exception.ctor(), new Error());
 };
-DesktopBrowser.Client.Utils.JsExtensions.AsJsArray = function (array){
+DesktopBrowser.client.utils.JsExtensions.AsJsArray = function (array){
     throw $CreateException(new System.Exception.ctor(), new Error());
 };
-DesktopBrowser.Client.Utils.JsExtensions.AsList = function (list){
+DesktopBrowser.client.utils.JsExtensions.AsList = function (list){
     throw $CreateException(new System.Exception.ctor(), new Error());
 };
-DesktopBrowser.Client.Utils.JsExtensions.IndexOf = function (array, item){
+DesktopBrowser.client.utils.JsExtensions.IndexOf = function (array, item){
     var i = 0;
     for (var $i2 = 0,$l2 = array.length,item2 = array[$i2]; $i2 < $l2; $i2++, item2 = array[$i2]){
         if (item2 == item)
@@ -332,7 +346,7 @@ DesktopBrowser.Client.Utils.JsExtensions.IndexOf = function (array, item){
     }
     return -1;
 };
-DesktopBrowser.Client.Utils.JsExtensions.Remove = function (array, item){
+DesktopBrowser.client.utils.JsExtensions.Remove = function (array, item){
     var i = 0;
     for (var $i3 = 0,$l3 = array.length,item2 = array[$i3]; $i3 < $l3; $i3++, item2 = array[$i3]){
         if (item2 == item){
@@ -343,25 +357,25 @@ DesktopBrowser.Client.Utils.JsExtensions.Remove = function (array, item){
     }
     return false;
 };
-DesktopBrowser.Client.Utils.JsExtensions.RemoveAt = function (array, index){
+DesktopBrowser.client.utils.JsExtensions.RemoveAt = function (array, index){
     array.splice(index, 1);
 };
-DesktopBrowser.Client.Utils.JsExtensions.Clear = function (array){
+DesktopBrowser.client.utils.JsExtensions.Clear = function (array){
     array.splice(0, array.length);
 };
-DesktopBrowser.Client.Utils.JsExtensions.Contains = function (array, item){
+DesktopBrowser.client.utils.JsExtensions.Contains = function (array, item){
     for (var $i4 = 0,$l4 = array.length,item2 = array[$i4]; $i4 < $l4; $i4++, item2 = array[$i4]){
         if (item2 == item)
             return true;
     }
     return false;
 };
-DesktopBrowser.Client.Utils.JsExtensions.Insert = function (array, index, item){
+DesktopBrowser.client.utils.JsExtensions.Insert = function (array, index, item){
     array.splice(index, 0, item);
 };
-DesktopBrowser.Client.Utils.jQueryExtensions = function (){
+DesktopBrowser.client.utils.jQueryExtensions = function (){
 };
-DesktopBrowser.Client.Utils.jQueryExtensions.isChecked = function (j, value){
+DesktopBrowser.client.utils.jQueryExtensions.isChecked = function (j, value){
     if (arguments.length == 1)
         return j.attr("checked");
     else {
@@ -369,23 +383,23 @@ DesktopBrowser.Client.Utils.jQueryExtensions.isChecked = function (j, value){
         return undefined;
     }
 };
-DesktopBrowser.Client.Utils.jQueryExtensions.val = function (j, visible){
+DesktopBrowser.client.utils.jQueryExtensions.val = function (j, visible){
     if (visible)
         j.show();
     else
         j.hide();
 };
-DesktopBrowser.Client.SiteProxy = function (){
+DesktopBrowser.client.SiteProxy = function (){
     this.DataClient = null;
-    this.DataClient = new DesktopBrowser.Client.Utils.DataServiceProxy();
+    this.DataClient = new DesktopBrowser.client.utils.DataServiceProxy();
 };
-DesktopBrowser.Client.SiteProxy.prototype.Execute = function (path, callback){
+DesktopBrowser.client.SiteProxy.prototype.Execute = function (path, callback){
     this.Invoke("Execute", [path], callback);
 };
-DesktopBrowser.Client.SiteProxy.prototype.Delete = function (path, callback){
+DesktopBrowser.client.SiteProxy.prototype.Delete = function (path, callback){
     this.Invoke("Delete", [path], callback);
 };
-DesktopBrowser.Client.SiteProxy.prototype.Invoke = function (methodName, prms, callback){
+DesktopBrowser.client.SiteProxy.prototype.Invoke = function (methodName, prms, callback){
     var req = {
         AssemblyName: "DesktopBrowser",
         TypeName: "DesktopBrowser.Server.SiteService",
@@ -402,92 +416,88 @@ DesktopBrowser.Client.SiteProxy.prototype.Invoke = function (methodName, prms, c
         }
     }), false);
 };
-if (typeof(ReportApp) == "undefined")
-    var ReportApp = {};
-if (typeof(ReportApp.client) == "undefined")
-    ReportApp.client = {};
-ReportApp.client.PropHelper = function (){
+DesktopBrowser.client.PropHelper = function (){
 };
-ReportApp.client.PropHelper.prototype.Prop = function (prop){
-    return ReportApp.client.Utils.Prop(prop);
+DesktopBrowser.client.PropHelper.prototype.Prop = function (prop){
+    return DesktopBrowser.client.Utils.Prop(prop);
 };
-ReportApp.client.Extensions2 = function (){
+DesktopBrowser.client.Extensions2 = function (){
 };
-ReportApp.client.Extensions2.ToFloatOrNull = function (s){
+DesktopBrowser.client.Extensions2.ToFloatOrNull = function (s){
     var x = parseFloat(s);
     if (isNaN(x))
         return null;
     return x;
 };
-ReportApp.client.Extensions2.ToIntOrNull = function (s){
+DesktopBrowser.client.Extensions2.ToIntOrNull = function (s){
     var x = parseInt(s);
     if (isNaN(x))
         return null;
     return x;
 };
-ReportApp.client.Extensions2.Abs = function (x){
+DesktopBrowser.client.Extensions2.Abs = function (x){
     return Math.abs(x);
 };
-ReportApp.client.Extensions2.ForEachWithPrev$1 = function (list, action){
+DesktopBrowser.client.Extensions2.ForEachWithPrev$1 = function (list, action){
     var prev = Default(T);
     for (var $i5 = 0,$l5 = list.length,item = list[$i5]; $i5 < $l5; $i5++, item = list[$i5]){
         action(item, prev);
         prev = item;
     }
 };
-ReportApp.client.Extensions2.ItemProp$1 = function (list, prop){
-    return ReportApp.client.Utils.Prop(prop);
+DesktopBrowser.client.Extensions2.ItemProp$1 = function (list, prop){
+    return DesktopBrowser.client.Utils.Prop(prop);
 };
-ReportApp.client.Extensions2.ToDate = function (yyyy_mm_dd){
+DesktopBrowser.client.Extensions2.ToDate = function (yyyy_mm_dd){
     if (Q.isNullOrEmpty(yyyy_mm_dd))
         return null;
     return Date.tryParseExact(yyyy_mm_dd, "yyyy-MM-dd");
 };
-ReportApp.client.Extensions2.ToDefaultDateString = function (date){
+DesktopBrowser.client.Extensions2.ToDefaultDateString = function (date){
     if (date == null)
         return null;
     return date.format("yyyy-MM-dd");
 };
-ReportApp.client.Extensions2.ToDateValue = function (yyyy_mm_dd){
-    return ReportApp.client.Extensions2.ToDate(yyyy_mm_dd).valueOf();
+DesktopBrowser.client.Extensions2.ToDateValue = function (yyyy_mm_dd){
+    return DesktopBrowser.client.Extensions2.ToDate(yyyy_mm_dd).valueOf();
 };
-ReportApp.client.Extensions2.Trigger = function (action){
+DesktopBrowser.client.Extensions2.Trigger = function (action){
     if (action != null)
         action();
 };
-ReportApp.client.Extensions2.GetPropertyName$1 = function (obj, prop){
-    return ReportApp.client.Utils.Prop(prop);
+DesktopBrowser.client.Extensions2.GetPropertyName$1 = function (obj, prop){
+    return DesktopBrowser.client.Utils.Prop(prop);
 };
-ReportApp.client.Extensions2.InvokeAsyncParallel = function (list, finalCallback){
+DesktopBrowser.client.Extensions2.InvokeAsyncParallel = function (list, finalCallback){
     var count = 0;
     var total = list.length;
     var cb = function (){
         count++;
         if (count == total){
-            ReportApp.client.Extensions2.Trigger(finalCallback);
+            DesktopBrowser.client.Extensions2.Trigger(finalCallback);
         }
     };
     list.forEach(function (t){
         t(cb);
     });
 };
-ReportApp.client.Extensions2.GetCreateChildDivWithClass = function (el, className){
+DesktopBrowser.client.Extensions2.GetCreateChildDivWithClass = function (el, className){
     var ch = el.children("." + className);
     if (ch.length == 0)
         ch = $("<div/>").addClass(className).appendTo(el);
     return ch;
 };
-ReportApp.client.Extensions2.DataItem$1 = function (j){
+DesktopBrowser.client.Extensions2.DataItem$1 = function (j){
     return j.data("DataItem");
 };
-ReportApp.client.Utils = function (){
+DesktopBrowser.client.Utils = function (){
 };
-ReportApp.client.Utils.data = null;
-ReportApp.client.Utils.CalcChangePct = function (from, to){
+DesktopBrowser.client.Utils.data = null;
+DesktopBrowser.client.Utils.CalcChangePct = function (from, to){
     var pct = ((to / from) - 1);
     return pct;
 };
-ReportApp.client.Utils.ObjToClass = function (obj, defaultTypeForNull){
+DesktopBrowser.client.Utils.ObjToClass = function (obj, defaultTypeForNull){
     var sb =  [];
     var mappings = (function (){
         var $v1 = new Object();
@@ -510,11 +520,11 @@ ReportApp.client.Utils.ObjToClass = function (obj, defaultTypeForNull){
     sb.push("}");
     return sb.join("\n");
 };
-ReportApp.client.Utils.PropHelper = function (){
-    var x = new ReportApp.client.PropHelper();
+DesktopBrowser.client.Utils.PropHelper = function (){
+    var x = new DesktopBrowser.client.PropHelper();
     return x.Prop;
 };
-ReportApp.client.Utils.Prop = function (prop){
+DesktopBrowser.client.Utils.Prop = function (prop){
     var code;
     if (prop["isDelegate"])
         code = prop["func"].toString();
@@ -522,7 +532,7 @@ ReportApp.client.Utils.Prop = function (prop){
         code = prop.toString();
     return code.substringBetween(".", ";");
 };
-ReportApp.client.Utils.listToMatrix = function (list, xProp, yProp, valueProp, aggregateFunc, yieldCallback){
+DesktopBrowser.client.Utils.listToMatrix = function (list, xProp, yProp, valueProp, aggregateFunc, yieldCallback){
     if (aggregateFunc == null)
         aggregateFunc = function (values){
             return values.sum();
@@ -543,10 +553,10 @@ ReportApp.client.Utils.listToMatrix = function (list, xProp, yProp, valueProp, a
         });
     });
 };
-ReportApp.client.Utils.listToMatrixRows = function (list, xProp, yProp, valueProp, aggregateFunc){
+DesktopBrowser.client.Utils.listToMatrixRows = function (list, xProp, yProp, valueProp, aggregateFunc){
     var header =  [];
     var rows =  [];
-    ReportApp.client.Utils.listToMatrix(list, xProp, yProp, valueProp, aggregateFunc, function (x, y, value, xIndex, yIndex){
+    DesktopBrowser.client.Utils.listToMatrix(list, xProp, yProp, valueProp, aggregateFunc, function (x, y, value, xIndex, yIndex){
         if (xIndex == 0){
             if (yIndex == 0)
                 header.push(xProp);
@@ -560,9 +570,9 @@ ReportApp.client.Utils.listToMatrixRows = function (list, xProp, yProp, valuePro
     rows.insert(0, header);
     return rows;
 };
-ReportApp.client.Utils.listToMatrixObject = function (list, xProp, yProp, valueProp, aggregateFunc){
+DesktopBrowser.client.Utils.listToMatrixObject = function (list, xProp, yProp, valueProp, aggregateFunc){
     var byX = new Object();
-    ReportApp.client.Utils.listToMatrix(list, xProp, yProp, valueProp, aggregateFunc, function (x, y, value, xIndex, yIndex){
+    DesktopBrowser.client.Utils.listToMatrix(list, xProp, yProp, valueProp, aggregateFunc, function (x, y, value, xIndex, yIndex){
         var xx = x;
         var yy = y;
         if (byX[xx] == null)
@@ -571,7 +581,7 @@ ReportApp.client.Utils.listToMatrixObject = function (list, xProp, yProp, valueP
     });
     return byX;
 };
-ReportApp.client.Utils.cleanUpRows = function (rows){
+DesktopBrowser.client.Utils.cleanUpRows = function (rows){
     rows.forEach(function (row){
         row.forEach(function (value, i){
             if (value === undefined)
@@ -580,7 +590,7 @@ ReportApp.client.Utils.cleanUpRows = function (rows){
     });
     return rows;
 };
-ReportApp.client.Utils.clearTextNodes = function (el){
+DesktopBrowser.client.Utils.clearTextNodes = function (el){
     if (el == null)
         el = document.body;
     $(el).find("*+*").toArray().forEach(function (el2){
@@ -592,7 +602,7 @@ ReportApp.client.Utils.clearTextNodes = function (el){
         }
     });
 };
-ReportApp.client.Utils.createTabControl = function (div){
+DesktopBrowser.client.Utils.createTabControl = function (div){
     var tabs = div.children("div");
     var ul = div.getAppend("ul.nav.nav-tabs");
     var lis = ul.getAppendRemove("li", tabs.length).toArray();
@@ -615,14 +625,14 @@ ReportApp.client.Utils.createTabControl = function (div){
     tabs.first().addClass("active");
     btns2.first().tab("show");
 };
-ReportApp.client.Utils._Unwrap = function (obj){
+DesktopBrowser.client.Utils._Unwrap = function (obj){
     var keys = Object.keys(obj);
     if (keys.length == 2 && keys.contains("_value") && keys.contains("_name")){
         return obj["_value"];
     }
     return obj;
 };
-ReportApp.client.Utils._xmlToJson = function (el){
+DesktopBrowser.client.Utils._xmlToJson = function (el){
     if (el.nodeType == 3)
         return el.data;
     if (el.nodeType != 1)
@@ -648,30 +658,30 @@ ReportApp.client.Utils._xmlToJson = function (el){
                     list =  [objValue];
                     obj[el2.nodeName] = list;
                 }
-                list.push(ReportApp.client.Utils._Unwrap(ReportApp.client.Utils._xmlToJson(el2)));
+                list.push(DesktopBrowser.client.Utils._Unwrap(DesktopBrowser.client.Utils._xmlToJson(el2)));
                 continue;
             }
-            obj[el2.nodeName] = ReportApp.client.Utils._Unwrap(ReportApp.client.Utils._xmlToJson(el2));
+            obj[el2.nodeName] = DesktopBrowser.client.Utils._Unwrap(DesktopBrowser.client.Utils._xmlToJson(el2));
         }
         else {
-            var value = ReportApp.client.Utils._xmlToJson(node2);
+            var value = DesktopBrowser.client.Utils._xmlToJson(node2);
             obj._value = value;
         }
     }
     return obj;
 };
-ReportApp.client.Utils.xmlToJson = function (xml){
+DesktopBrowser.client.Utils.xmlToJson = function (xml){
     if (typeof(xml) == "string")
         xml = $.parseXML(xml);
     var el = xml.documentElement;
-    var obj = ReportApp.client.Utils._xmlToJson(el);
+    var obj = DesktopBrowser.client.Utils._xmlToJson(el);
     return obj;
 };
-ReportApp.client.Utils.parseDutchFloat = function (s){
+DesktopBrowser.client.Utils.parseDutchFloat = function (s){
     s = s.replaceAll(".", "d").replaceAll(",", ".").replaceAll("d", ",");
     return parseFloat(s);
 };
-ReportApp.client.Utils.proxy = function (url, q, data, cb){
+DesktopBrowser.client.Utils.proxy = function (url, q, data, cb){
     var qurl = url;
     if (q != null)
         qurl = url += "?" + QueryString.stringify(q);
@@ -693,11 +703,11 @@ ReportApp.client.Utils.proxy = function (url, q, data, cb){
     x.method = data != null ? "POST" : "GET";
     $.ajax(x);
 };
-DesktopBrowser.Client.Utils.DataServiceProxy = function (){
+DesktopBrowser.client.utils.DataServiceProxy = function (){
     this.DataServiceUrl = null;
     this.DataServiceUrl = "DataService.ashx";
 };
-DesktopBrowser.Client.Utils.DataServiceProxy.CreateRequest = function (){
+DesktopBrowser.client.utils.DataServiceProxy.CreateRequest = function (){
     if (window.XMLHttpRequest)
   return new XMLHttpRequest();
 
@@ -706,8 +716,8 @@ else if (window.ActiveXObject)
 else
     throw new Error('Your browser does not support ajax requests');
 };
-DesktopBrowser.Client.Utils.DataServiceProxy.WebGetAsync = function (url, callback){
-    var req = DesktopBrowser.Client.Utils.DataServiceProxy.CreateRequest();
+DesktopBrowser.client.utils.DataServiceProxy.WebGetAsync = function (url, callback){
+    var req = DesktopBrowser.client.utils.DataServiceProxy.CreateRequest();
     req.open("GET", url, true);
     req.onreadystatechange = function (){
         if (req.readyState == 4){
@@ -716,8 +726,8 @@ DesktopBrowser.Client.Utils.DataServiceProxy.WebGetAsync = function (url, callba
     };
     req.send(null);
 };
-DesktopBrowser.Client.Utils.DataServiceProxy.WebPostFormAsync = function (url, form, callback){
-    var req = DesktopBrowser.Client.Utils.DataServiceProxy.CreateRequest();
+DesktopBrowser.client.utils.DataServiceProxy.WebPostFormAsync = function (url, form, callback){
+    var req = DesktopBrowser.client.utils.DataServiceProxy.CreateRequest();
     req.open("POST", url, true);
     req.setRequestHeader("content-type", "application/x-www-form-urlencoded");
     req.onreadystatechange = function (){
@@ -726,10 +736,10 @@ DesktopBrowser.Client.Utils.DataServiceProxy.WebPostFormAsync = function (url, f
         }
     };
     var sb =  [];
-    DesktopBrowser.Client.Utils.DataServiceProxy.SerializeForm(form, sb);
+    DesktopBrowser.client.utils.DataServiceProxy.SerializeForm(form, sb);
     req.send(sb.join(""));
 };
-DesktopBrowser.Client.Utils.DataServiceProxy.SerializeForm = function (form, sb){
+DesktopBrowser.client.utils.DataServiceProxy.SerializeForm = function (form, sb){
     var first = true;
     for (var p in form){
         if (first)
@@ -741,7 +751,7 @@ DesktopBrowser.Client.Utils.DataServiceProxy.SerializeForm = function (form, sb)
         sb.push(encodeURIComponent(form[p]));
     }
 };
-DesktopBrowser.Client.Utils.DataServiceProxy.prototype.InvokeAsync = function (req, callback, useGetMethod){
+DesktopBrowser.client.utils.DataServiceProxy.prototype.InvokeAsync = function (req, callback, useGetMethod){
     var callback2 = $CreateAnonymousDelegate(this, function (t){
         var res = {};
         if (t.status == 200){
@@ -757,18 +767,18 @@ DesktopBrowser.Client.Utils.DataServiceProxy.prototype.InvokeAsync = function (r
     var sb =  [];
     if (useGetMethod){
         sb.push(url, "?z=z");
-        DesktopBrowser.Client.Utils.DataServiceProxy.SerializeToQueryString(req, sb);
+        DesktopBrowser.client.utils.DataServiceProxy.SerializeToQueryString(req, sb);
         url = sb.join("");
-        DesktopBrowser.Client.Utils.DataServiceProxy.WebGetAsync(url, callback2);
+        DesktopBrowser.client.utils.DataServiceProxy.WebGetAsync(url, callback2);
     }
     else {
         var body = JSON.stringify(req);
-        DesktopBrowser.Client.Utils.DataServiceProxy.WebPostFormAsync(url, new Object({
+        DesktopBrowser.client.utils.DataServiceProxy.WebPostFormAsync(url, new Object({
             req: body
         }), callback2);
     }
 };
-DesktopBrowser.Client.Utils.DataServiceProxy.SerializeToQueryString = function (req, sb){
+DesktopBrowser.client.utils.DataServiceProxy.SerializeToQueryString = function (req, sb){
     if (req.AssemblyName != null)
         sb.push("&a=" + req.AssemblyName);
     if (req.TypeName != null)
@@ -787,30 +797,18 @@ DesktopBrowser.Client.Utils.DataServiceProxy.SerializeToQueryString = function (
         }
     }
 };
-DesktopBrowser.Keys = function (){
-};
-DesktopBrowser.Keys.Enter = 13;
-DesktopBrowser.Keys.PageUp = 33;
-DesktopBrowser.Keys.PageDown = 34;
-DesktopBrowser.Keys.End = 35;
-DesktopBrowser.Keys.Home = 36;
-DesktopBrowser.Keys.Up = 38;
-DesktopBrowser.Keys.Down = 40;
-DesktopBrowser.ClientExtensions = function (){
-};
-DesktopBrowser.ClientExtensions.RegexEscape = function (text){
-    return text.replace(new RegExp("[-[\\]{}()*+?.,\\\\^$|#\\s]", "g"), "\\$&");
-};
 
+var win = null;
 var Selector = null;
 var SiteProxy = null;
 var PageSize = 10;
-SiteProxy = new DesktopBrowser.Client.SiteProxy();
+SiteProxy = new DesktopBrowser.client.SiteProxy();
+win = window;
 function DefaultClient_Load(){
     if (Data.MoreAvailable === false){
         $(".Pager .Next").addClass("disabled").attr("disabled", "disabled");
     }
-    Selector = new DesktopBrowser.Selector();
+    Selector = new DesktopBrowser.client.Selector();
     Selector.Selected = function (t){
         t.className = "Selected";
         SaveSelection($(t).find(".NameCell A").text());
@@ -820,26 +818,26 @@ function DefaultClient_Load(){
     };
     UpdateClock();
     RestoreSelection();
-    $(window).keydown(function (e){
+    $(win).keydown(function (e){
         if (e.target != null && e.target.nodeName == "INPUT")
             return;
-        if (e.which == DesktopBrowser.Keys.Up){
+        if (e.which == DesktopBrowser.client.Keys.Up){
             e.preventDefault();
             Up();
         }
-        else if (e.which == DesktopBrowser.Keys.Down){
+        else if (e.which == DesktopBrowser.client.Keys.Down){
             e.preventDefault();
             Down();
         }
-        else if (e.which == DesktopBrowser.Keys.PageDown){
+        else if (e.which == DesktopBrowser.client.Keys.PageDown){
             e.preventDefault();
             PageDown();
         }
-        else if (e.which == DesktopBrowser.Keys.PageUp){
+        else if (e.which == DesktopBrowser.client.Keys.PageUp){
             e.preventDefault();
             PageUp();
         }
-        else if (e.which == DesktopBrowser.Keys.Enter){
+        else if (e.which == DesktopBrowser.client.Keys.Enter){
             e.preventDefault();
             Enter();
         }
@@ -849,8 +847,8 @@ function DefaultClient_Load(){
     });
 };
 function WriteLine(obj){
-    document.body.appendChild(document.createTextNode(obj));
-    document.body.appendChild(document.createElement("br"));
+    win.document.body.appendChild(win.document.createTextNode(obj));
+    win.document.body.appendChild(win.document.createElement("br"));
 };
 function CanMoveSelection(by){
     return MoveSelection(by, false);
@@ -883,10 +881,10 @@ function MoveSelection(by, preview){
 function Select(row){
     Selector.Select(row);
     var pos = $(row).offset();
-    if (pos.top < window.pageYOffset){
+    if (pos.top < win.pageYOffset){
         row.scrollIntoView(true);
     }
-    else if (pos.top > window.pageYOffset + window.innerHeight){
+    else if (pos.top > win.pageYOffset + win.innerHeight){
         row.scrollIntoView(false);
     }
 };
@@ -936,10 +934,10 @@ function RestoreSelection(){
     }
 };
 function GetStorageItem(key){
-    return window.localStorage.getItem(key);
+    return win.localStorage.getItem(key);
 };
 function SetStorageItem(key, value){
-    window.localStorage.setItem(key, value);
+    win.localStorage.setItem(key, value);
 };
 function SaveSelection(filename){
     var folder = $("#tbFilename").val();
@@ -950,13 +948,13 @@ function SaveSelection(filename){
 function UpdateClock(){
     $("#divTime").text(new Date().format("h:MM tt"));
     $("#divDate").text(new Date().format("ddd, mmm d"));
-    window.setTimeout(UpdateClock, 5000);
+    win.setTimeout(UpdateClock, 5000);
 };
 function Execute(path){
-    new DesktopBrowser.Client.SiteProxy().Execute(path, null);
+    new DesktopBrowser.client.SiteProxy().Execute(path, null);
 };
 function OpenFile(path){
-    new DesktopBrowser.Client.SiteProxy().Execute(path, null);
+    new DesktopBrowser.client.SiteProxy().Execute(path, null);
 };
 function GetSelectedPath(){
     if (Selector.SelectedItem == null)
@@ -968,10 +966,10 @@ function btnDelete_click(){
     var path = GetSelectedPath();
     if (path == null)
         return;
-    if (!window.confirm("are you sure you want to permanantly delete the path: " + path))
+    if (!win.confirm("are you sure you want to permanantly delete the path: " + path))
         return;
     SiteProxy.Delete(path, function (t){
-        window.location.reload();
+        win.location.reload();
     });
 };
 function Filter(el, exp){
@@ -985,14 +983,14 @@ function tbFolder_keydown(e){
 };
 function Go(){
     var newPath = $("#tbFolder").val();
-    window.location.href = "?p=" + encodeURIComponent(newPath);
+    win.location.href = "?p=" + encodeURIComponent(newPath);
 };
 function btnGo_click(e){
     Go();
 };
 function tbSearch_keyup(e){
     var search = $("#tbSearch").val();
-    var exp = new RegExp(DesktopBrowser.ClientExtensions.RegexEscape(search), "i");
+    var exp = new RegExp(DesktopBrowser.client.ClientExtensions.RegexEscape(search), "i");
     $("#grdFiles .NameCell A").each(function (i, el){
         Filter(el, exp);
     });
@@ -1004,9 +1002,28 @@ function SimulateClick(anchor){
     if (href != null && href.length > 0){
         var target = a.attr("target");
         if (target == "_blank")
-            window.open(href, "");
+            win.open(href, "");
         else
-            window.location.href = href;
+            win.location.href = href;
     }
+};
+if (typeof(DesktopBrowser) == "undefined")
+    var DesktopBrowser = {};
+if (typeof(DesktopBrowser.client) == "undefined")
+    DesktopBrowser.client = {};
+DesktopBrowser.client.Selector = function (){
+    this.Selected = null;
+    this.UnSelected = null;
+    this.SelectedItem = null;
+};
+DesktopBrowser.client.Selector.prototype.Select = function (el){
+    if (this.SelectedItem == el)
+        return;
+    var unselected = this.SelectedItem;
+    this.SelectedItem = el;
+    if (unselected != null && this.UnSelected != null)
+        this.UnSelected(unselected);
+    if (this.SelectedItem != null && this.Selected != null)
+        this.Selected(this.SelectedItem);
 };
 

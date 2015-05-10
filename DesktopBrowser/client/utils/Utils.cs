@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using ReportApp.client.utils;
+using DesktopBrowser.client.utils;
 
-namespace ReportApp.client
+namespace DesktopBrowser.client
 {
 
     [JsType(JsMode.Prototype)]

@@ -11,7 +11,7 @@
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="res/css/default.css" rel="stylesheet" type="text/css" />
-    <title><%=File.Name%> - Desktop Browser v0.95</title>
+    <title><%=File.Name%> - Desktop Browser v1.0.0</title>
     <script>var Data = {};</script>
 </head>
 <body>

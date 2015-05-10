@@ -1,16 +1,23 @@
-﻿using SharpKit.JavaScript;
+﻿using SharpKit.Html;
+using SharpKit.JavaScript;
 using SharpKit.jQuery;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ReportApp.client
+namespace DesktopBrowser.client
 {
 
     [JsType(JsMode.Prototype, Export = false)]
     public static class Extensions
     {
+        [JsMethod(InlineCodeExpression = "$(el)")]
+        public static jQuery ToJ(this HtmlElement el) { return null; }
+        [JsMethod(InlineCodeExpression = "$(s)")]
+        public static jQuery ToJ(this JsString s) { return null; }
+        [JsMethod(InlineCodeExpression = "$(s)")]
+        public static jQuery ToJ(this string s) { return null; }
         [JsMethod(ExtensionImplementedInInstance = true)]
         public static void remove<T>(this JsArray<T> list, T item) { }
 

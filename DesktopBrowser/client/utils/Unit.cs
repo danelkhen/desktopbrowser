@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ReportApp.client.utils
+namespace DesktopBrowser.client.utils
 {
     [JsType(JsMode.Json)]
     class Unit

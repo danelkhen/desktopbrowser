@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ReportApp.client
+namespace DesktopBrowser.client
 {
     //[JsType(JsMode.Prototype, NativeOverloads = false)]
     [JsType(JsMode.Prototype)]
@@ -20,6 +20,7 @@ namespace ReportApp.client
     [JsType(JsMode.Prototype, NativeOverloads = false)]
     public static class Extensions2
     {
+
 
         //public static T firstOrAdd<T>(this JsArray<T> list, JsFunc<T, bool> predicate, JsFunc<T> creator)
         //{

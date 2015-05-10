@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ReportApp.client
+namespace DesktopBrowser.client
 {
     [JsType(JsMode.Json)]
     public class CopyOptions

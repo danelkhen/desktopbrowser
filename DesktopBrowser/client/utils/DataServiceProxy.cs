@@ -4,10 +4,10 @@ using SharpKit.JavaScript;
 using DesktopBrowser.Server.Utils;
 using SharpKit.jQuery;
 
-namespace DesktopBrowser.Client.Utils
+namespace DesktopBrowser.client.utils
 {
     [JsType(JsMode.Prototype)]
-    public class DataServiceProxy : HtmlContext
+    public class DataServiceProxy
     {
         public DataServiceProxy()
         {
@@ -60,7 +60,7 @@ namespace DesktopBrowser.Client.Utils
                     sb.push("&");
                 sb.push(p);
                 sb.push("=");
-                sb.push(encodeURIComponent(form[p].As<JsString>()));
+                sb.push(HtmlContext.encodeURIComponent(form[p].As<JsString>()));
             }
         }
 
@@ -128,7 +128,7 @@ namespace DesktopBrowser.Client.Utils
                     sb.push("&p");
                     sb.push((i + 1).As<JsNumber>().toString());
                     sb.push("=");
-                    sb.push(encodeURIComponent(prms[i].As<JsObject>().toString()));
+                    sb.push(HtmlContext.encodeURIComponent(prms[i].As<JsObject>().toString()));
                 }
             }
         }

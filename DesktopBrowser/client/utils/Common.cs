@@ -5,7 +5,7 @@ using SharpKit.Html;
 using SharpKit.JavaScript;
 using SharpKit.jQuery;
 
-namespace DesktopBrowser.Client.Utils
+namespace DesktopBrowser.client.utils
 {
 
 
