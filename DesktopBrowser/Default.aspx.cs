@@ -79,7 +79,7 @@ namespace DesktopBrowser
     {
         public bool MoreAvailable { get; set; }
     }
-    [JsType(JsMode.Global, Filename = "res/Default.js")]
+    [JsType(JsMode.Global, Filename = "res/js/default.js")]
     public class DefaultClient : jQueryContext
     {
         [JsProperty(Export = false, NativeField=true)]

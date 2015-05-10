@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="res/Site.css" rel="stylesheet" type="text/css" />
+    <link href="res/css/default.css" rel="stylesheet" type="text/css" />
     <title><%=File.Name%> - Desktop Browser v0.95</title>
     <script>var Data = {};</script>
 </head>
@@ -61,7 +61,7 @@
     </div>
     <script src="res/libs/jquery/jquery-2.1.3.min.js"></script>
     <script src="res/libs/bootstrap-3.3.4/js/bootstrap.min.js"></script>
-    <script src="res/all.js" type="text/javascript"></script>
+    <script src="res/js/all.js" type="text/javascript"></script>
     <script>        $(DefaultClient_Load);</script>
 </body>
 </html>

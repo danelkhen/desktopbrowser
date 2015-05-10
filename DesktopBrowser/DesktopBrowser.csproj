@@ -67,7 +67,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="res\all.js" />
-    <Content Include="res\date.format.js" />
+    <Content Include="res\js\date.format.js" />
     <Content Include="res\Default.js" />
     <Content Include="res\DesktopBrowser.js" />
     <Content Include="res\libs\bootstrap-3.3.4\css\bootstrap-theme.css" />
@@ -78,8 +78,10 @@
     <Content Include="res\libs\bootstrap-3.3.4\js\bootstrap.js" />
     <Content Include="res\libs\bootstrap-3.3.4\js\bootstrap.min.js" />
     <Content Include="res\libs\bootstrap-3.3.4\js\npm.js" />
+    <Content Include="res\libs\corex\corex.js" />
+    <Content Include="res\libs\corex\uiutils.js" />
     <Content Include="res\libs\jquery\jquery-2.1.3.min.js" />
-    <Content Include="res\Site.css" />
+    <Content Include="res\css\default.css" />
     <Content Include="Templates\FilesGrid.ascx" />
     <Content Include="Templates\FilesImageList.ascx" />
     <Content Include="Templates\Finder.ascx" />
@@ -92,9 +94,15 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\Utils\Common.cs" />
-    <Compile Include="Client\SiteProxy.cs" />
-    <Compile Include="Client\Utils\jquery-cookie.cs" />
+    <Compile Include="client2\utils2\Common.cs" />
+    <Compile Include="client2\SiteProxy.cs" />
+    <Compile Include="client2\utils2\CopyOptions.cs" />
+    <Compile Include="client2\utils2\Extensions.cs" />
+    <Compile Include="client2\utils2\Extensions2.cs" />
+    <Compile Include="client2\utils2\jquery-cookie.cs" />
+    <Compile Include="client2\utils2\Obsolete.cs" />
+    <Compile Include="client2\utils2\Unit.cs" />
+    <Compile Include="client2\utils2\Utils.cs" />
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -115,7 +123,7 @@
     <Compile Include="Server\SiteConfiguration.cs" />
     <Compile Include="Server\Utils\CssHandler.cs" />
     <Compile Include="Server\Utils\DataService.cs" />
-    <Compile Include="Client\Utils\DataServiceProxy.cs" />
+    <Compile Include="client2\utils2\DataServiceProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
