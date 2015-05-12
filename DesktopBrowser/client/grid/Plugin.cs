@@ -9,7 +9,7 @@ using System.Web;
 namespace SharpKit.jQuery
 {
 
-    [JsType(JsMode.Prototype, Name = "jQuery", PrototypeName = "fn", OmitDefaultConstructor = true, Filename = "~/res/grid.js")]
+    [JsType(JsMode.Prototype, Name = "jQuery", PrototypeName = "fn", OmitDefaultConstructor = true, Filename = "~/res/js/grid.js")]
     public class jQueryGridPlugin : jQuery
     {
         public jQuery Grid<T>(GridOptions<T> opts)
@@ -36,7 +36,7 @@ namespace SharpKit.jQuery
 
     }
 
-    [JsType(JsMode.Prototype, Name = "$", Export = false, Filename = "~/res/js/grid.js")]
+    [JsType(JsMode.Prototype, Name = "$", Export = false, Filename = "~/res/js/js/grid.js")]
     public static class Extensions4
     {
         [JsMethod(ExtensionImplementedInInstance = true)]

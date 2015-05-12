@@ -245,4 +245,22 @@ dbr.grid.Extensions5.ToGrid = function (list, j, opts){
     opts.Items = list;
     return j.Grid(opts);
 };
+jQuery.fn.Grid = function (opts){
+    this.toArray().forEach($CreateAnonymousDelegate(this, function (el){
+        var el2 = $(el);
+        var grid = el2.data("Grid");
+        if (grid != null){
+            grid.Options = opts;
+            grid.El = $(el);
+            grid.Render();
+        }
+        else {
+            grid = new dbr.grid.Grid(el2, opts);
+            el2.data("Grid", grid);
+            grid.Render();
+        }
+    }));
+    return this;
+};
+$Inherit(jQuery, $);
 

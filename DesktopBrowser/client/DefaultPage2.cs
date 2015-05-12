@@ -14,6 +14,15 @@ namespace DesktopBrowser.client
     [JsType(JsMode.Prototype, Filename = "~/res/js/default2.js")]
     public class DefaultPage2
     {
+        public DefaultPage2()
+        {
+            new jQuery(OnDomReady);
+        }
+
+        private void OnDomReady()
+        {
+            var service = new SiteProxy();
+        }
     }
 
 }

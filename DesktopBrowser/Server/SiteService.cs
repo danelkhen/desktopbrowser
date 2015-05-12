@@ -125,6 +125,21 @@ namespace DesktopBrowser.Server
             }
         }
 
+        public virtual File GetFile2(SingleValueRequest<string> path)
+        {
+            return GetFile(path.Value);
+        }
+
+        public virtual void Execute2(SingleValueRequest<string> filename)
+        {
+            Execute(filename.Value);
+        }
+
+        public void Delete2(SingleValueRequest<string> path)
+        {
+            Execute(path.Value);
+        }
+
         #region Utils
 
         IEnumerable<File> ApplyRequest(IEnumerable<File> files, SiteRequest req)
@@ -400,6 +415,10 @@ namespace DesktopBrowser.Server
 
     }
 
+    public class SingleValueRequest<T>
+    {
+        public T Value { get; set; }
+    }
 
     public class DemoSiteService : SiteService
     {

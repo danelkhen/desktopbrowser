@@ -97,6 +97,40 @@ function SmoothScrollToTop(){
 };
 if (typeof(dbr) == "undefined")
     var dbr = {};
+dbr.SiteServiceClient = function (){
+    this.Url = null;
+    this.Url = "/api";
+};
+dbr.SiteServiceClient.prototype.GetFiles = function (req, cb){
+    return this.Invoke("GetFiles", req, cb);
+};
+dbr.SiteServiceClient.prototype.GetFileRelatives = function (path, cb){
+    return this.Invoke("GetFileRelatives", {
+        path: path
+    }, cb);
+};
+dbr.SiteServiceClient.prototype.GetFile = function (path, cb){
+    return this.Invoke("GetFileRelatives2", {
+        Value: path
+    }, cb);
+};
+dbr.SiteServiceClient.prototype.Execute = function (filename, cb){
+    return this.Invoke("GetFileRelatives2", {
+        Value: filename
+    }, cb);
+};
+dbr.SiteServiceClient.prototype.Delete = function (path, cb){
+    return this.Invoke("GetFileRelatives2", {
+        Value: path
+    }, cb);
+};
+dbr.SiteServiceClient.prototype.Invoke = function (action, prms, callback){
+    var xhr = $.ajax({
+        url: this.Url + "/" + action,
+        data: prms
+    });
+    return xhr;
+};
 if (typeof(dbr.utils) == "undefined")
     dbr.utils = {};
 dbr.utils.JsArrayEnumerator = function (array){

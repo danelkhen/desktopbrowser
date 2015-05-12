@@ -3,5 +3,9 @@
 if (typeof(dbr) == "undefined")
     var dbr = {};
 dbr.DefaultPage2 = function (){
+    $($CreateDelegate(this, this.OnDomReady));
+};
+dbr.DefaultPage2.prototype.OnDomReady = function (){
+    var service = new dbr.SiteProxy();
 };
 

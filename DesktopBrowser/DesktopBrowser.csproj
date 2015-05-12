@@ -102,6 +102,7 @@
     <Compile Include="client\grid\Grid.cs" />
     <Compile Include="client\grid\GridOptions.cs" />
     <Compile Include="client\grid\Plugin.cs" />
+    <Compile Include="client\SiteServiceClient.cs" />
     <Compile Include="client\utils\Common.cs" />
     <Compile Include="client\SiteProxy.cs" />
     <Compile Include="client\utils\CopyOptions.cs" />
