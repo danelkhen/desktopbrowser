@@ -29,17 +29,17 @@ namespace DesktopBrowser.client
 
         public jqXHR GetFile(string path, JsAction<File> cb)
         {
-            return Invoke("GetFileRelatives2", new { Value = path }, cb);
+            return Invoke("GetFile", new { Value = path }, cb);
         }
 
         public jqXHR Execute(string filename, JsAction<object> cb)
         {
-            return Invoke("GetFileRelatives2", new { Value = filename }, cb);
+            return Invoke("Execute", new { Value = filename }, cb);
         }
 
         public jqXHR Delete(string path, JsAction<object> cb)
         {
-            return Invoke("GetFileRelatives2", new { Value = path }, cb);
+            return Invoke("Delete", new { Value = path }, cb);
         }
 
         #region Utils

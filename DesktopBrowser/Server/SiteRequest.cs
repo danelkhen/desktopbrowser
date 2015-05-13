@@ -4,9 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Text;
 using SharpKit.Utils;
+using SharpKit.JavaScript;
 
 namespace DesktopBrowser.Server
 {
+
+    [JsType(JsMode.Json)]
     public class SiteRequest
     {
         public string SearchPattern { get; set; }
@@ -216,6 +219,20 @@ namespace DesktopBrowser.Server
         public int? Take { get; set; }
     }
 
+    [JsType(JsMode.Json)]
+    public class ListFilesRequest : SiteRequest
+    {
+    }
+    [JsType(JsMode.Json)]
+    public class ListFilesResponse
+    {
+        public File File { get; set; }
+        public List<File> Files { get; set; }
+        public FileRelativesInfo Relatives { get; set; }
+    }
+
+
+    [JsType(JsMode.Json)]
     public class SortRequest
     {
         public SortRequest()
@@ -253,6 +270,7 @@ namespace DesktopBrowser.Server
         public List<SortColumn> Columns { get; set; }
     }
 
+    [JsType(JsMode.Json)]
     public class SortColumn
     {
         public string Name { get; set; }
@@ -263,4 +281,13 @@ namespace DesktopBrowser.Server
             return new SortColumn { Name = Name, Descending = Descending };
         }
     }
+
+
+    [JsType(JsMode.Json)]
+    public class PathRequest
+    {
+        public string Path { get; set; }
+    }
+
+
 }

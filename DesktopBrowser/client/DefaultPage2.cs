@@ -21,7 +21,8 @@ namespace DesktopBrowser.client
 
         private void OnDomReady()
         {
-            var service = new SiteProxy();
+            var service = new SiteServiceClient();
+
         }
     }
 

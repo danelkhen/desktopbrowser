@@ -110,17 +110,17 @@ dbr.SiteServiceClient.prototype.GetFileRelatives = function (path, cb){
     }, cb);
 };
 dbr.SiteServiceClient.prototype.GetFile = function (path, cb){
-    return this.Invoke("GetFileRelatives2", {
+    return this.Invoke("GetFile", {
         Value: path
     }, cb);
 };
 dbr.SiteServiceClient.prototype.Execute = function (filename, cb){
-    return this.Invoke("GetFileRelatives2", {
+    return this.Invoke("Execute", {
         Value: filename
     }, cb);
 };
 dbr.SiteServiceClient.prototype.Delete = function (path, cb){
-    return this.Invoke("GetFileRelatives2", {
+    return this.Invoke("Delete", {
         Value: path
     }, cb);
 };
@@ -234,33 +234,6 @@ dbr.utils.ClientExtensions = function (){
 };
 dbr.utils.ClientExtensions.RegexEscape = function (text){
     return text.replace(new RegExp("[-[\\]{}()*+?.,\\\\^$|#\\s]", "g"), "\\$&");
-};
-dbr.SiteProxy = function (){
-    this.DataClient = null;
-    this.DataClient = new dbr.utils.DataServiceProxy();
-};
-dbr.SiteProxy.prototype.Execute = function (path, callback){
-    this.Invoke("Execute", [path], callback);
-};
-dbr.SiteProxy.prototype.Delete = function (path, callback){
-    this.Invoke("Delete", [path], callback);
-};
-dbr.SiteProxy.prototype.Invoke = function (methodName, prms, callback){
-    var req = {
-        AssemblyName: "DesktopBrowser",
-        TypeName: "DesktopBrowser.Server.SiteService",
-        MethodName: methodName,
-        Parameters: prms
-    };
-    this.DataClient.InvokeAsync(req, $CreateAnonymousDelegate(this, function (t){
-        if (t.Error != null){
-            alert(t.Error);
-        }
-        else {
-            if (callback != null)
-                callback(t.ReturnValue);
-        }
-    }), false);
 };
 dbr.PropHelper = function (){
 };

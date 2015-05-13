@@ -17,10 +17,10 @@ namespace DesktopBrowser.client
         Window win;
         DefaultClientData Data { get; set; }
         Selector<HtmlElement> Selector;
-        SiteProxy SiteProxy;
+        SiteServiceClient Service;
         public DefaultPage()
         {
-            SiteProxy = new SiteProxy();
+            Service = new SiteServiceClient();
             win = HtmlContext.window;
             Data = new DefaultClientData();
             new jQuery(DefaultClient_Load);
@@ -223,11 +223,11 @@ namespace DesktopBrowser.client
         }
         void Execute(JsString path)
         {
-            new SiteProxy().Execute(path, null);
+            new SiteServiceClient().Execute(path, null);
         }
         void OpenFile(JsString path)
         {
-            new SiteProxy().Execute(path, null);
+            new SiteServiceClient().Execute(path, null);
         }
 
 
@@ -247,7 +247,7 @@ namespace DesktopBrowser.client
                 return;
             if (!win.confirm("are you sure you want to permanantly delete the path: " + path))
                 return;
-            SiteProxy.Delete(path, t => win.location.reload());
+            Service.Delete(path, t => win.location.reload());
         }
 
         void Filter(HtmlElement el, JsRegExp exp)

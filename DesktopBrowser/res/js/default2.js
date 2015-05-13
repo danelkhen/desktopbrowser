@@ -6,6 +6,6 @@ dbr.DefaultPage2 = function (){
     $($CreateDelegate(this, this.OnDomReady));
 };
 dbr.DefaultPage2.prototype.OnDomReady = function (){
-    var service = new dbr.SiteProxy();
+    var service = new dbr.SiteServiceClient();
 };
 

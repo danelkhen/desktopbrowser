@@ -10,17 +10,17 @@ namespace DesktopBrowser
 {
     public partial class Default : System.Web.UI.Page
     {
-        public IEnumerable<DesktopBrowser.Server.File> Files { get; set; }
+        public IEnumerable<File> Files { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             Service = new SiteService();
             Req = SiteRequest.Load(Context.Request);
-            File = Service.GetFile(Req.Path);
+            File = Service.GetFile(new PathRequest { Path = Req.Path });
             Req.Path = File.Path;
             if (!File.IsFolder)
             {
-                Service.Execute(File.Path);
+                Service.Execute(new PathRequest { Path = File.Path });
             }
             else
             {

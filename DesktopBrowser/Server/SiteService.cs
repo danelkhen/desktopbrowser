@@ -19,6 +19,20 @@ namespace DesktopBrowser.Server
     [DataService]
     public class SiteService
     {
+        public ListFilesResponse ListFiles(ListFilesRequest req)
+        {
+            var res = new ListFilesResponse
+            {
+                Relatives = GetFileRelatives(req.Path),
+                File = GetFile(new PathRequest { Path = req.Path }),
+            };
+            if (res.File.IsFolder)
+            {
+                res.Files = GetFiles(req).ToList();
+            }
+            return res;
+        }
+
         public virtual IEnumerable<File> GetFiles(SiteRequest req)
         {
             if (req.HideFiles && req.HideFolders)
@@ -54,7 +68,7 @@ namespace DesktopBrowser.Server
             if (req.Skip != null)
                 files = files.Skip(req.Skip.Value);
             if (req.Take != null)
-                files = files.Take(req.Take.Value+1);
+                files = files.Take(req.Take.Value + 1);
             return files;
         }
 
@@ -64,7 +78,7 @@ namespace DesktopBrowser.Server
                 return new FileRelativesInfo();
             var pathInfo = new PathInfo(path);
             var info = new FileRelativesInfo();
-            info.ParentFolder = GetFile(pathInfo.ParentPath.Value);
+            info.ParentFolder = GetFile(new PathRequest { Path = pathInfo.ParentPath.Value });
             var parentFiles = GetFileAndOrFolders(info.ParentFolder.Path, null, false, false, true).Where(t => t.IsFolder).OrderBy(t => t.Name).ToList();
             var index = parentFiles.FindIndex(t => t.Name.EqualsIgnoreCase(pathInfo.Name));
             info.NextSibling = index >= 0 && index + 1 < parentFiles.Count ? parentFiles[index + 1] : null;
@@ -72,8 +86,9 @@ namespace DesktopBrowser.Server
             return info;
         }
 
-        public virtual File GetFile(string path)
+        public virtual File GetFile(PathRequest req)
         {
+            var path = req.Path;
             if (path.IsNullOrEmpty())
                 return new File { IsFolder = true, Path = "", Name = "Home" };
             var absPath = new PathInfo(path).ToAbsolute();
@@ -88,33 +103,20 @@ namespace DesktopBrowser.Server
             return null;
         }
 
-        public virtual void Execute(string filename)
+        public virtual void Execute(PathRequest req)
         {
+            var filename = req.Path;
             var process = Process.Start(new ProcessStartInfo
-                 {
-                     FileName = filename,
-                 });
-            //if(process==null)
-            //{
-            //    var info = new FileAssociationInfo(System.IO.Path.GetExtension(filename));
-            //    if (info != null && info.ProgID.IsNotNullOrEmpty())
-            //    {
-            //        var pi = new ProgramAssociationInfo(info.ProgID);
-            //        var openVerb = pi.Verbs.Where(t => t.Name == "Open").FirstOrDefault();
-            //        if (openVerb != null)
-            //        {
-            //            var exe = openVerb.Command.SubstringBetween("\"", "\"");
-            //            if (System.IO.File.Exists(exe))
-            //                process = Process.GetProcessesByName(System.IO.Path.GetFileName(exe)).FirstOrDefault();
-            //        }
-            //    }
-            //}
+            {
+                FileName = filename,
+            });
             if (process != null)
                 SetForegroundWindow(process.MainWindowHandle);
         }
 
-        public void Delete(string path)
+        public void Delete(PathRequest req)
         {
+            var path = req.Path;
             if (System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
             else if (Directory.Exists(path))
@@ -125,20 +127,6 @@ namespace DesktopBrowser.Server
             }
         }
 
-        public virtual File GetFile2(SingleValueRequest<string> path)
-        {
-            return GetFile(path.Value);
-        }
-
-        public virtual void Execute2(SingleValueRequest<string> filename)
-        {
-            Execute(filename.Value);
-        }
-
-        public void Delete2(SingleValueRequest<string> path)
-        {
-            Execute(path.Value);
-        }
 
         #region Utils
 
@@ -415,10 +403,6 @@ namespace DesktopBrowser.Server
 
     }
 
-    public class SingleValueRequest<T>
-    {
-        public T Value { get; set; }
-    }
 
     public class DemoSiteService : SiteService
     {
@@ -447,13 +431,13 @@ namespace DesktopBrowser.Server
             return base.GetFileRelatives(path);
         }
 
-        public override File GetFile(string path)
+        public override File GetFile(PathRequest req)
         {
-            path = MakePathValid(path);
-            return base.GetFile(path);
+            req.Path = MakePathValid(req.Path);
+            return base.GetFile(req);
         }
 
-        public override void Execute(string filename)
+        public override void Execute(PathRequest req)
         {
             return;
         }
