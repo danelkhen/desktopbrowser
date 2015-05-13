@@ -14,9 +14,9 @@ namespace DesktopBrowser.Launcher
         {
             try
             {
-                var iisExpress = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\IIS Express\iisexpress.exe");
+                var iisExpress = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\IIS Express\iisexpress.exe");
                 if (!File.Exists(iisExpress))
-                    iisExpress = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\IIS Express\iisexpress.exe");
+                    iisExpress = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\IIS Express\iisexpress.exe");
                 if (!File.Exists(iisExpress))
                 {
                     Console.WriteLine("Please install IIS Express and try again");
