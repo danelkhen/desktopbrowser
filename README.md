@@ -3,8 +3,6 @@ DesktopBrowser
 
 Web based file explorer, runs locally on your browser, designed for media desktops.
 
-See online demo - http://desktopbrowser.sharpkit.net/
-
 ### Running instructions
 Install .NET 4.5
 Install IIS Express 8

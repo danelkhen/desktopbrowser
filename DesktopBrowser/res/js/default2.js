@@ -4,14 +4,33 @@ if (typeof(dbr) == "undefined")
     var dbr = {};
 dbr.DefaultPage2 = function (){
     this.ListFilesResponse = null;
+    this.grdFiles = null;
+    this.tbPath = null;
     this.Path = null;
     this.Service = null;
+    this.El = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
     this.Path = "C:\\Temp";
+    this.ListFilesResponse = {
+        Relatives: {}
+    };
 };
 dbr.DefaultPage2.prototype.OnDomReady = function (){
-    this.ListFiles($CreateDelegate(this, this.RenderGrid));
+    this.El = $("body");
+    this.El.getAppend("button#btnGotoParentDir.btn.btn-default").text("Parent").click($CreateAnonymousDelegate(this, function (e){
+        this.GotoParentDir();
+    }));
+    this.El.getAppend("button#btnGotoPrevSibling.btn.btn-default").text("Prev").click($CreateAnonymousDelegate(this, function (e){
+        this.GotoPrevSibling();
+    }));
+    this.El.getAppend("button#btnGotoNextSibling.btn.btn-default").text("Next").click($CreateAnonymousDelegate(this, function (e){
+        this.GotoNextSibling();
+    }));
+    this.tbPath = this.El.getAppend("input.form-control.Path");
+    this.grdFiles = this.El.getAppend("#grdFiles.Grid");
+    this.tbPath.val(this.Path);
+    this.ListFiles($CreateDelegate(this, this.Render));
 };
 dbr.DefaultPage2.prototype.ListFiles = function (cb){
     this.Service.ListFiles({
@@ -21,24 +40,44 @@ dbr.DefaultPage2.prototype.ListFiles = function (cb){
         dbr.Extensions2.Trigger(cb);
     }));
 };
+dbr.DefaultPage2.prototype.GotoPrevSibling = function (){
+    this.GotoFolder(this.ListFilesResponse.Relatives.PreviousSibling);
+};
+dbr.DefaultPage2.prototype.GotoNextSibling = function (){
+    this.GotoFolder(this.ListFilesResponse.Relatives.NextSibling);
+};
+dbr.DefaultPage2.prototype.GotoParentDir = function (){
+    this.GotoFolder(this.ListFilesResponse.Relatives.ParentFolder);
+};
+dbr.DefaultPage2.prototype.GotoFolder = function (file){
+    if (file == null || !file.IsFolder)
+        return;
+    this.GotoPath(file.Path);
+};
+dbr.DefaultPage2.prototype.GotoPath = function (path){
+    this.Path = path;
+    this.ListFiles($CreateDelegate(this, this.Render));
+};
+dbr.DefaultPage2.prototype.Render = function (){
+    this.tbPath.val(this.Path);
+    this.RenderGrid();
+};
 dbr.DefaultPage2.prototype.RenderGrid = function (){
-    var gridEl = $("body").getAppend("#grdFiles.Grid");
-    gridEl.off();
+    this.grdFiles.off();
     var gridOptions = {
         Items: this.ListFilesResponse.Files,
         Columns: [{
             Prop: function (t){
                 return t.Name;
             },
-            Width: null
+            Width: null,
+            RenderCell: $CreateDelegate(this, this.RenderNameCell)
         }, {
             Prop: function (t){
                 return t.Modified;
             },
             Width: 150,
-            Format: $CreateAnonymousDelegate(this, function (v){
-                return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(v), null);
-            })
+            Format: $CreateDelegate(this, this.FormatFriendlyDate)
         }, {
             Prop: function (t){
                 return t.Size;
@@ -50,19 +89,32 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
             },
             Width: 150
         }
-        ]
+        ],
+        RowClass: $CreateDelegate(this, this.GetRowClass)
     };
-    gridEl.Grid(gridOptions);
-    var grid = dbr.grid.Grid.Get(gridEl);
-    gridEl.click($CreateAnonymousDelegate(this, function (e){
-        var file = grid.GetItem($(e.target));
+    this.grdFiles.Grid(gridOptions);
+    var grid = dbr.grid.Grid.Get(this.grdFiles);
+    this.grdFiles.click(($CreateAnonymousDelegate(this, function (e){
+        var target = $(e.target);
+        var file = grid.GetItem(target);
         if (file == null)
             return;
         console.info(file);
-        if (file.IsFolder){
+        if (file.IsFolder && target.is("a.Name")){
             this.Path = file.Path;
-            this.ListFiles($CreateDelegate(this, this.RenderGrid));
+            this.ListFiles($CreateDelegate(this, this.Render));
         }
-    }));
+    })));
+};
+dbr.DefaultPage2.prototype.FormatFriendlyDate = function (arg){
+    return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(arg), null);
+};
+dbr.DefaultPage2.prototype.RenderNameCell = function (col, file, td){
+    td.getAppend("a.Name").text(file.Name).attr("href", "javascript:void(0)");
+};
+dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
+    if (file.IsFolder)
+        return "FolderRow";
+    return "FileRow";
 };
 

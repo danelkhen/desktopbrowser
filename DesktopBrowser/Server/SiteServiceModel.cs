@@ -20,6 +20,7 @@ namespace DesktopBrowser.Server
         public string Extension { get; set; }
     }
 
+    [JsType(JsMode.Json)]
     public class FileRelativesInfo
     {
         public File ParentFolder { get; set; }

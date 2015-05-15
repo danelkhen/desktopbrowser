@@ -79,7 +79,10 @@ namespace DesktopBrowser.Server.Utils
                     return this;
                 if (IsRoot)
                     return new PathInfo("");
-                return new PathInfo(System.IO.Path.GetDirectoryName(Value));
+                var x = Value;
+                if (x.EndsWith("\\"))
+                    x = x.RemoveLast(1);
+                return new PathInfo(System.IO.Path.GetDirectoryName(x));
             }
         }
 

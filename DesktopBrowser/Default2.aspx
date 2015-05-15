@@ -24,7 +24,7 @@
     <script>var _page = new dbr.DefaultPage2();</script>
 </head>
 <body>
-    <div>
+<%--    <div>
         <div class="Panel row row-full">
             <div class="col-md-12">
                 <input type="text" id="tbFilename" readonly />
@@ -41,15 +41,13 @@
             </div>
         </form>
         <div class="Panel">
-<%--            <uc:FilesGrid ID="FilesGrid1" runat="server" />--%>
         </div>
         <div class="Panel">
-<%--            <uc:FilesImageList ID="FilesImageList1" runat="server" />--%>
         </div>
         <div class="Footer">
             <p><a href="https://github.com/danelkhen/desktopbrowser" target="_blank">DesktopBrowser</a> by Dan-el (Copyright &copy; all rights reserved 2011)</p>
             <p><a href="https://github.com/danelkhen/desktopbrowser/releases">Check for new version</a></p>
         </div>
-    </div>
+    </div>--%>
 </body>
 </html>
