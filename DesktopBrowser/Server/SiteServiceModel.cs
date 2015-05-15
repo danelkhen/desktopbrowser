@@ -13,7 +13,7 @@ namespace DesktopBrowser.Server
         public bool IsFolder { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
-        public DateTime? Modified { get; set; }
+        public string Modified { get; set; }
         public bool IsHidden { get; set; }
         public double? Size { get; set; }
 

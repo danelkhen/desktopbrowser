@@ -4,11 +4,24 @@ using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 using DesktopBrowser.Server.Utils;
+using System.Globalization;
 
 namespace DesktopBrowser.Server
 {
     public static class Extensions
     {
+        public static DateTime? ToDefaultDate(this string s)
+        {
+            DateTime dt;
+            if (!DateTime.TryParseExact(s, DefaultDateFormat, null, DateTimeStyles.None, out dt))
+                return null;
+            return dt;
+        }
+        static string DefaultDateFormat = "yyyy-MM-dd HH:mm:ss";
+        public static string ToDefaultString(this DateTime dt)
+        {
+            return dt.ToString(DefaultDateFormat);
+        }
         public static string Active(this bool x)
         {
             if (x)
@@ -91,6 +104,12 @@ namespace DesktopBrowser.Server
             }
             return dt.ToString("d/M/yy");
         }
+        public static string ToFriendlyRelative2(this string s)
+        {
+            return s.ToDefaultDate().ToFriendlyRelative2();
+
+        }
+
         //public static string EncodeQueryStringValue(string s)
         //{
         //    return s.Replace("#", "%23").Replace("&", "%26").Replace("+", "%2B");

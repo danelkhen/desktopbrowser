@@ -330,7 +330,7 @@ namespace DesktopBrowser.Server
             {
                 Name = t.Name,
                 IsFolder = t is DirectoryInfo,
-                Modified = t.LastWriteTime,
+                Modified = t.LastWriteTime.ToDefaultString(),
                 Size = file != null ? file.Length : default(double?),
                 IsHidden = t.Attributes.HasFlag(FileAttributes.Hidden),
                 Extension = file != null ? t.Extension : null,
