@@ -19,5 +19,9 @@ namespace DesktopBrowser.client
         {
             throw new NotImplementedException();
         }
+        public static T parse<T>(JsString q, T obj = default(T), T defaults = default(T))
+        {
+            throw new NotImplementedException();
+        }
     }
 }

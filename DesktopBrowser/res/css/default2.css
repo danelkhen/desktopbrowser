@@ -89,3 +89,8 @@
 {
     width:100%;
 }
+
+.FileRow > td > a.Name
+{
+    color:#053e70;
+}

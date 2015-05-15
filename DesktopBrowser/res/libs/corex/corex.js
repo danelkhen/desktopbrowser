@@ -151,10 +151,10 @@
     //function Hello(a,b,c){return [a,b,c].join();}
     //Hello.bindArgs("a")("b","c")  -> a,b,c
     Function.prototype.bindArgs = function () {
-        var args = Array.toArray(arguments);
+        var args = Array.from(arguments);
         var func = this;
         return function () {
-            var args2 = args.concat(Array.toArray(arguments));
+            var args2 = args.concat(Array.from(arguments));
             return func.apply(this, args2);
         };
     }
@@ -162,7 +162,7 @@
     Function.prototype.toPrototypeFunction = function () {
         var func = this;
         return function () {
-            var args2 = Array.toArray(arguments);
+            var args2 = Array.from(arguments);
             args2.insert(0, this);
             return func.apply(null, args2);
         };
@@ -175,25 +175,30 @@
     Function.prototype.toNew = function () {
         var func = this;
         return function () {
-            var x = func.applyNew(Array.toArray(arguments));
+            var x = func.applyNew(Array.from(arguments));
             return x;
         };
     }
     // Similar to func.apply(thisContext, args), but creates a new object instead of just calling the function - new func(args[0], args[1], args[2]...)
     Function.prototype.applyNew = function (args) {
-        var args2 = args.toArray();
-        args2.insert(0, null);
-        var ctor2 = this.bind.apply(this, args2);
-        var obj = new ctor2();
-        return obj;
+        var count = args == null ? 0 : args.length;
+        var ctor = this;
+        switch (count) {
+            case 0: return new ctor();
+            case 1: return new ctor(args[0]);
+            case 2: return new ctor(args[0], args[1]);
+            case 3: return new ctor(args[0], args[1], args[2]);
+            case 4: return new ctor(args[0], args[1], args[2], args[3]);
+            case 5: return new ctor(args[0], args[1], args[2], args[3], args[4]);
+            case 6: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+            case 7: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+        }
+        throw new Error("Function.prototype.applyNew doesn't support more than 8 parameters");
     }
     // Similar to func.call(thisContext, args), but creates a new object instead of just calling the function - new func(arguments[0], arguments[1], arguments[2]...)
     Function.prototype.callNew = function (varargs) {
-        var args2 = Array.prototype.slice.call(arguments);
-        args2.insert(0, null);
-        var ctor2 = this.bind.apply(this, args2);
-        var obj = new ctor2();
-        return obj;
+        var args = Array.from(arguments);
+        return this.applyNew(args);
     }
     Function.prototype.getName = function () {
         var func = this;
@@ -205,6 +210,31 @@
     }
     Function.prototype.addTo = function (target) {
         return Function.addTo(target, [this]);
+    }
+    // Creates a combination of two functions, where the new function will invoke the two functions, if the left side is already a combination function, it will be cloned and add the new function to it
+    Function.combine = function (f1, f2) {
+        if (f1 == null)
+            return f2;
+        if (f2 == null)
+            return f1;
+        var funcs;
+        if (f1._isCombined) {
+            var funcs = f1._funcs.toArray();
+            funcs.add(f2);
+        }
+        else {
+            funcs = [f1, f2];
+        }
+        return Function._combined(funcs);
+    }
+    Function._combined = function (funcs) {
+        var func = function () {
+            for (var i = 0; i < func._funcs.length; i++)
+                func._funcs[i].apply(this, arguments);
+        }
+        func._isCombined = true;
+        func._funcs = funcs;
+        return func;
     }
 
 
@@ -317,6 +347,8 @@
         }
         return obj;
     };
+    Array.prototype.keysToObject = Array.prototype.toObjectKeys;
+    Array.prototype.pairsToObject = Array.prototype.toObject;
     Array.prototype.copyPairsToObject = function (obj) {
         if (obj == null)
             obj = {};
@@ -388,6 +420,10 @@
     Array.prototype.whereEq = function (selector, value) {
         selector = Q.createSelectorFunction(selector);
         return this.filter(function (t, i) { return selector(t, i) == value; });
+    }
+    Array.prototype.whereNotEq = function (selector, value) {
+        selector = Q.createSelectorFunction(selector);
+        return this.filter(function (t, i) { return selector(t, i) != value; });
     }
     Array.prototype.addRange = function (items) {
         this.push.apply(this, items);
@@ -489,24 +525,7 @@
     Array.prototype.sortByDescending = function (selector) {
         return this.sortBy(selector, true);
     }
-    Array.prototype.forEachAsyncParallel = function (asyncFunc, finalCallback) {
-        var length = this.length;
-        if (length == 0) {
-            finalCallback();
-            return;
-        }
-        var count = 0;
-        var cb = function () {
-            count++;
-            if (count >= length)
-                finalCallback();
-        };
-        for (var i = 0; i < length; i++) {
-            var item = this[i];
-            asyncFunc(item, cb);
-        }
-    }
-        //Performs an async function on each item in the array, invoking a finalCallback when all are completed
+    //Performs an async function on each item in the array, invoking a finalCallback when all are completed
     //asyncFunc -> function(item, callback -> function(result))
     //finalCallback -> function(results);
     Array.prototype.mapAsyncParallel = function (asyncFunc, finalCallback) {
@@ -702,6 +721,12 @@
     Array.prototype.peek = Array.prototype.last;
     Array.prototype.removeLast = Array.prototype.pop;
     Array.prototype.add = Array.prototype.push;
+    Array.prototype.forEachWith = function (list, action) {
+        return Array.forEachTwice(this, list, action);
+    }
+    Array.prototype.selectWith = function (list, func) {
+        return Array.selectTwice(this, list, action);
+    }
 
     //Array Static Extensions
     Array.joinAll = function (lists, keySelector, resultSelector) {
@@ -806,8 +831,11 @@
             return obj;
         return [obj];
     }
-    Array.toArray = function (obj) {
-        return Array.prototype.slice.call(obj, 0);
+    Array.toArray = function (arrayLike) {
+        return Array.prototype.slice.call(arrayLike, 0);
+    }
+    Array.from = function (arrayLike) {
+        return Array.prototype.slice.call(arrayLike, 0);
     }
     Array.generateNumbers = function (from, until) {
         if (arguments.length == 1) {
@@ -853,7 +881,7 @@
         return this.valueOf() / (60 * 60 * 1000);
     };
     Date.prototype.totalMinutes = function () {
-        return this.valueOf() / ( 60 * 1000);
+        return this.valueOf() / (60 * 1000);
     };
     Date.prototype.month = function (value) {
         if (value == null) {
@@ -1031,6 +1059,9 @@
         date2.setDate(date2.getDate() + days);
         return date2;
     };
+    Date.prototype.addWeeks = function (weeks) {
+        return this.addDays(weeks * 7);
+    };
     Date.prototype.addMonths = function (months) {
         var date2 = this.clone();
         date2.setMonth(date2.getMonth() + months);
@@ -1122,7 +1153,7 @@
     Date.current = function () {
         return new Date();
     };
-    Date.new = function (y, m, d, h, mm, s, ms) {
+    Date.create = function (y, m, d, h, mm, s, ms) {
         if (ms != null)
             return new Date(y, m - 1, d, h, mm, s, ms);
         if (s != null)
@@ -1174,7 +1205,7 @@
     Date._tryParseExact = function (s, format) {
         if (s.length != format.length)
             return null;
-        var date = Date.new();
+        var date = Date.create();
         var ctx = { date: date, s: s, format: format };
         Date._parsePart(ctx, "yyyy", date.year);
         Date._parsePart(ctx, "yy", date.year);
@@ -1339,12 +1370,9 @@
     String.prototype.toSelector = function () {
         return Q.createSelectorFunction(this);
     }
-    String.prototype.substringBetween = function (start, end, fromIndex) {
-        if(fromIndex==null)
-            fromIndex = 0;
-
+    String.prototype.substringBetween = function (start, end) {
         var s = this;
-        var i1 = s.indexOf(start, fromIndex);
+        var i1 = s.indexOf(start);
         if (i1 < 0)
             return null;
         var i2 = s.indexOf(end, i1 + 1);
@@ -1379,6 +1407,10 @@
                 return this[i];
         }
         return null;
+    }
+
+    String.prototype.splitAt = function (index) {
+        return [this.substr(0, index), this.substr(index)];
     }
 
 })();
@@ -1489,11 +1521,11 @@
     Error.prototype.causedBy = function (e) {
         this.innerError = e;
     }
-});
+})();
 
 
 //******** Q
-(function() {
+(function () {
     function Q() {
     };
     Q.copy = function (src, target, options, depth) {
@@ -1695,6 +1727,9 @@
                     sb.endBlock("]");
                 }
             }
+            else if (obj instanceof Date) {
+                sb.push("new Date(" + obj.valueOf() + ")");
+            }
             else {
                 var canInline = Q._canInlineObject(obj);
                 sb.startBlock("{", canInline);
@@ -1840,10 +1875,10 @@
             return -1;
         return 0;
     }
-    Comparer.default = new Comparer();
+    Comparer._default = new Comparer();
 
 
-    function Timer (action, ms) {
+    function Timer(action, ms) {
         this.action = action;
         if (ms != null)
             this.set(ms);
@@ -1872,17 +1907,13 @@
     function QueryString() {
 
     }
-    QueryString.parse = function (url, obj, defaults) {
-        if (url == null)
-            url = window.location.href;
+    QueryString.parse = function (query, obj, defaults) {
+        if (query == null)
+            query = window.location.search.substr(1);
         if (obj == null)
             obj = {};
         if (defaults == null)
             defaults = {};
-        var index = url.indexOf("?");
-        if (index < 0)
-            return obj;
-        var query = url.slice(index + 1);
         var index2 = query.indexOf("#");
         if (index2 >= 0)
             query = query.substr(0, index2);
@@ -1904,7 +1935,7 @@
                     currentValue = [];
                     obj[key] = currentValue;
                 }
-                if (defaults[key]!=null && currentValue.itemsEqual(defaults[key]))
+                if (defaults[key] != null && currentValue.itemsEqual(defaults[key]))
                     currentValue.clear();
                 if (eValue != "") {
                     var items = eValue.split(",").select(function (item) { return decodeURIComponent(item); });
@@ -1977,7 +2008,7 @@
 
     function createCompareFuncFromSelector(selector, desc) {
         desc = desc ? -1 : 1;
-        var compare = Comparer.default.compare;
+        var compare = Comparer._default.compare;
         var type = typeof (selector);
         if (type == "string" || type == "number") {
             return function (x, y) {
@@ -1996,28 +2027,5 @@
     Function.addTo(window, [toStringOrEmpty, createCompareFuncFromSelector, combineCompareFuncs]);
 
 })();
-
-
-Date.fromDotNet = function (value) {
-    return new Date(parseInt(value.substr(6, 13)));
-}
-Number.prototype.toStringWithCommas = function () {
-    var x = this;
-    var parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-}
-
-Number.prototype.toFixedWithCommas = function (decimals) {
-    var x = this;
-    var parts = x.toFixed(decimals).split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-}
-
-String.prototype.lines = function () {
-    return this.split(/\r?\n/);
-}
-
 
 

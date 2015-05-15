@@ -6,36 +6,120 @@ dbr.DefaultPage2 = function (){
     this.ListFilesResponse = null;
     this.grdFiles = null;
     this.tbPath = null;
-    this.Path = null;
+    this.btnGroup = null;
+    this.Req = null;
     this.Service = null;
     this.El = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
-    this.Path = "C:\\Temp";
     this.ListFilesResponse = {
         Relatives: {}
     };
 };
+dbr.DefaultPage2.prototype.get_Path = function (){
+    return this.Req.Path;
+};
 dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.El = $("body");
-    this.El.getAppend("button#btnGotoParentDir.btn.btn-default").text("Parent").click($CreateAnonymousDelegate(this, function (e){
-        this.GotoParentDir();
-    }));
-    this.El.getAppend("button#btnGotoPrevSibling.btn.btn-default").text("Prev").click($CreateAnonymousDelegate(this, function (e){
-        this.GotoPrevSibling();
-    }));
-    this.El.getAppend("button#btnGotoNextSibling.btn.btn-default").text("Next").click($CreateAnonymousDelegate(this, function (e){
-        this.GotoNextSibling();
-    }));
-    this.tbPath = this.El.getAppend("input.form-control.Path");
     this.grdFiles = this.El.getAppend("#grdFiles.Grid");
-    this.tbPath.val(this.Path);
+    this.btnGroup = this.grdFiles.getAppend(".btn-group");
+    var btns =  [{
+        Id: "GotoParentDir",
+        Text: "Up",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.GotoFolder(this.ListFilesResponse.Relatives.ParentFolder);
+        })
+    }, {
+        Id: "GotoPrevSibling",
+        Text: "Prev",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.GotoFolder(this.ListFilesResponse.Relatives.PreviousSibling);
+        })
+    }, {
+        Id: "GotoNextSibling",
+        Text: "Next",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.GotoFolder(this.ListFilesResponse.Relatives.NextSibling);
+        })
+    }, {
+        Id: "Folders",
+        Text: "Folders",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.HideFolders = !this.Req.HideFolders;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Files",
+        Text: "Files",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.HideFiles = !this.Req.HideFiles;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Mix",
+        Text: "Mix",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.MixFilesAndFolders = !this.Req.MixFilesAndFolders;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Size",
+        Text: "Size",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.FolderSize = !this.Req.FolderSize;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Keep",
+        Text: "Keep",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.KeepView = !this.Req.KeepView;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Hidden",
+        Text: "Hidden",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.ShowHiddenFiles = !this.Req.ShowHiddenFiles;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Recursive",
+        Text: "Recursive",
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Req.IsRecursive = !this.Req.IsRecursive;
+            this.SaveReqListAndRender();
+        })
+    }, {
+        Id: "Subs",
+        Text: "Subs",
+        Action: $CreateDelegate(this, this.GotoNextSibling)
+    }, {
+        Id: "Imdb",
+        Text: "Imdb",
+        Action: $CreateDelegate(this, this.GotoNextSibling)
+    }, {
+        Id: "Delete",
+        Text: "Delete",
+        Action: $CreateDelegate(this, this.GotoNextSibling)
+    }, {
+        Id: "Explore",
+        Text: "Explore",
+        Action: $CreateDelegate(this, this.GotoNextSibling)
+    }
+    ];
+    btns.forEach($CreateDelegate(this, this.AddButton));
+    this.tbPath = this.grdFiles.getAppend("input.form-control.Path");
+    this.Req = {};
+    QueryString.parse(null, this.Req, null);
+    this.tbPath.val(this.Req.Path);
     this.ListFiles($CreateDelegate(this, this.Render));
 };
+dbr.DefaultPage2.prototype.AddButton = function (btn){
+    this.btnGroup.getAppend("button.btn.btn-default#btn" + btn.Id).text(btn.Text).click(btn.Action);
+};
 dbr.DefaultPage2.prototype.ListFiles = function (cb){
-    this.Service.ListFiles({
-        Path: this.Path
-    }, $CreateAnonymousDelegate(this, function (res){
+    this.Service.ListFiles(this.Req, $CreateAnonymousDelegate(this, function (res){
         this.ListFilesResponse = res;
         dbr.Extensions2.Trigger(cb);
     }));
@@ -55,11 +139,24 @@ dbr.DefaultPage2.prototype.GotoFolder = function (file){
     this.GotoPath(file.Path);
 };
 dbr.DefaultPage2.prototype.GotoPath = function (path){
-    this.Path = path;
+    this.Req.Path = path;
+    this.SaveReqListAndRender();
+};
+dbr.DefaultPage2.prototype.SaveReq = function (){
+    var state = this.Req;
+    var q = QueryString.stringify(state);
+    var win = window;
+    win.history.pushState(state, this.Req.Path, "?" + q);
+};
+dbr.DefaultPage2.prototype.SaveReqListAndRender = function (){
+    this.SaveReq();
+    this.ListAndRender();
+};
+dbr.DefaultPage2.prototype.ListAndRender = function (){
     this.ListFiles($CreateDelegate(this, this.Render));
 };
 dbr.DefaultPage2.prototype.Render = function (){
-    this.tbPath.val(this.Path);
+    this.tbPath.val(this.get_Path());
     this.RenderGrid();
 };
 dbr.DefaultPage2.prototype.RenderGrid = function (){
@@ -101,8 +198,7 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
             return;
         console.info(file);
         if (file.IsFolder && target.is("a.Name")){
-            this.Path = file.Path;
-            this.ListFiles($CreateDelegate(this, this.Render));
+            this.GotoFolder(file);
         }
     })));
 };
