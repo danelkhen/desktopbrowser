@@ -3,9 +3,66 @@
 if (typeof(dbr) == "undefined")
     var dbr = {};
 dbr.DefaultPage2 = function (){
+    this.ListFilesResponse = null;
+    this.Path = null;
+    this.Service = null;
     $($CreateDelegate(this, this.OnDomReady));
+    this.Service = new dbr.SiteServiceClient();
+    this.Path = "C:\\Temp";
 };
 dbr.DefaultPage2.prototype.OnDomReady = function (){
-    var service = new dbr.SiteServiceClient();
+    this.ListFiles($CreateDelegate(this, this.RenderGrid));
+};
+dbr.DefaultPage2.prototype.ListFiles = function (cb){
+    this.Service.ListFiles({
+        Path: this.Path
+    }, $CreateAnonymousDelegate(this, function (res){
+        this.ListFilesResponse = res;
+        dbr.Extensions2.Trigger(cb);
+    }));
+};
+dbr.DefaultPage2.prototype.RenderGrid = function (){
+    var gridEl = $("body").getAppend("#grdFiles.Grid");
+    gridEl.off();
+    var gridOptions = {
+        Items: this.ListFilesResponse.Files,
+        Columns: [{
+            Prop: function (t){
+                return t.Name;
+            },
+            Width: null
+        }, {
+            Prop: function (t){
+                return t.Modified;
+            },
+            Width: 150,
+            Format: $CreateAnonymousDelegate(this, function (v){
+                return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(v), null);
+            })
+        }, {
+            Prop: function (t){
+                return t.Size;
+            },
+            Width: 150
+        }, {
+            Prop: function (t){
+                return t.Extension;
+            },
+            Width: 150
+        }
+        ]
+    };
+    gridEl.Grid(gridOptions);
+    var grid = dbr.grid.Grid.Get(gridEl);
+    gridEl.click($CreateAnonymousDelegate(this, function (e){
+        var file = grid.GetItem($(e.target));
+        if (file == null)
+            return;
+        console.info(file);
+        if (file.IsFolder){
+            this.Path = file.Path;
+            this.ListFiles($CreateDelegate(this, this.RenderGrid));
+        }
+    }));
 };
 

@@ -97,9 +97,43 @@ function SmoothScrollToTop(){
 };
 if (typeof(dbr) == "undefined")
     var dbr = {};
+dbr.SiteExtensions = function (){
+};
+dbr.SiteExtensions.ToDefaultDate = function (s){
+    if (Q.isNullOrEmpty(s))
+        return null;
+    return Date.tryParseExact(s, ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd"]);
+};
+dbr.SiteExtensions.ToDefaultDateString = function (date){
+    if (date == null)
+        return null;
+    return date.format("yyyy-MM-dd");
+};
+dbr.SiteExtensions.ToDefaultDateTimeString = function (date){
+    if (date == null)
+        return null;
+    return date.format("yyyy-MM-dd HH:mm:ss");
+};
+dbr.SiteExtensions.ToFriendlyRelative2 = function (dt, rel){
+    if (rel == null)
+        rel = Date.current();
+    if (dt.Year == rel.Year){
+        if (dt.Month == rel.Month){
+            if (dt.Day == rel.Day){
+                return dt.format("hh:mm tt").toLowerCase();
+            }
+            return dt.format("MMM d");
+        }
+        return dt.format("MMM d");
+    }
+    return dt.format("d/M/yy");
+};
 dbr.SiteServiceClient = function (){
     this.Url = null;
     this.Url = "/api";
+};
+dbr.SiteServiceClient.prototype.ListFiles = function (req, cb){
+    return this.Invoke("ListFiles", req, cb);
 };
 dbr.SiteServiceClient.prototype.GetFiles = function (req, cb){
     return this.Invoke("GetFiles", req, cb);
@@ -127,7 +161,11 @@ dbr.SiteServiceClient.prototype.Delete = function (path, cb){
 dbr.SiteServiceClient.prototype.Invoke = function (action, prms, callback){
     var xhr = $.ajax({
         url: this.Url + "/" + action,
-        data: prms
+        data: prms,
+        complete: $CreateAnonymousDelegate(this, function (a, b){
+            if (callback != null)
+                callback(JSON.parse(a.responseText));
+        })
     });
     return xhr;
 };

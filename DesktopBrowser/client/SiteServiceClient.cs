@@ -17,6 +17,10 @@ namespace DesktopBrowser.client
             Url = "/api";
         }
 
+        public jqXHR ListFiles(ListFilesRequest req, JsAction<ListFilesResponse> cb)
+        {
+            return Invoke("ListFiles", req, cb);
+        }
         public jqXHR GetFiles(SiteRequest req, JsAction<JsArray<File>> cb)
         {
             return Invoke("GetFiles", req, cb);
@@ -51,6 +55,11 @@ namespace DesktopBrowser.client
             {
                 url = Url + "/" + action,
                 data = prms,
+                complete = (a,b) =>
+                {
+                    if(callback!=null)
+                        callback(JSON.parse(a.responseText).As<T>());
+                }
             });
             return xhr;
         }

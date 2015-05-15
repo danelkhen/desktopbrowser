@@ -9,12 +9,15 @@
     <title>Desktop Browser v1.0.0</title>
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="res/css/default.css" rel="stylesheet" type="text/css" />
+<%--    <link href="res/css/default.css" rel="stylesheet" type="text/css" />--%>
     <link href="res/css/default2.css" rel="stylesheet" type="text/css" />
     <script src="res/libs/jquery/jquery-2.1.3.min.js"></script>
     <script src="res/libs/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script src="res/libs/corex/corex.js"></script>
+    <script src="res/libs/corex/corex-ui.js"></script>
     <script src="res/js/sk.js" type="text/javascript"></script>
     <script src="res/js/date.format.js" type="text/javascript"></script>
+    <script src="res/js/grid.js" type="text/javascript"></script>
     <script src="res/js/desktopbrowser.js" type="text/javascript"></script>
     <script src="res/js/default.js" type="text/javascript"></script>
     <script src="res/js/default2.js" type="text/javascript"></script>

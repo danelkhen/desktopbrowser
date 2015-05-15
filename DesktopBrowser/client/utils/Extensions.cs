@@ -221,6 +221,10 @@ namespace DesktopBrowser.client
         {
             throw new NotImplementedException();
         }
+        public static JsDateEx tryParseExact(string p1, JsArray<JsString> p2)
+        {
+            throw new NotImplementedException();
+        }
 
         public static JsDateEx today()
         {
@@ -266,6 +270,29 @@ namespace DesktopBrowser.client
         internal int compareTo(JsDateEx startDate)
         {
             throw new NotImplementedException();
+        }
+
+
+        public JsNumber Year
+        {
+            [JsMethod(Name = "year")]
+            get;
+            [JsMethod(Name = "year")]
+            set;
+        }
+        public JsNumber Month
+        {
+            [JsMethod(Name = "month")]
+            get;
+            [JsMethod(Name = "month")]
+            set;
+        }
+        public JsNumber Day
+        {
+            [JsMethod(Name = "day")]
+            get;
+            [JsMethod(Name = "day")]
+            set;
         }
 
     }

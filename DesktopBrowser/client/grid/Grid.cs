@@ -18,9 +18,9 @@ namespace DesktopBrowser.client.grid
     ///     RenderTable
     ///         RenderHeaderCell
     ///         RenderCell
-    ///     RenderSearch    
+    ///     RenderSearch
     ///     RenderPager
-    ///     
+    ///
     /// Html Template
     ///     <div class="Grid">
     ///         <div class="Search form-inline">
@@ -47,7 +47,7 @@ namespace DesktopBrowser.client.grid
     ///             </tfoot>
     ///         </table>
     ///     </div>
-    ///     
+    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [JsType(JsMode.Prototype, Filename = "~/res/js/grid.js")]
@@ -348,6 +348,15 @@ namespace DesktopBrowser.client.grid
 
 
         public JsArray<T> CurrentListBeforePaging { get; set; }
+
+        public T GetItem(jQuery el)
+        {
+            return el.closest("tr").DataItem<T>();
+        }
+        public static Grid<T> Get(jQuery el)
+        {
+            return el.data("Grid").As<Grid<T>>();
+        }
     }
 }
 

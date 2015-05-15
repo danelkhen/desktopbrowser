@@ -239,6 +239,12 @@ dbr.grid.Grid.prototype.RenderPager = function (){
         this.Render();
     }));
 };
+dbr.grid.Grid.prototype.GetItem = function (el){
+    return dbr.Extensions2.DataItem$1(el.closest("tr"));
+};
+dbr.grid.Grid.Get = function (el){
+    return el.data("Grid");
+};
 dbr.grid.Extensions5 = function (){
 };
 dbr.grid.Extensions5.ToGrid = function (list, j, opts){

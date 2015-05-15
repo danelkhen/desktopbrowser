@@ -1,0 +1,91 @@
+﻿.Grid > table {
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.Grid > table > thead > tr > th {
+    border:1px solid #eee;
+    padding: 4px 8px;
+    white-space:nowrap;
+    cursor:default;
+    font-weight:bold;
+}
+.Grid > table > thead > tr > th:hover {
+    outline:1px solid #337ab7;
+}
+
+.Grid > table > thead > tr > th.OrderBy.Asc {
+    background-color:#dddddd;
+}
+.Grid > table > thead > tr > th.OrderBy.Desc {
+    background-color:#d0d0d0;
+}
+.Grid > table > tfoot > tr > th {
+    padding: 4px 8px;
+    white-space:nowrap;
+    cursor:pointer;
+    font-weight:bold;
+}
+.Grid > table > tfoot > tr:hover {
+    outline:1px solid #337ab7;
+}
+
+.Grid > table > tbody > tr > td {
+    border:1px solid #eee;
+    padding: 4px 8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.Grid > table > tbody > tr:hover {
+    outline:1px solid #337ab7;
+}
+.Grid > .Pager > .Pages > .Page
+{
+    display:inline-block;
+    width:20px;
+    line-height:20px;
+}
+
+
+.Grid > .Search{
+    display:inline-block;
+}
+.Grid > .Pager{
+    display:inline-block;
+    margin: 0 5px;
+}
+.Grid > .Pager > .PagerInfo {
+    display:inline-block;
+    margin:0 5px;
+}
+
+.Grid > .Pager > .NextPage{
+    visibility:hidden;
+
+}
+.Grid.HasNoPages > .Pager {
+    visibility:hidden;
+}
+.Grid.HasOnePage > .Pager {
+    visibility:hidden;
+}
+.Grid.HasNextPage > .Pager > .NextPage{
+    visibility:visible;
+}
+
+.Grid > .Pager > .PrevPage{
+    visibility:hidden;
+
+}
+.Grid.HasPrevPage > .Pager > .PrevPage{
+    visibility:visible;
+
+}
+
+
+
+#grdFiles > table
+{
+    width:100%;
+}
