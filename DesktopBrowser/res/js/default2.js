@@ -113,9 +113,29 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         this.GotoPath(this.tbPath.val());
     }));
     this.Req = {};
-    QueryString.parse(null, this.Req, null);
+    this.LoadReq();
     this.tbPath.val(this.Req.Path);
     this.ListFiles($CreateDelegate(this, this.Render));
+};
+dbr.DefaultPage2.prototype.LoadReq = function (){
+    QueryString.parse(null, this.Req, null);
+    var path = decodeURI(window.location.pathname);
+    if (path == "/"){
+        path = "";
+    }
+    else if (path.startsWith("//")){
+        var tokens = path.split("/");
+        path = tokens.join("\\");
+    }
+    else {
+        path = path.substr(1);
+        var tokens = path.split("/");
+        tokens[0] += ":";
+        path = tokens.join("\\");
+    }
+    if (path.endsWith("\\"))
+        path = dbr.SiteExtensions.removeLast(path, 1);
+    this.Req.Path = path;
 };
 dbr.DefaultPage2.prototype.AddButton = function (btn){
     this.btnGroup.getAppend("button.btn.btn-default#btn" + btn.Id).text(btn.Text).click(btn.Action);
@@ -147,19 +167,26 @@ dbr.DefaultPage2.prototype.GotoPath = function (path){
 dbr.DefaultPage2.prototype.SaveReq = function (){
     var state = Q.copy(this.Req);
     var path = state.Path;
-    var tokens = path.split("\\").where($CreateAnonymousDelegate(this, function (t){
-        return t.length > 0;
-    }));
-    tokens[0] = tokens[0].replaceAll(":", "");
-    tokens = tokens.select(encodeURIComponent);
-    path = tokens.join("/");
-    path = "/" + path + "/";
+    if (path.length > 0){
+        var isNetworkShare = path.startsWith("\\\\");
+        if (isNetworkShare)
+            path = path.substr(1);
+        var tokens = path.split("\\");
+        if (!isNetworkShare)
+            tokens[0] = tokens[0].replaceAll(":", "");
+        path = tokens.join("/");
+        path = encodeURI(path);
+        path = "/" + path;
+        if (!path.endsWith("/"))
+            path += "/";
+    }
     delete state.Path;
     var q = QueryString.stringify(state);
     if (Q.isNotNullOrEmpty(q))
         q = "?" + q;
+    var url = location.origin + path + q;
     var win = window;
-    win.history.pushState(state, this.Req.Path, path + q);
+    win.history.pushState(state, this.Req.Path, url);
 };
 dbr.DefaultPage2.prototype.SaveReqListAndRender = function (){
     this.SaveReq();
@@ -210,9 +237,15 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
         var file = grid.GetItem(target);
         if (file == null)
             return;
-        console.info(file);
         if (file.IsFolder && target.is("a.Name")){
             this.GotoFolder(file);
+        }
+        else {
+            this.Service.Execute({
+                Path: file.Path
+            }, $CreateAnonymousDelegate(this, function (res){
+                console.info(res);
+            }));
         }
     })));
 };

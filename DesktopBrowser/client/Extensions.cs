@@ -10,6 +10,13 @@ namespace DesktopBrowser.client
     [JsType(JsMode.Prototype)]
     static class SiteExtensions
     {
+        public static JsString removeLast(this JsString s, JsNumber count)
+        {
+            if (count == null || count <= 0)
+                return s;
+            return s.substr(0, s.length - count);
+        }
+
         public static JsDateEx ToDefaultDate(this JsString s)
         {
             if (s.isNullOrEmpty())

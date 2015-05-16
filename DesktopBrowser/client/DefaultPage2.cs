@@ -60,13 +60,39 @@ namespace DesktopBrowser.client
             };
             btns.forEach(AddButton);
 
-            tbPath = grdFiles.getAppend("input.form-control.Path").change(e=>GotoPath(tbPath.valString()));
+            tbPath = grdFiles.getAppend("input.form-control.Path").change(e => GotoPath(tbPath.valString()));
 
             //Options = new Page2Options { p = "" };
             Req = new ListFilesRequest();
-            QueryString.parse(null, Req);
+            LoadReq();
+
             tbPath.val(Req.Path);
             ListFiles(Render);
+        }
+
+        private void LoadReq()
+        {
+            QueryString.parse(null, Req);
+            var path = HtmlContext.decodeURI(HtmlContext.window.location.pathname);
+            if (path == "/")
+            {
+                path = "";
+            }
+            else if(path.startsWith("//"))
+            {
+                var tokens = path.split('/');
+                path = tokens.join("\\");
+            }
+            else
+            {
+                path = path.substr(1); //skip first / to get real drive name
+                var tokens = path.split('/');
+                tokens[0] += ":";
+                path = tokens.join("\\");
+            }
+            if (path.endsWith("\\"))
+                path = path.removeLast(1);
+            Req.Path = path;
         }
         //Page2Options Options;
 
@@ -118,23 +144,36 @@ namespace DesktopBrowser.client
         {
             var state = Q.copy(Req);
             var path = state.Path.AsJsString();
-            var tokens = path.split('\\').where(t=>t.length>0);
-            tokens[0] = tokens[0].replaceAll(":", "");
-            tokens = tokens.select(HtmlContext.encodeURIComponent);
-            path = tokens.join("/");
-            //path = path.replaceAll(":\\", "/").replaceAll("\\", "/");
-            path = "/" + path + "/";
-            //if (!path.endsWith("/"))
-            //    path += "/";
+            if (path.length>0)
+            {
+                var isNetworkShare = path.startsWith("\\\\");
+                if (isNetworkShare)//network share
+                    path = path.substr(1);
+                var tokens = path.split('\\');//.where(t=>t.length>0);
+                if(!isNetworkShare)
+                    tokens[0] = tokens[0].replaceAll(":","");
+                //tokens[0] = tokens[0].replaceAll(":", "");
+                //tokens = tokens;
+                path = tokens.join("/");
+                //path = path.replaceAll(":\\", "/").replaceAll("\\", "/");
+                //path = "/" + path;
+                path = HtmlContext.encodeURI(path);
+                path = "/" + path;
+                //if (!path.startsWith("/"))
+                //    path = "/" + path;
+                if (!path.endsWith("/"))
+                    path += "/";
+
+            }
 
             JsContext.delete(state.Path);
-
             var q = QueryString.stringify(state);
             if (q.isNotNullOrEmpty())
                 q = "?" + q;
+            var url = HtmlContext.location.origin+path + q;
             var win = HtmlContext.window;
             //win.history.pushState(state, Req.Path, "?" + q);
-            win.history.pushState(state, Req.Path, path + q);
+            win.history.pushState(state, Req.Path, url);
         }
 
         void SaveReqListAndRender()
@@ -179,13 +218,17 @@ namespace DesktopBrowser.client
                 var file = grid.GetItem(target);
                 if (file == null)
                     return;
-                HtmlContext.console.info(file);
                 if (file.IsFolder && target.@is("a.Name"))
                 {
                     GotoFolder(file);
                 }
+                else
+                {
+                    Service.Execute(new PathRequest { Path = file.Path }, res => HtmlContext.console.info(res));
+                }
             }));
         }
+
 
         private JsString FormatFriendlyDate(object arg)
         {

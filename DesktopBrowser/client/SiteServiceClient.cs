@@ -26,24 +26,24 @@ namespace DesktopBrowser.client
             return Invoke("GetFiles", req, cb);
         }
 
-        public jqXHR GetFileRelatives(string path, JsAction<FileRelativesInfo> cb)
+        public jqXHR GetFileRelatives(PathRequest req, JsAction<FileRelativesInfo> cb)
         {
-            return Invoke("GetFileRelatives", new { path }, cb);
+            return Invoke("GetFileRelatives", req, cb);
         }
 
-        public jqXHR GetFile(string path, JsAction<File> cb)
+        public jqXHR GetFile(PathRequest req, JsAction<File> cb)
         {
-            return Invoke("GetFile", new { Value = path }, cb);
+            return Invoke("GetFile", req, cb);
         }
 
-        public jqXHR Execute(string filename, JsAction<object> cb)
+        public jqXHR Execute(PathRequest req, JsAction<object> cb)
         {
-            return Invoke("Execute", new { Value = filename }, cb);
+            return Invoke("Execute", req, cb);
         }
 
-        public jqXHR Delete(string path, JsAction<object> cb)
+        public jqXHR Delete(PathRequest req, JsAction<object> cb)
         {
-            return Invoke("Delete", new { Value = path }, cb);
+            return Invoke("Delete", req, cb);
         }
 
         #region Utils

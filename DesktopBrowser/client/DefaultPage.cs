@@ -1,5 +1,6 @@
 ﻿using DesktopBrowser.client;
 using DesktopBrowser.client.utils;
+using DesktopBrowser.Server;
 using SharpKit.Html;
 using SharpKit.JavaScript;
 using SharpKit.jQuery;
@@ -223,11 +224,12 @@ namespace DesktopBrowser.client
         }
         void Execute(JsString path)
         {
-            new SiteServiceClient().Execute(path, null);
+            new SiteServiceClient().Execute(new PathRequest { Path = path }, null);
+
         }
         void OpenFile(JsString path)
         {
-            new SiteServiceClient().Execute(path, null);
+            Execute(path);
         }
 
 
@@ -247,7 +249,7 @@ namespace DesktopBrowser.client
                 return;
             if (!win.confirm("are you sure you want to permanantly delete the path: " + path))
                 return;
-            Service.Delete(path, t => win.location.reload());
+            Service.Delete(new PathRequest { Path = path }, t => win.location.reload());
         }
 
         void Filter(HtmlElement el, JsRegExp exp)

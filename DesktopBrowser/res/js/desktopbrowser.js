@@ -99,6 +99,11 @@ if (typeof(dbr) == "undefined")
     var dbr = {};
 dbr.SiteExtensions = function (){
 };
+dbr.SiteExtensions.removeLast = function (s, count){
+    if (count == null || count <= 0)
+        return s;
+    return s.substr(0, s.length - count);
+};
 dbr.SiteExtensions.ToDefaultDate = function (s){
     if (Q.isNullOrEmpty(s))
         return null;
@@ -138,25 +143,17 @@ dbr.SiteServiceClient.prototype.ListFiles = function (req, cb){
 dbr.SiteServiceClient.prototype.GetFiles = function (req, cb){
     return this.Invoke("GetFiles", req, cb);
 };
-dbr.SiteServiceClient.prototype.GetFileRelatives = function (path, cb){
-    return this.Invoke("GetFileRelatives", {
-        path: path
-    }, cb);
+dbr.SiteServiceClient.prototype.GetFileRelatives = function (req, cb){
+    return this.Invoke("GetFileRelatives", req, cb);
 };
-dbr.SiteServiceClient.prototype.GetFile = function (path, cb){
-    return this.Invoke("GetFile", {
-        Value: path
-    }, cb);
+dbr.SiteServiceClient.prototype.GetFile = function (req, cb){
+    return this.Invoke("GetFile", req, cb);
 };
-dbr.SiteServiceClient.prototype.Execute = function (filename, cb){
-    return this.Invoke("Execute", {
-        Value: filename
-    }, cb);
+dbr.SiteServiceClient.prototype.Execute = function (req, cb){
+    return this.Invoke("Execute", req, cb);
 };
-dbr.SiteServiceClient.prototype.Delete = function (path, cb){
-    return this.Invoke("Delete", {
-        Value: path
-    }, cb);
+dbr.SiteServiceClient.prototype.Delete = function (req, cb){
+    return this.Invoke("Delete", req, cb);
 };
 dbr.SiteServiceClient.prototype.Invoke = function (action, prms, callback){
     var xhr = $.ajax({

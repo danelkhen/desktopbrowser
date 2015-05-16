@@ -160,10 +160,12 @@ dbr.DefaultPage.prototype.UpdateClock = function (){
     this.win.setTimeout($CreateDelegate(this, this.UpdateClock), 5000);
 };
 dbr.DefaultPage.prototype.Execute = function (path){
-    new dbr.SiteServiceClient().Execute(path, null);
+    new dbr.SiteServiceClient().Execute({
+        Path: path
+    }, null);
 };
 dbr.DefaultPage.prototype.OpenFile = function (path){
-    new dbr.SiteServiceClient().Execute(path, null);
+    this.Execute(path);
 };
 dbr.DefaultPage.prototype.GetSelectedPath = function (){
     if (this.Selector.SelectedItem == null)
@@ -177,7 +179,9 @@ dbr.DefaultPage.prototype.btnDelete_click = function (){
         return;
     if (!this.win.confirm("are you sure you want to permanantly delete the path: " + path))
         return;
-    this.Service.Delete(path, $CreateAnonymousDelegate(this, function (t){
+    this.Service.Delete({
+        Path: path
+    }, $CreateAnonymousDelegate(this, function (t){
         this.win.location.reload();
     }));
 };
