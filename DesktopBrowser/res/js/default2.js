@@ -8,6 +8,7 @@ dbr.DefaultPage2 = function (){
     this.tbPath = null;
     this.btnGroup = null;
     this.Req = null;
+    this.Win = null;
     this.Service = null;
     this.El = null;
     $($CreateDelegate(this, this.OnDomReady));
@@ -20,6 +21,7 @@ dbr.DefaultPage2.prototype.get_Path = function (){
     return this.Req.Path;
 };
 dbr.DefaultPage2.prototype.OnDomReady = function (){
+    this.Win = window;
     this.El = $("body");
     this.grdFiles = this.El.getAppend("#grdFiles.Grid");
     this.btnGroup = this.grdFiles.getAppend(".btn-group");
@@ -116,6 +118,10 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.LoadReq();
     this.tbPath.val(this.Req.Path);
     this.ListFiles($CreateDelegate(this, this.Render));
+    this.Win.onpopstate = $CreateAnonymousDelegate(this, function (e){
+        this.LoadReq();
+        this.ListAndRender();
+    });
 };
 dbr.DefaultPage2.prototype.LoadReq = function (){
     QueryString.parse(null, this.Req, null);
@@ -259,5 +265,54 @@ dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
     if (file.IsFolder)
         return "FolderRow";
     return "FileRow";
+};
+dbr.DefaultPage2.prototype.GetSubtitleSearchLink = function (File){
+    if (File == null)
+        return null;
+    var s = this.GetFilenameForSearch(File.Name);
+    return "https://www.google.com/search?q=" + System.Web.HttpUtility.UrlEncode$$String(s + " eng subscene");
+};
+dbr.DefaultPage2.prototype.GetGoogleSearchLink = function (File){
+    if (File == null)
+        return null;
+    var s = this.GetFilenameForSearch(File.Name);
+    return "https://www.google.com/search?q=" + System.Web.HttpUtility.UrlEncode$$String(s);
+};
+dbr.DefaultPage2.prototype.GetFilenameForSearch = function (s){
+    var tokens = s.Split$$Char$Array(" ", ".", "-");
+    var ignoreWords = (function (){
+        var $v1 = new System.Collections.Generic.HashSet$1.ctor$$IEqualityComparer$1(System.String.ctor, System.StringComparer.get_CurrentCultureIgnoreCase());
+        $v1.Add("xvid");
+        $v1.Add("720p");
+        $v1.Add("1080p");
+        $v1.Add("dimension");
+        $v1.Add("sample");
+        $v1.Add("nfo");
+        $v1.Add("par2");
+        return $v1;
+    }).call(this);
+    var list = new System.Collections.Generic.List$1.ctor(System.String.ctor);
+    for (var $i2 = 0,$l2 = tokens.length,token = tokens[$i2]; $i2 < $l2; $i2++, token = tokens[$i2]){
+        if (ignoreWords.Contains(token))
+            break;
+        if (token.length == 3){
+            var season = this.TryParse(token.substr(0, 1));
+            var episode = this.TryParse(token.substr(1));
+            if (season != null && episode != null && episode < 30){
+                var normalized = "S" + season.format("00") + "E" + episode.format("00");
+                list.Add(normalized);
+                break;
+            }
+        }
+        list.Add(token);
+    }
+    var s2 = System.String.Join$$String$$String$Array(" ", list.ToArray());
+    return s2;
+};
+dbr.DefaultPage2.prototype.TryParse = function (s){
+    var x = parseInt(s);
+    if (isNaN(x))
+        return null;
+    return x;
 };
 

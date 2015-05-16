@@ -36,6 +36,7 @@ namespace DesktopBrowser.client
 
         private void OnDomReady()
         {
+            Win = HtmlContext.window;
             El = "body".ToJ();
             grdFiles = El.getAppend("#grdFiles.Grid");
             btnGroup = grdFiles.getAppend(".btn-group");
@@ -52,11 +53,11 @@ namespace DesktopBrowser.client
                 new Page2Button { Id = "Keep",            Text = "Keep",      Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Hidden",          Text = "Hidden",    Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Recursive",       Text = "Recursive", Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); } },
-                //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Subs",            Text = "Subs",      Action = GotoNextSibling },
                 new Page2Button { Id = "Imdb",            Text = "Imdb",      Action = GotoNextSibling },
                 new Page2Button { Id = "Delete",          Text = "Delete",    Action = GotoNextSibling },
                 new Page2Button { Id = "Explore",         Text = "Explore",   Action = GotoNextSibling },
+                //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
             };
             btns.forEach(AddButton);
 
@@ -68,6 +69,12 @@ namespace DesktopBrowser.client
 
             tbPath.val(Req.Path);
             ListFiles(Render);
+            Win.onpopstate = e =>
+            {
+                LoadReq();
+                ListAndRender();
+
+            };
         }
 
         private void LoadReq()
@@ -103,6 +110,7 @@ namespace DesktopBrowser.client
 
 
         ListFilesRequest Req;
+        private Window Win;
 
         void ListFiles(JsAction cb)
         {
@@ -246,6 +254,58 @@ namespace DesktopBrowser.client
                 return "FolderRow";
             return "FileRow";
         }
+
+
+        public string GetSubtitleSearchLink(File File)
+        {
+            if (File == null)
+                return null;
+            var s = GetFilenameForSearch(File.Name);
+            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s + " eng subscene");
+        }
+        public string GetGoogleSearchLink(File File)
+        {
+            if (File == null)
+                return null;
+            var s = GetFilenameForSearch(File.Name);
+            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s);
+        }
+        string GetFilenameForSearch(string s)
+        {
+            //s = s.Replace(".", " ").Replace("-", " ");
+            var tokens = s.Split(' ', '.', '-');
+            var ignoreWords = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase) { "xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2" };
+            var list = new List<string>();
+            foreach (var token in tokens)
+            {
+                if (ignoreWords.Contains(token))
+                    break;
+                if (token.Length == 3)
+                {
+                    var season = TryParse(token.Substring(0, 1));
+                    var episode = TryParse(token.Substring(1));
+                    if (season != null && episode != null && episode < 30)
+                    {
+                        var normalized = "S"+season.format("00")+"E"+episode.format("00");
+                        list.Add(normalized);
+                        break;
+                    }
+                }
+                list.Add(token);
+            }
+            var s2 = String.Join(" ", list.ToArray());
+            return s2;
+        }
+
+        JsNumber TryParse(string s)
+        {
+            var x = JsContext.parseInt(s);
+            if (x.IsNaN())
+                return null;
+            return x;
+        }
+
+
     }
 
     [JsType(JsMode.Json)]

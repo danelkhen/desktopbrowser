@@ -90,7 +90,13 @@
     width:100%;
 }
 
-.FileRow > td > a.Name
+.FileRow a,
+.FileRow a:focus, 
+.FileRow a:hover 
 {
     color:#053e70;
+}
+
+a:focus, a:hover {
+  color:#337ab7;
 }

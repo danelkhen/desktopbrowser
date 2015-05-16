@@ -198,6 +198,8 @@ namespace DesktopBrowser.client
         public static jQuery bindChildrenToList<T>(this jQuery j, JsString selector, JsArray<T> list, JsAction<jQuery, T, JsNumber> action) { return null; }
         [JsMethod(ExtensionImplementedInInstance = true)]
         public static jQuery off(this jQuery j) { return null; }
+        [JsMethod(ExtensionImplementedInInstance = true)]
+        public static JsString format(this JsNumber x, JsString format) { return null; }
 
     }
 

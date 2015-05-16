@@ -206,7 +206,7 @@ dbr.utils.JsExtensions.AsList = function (list){
 };
 dbr.utils.JsExtensions.IndexOf = function (array, item){
     var i = 0;
-    for (var $i2 = 0,$l2 = array.length,item2 = array[$i2]; $i2 < $l2; $i2++, item2 = array[$i2]){
+    for (var $i3 = 0,$l3 = array.length,item2 = array[$i3]; $i3 < $l3; $i3++, item2 = array[$i3]){
         if (item2 == item)
             return i;
         i++;
@@ -215,7 +215,7 @@ dbr.utils.JsExtensions.IndexOf = function (array, item){
 };
 dbr.utils.JsExtensions.Remove = function (array, item){
     var i = 0;
-    for (var $i3 = 0,$l3 = array.length,item2 = array[$i3]; $i3 < $l3; $i3++, item2 = array[$i3]){
+    for (var $i4 = 0,$l4 = array.length,item2 = array[$i4]; $i4 < $l4; $i4++, item2 = array[$i4]){
         if (item2 == item){
             array.splice(i, 1);
             return true;
@@ -231,7 +231,7 @@ dbr.utils.JsExtensions.Clear = function (array){
     array.splice(0, array.length);
 };
 dbr.utils.JsExtensions.Contains = function (array, item){
-    for (var $i4 = 0,$l4 = array.length,item2 = array[$i4]; $i4 < $l4; $i4++, item2 = array[$i4]){
+    for (var $i5 = 0,$l5 = array.length,item2 = array[$i5]; $i5 < $l5; $i5++, item2 = array[$i5]){
         if (item2 == item)
             return true;
     }
@@ -294,7 +294,7 @@ dbr.Extensions2.Abs = function (x){
 };
 dbr.Extensions2.ForEachWithPrev$1 = function (list, action){
     var prev = Default(T);
-    for (var $i5 = 0,$l5 = list.length,item = list[$i5]; $i5 < $l5; $i5++, item = list[$i5]){
+    for (var $i6 = 0,$l6 = list.length,item = list[$i6]; $i6 < $l6; $i6++, item = list[$i6]){
         action(item, prev);
         prev = item;
     }
@@ -354,12 +354,12 @@ dbr.Utils.CalcChangePct = function (from, to){
 dbr.Utils.ObjToClass = function (obj, defaultTypeForNull){
     var sb =  [];
     var mappings = (function (){
-        var $v1 = new Object();
-        $v1 ["object"] = "JsObject";
-        $v1 ["number"] = "JsNumber";
-        $v1 ["boolean"] = "JsBoolean";
-        $v1 ["string"] = "JsString";
-        return $v1;
+        var $v2 = new Object();
+        $v2 ["object"] = "JsObject";
+        $v2 ["number"] = "JsNumber";
+        $v2 ["boolean"] = "JsBoolean";
+        $v2 ["string"] = "JsString";
+        return $v2;
     })();
     sb.push("public class Obj");
     sb.push("{");
