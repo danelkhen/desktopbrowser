@@ -109,7 +109,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     }
     ];
     btns.forEach($CreateDelegate(this, this.AddButton));
-    this.tbPath = this.grdFiles.getAppend("input.form-control.Path");
+    this.tbPath = this.grdFiles.getAppend("input.form-control.Path").change($CreateAnonymousDelegate(this, function (e){
+        this.GotoPath(this.tbPath.val());
+    }));
     this.Req = {};
     QueryString.parse(null, this.Req, null);
     this.tbPath.val(this.Req.Path);
@@ -143,10 +145,21 @@ dbr.DefaultPage2.prototype.GotoPath = function (path){
     this.SaveReqListAndRender();
 };
 dbr.DefaultPage2.prototype.SaveReq = function (){
-    var state = this.Req;
+    var state = Q.copy(this.Req);
+    var path = state.Path;
+    var tokens = path.split("\\").where($CreateAnonymousDelegate(this, function (t){
+        return t.length > 0;
+    }));
+    tokens[0] = tokens[0].replaceAll(":", "");
+    tokens = tokens.select(encodeURIComponent);
+    path = tokens.join("/");
+    path = "/" + path + "/";
+    delete state.Path;
     var q = QueryString.stringify(state);
+    if (Q.isNotNullOrEmpty(q))
+        q = "?" + q;
     var win = window;
-    win.history.pushState(state, this.Req.Path, "?" + q);
+    win.history.pushState(state, this.Req.Path, path + q);
 };
 dbr.DefaultPage2.prototype.SaveReqListAndRender = function (){
     this.SaveReq();
@@ -187,7 +200,8 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
             Width: 150
         }
         ],
-        RowClass: $CreateDelegate(this, this.GetRowClass)
+        RowClass: $CreateDelegate(this, this.GetRowClass),
+        PageSize: 100
     };
     this.grdFiles.Grid(gridOptions);
     var grid = dbr.grid.Grid.Get(this.grdFiles);

@@ -22,12 +22,18 @@ namespace DesktopBrowser
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            //var app = sender as Global;
-            //if (app == null)
-            //    return;
-            //var context = app.Context;
-            //if (context == null)
-            //    return;
+            var app = sender as Global;
+            if (app == null)
+                return;
+            var context = app.Context;
+            if (context == null)
+                return;
+            var path = context.Request.Path;
+            if(path.EndsWith("/"))
+            {
+                context.RewritePath("~/Default2.aspx");
+
+            }
             //var tokens = context.Request.AppRelativeCurrentExecutionFilePath.Split('/').ToList();
             //tokens.RemoveAt(0);
             //if (tokens.Count == 0)

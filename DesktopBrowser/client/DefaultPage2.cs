@@ -60,7 +60,7 @@ namespace DesktopBrowser.client
             };
             btns.forEach(AddButton);
 
-            tbPath = grdFiles.getAppend("input.form-control.Path");
+            tbPath = grdFiles.getAppend("input.form-control.Path").change(e=>GotoPath(tbPath.valString()));
 
             //Options = new Page2Options { p = "" };
             Req = new ListFilesRequest();
@@ -116,10 +116,25 @@ namespace DesktopBrowser.client
         }
         void SaveReq()
         {
-            var state = Req;
+            var state = Q.copy(Req);
+            var path = state.Path.AsJsString();
+            var tokens = path.split('\\').where(t=>t.length>0);
+            tokens[0] = tokens[0].replaceAll(":", "");
+            tokens = tokens.select(HtmlContext.encodeURIComponent);
+            path = tokens.join("/");
+            //path = path.replaceAll(":\\", "/").replaceAll("\\", "/");
+            path = "/" + path + "/";
+            //if (!path.endsWith("/"))
+            //    path += "/";
+
+            JsContext.delete(state.Path);
+
             var q = QueryString.stringify(state);
+            if (q.isNotNullOrEmpty())
+                q = "?" + q;
             var win = HtmlContext.window;
-            win.history.pushState(state, Req.Path, "?" + q);
+            //win.history.pushState(state, Req.Path, "?" + q);
+            win.history.pushState(state, Req.Path, path + q);
         }
 
         void SaveReqListAndRender()
@@ -153,6 +168,7 @@ namespace DesktopBrowser.client
                         new GridCol<File> {Prop = t=>t.Extension,    Width=150  ,},
                     },
                 RowClass = GetRowClass,
+                PageSize = 100,
             };
             grdFiles.Grid(gridOptions);
             var grid = Grid<File>.Get(grdFiles);
