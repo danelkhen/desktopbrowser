@@ -95,11 +95,15 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     }, {
         Id: "Subs",
         Text: "Subs",
-        Action: $CreateDelegate(this, this.GotoNextSibling)
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.ListFilesResponse.File));
+        })
     }, {
         Id: "Imdb",
         Text: "Imdb",
-        Action: $CreateDelegate(this, this.GotoNextSibling)
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.ListFilesResponse.File));
+        })
     }, {
         Id: "Delete",
         Text: "Delete",
@@ -122,6 +126,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         this.LoadReq();
         this.ListAndRender();
     });
+};
+dbr.DefaultPage2.prototype.OpenInNewWindow = function (p){
+    this.Win.open(p, "_blank");
 };
 dbr.DefaultPage2.prototype.LoadReq = function (){
     QueryString.parse(null, this.Req, null);
@@ -270,43 +277,39 @@ dbr.DefaultPage2.prototype.GetSubtitleSearchLink = function (File){
     if (File == null)
         return null;
     var s = this.GetFilenameForSearch(File.Name);
-    return "https://www.google.com/search?q=" + System.Web.HttpUtility.UrlEncode$$String(s + " eng subscene");
+    return "https://www.google.com/search?q=" + encodeURIComponent(s + " eng subscene");
 };
 dbr.DefaultPage2.prototype.GetGoogleSearchLink = function (File){
     if (File == null)
         return null;
     var s = this.GetFilenameForSearch(File.Name);
-    return "https://www.google.com/search?q=" + System.Web.HttpUtility.UrlEncode$$String(s);
+    return "https://www.google.com/search?q=" + encodeURIComponent(s);
 };
 dbr.DefaultPage2.prototype.GetFilenameForSearch = function (s){
-    var tokens = s.Split$$Char$Array(" ", ".", "-");
-    var ignoreWords = (function (){
-        var $v1 = new System.Collections.Generic.HashSet$1.ctor$$IEqualityComparer$1(System.String.ctor, System.StringComparer.get_CurrentCultureIgnoreCase());
-        $v1.Add("xvid");
-        $v1.Add("720p");
-        $v1.Add("1080p");
-        $v1.Add("dimension");
-        $v1.Add("sample");
-        $v1.Add("nfo");
-        $v1.Add("par2");
-        return $v1;
-    }).call(this);
-    var list = new System.Collections.Generic.List$1.ctor(System.String.ctor);
+    var tokens = s.split(new RegExp("[ \\.\\-]")).select($CreateAnonymousDelegate(this, function (t){
+        return t.toLowerCase();
+    }));
+    var ignoreWords =  ["xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2"].selectToObject($CreateAnonymousDelegate(this, function (t){
+        return t;
+    }), $CreateAnonymousDelegate(this, function (t){
+        return true;
+    }));
+    var list =  [];
     for (var $i2 = 0,$l2 = tokens.length,token = tokens[$i2]; $i2 < $l2; $i2++, token = tokens[$i2]){
-        if (ignoreWords.Contains(token))
+        if (ignoreWords[token])
             break;
         if (token.length == 3){
             var season = this.TryParse(token.substr(0, 1));
             var episode = this.TryParse(token.substr(1));
             if (season != null && episode != null && episode < 30){
                 var normalized = "S" + season.format("00") + "E" + episode.format("00");
-                list.Add(normalized);
+                list.push(normalized);
                 break;
             }
         }
-        list.Add(token);
+        list.push(token);
     }
-    var s2 = System.String.Join$$String$$String$Array(" ", list.ToArray());
+    var s2 = list.join(" ");
     return s2;
 };
 dbr.DefaultPage2.prototype.TryParse = function (s){

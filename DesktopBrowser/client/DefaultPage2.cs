@@ -20,7 +20,7 @@ namespace DesktopBrowser.client
         {
             new jQuery(OnDomReady);
             Service = new SiteServiceClient();
-            ListFilesResponse = new ListFilesResponse
+            Res = new ListFilesResponse
             {
                 Relatives = new FileRelativesInfo { }
             };
@@ -29,7 +29,7 @@ namespace DesktopBrowser.client
         public JsString Path { get { return Req.Path; } }
         public SiteServiceClient Service { get; set; }
         public jQuery El { get; set; }
-        ListFilesResponse ListFilesResponse;
+        ListFilesResponse Res;
         private jQuery grdFiles;
         private jQuery tbPath;
         private jQuery btnGroup;
@@ -43,9 +43,9 @@ namespace DesktopBrowser.client
 
             var btns = new JsArray<Page2Button>
             {
-                new Page2Button { Id = "GotoParentDir",   Text = "Up",        Action = () => GotoFolder(ListFilesResponse.Relatives.ParentFolder)},
-                new Page2Button { Id = "GotoPrevSibling", Text = "Prev",      Action = () => GotoFolder(ListFilesResponse.Relatives.PreviousSibling)},
-                new Page2Button { Id = "GotoNextSibling", Text = "Next",      Action = () => GotoFolder(ListFilesResponse.Relatives.NextSibling)},
+                new Page2Button { Id = "GotoParentDir",   Text = "Up",        Action = () => GotoFolder(Res.Relatives.ParentFolder)},
+                new Page2Button { Id = "GotoPrevSibling", Text = "Prev",      Action = () => GotoFolder(Res.Relatives.PreviousSibling)},
+                new Page2Button { Id = "GotoNextSibling", Text = "Next",      Action = () => GotoFolder(Res.Relatives.NextSibling)},
                 new Page2Button { Id = "Folders",         Text = "Folders",   Action = () => { Req.HideFolders=!Req.HideFolders; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Files",           Text = "Files",     Action = () => { Req.HideFiles=!Req.HideFiles; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Mix",             Text = "Mix",       Action = () => { Req.MixFilesAndFolders=!Req.MixFilesAndFolders; SaveReqListAndRender(); } },
@@ -53,8 +53,8 @@ namespace DesktopBrowser.client
                 new Page2Button { Id = "Keep",            Text = "Keep",      Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Hidden",          Text = "Hidden",    Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Recursive",       Text = "Recursive", Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Subs",            Text = "Subs",      Action = GotoNextSibling },
-                new Page2Button { Id = "Imdb",            Text = "Imdb",      Action = GotoNextSibling },
+                new Page2Button { Id = "Subs",            Text = "Subs",      Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
+                new Page2Button { Id = "Imdb",            Text = "Imdb",      Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
                 new Page2Button { Id = "Delete",          Text = "Delete",    Action = GotoNextSibling },
                 new Page2Button { Id = "Explore",         Text = "Explore",   Action = GotoNextSibling },
                 //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
@@ -77,6 +77,11 @@ namespace DesktopBrowser.client
             };
         }
 
+        private void OpenInNewWindow(string p)
+        {
+            Win.open(p, "_blank");
+        }
+
         private void LoadReq()
         {
             QueryString.parse(null, Req);
@@ -85,7 +90,7 @@ namespace DesktopBrowser.client
             {
                 path = "";
             }
-            else if(path.startsWith("//"))
+            else if (path.startsWith("//"))
             {
                 var tokens = path.split('/');
                 path = tokens.join("\\");
@@ -116,22 +121,22 @@ namespace DesktopBrowser.client
         {
             Service.ListFiles(Req, res =>
                {
-                   ListFilesResponse = res;
+                   Res = res;
                    cb.Trigger();
                });
         }
 
         void GotoPrevSibling()
         {
-            GotoFolder(ListFilesResponse.Relatives.PreviousSibling);
+            GotoFolder(Res.Relatives.PreviousSibling);
         }
         void GotoNextSibling()
         {
-            GotoFolder(ListFilesResponse.Relatives.NextSibling);
+            GotoFolder(Res.Relatives.NextSibling);
         }
         void GotoParentDir()
         {
-            GotoFolder(ListFilesResponse.Relatives.ParentFolder);
+            GotoFolder(Res.Relatives.ParentFolder);
         }
 
         void GotoFolder(File file)
@@ -152,14 +157,14 @@ namespace DesktopBrowser.client
         {
             var state = Q.copy(Req);
             var path = state.Path.AsJsString();
-            if (path.length>0)
+            if (path.length > 0)
             {
                 var isNetworkShare = path.startsWith("\\\\");
                 if (isNetworkShare)//network share
                     path = path.substr(1);
                 var tokens = path.split('\\');//.where(t=>t.length>0);
-                if(!isNetworkShare)
-                    tokens[0] = tokens[0].replaceAll(":","");
+                if (!isNetworkShare)
+                    tokens[0] = tokens[0].replaceAll(":", "");
                 //tokens[0] = tokens[0].replaceAll(":", "");
                 //tokens = tokens;
                 path = tokens.join("/");
@@ -178,7 +183,7 @@ namespace DesktopBrowser.client
             var q = QueryString.stringify(state);
             if (q.isNotNullOrEmpty())
                 q = "?" + q;
-            var url = HtmlContext.location.origin+path + q;
+            var url = HtmlContext.location.origin + path + q;
             var win = HtmlContext.window;
             //win.history.pushState(state, Req.Path, "?" + q);
             win.history.pushState(state, Req.Path, url);
@@ -206,7 +211,7 @@ namespace DesktopBrowser.client
             grdFiles.off();
             var gridOptions = new GridOptions<File>
             {
-                Items = ListFilesResponse.Files.AsJsArray(),
+                Items = Res.Files.AsJsArray(),
                 Columns =
                     {
                         new GridCol<File> {Prop = t=>t.Name     ,    Width=null , RenderCell=RenderNameCell},
@@ -261,39 +266,39 @@ namespace DesktopBrowser.client
             if (File == null)
                 return null;
             var s = GetFilenameForSearch(File.Name);
-            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s + " eng subscene");
+            return "https://www.google.com/search?q=" + HtmlContext.encodeURIComponent(s + " eng subscene");
         }
         public string GetGoogleSearchLink(File File)
         {
             if (File == null)
                 return null;
             var s = GetFilenameForSearch(File.Name);
-            return "https://www.google.com/search?q=" + HttpUtility.UrlEncode(s);
+            return "https://www.google.com/search?q=" + HtmlContext.encodeURIComponent(s);
         }
-        string GetFilenameForSearch(string s)
+        string GetFilenameForSearch(JsString s)
         {
             //s = s.Replace(".", " ").Replace("-", " ");
-            var tokens = s.Split(' ', '.', '-');
-            var ignoreWords = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase) { "xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2" };
-            var list = new List<string>();
+            var tokens = s.split(new JsRegExp(@"[ \.\-]")).select(t=>t.toLowerCase());
+            var ignoreWords = new JsArray<JsString> { "xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2" }.selectToObject(t=>t, t=>true);
+            var list = new JsArray<JsString>();
             foreach (var token in tokens)
             {
-                if (ignoreWords.Contains(token))
+                if (ignoreWords[token])
                     break;
-                if (token.Length == 3)
+                if (token.length == 3)
                 {
-                    var season = TryParse(token.Substring(0, 1));
-                    var episode = TryParse(token.Substring(1));
+                    var season = TryParse(token.substr(0, 1));
+                    var episode = TryParse(token.substr(1));
                     if (season != null && episode != null && episode < 30)
                     {
-                        var normalized = "S"+season.format("00")+"E"+episode.format("00");
+                        var normalized = "S" + season.format("00") + "E" + episode.format("00");
                         list.Add(normalized);
                         break;
                     }
                 }
                 list.Add(token);
             }
-            var s2 = String.Join(" ", list.ToArray());
+            var s2 = list.join(" ");// String.Join(" ", list.ToArray());
             return s2;
         }
 
