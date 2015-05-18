@@ -1,5 +1,4 @@
-﻿using DesktopBrowser.client;
-using DesktopBrowser.client.grid;
+﻿using corexjs.ui.grid;
 using DesktopBrowser.client.utils;
 using DesktopBrowser.Server;
 using SharpKit.Html;

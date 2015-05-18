@@ -63,7 +63,6 @@
     </div>
     <script src="res/libs/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script src="res/js/sk.js" type="text/javascript"></script>
-    <script src="res/js/date.format.js" type="text/javascript"></script>
     <script src="res/js/desktopbrowser.js" type="text/javascript"></script>
     <script src="res/js/default.js" type="text/javascript"></script>
     <script>var _page = new dbr.DefaultPage();</script>

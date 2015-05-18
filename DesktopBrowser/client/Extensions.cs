@@ -1,4 +1,5 @@
-﻿using SharpKit.JavaScript;
+﻿using corexjs;
+using SharpKit.JavaScript;
 using System;
 using System.Collections.Generic;
 using System.Linq;

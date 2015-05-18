@@ -3,7 +3,7 @@
 if (typeof(dbr) == "undefined")
     var dbr = {};
 dbr.DefaultPage2 = function (){
-    this.ListFilesResponse = null;
+    this.Res = null;
     this.grdFiles = null;
     this.tbPath = null;
     this.btnGroup = null;
@@ -13,7 +13,7 @@ dbr.DefaultPage2 = function (){
     this.El = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
-    this.ListFilesResponse = {
+    this.Res = {
         Relatives: {}
     };
 };
@@ -29,19 +29,19 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Id: "GotoParentDir",
         Text: "Up",
         Action: $CreateAnonymousDelegate(this, function (){
-            this.GotoFolder(this.ListFilesResponse.Relatives.ParentFolder);
+            this.GotoFolder(this.Res.Relatives.ParentFolder);
         })
     }, {
         Id: "GotoPrevSibling",
         Text: "Prev",
         Action: $CreateAnonymousDelegate(this, function (){
-            this.GotoFolder(this.ListFilesResponse.Relatives.PreviousSibling);
+            this.GotoFolder(this.Res.Relatives.PreviousSibling);
         })
     }, {
         Id: "GotoNextSibling",
         Text: "Next",
         Action: $CreateAnonymousDelegate(this, function (){
-            this.GotoFolder(this.ListFilesResponse.Relatives.NextSibling);
+            this.GotoFolder(this.Res.Relatives.NextSibling);
         })
     }, {
         Id: "Folders",
@@ -96,13 +96,13 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Id: "Subs",
         Text: "Subs",
         Action: $CreateAnonymousDelegate(this, function (){
-            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.ListFilesResponse.File));
+            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.Res.File));
         })
     }, {
         Id: "Imdb",
         Text: "Imdb",
         Action: $CreateAnonymousDelegate(this, function (){
-            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.ListFilesResponse.File));
+            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.Res.File));
         })
     }, {
         Id: "Delete",
@@ -155,18 +155,18 @@ dbr.DefaultPage2.prototype.AddButton = function (btn){
 };
 dbr.DefaultPage2.prototype.ListFiles = function (cb){
     this.Service.ListFiles(this.Req, $CreateAnonymousDelegate(this, function (res){
-        this.ListFilesResponse = res;
+        this.Res = res;
         dbr.Extensions2.Trigger(cb);
     }));
 };
 dbr.DefaultPage2.prototype.GotoPrevSibling = function (){
-    this.GotoFolder(this.ListFilesResponse.Relatives.PreviousSibling);
+    this.GotoFolder(this.Res.Relatives.PreviousSibling);
 };
 dbr.DefaultPage2.prototype.GotoNextSibling = function (){
-    this.GotoFolder(this.ListFilesResponse.Relatives.NextSibling);
+    this.GotoFolder(this.Res.Relatives.NextSibling);
 };
 dbr.DefaultPage2.prototype.GotoParentDir = function (){
-    this.GotoFolder(this.ListFilesResponse.Relatives.ParentFolder);
+    this.GotoFolder(this.Res.Relatives.ParentFolder);
 };
 dbr.DefaultPage2.prototype.GotoFolder = function (file){
     if (file == null || !file.IsFolder)
@@ -215,7 +215,7 @@ dbr.DefaultPage2.prototype.Render = function (){
 dbr.DefaultPage2.prototype.RenderGrid = function (){
     this.grdFiles.off();
     var gridOptions = {
-        Items: this.ListFilesResponse.Files,
+        Items: this.Res.Files,
         Columns: [{
             Prop: function (t){
                 return t.Name;
@@ -244,7 +244,7 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
         PageSize: 100
     };
     this.grdFiles.Grid(gridOptions);
-    var grid = dbr.grid.Grid.Get(this.grdFiles);
+    var grid = corexjs.ui.grid.Grid.Get(this.grdFiles);
     this.grdFiles.click(($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
         var file = grid.GetItem(target);
