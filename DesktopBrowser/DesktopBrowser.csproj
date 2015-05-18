@@ -89,6 +89,7 @@
     <Content Include="res\libs\corex\corex-sk.js" />
     <Content Include="res\libs\corex\corex.js" />
     <Content Include="res\libs\corex\grid.js" />
+    <Content Include="res\libs\corex\sk.js" />
     <Content Include="res\libs\jquery\jquery-2.1.3.min.js" />
     <Content Include="res\css\default.css" />
     <Content Include="Templates\FilesGrid.ascx" />

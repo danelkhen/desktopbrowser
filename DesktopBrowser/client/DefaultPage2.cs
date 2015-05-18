@@ -222,12 +222,12 @@ namespace DesktopBrowser.client
                 PageSize = 100,
             };
             grdFiles.Grid(gridOptions);
-            var grid = Grid<File>.Get(grdFiles);
+            grdFiles2 = Grid<File>.Get(grdFiles);
 
             grdFiles.mousedown(e =>
             {
                 var target = e.target.ToJ();
-                var file = grid.GetItem(target);
+                var file = grdFiles2.GetItem(target);
                 if (file == null)
                     return;
                 ClickFile(file, e.ctrlKey, e.shiftKey);
@@ -235,7 +235,7 @@ namespace DesktopBrowser.client
             grdFiles.click(e =>
             {
                 var target = e.target.ToJ();
-                var file = grid.GetItem(target);
+                var file = grdFiles2.GetItem(target);
                 if (file == null)
                     return;
                 if (!target.@is("a.Name"))
@@ -246,7 +246,7 @@ namespace DesktopBrowser.client
             grdFiles.dblclick(e =>
             {
                 var target = e.target.ToJ();
-                var file = grid.GetItem(target);
+                var file = grdFiles2.GetItem(target);
                 if (file == null)
                     return;
                 e.preventDefault();
@@ -254,8 +254,8 @@ namespace DesktopBrowser.client
             });
         }
 
-//        JsArray<File> SelectedFiles = new JsArray<File>();
-        File ActiveFile{get;set;}
+        JsArray<File> SelectedFiles = new JsArray<File>();
+        File ActiveFile { get; set; }
         //{
         //    get
         //    {
@@ -268,7 +268,9 @@ namespace DesktopBrowser.client
         //}
         private void ClickFile(File file, bool ctrl, bool shift)
         {
-            if(ctrl)
+            var prev = ActiveFile;
+
+            if (ctrl)
             {
                 if (ActiveFile == file)
                     ActiveFile = null;
@@ -284,7 +286,39 @@ namespace DesktopBrowser.client
                 ActiveFile = file;
             }
 
+            grdFiles2.RenderRow(prev);
+            if (ActiveFile != null)
+                grdFiles2.RenderRow(ActiveFile);
+        }
+        private void ClickFile2(File file, bool ctrl, bool shift)
+        {
+            var lastActive = SelectedFiles.last();
+            var removed = new JsArray<File>(); ;
 
+            if (ctrl)
+            {
+                if (SelectedFiles.contains(file))
+                {
+                    SelectedFiles.remove(file);
+                    removed.push(file);
+                }
+                else
+                {
+                    SelectedFiles.push(file);
+                }
+            }
+            else if (shift)
+            {
+                ActiveFile = file;
+            }
+            else
+            {
+                ActiveFile = file;
+            }
+
+            //grdFiles2.RenderRow(prev);
+            if (ActiveFile != null)
+                grdFiles2.RenderRow(ActiveFile);
         }
 
 
@@ -334,9 +368,12 @@ namespace DesktopBrowser.client
 
         private JsString GetRowClass(File file, JsNumber index)
         {
+            var s = "FileRow";
             if (file.IsFolder)
-                return "FolderRow";
-            return "FileRow";
+                s = "FolderRow";
+            if (file == ActiveFile)
+                s += " Active";
+            return s;
         }
 
 
@@ -390,6 +427,8 @@ namespace DesktopBrowser.client
         }
 
 
+
+        public Grid<File> grdFiles2 { get; set; }
     }
 
     [JsType(JsMode.Json)]

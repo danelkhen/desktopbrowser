@@ -9,9 +9,11 @@ dbr.DefaultPage2 = function (){
     this.btnGroup = null;
     this.Req = null;
     this.Win = null;
+    this.SelectedFiles =  [];
     this.Service = null;
     this.El = null;
     this.ActiveFile = null;
+    this.grdFiles2 = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
     this.Res = {
@@ -249,17 +251,17 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
         PageSize: 100
     };
     this.grdFiles.Grid(gridOptions);
-    var grid = corexjs.ui.grid.Grid.Get(this.grdFiles);
+    this.grdFiles2 = corexjs.ui.grid.Grid.Get(this.grdFiles);
     this.grdFiles.mousedown($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
-        var file = grid.GetItem(target);
+        var file = this.grdFiles2.GetItem(target);
         if (file == null)
             return;
         this.ClickFile(file, e.ctrlKey, e.shiftKey);
     }));
     this.grdFiles.click($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
-        var file = grid.GetItem(target);
+        var file = this.grdFiles2.GetItem(target);
         if (file == null)
             return;
         if (!target.is("a.Name"))
@@ -269,7 +271,7 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     }));
     this.grdFiles.dblclick($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
-        var file = grid.GetItem(target);
+        var file = this.grdFiles2.GetItem(target);
         if (file == null)
             return;
         e.preventDefault();
@@ -277,6 +279,7 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     }));
 };
 dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
+    var prev = this.ActiveFile;
     if (ctrl){
         if (this.ActiveFile == file)
             this.ActiveFile = null;
@@ -289,6 +292,30 @@ dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
     else {
         this.ActiveFile = file;
     }
+    this.grdFiles2.RenderRow$$T(prev);
+    if (this.ActiveFile != null)
+        this.grdFiles2.RenderRow$$T(this.ActiveFile);
+};
+dbr.DefaultPage2.prototype.ClickFile2 = function (file, ctrl, shift){
+    var lastActive = this.SelectedFiles.last();
+    var removed =  [];
+    if (ctrl){
+        if (this.SelectedFiles.contains(file)){
+            this.SelectedFiles.remove(file);
+            removed.push(file);
+        }
+        else {
+            this.SelectedFiles.push(file);
+        }
+    }
+    else if (shift){
+        this.ActiveFile = file;
+    }
+    else {
+        this.ActiveFile = file;
+    }
+    if (this.ActiveFile != null)
+        this.grdFiles2.RenderRow$$T(this.ActiveFile);
 };
 dbr.DefaultPage2.prototype.Open = function (file){
     if (file == null)
@@ -326,9 +353,12 @@ dbr.DefaultPage2.prototype.RenderNameCell = function (col, file, td){
     td.getAppend("a.Name").text(file.Name).attr("href", "javascript:void(0)");
 };
 dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
+    var s = "FileRow";
     if (file.IsFolder)
-        return "FolderRow";
-    return "FileRow";
+        s = "FolderRow";
+    if (file == this.ActiveFile)
+        s += " Active";
+    return s;
 };
 dbr.DefaultPage2.prototype.GetSubtitleSearchLink = function (File){
     if (File == null)
