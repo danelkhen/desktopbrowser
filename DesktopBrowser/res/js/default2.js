@@ -11,6 +11,7 @@ dbr.DefaultPage2 = function (){
     this.Win = null;
     this.Service = null;
     this.El = null;
+    this.ActiveFile = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
     this.Res = {
@@ -111,7 +112,11 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     }, {
         Id: "Explore",
         Text: "Explore",
-        Action: $CreateDelegate(this, this.GotoNextSibling)
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.Execute(this.Res.File, $CreateAnonymousDelegate(this, function (res){
+                console.info(res);
+            }));
+        })
     }
     ];
     btns.forEach($CreateDelegate(this, this.AddButton));
@@ -245,43 +250,74 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     };
     this.grdFiles.Grid(gridOptions);
     var grid = corexjs.ui.grid.Grid.Get(this.grdFiles);
-    this.grdFiles.on("click dblclick", $CreateAnonymousDelegate(this, function (e){
+    this.grdFiles.mousedown($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
         var file = grid.GetItem(target);
         if (file == null)
             return;
-        if (file.IsFolder){
-            if (target.is("a.Name")){
-                e.preventDefault();
-                this.GotoFolder(file);
-            }
-            else if (e.type == "dblclick"){
-                e.preventDefault();
-                this.GotoFolder(file);
-            }
-        }
-        else {
-            e.preventDefault();
-            var prompt = false;
-            if (file.Extension != null){
-                var ext = file.Extension.toLowerCase();
-                var blackList =  [".exe", ".bat", ".com"];
-                if (blackList.contains(ext)){
-                    prompt = true;
-                }
-            }
-            else {
-                prompt = true;
-            }
-            if (prompt && !this.Win.confirm("This is an executable file, are you sure you want to run it?"))
-                return;
-            this.Service.Execute({
-                Path: file.Path
-            }, $CreateAnonymousDelegate(this, function (res){
-                console.info(res);
-            }));
-        }
+        this.ClickFile(file, e.ctrlKey, e.shiftKey);
     }));
+    this.grdFiles.click($CreateAnonymousDelegate(this, function (e){
+        var target = $(e.target);
+        var file = grid.GetItem(target);
+        if (file == null)
+            return;
+        if (!target.is("a.Name"))
+            return;
+        e.preventDefault();
+        this.Open(file);
+    }));
+    this.grdFiles.dblclick($CreateAnonymousDelegate(this, function (e){
+        var target = $(e.target);
+        var file = grid.GetItem(target);
+        if (file == null)
+            return;
+        e.preventDefault();
+        this.Open(file);
+    }));
+};
+dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
+    if (ctrl){
+        if (this.ActiveFile == file)
+            this.ActiveFile = null;
+        else
+            this.ActiveFile = file;
+    }
+    else if (shift){
+        this.ActiveFile = file;
+    }
+    else {
+        this.ActiveFile = file;
+    }
+};
+dbr.DefaultPage2.prototype.Open = function (file){
+    if (file == null)
+        return;
+    if (file.IsFolder){
+        this.GotoFolder(file);
+        return;
+    }
+    var prompt = false;
+    if (file.Extension != null){
+        var ext = file.Extension.toLowerCase();
+        var blackList =  [".exe", ".bat", ".com"];
+        if (blackList.contains(ext)){
+            prompt = true;
+        }
+    }
+    else {
+        prompt = true;
+    }
+    if (prompt && !this.Win.confirm("This is an executable file, are you sure you want to run it?"))
+        return;
+    this.Execute(file, $CreateAnonymousDelegate(this, function (res){
+        console.info(res);
+    }));
+};
+dbr.DefaultPage2.prototype.Execute = function (file, cb){
+    this.Service.Execute({
+        Path: file.Path
+    }, cb);
 };
 dbr.DefaultPage2.prototype.FormatFriendlyDate = function (arg){
     return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(arg), null);

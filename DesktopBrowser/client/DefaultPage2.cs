@@ -55,7 +55,7 @@ namespace DesktopBrowser.client
                 new Page2Button { Id = "Subs",            Text = "Subs",      Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
                 new Page2Button { Id = "Imdb",            Text = "Imdb",      Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
                 new Page2Button { Id = "Delete",          Text = "Delete",    Action = GotoNextSibling },
-                new Page2Button { Id = "Explore",         Text = "Explore",   Action = GotoNextSibling },
+                new Page2Button { Id = "Explore",         Text = "Explore",   Action = () => Execute(Res.File, res=>HtmlContext.console.info(res))},
                 //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
             };
             btns.forEach(AddButton);
@@ -224,47 +224,101 @@ namespace DesktopBrowser.client
             grdFiles.Grid(gridOptions);
             var grid = Grid<File>.Get(grdFiles);
 
-            grdFiles.on("click dblclick", e =>
+            grdFiles.mousedown(e =>
             {
                 var target = e.target.ToJ();
                 var file = grid.GetItem(target);
                 if (file == null)
                     return;
-                if (file.IsFolder)
-                {
-                    if (target.@is("a.Name"))
-                    {
-                        e.preventDefault();
-                        GotoFolder(file);
-                    }
-                    else if (e.type == "dblclick")
-                    {
-                        e.preventDefault();
-                        GotoFolder(file);
-                    }
-                }
-                else
-                {
-                    e.preventDefault();
-                    var prompt = false;
-                    if (file.Extension != null)
-                    {
-                        var ext = file.Extension.AsJsString().toLowerCase();
-                        var blackList = new JsArray<JsString> { ".exe", ".bat", ".com", };
-                        if (blackList.contains(ext))
-                        {
-                            prompt = true;
-                        }
-                    }
-                    else
-                    {
-                        prompt = true;
-                    }
-                    if (prompt && !Win.confirm("This is an executable file, are you sure you want to run it?"))
-                        return;
-                    Service.Execute(new PathRequest { Path = file.Path }, res => HtmlContext.console.info(res));
-                }
+                ClickFile(file, e.ctrlKey, e.shiftKey);
             });
+            grdFiles.click(e =>
+            {
+                var target = e.target.ToJ();
+                var file = grid.GetItem(target);
+                if (file == null)
+                    return;
+                if (!target.@is("a.Name"))
+                    return;
+                e.preventDefault();
+                Open(file);
+            });
+            grdFiles.dblclick(e =>
+            {
+                var target = e.target.ToJ();
+                var file = grid.GetItem(target);
+                if (file == null)
+                    return;
+                e.preventDefault();
+                Open(file);
+            });
+        }
+
+//        JsArray<File> SelectedFiles = new JsArray<File>();
+        File ActiveFile{get;set;}
+        //{
+        //    get
+        //    {
+        //        return SelectedFiles[0];
+        //    }
+        //    set
+        //    {
+        //        SelectedFiles.push(value);
+        //    }
+        //}
+        private void ClickFile(File file, bool ctrl, bool shift)
+        {
+            if(ctrl)
+            {
+                if (ActiveFile == file)
+                    ActiveFile = null;
+                else
+                    ActiveFile = file;
+            }
+            else if (shift)
+            {
+                ActiveFile = file;
+            }
+            else
+            {
+                ActiveFile = file;
+            }
+
+
+        }
+
+
+        void Open(File file)
+        {
+            if (file == null)
+                return;
+            if (file.IsFolder)
+            {
+                GotoFolder(file);
+                return;
+            }
+            var prompt = false;
+            if (file.Extension != null)
+            {
+                var ext = file.Extension.AsJsString().toLowerCase();
+                var blackList = new JsArray<JsString> { ".exe", ".bat", ".com", };
+                if (blackList.contains(ext))
+                {
+                    prompt = true;
+                }
+            }
+            else
+            {
+                prompt = true;
+            }
+            if (prompt && !Win.confirm("This is an executable file, are you sure you want to run it?"))
+                return;
+            Execute(file, res => HtmlContext.console.info(res));
+        }
+
+        void Execute(File file, JsAction<object> cb)
+        {
+            Service.Execute(new PathRequest { Path = file.Path }, cb);
         }
 
 
@@ -303,8 +357,8 @@ namespace DesktopBrowser.client
         string GetFilenameForSearch(JsString s)
         {
             //s = s.Replace(".", " ").Replace("-", " ");
-            var tokens = s.split(new JsRegExp(@"[ \.\-]")).select(t=>t.toLowerCase());
-            var ignoreWords = new JsArray<JsString> { "xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2" }.selectToObject(t=>t, t=>true);
+            var tokens = s.split(new JsRegExp(@"[ \.\-]")).select(t => t.toLowerCase());
+            var ignoreWords = new JsArray<JsString> { "xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2" }.selectToObject(t => t, t => true);
             var list = new JsArray<JsString>();
             foreach (var token in tokens)
             {
