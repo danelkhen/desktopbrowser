@@ -224,21 +224,47 @@ namespace DesktopBrowser.client
             grdFiles.Grid(gridOptions);
             var grid = Grid<File>.Get(grdFiles);
 
-            grdFiles.click((JsAction<Event>)(e =>
+            grdFiles.on("click dblclick", e =>
             {
                 var target = e.target.ToJ();
                 var file = grid.GetItem(target);
                 if (file == null)
                     return;
-                if (file.IsFolder && target.@is("a.Name"))
+                if (file.IsFolder)
                 {
-                    GotoFolder(file);
+                    if (target.@is("a.Name"))
+                    {
+                        e.preventDefault();
+                        GotoFolder(file);
+                    }
+                    else if (e.type == "dblclick")
+                    {
+                        e.preventDefault();
+                        GotoFolder(file);
+                    }
                 }
                 else
                 {
+                    e.preventDefault();
+                    var prompt = false;
+                    if (file.Extension != null)
+                    {
+                        var ext = file.Extension.AsJsString().toLowerCase();
+                        var blackList = new JsArray<JsString> { ".exe", ".bat", ".com", };
+                        if (blackList.contains(ext))
+                        {
+                            prompt = true;
+                        }
+                    }
+                    else
+                    {
+                        prompt = true;
+                    }
+                    if (prompt && !Win.confirm("This is an executable file, are you sure you want to run it?"))
+                        return;
                     Service.Execute(new PathRequest { Path = file.Path }, res => HtmlContext.console.info(res));
                 }
-            }));
+            });
         }
 
 

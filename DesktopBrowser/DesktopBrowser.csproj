@@ -72,7 +72,6 @@
     <Content Include="Default2.aspx" />
     <Content Include="Global.asax" />
     <Content Include="res\css\default2.css" />
-    <Content Include="res\js\date.format.js" />
     <Content Include="res\js\default.js" />
     <Content Include="res\js\default2.js" />
     <Content Include="res\js\desktopbrowser.js" />

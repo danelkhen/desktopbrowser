@@ -245,22 +245,43 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     };
     this.grdFiles.Grid(gridOptions);
     var grid = corexjs.ui.grid.Grid.Get(this.grdFiles);
-    this.grdFiles.click(($CreateAnonymousDelegate(this, function (e){
+    this.grdFiles.on("click dblclick", $CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
         var file = grid.GetItem(target);
         if (file == null)
             return;
-        if (file.IsFolder && target.is("a.Name")){
-            this.GotoFolder(file);
+        if (file.IsFolder){
+            if (target.is("a.Name")){
+                e.preventDefault();
+                this.GotoFolder(file);
+            }
+            else if (e.type == "dblclick"){
+                e.preventDefault();
+                this.GotoFolder(file);
+            }
         }
         else {
+            e.preventDefault();
+            var prompt = false;
+            if (file.Extension != null){
+                var ext = file.Extension.toLowerCase();
+                var blackList =  [".exe", ".bat", ".com"];
+                if (blackList.contains(ext)){
+                    prompt = true;
+                }
+            }
+            else {
+                prompt = true;
+            }
+            if (prompt && !this.Win.confirm("This is an executable file, are you sure you want to run it?"))
+                return;
             this.Service.Execute({
                 Path: file.Path
             }, $CreateAnonymousDelegate(this, function (res){
                 console.info(res);
             }));
         }
-    })));
+    }));
 };
 dbr.DefaultPage2.prototype.FormatFriendlyDate = function (arg){
     return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(arg), null);

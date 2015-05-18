@@ -47,7 +47,7 @@ namespace DesktopBrowser.client
                 {
                     if (dt.Day == rel.Day)
                     {
-                        return dt.format("hh:mm tt").toLowerCase();
+                        return dt.format("HH:mm").toLowerCase();
                     }
                     return dt.format("MMM d");
                 }

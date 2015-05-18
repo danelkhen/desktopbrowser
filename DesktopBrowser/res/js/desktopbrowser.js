@@ -125,7 +125,7 @@ dbr.SiteExtensions.ToFriendlyRelative2 = function (dt, rel){
     if (dt.Year == rel.Year){
         if (dt.Month == rel.Month){
             if (dt.Day == rel.Day){
-                return dt.format("hh:mm tt").toLowerCase();
+                return dt.format("HH:mm").toLowerCase();
             }
             return dt.format("MMM d");
         }
