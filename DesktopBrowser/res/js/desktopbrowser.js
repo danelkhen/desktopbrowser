@@ -345,9 +345,11 @@ dbr.Extensions2.DataItem$1 = function (j){
     return j.data("DataItem");
 };
 dbr.utils.Selection = function (){
-    this.Changed = null;
     this.SelectedItems = null;
     this.AllItems = null;
+    this.Changed = null;
+    this.SelectedItems =  [];
+    this.AllItems =  [];
 };
 dbr.utils.Selection.prototype.Toggle = function (list, item){
     var index = list.indexOf(item);
@@ -385,12 +387,6 @@ dbr.utils.Selection.prototype.Click = function (item, ctrl, shift){
         To: this.SelectedItems
     });
 };
-dbr.utils.Selection.prototype.add_Changed = function (value){
-    this.Changed = $CombineDelegates(this.Changed, value);
-};
-dbr.utils.Selection.prototype.remove_Changed = function (value){
-    this.Changed = $RemoveDelegate(this.Changed, value);
-};
 dbr.utils.Selection.prototype.OnChanged = function (e){
     var diff = e.From.diff(e.To);
     e.Added = diff.added;
@@ -408,12 +404,12 @@ dbr.Utils.CalcChangePct = function (from, to){
 dbr.Utils.ObjToClass = function (obj, defaultTypeForNull){
     var sb =  [];
     var mappings = (function (){
-        var $v1 = new Object();
-        $v1 ["object"] = "JsObject";
-        $v1 ["number"] = "JsNumber";
-        $v1 ["boolean"] = "JsBoolean";
-        $v1 ["string"] = "JsString";
-        return $v1;
+        var $v2 = new Object();
+        $v2 ["object"] = "JsObject";
+        $v2 ["number"] = "JsNumber";
+        $v2 ["boolean"] = "JsBoolean";
+        $v2 ["string"] = "JsString";
+        return $v2;
     })();
     sb.push("public class Obj");
     sb.push("{");

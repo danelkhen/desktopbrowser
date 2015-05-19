@@ -9,6 +9,7 @@ dbr.DefaultPage2 = function (){
     this.btnGroup = null;
     this.Req = null;
     this.Win = null;
+    this.FileSelection = null;
     this.Service = null;
     this.El = null;
     this.ActiveFile = null;
@@ -18,6 +19,11 @@ dbr.DefaultPage2 = function (){
     this.Res = {
         Relatives: {}
     };
+    this.FileSelection = (function (){
+        var $v1 = new dbr.utils.Selection();
+        $v1.Changed = $CreateDelegate(this, this.FileSelection_Changed);
+        return $v1;
+    }).call(this);
 };
 dbr.DefaultPage2.prototype.get_Path = function (){
     return this.Req.Path;
@@ -278,6 +284,8 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     }));
 };
 dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
+    this.FileSelection.Click(file, ctrl, shift);
+    return;
     var prev = this.ActiveFile;
     if (ctrl){
         if (this.ActiveFile == file)
@@ -294,6 +302,10 @@ dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
     this.grdFiles2.RenderRow$$T(prev);
     if (this.ActiveFile != null)
         this.grdFiles2.RenderRow$$T(this.ActiveFile);
+};
+dbr.DefaultPage2.prototype.FileSelection_Changed = function (e){
+    e.Removed.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
+    e.Added.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
 };
 dbr.DefaultPage2.prototype.Open = function (file){
     if (file == null)
@@ -334,7 +346,7 @@ dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
     var s = "FileRow";
     if (file.IsFolder)
         s = "FolderRow";
-    if (file == this.ActiveFile)
+    if (file == this.ActiveFile || this.FileSelection.SelectedItems.contains(file))
         s += " Active";
     return s;
 };

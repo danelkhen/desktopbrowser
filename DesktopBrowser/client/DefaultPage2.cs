@@ -23,7 +23,9 @@ namespace DesktopBrowser.client
             {
                 Relatives = new FileRelativesInfo { }
             };
+            FileSelection = new Selection<File> { Changed = FileSelection_Changed };
         }
+
 
         public JsString Path { get { return Req.Path; } }
         public SiteServiceClient Service { get; set; }
@@ -254,7 +256,7 @@ namespace DesktopBrowser.client
             });
         }
 
-        //Selection<File> FileSelection;
+        Selection<File> FileSelection;
         File ActiveFile { get; set; }
         //{
         //    get
@@ -268,6 +270,8 @@ namespace DesktopBrowser.client
         //}
         private void ClickFile(File file, bool ctrl, bool shift)
         {
+            FileSelection.Click(file, ctrl, shift);
+            return;
             var prev = ActiveFile;
 
             if (ctrl)
@@ -289,6 +293,12 @@ namespace DesktopBrowser.client
             grdFiles2.RenderRow(prev);
             if (ActiveFile != null)
                 grdFiles2.RenderRow(ActiveFile);
+        }
+
+        private void FileSelection_Changed(SelectionChangedEventArgs<File> e)
+        {
+            e.Removed.forEach(grdFiles2.RenderRow);
+            e.Added.forEach(grdFiles2.RenderRow);
         }
 
 
@@ -341,7 +351,7 @@ namespace DesktopBrowser.client
             var s = "FileRow";
             if (file.IsFolder)
                 s = "FolderRow";
-            if (file == ActiveFile)
+            if (file == ActiveFile || FileSelection.SelectedItems.contains(file))
                 s += " Active";
             return s;
         }

@@ -6,6 +6,11 @@ namespace DesktopBrowser.client.utils
     [JsType(JsMode.Prototype)]
     class Selection<T>
     {
+        public Selection()
+        {
+            SelectedItems = new JsArray<T>();
+            AllItems = new JsArray<T>();
+        }
 
         void Toggle(JsArray<T> list, T item)
         {
@@ -53,7 +58,7 @@ namespace DesktopBrowser.client.utils
             OnChanged(new SelectionChangedEventArgs<T> { From = prevSelection, To = SelectedItems });
         }
 
-        public event JsAction<SelectionChangedEventArgs<T>> Changed;
+        public JsAction<SelectionChangedEventArgs<T>> Changed { get; set; }
         private void OnChanged(SelectionChangedEventArgs<T> e)
         {
             var diff = e.From.diff(e.To);
