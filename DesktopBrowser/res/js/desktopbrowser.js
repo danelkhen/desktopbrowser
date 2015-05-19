@@ -344,6 +344,60 @@ dbr.Extensions2.GetCreateChildDivWithClass = function (el, className){
 dbr.Extensions2.DataItem$1 = function (j){
     return j.data("DataItem");
 };
+dbr.utils.Selection = function (){
+    this.Changed = null;
+    this.SelectedItems = null;
+    this.AllItems = null;
+};
+dbr.utils.Selection.prototype.Toggle = function (list, item){
+    var index = list.indexOf(item);
+    if (index < 0)
+        list.push(item);
+    else
+        list.removeAt(index);
+};
+dbr.utils.Selection.prototype.Click = function (item, ctrl, shift){
+    var sel = this.SelectedItems.toList();
+    var lastActive = this.SelectedItems.last();
+    var anchor = this.SelectedItems.first();
+    if (ctrl){
+        this.Toggle(sel, item);
+    }
+    else if (shift && anchor != null){
+        var index1 = this.AllItems.indexOf(anchor);
+        var index2 = this.AllItems.indexOf(item);
+        var minIndex = Math.min(index1, index2);
+        var maxIndex = Math.max(index1, index2);
+        var slice = this.AllItems.slice(minIndex, maxIndex + 1);
+        sel.clear();
+        sel.addRange(slice);
+    }
+    else {
+        sel.clear();
+        sel.push(item);
+    }
+    if (sel.itemsEqual(this.SelectedItems))
+        return;
+    var prevSelection = this.SelectedItems;
+    this.SelectedItems = sel;
+    this.OnChanged({
+        From: prevSelection,
+        To: this.SelectedItems
+    });
+};
+dbr.utils.Selection.prototype.add_Changed = function (value){
+    this.Changed = $CombineDelegates(this.Changed, value);
+};
+dbr.utils.Selection.prototype.remove_Changed = function (value){
+    this.Changed = $RemoveDelegate(this.Changed, value);
+};
+dbr.utils.Selection.prototype.OnChanged = function (e){
+    var diff = e.From.diff(e.To);
+    e.Added = diff.added;
+    e.Removed = diff.removed;
+    if (this.Changed != null)
+        this.Changed(e);
+};
 dbr.Utils = function (){
 };
 dbr.Utils.data = null;

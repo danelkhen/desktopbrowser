@@ -111,6 +111,7 @@
     <Compile Include="client\utils\Common.cs" />
     <Compile Include="client\utils\CopyOptions.cs" />
     <Compile Include="client\utils\Extensions2.cs" />
+    <Compile Include="client\utils\Selection.cs" />
     <Compile Include="client\utils\Unit.cs" />
     <Compile Include="client\utils\Utils.cs" />
     <Compile Include="Default.aspx.designer.cs">

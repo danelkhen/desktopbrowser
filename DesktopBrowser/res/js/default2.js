@@ -9,7 +9,6 @@ dbr.DefaultPage2 = function (){
     this.btnGroup = null;
     this.Req = null;
     this.Win = null;
-    this.SelectedFiles =  [];
     this.Service = null;
     this.El = null;
     this.ActiveFile = null;
@@ -293,27 +292,6 @@ dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
         this.ActiveFile = file;
     }
     this.grdFiles2.RenderRow$$T(prev);
-    if (this.ActiveFile != null)
-        this.grdFiles2.RenderRow$$T(this.ActiveFile);
-};
-dbr.DefaultPage2.prototype.ClickFile2 = function (file, ctrl, shift){
-    var lastActive = this.SelectedFiles.last();
-    var removed =  [];
-    if (ctrl){
-        if (this.SelectedFiles.contains(file)){
-            this.SelectedFiles.remove(file);
-            removed.push(file);
-        }
-        else {
-            this.SelectedFiles.push(file);
-        }
-    }
-    else if (shift){
-        this.ActiveFile = file;
-    }
-    else {
-        this.ActiveFile = file;
-    }
     if (this.ActiveFile != null)
         this.grdFiles2.RenderRow$$T(this.ActiveFile);
 };

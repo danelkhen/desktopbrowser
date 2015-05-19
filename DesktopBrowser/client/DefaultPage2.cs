@@ -254,7 +254,7 @@ namespace DesktopBrowser.client
             });
         }
 
-        JsArray<File> SelectedFiles = new JsArray<File>();
+        //Selection<File> FileSelection;
         File ActiveFile { get; set; }
         //{
         //    get
@@ -287,36 +287,6 @@ namespace DesktopBrowser.client
             }
 
             grdFiles2.RenderRow(prev);
-            if (ActiveFile != null)
-                grdFiles2.RenderRow(ActiveFile);
-        }
-        private void ClickFile2(File file, bool ctrl, bool shift)
-        {
-            var lastActive = SelectedFiles.last();
-            var removed = new JsArray<File>(); ;
-
-            if (ctrl)
-            {
-                if (SelectedFiles.contains(file))
-                {
-                    SelectedFiles.remove(file);
-                    removed.push(file);
-                }
-                else
-                {
-                    SelectedFiles.push(file);
-                }
-            }
-            else if (shift)
-            {
-                ActiveFile = file;
-            }
-            else
-            {
-                ActiveFile = file;
-            }
-
-            //grdFiles2.RenderRow(prev);
             if (ActiveFile != null)
                 grdFiles2.RenderRow(ActiveFile);
         }
