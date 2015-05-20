@@ -14,6 +14,8 @@ corexjs.ui.grid.Grid = function (el, opts){
     this.OrderByColClickCount = null;
     this.DataRows = null;
     this.VisibleColumns = null;
+    this.HeaderRows = null;
+    this.Table = null;
     this.Options = null;
     this.El = null;
     this.CurrentList = null;
@@ -116,14 +118,14 @@ corexjs.ui.grid.Grid.prototype.OrderBy = function (col){
     this.Render();
 };
 corexjs.ui.grid.Grid.prototype.RenderTable = function (){
-    var table = this.El.getAppend("table");
-    var thead = table.getAppend("thead");
-    var tbody = table.getAppend("tbody");
-    var tfoot = table.getAppendRemove("tfoot", this.Options.FooterItem != null ? 1 : 0);
+    this.Table = this.El.getAppend("table");
+    var thead = this.Table.getAppend("thead");
+    var tbody = this.Table.getAppend("tbody");
+    var tfoot = this.Table.getAppendRemove("tfoot", this.Options.FooterItem != null ? 1 : 0);
     this.VisibleColumns = this.Options.Columns.where($CreateAnonymousDelegate(this, function (t){
         return t.Visible == true;
     }));
-    var ths = thead.getAppend("tr").bindChildrenToList("th", this.VisibleColumns, $CreateAnonymousDelegate(this, function (th, col){
+    this.HeaderRows = thead.getAppend("tr").bindChildrenToList("th", this.VisibleColumns, $CreateAnonymousDelegate(this, function (th, col){
         this.RenderHeaderCell(col, th);
     }));
     var list = this.CurrentList;
@@ -135,25 +137,29 @@ corexjs.ui.grid.Grid.prototype.RenderTable = function (){
             this.RenderCell(col, this.Options.FooterItem, th);
         }));
     }
+};
+corexjs.ui.grid.Grid.prototype.AutoSizeColumns = function (){
     if (this.VisibleColumns.first($CreateAnonymousDelegate(this, function (t){
         return t.Width != null;
-    })) != null){
-        table.css("width", "");
-        ths.css("width", "");
-        var widths = this.VisibleColumns.select($CreateAnonymousDelegate(this, function (col, i){
-            var th = ths[i];
-            if (col.Width == null)
-                return th.offsetWidth;
-            return col.Width;
-        }));
-        this.VisibleColumns.forEach($CreateAnonymousDelegate(this, function (col, i){
-            var th = ths[i];
-            if (col.Width == null)
-                th.style.width = th.offsetWidth + "px";
-        }));
-        var totalWidth = widths.sum();
-        table.css("width", totalWidth + "px");
-    }
+    })) == null)
+        return;
+    this.Table.css("width", "");
+    this.HeaderRows.css("width", "");
+    var widths = this.VisibleColumns.select($CreateAnonymousDelegate(this, function (col, i){
+        var th = this.HeaderRows[i];
+        if (col.Width == null)
+            return th.offsetWidth;
+        return col.Width;
+    }));
+    this.VisibleColumns.forEach($CreateAnonymousDelegate(this, function (col, i){
+        var th = this.HeaderRows[i];
+        if (col.Width == null)
+            th.style.width = th.offsetWidth + "px";
+        else
+            th.style.width = col.Width + "px";
+    }));
+    var totalWidth = widths.sum();
+    this.Table.css("width", totalWidth + "px");
 };
 corexjs.ui.grid.Grid.prototype.RenderRow$$T = function (obj){
     if (this.DataRows == null)
