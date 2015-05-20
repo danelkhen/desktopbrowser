@@ -11,7 +11,7 @@
         <%if (ShowGrid){ %><uc:Pager ID="Pager1" runat="server" /><%} %>
         <div id="divClock" class="btn-group btn-group-sm pull-right">
         <div class="btn btn-default">
-            <span id="divTime"><%=DateTime.Now.ToString("h:mm tt") %></span><br />
+            <span id="divTime"><%=DateTime.Now.ToString("HH:mm") %></span><br />
             <span id="divDate"><%=DateTime.Now.ToString("ddd, MMM d")%></span>
             </div>
         </div>

@@ -8,6 +8,7 @@ using System.Web;
 
 namespace DesktopBrowser.client
 {
+
     //[JsType(JsMode.Prototype, NativeOverloads = false)]
     [JsType(JsMode.Prototype)]
     public class PropHelper<T>
@@ -21,6 +22,46 @@ namespace DesktopBrowser.client
     [JsType(JsMode.Prototype, NativeOverloads = false)]
     public static class Extensions2
     {
+        public static T GetNext<T>(this JsArray<T> list, T item)
+        {
+            var index = list.indexOf(item);
+            if (index < 0 || (index + 1) >= list.length)
+                return JsContext.@null.As<T>();
+            return list[index + 1];
+        }
+        public static T GetPrev<T>(this JsArray<T> list, T item)
+        {
+            var index = list.indexOf(item);
+            if (index <= 0)
+                return JsContext.@null.As<T>();
+            return list[index - 1];
+        }
+        public static T GetSibling<T>(this JsArray<T> list, T item, JsNumber offset)
+        {
+            if (offset == null || offset == 0)
+                return item;
+            var index = list.indexOf(item);
+            if (index < 0)
+                return JsContext.@null.As<T>();
+            var newIndex = index += offset;
+            if(newIndex<0 || newIndex>=list.length)
+                return JsContext.@null.As<T>();
+            return list[newIndex];
+        }
+        public static T GetSiblingOrEdge<T>(this JsArray<T> list, T item, JsNumber offset)
+        {
+            if (offset == null || offset == 0)
+                return item;
+            var index = list.indexOf(item);
+            var newIndex = index += offset;
+            if (newIndex < 0 || newIndex >= list.length)
+            {
+                if (offset > 0)
+                    return list.last();
+                return list.first();
+            }
+            return list[newIndex];
+        }
 
 
         //public static T firstOrAdd<T>(this JsArray<T> list, JsFunc<T, bool> predicate, JsFunc<T> creator)

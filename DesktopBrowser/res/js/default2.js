@@ -13,6 +13,7 @@ dbr.DefaultPage2 = function (){
     this.Service = null;
     this.El = null;
     this.grdFiles2 = null;
+    this.DefaultReq = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
     this.Res = {
@@ -73,7 +74,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         })
     }, {
         Id: "Size",
-        Text: "Size",
+        Text: "Folder Size",
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.FolderSize = !this.Req.FolderSize;
             this.SaveReqListAndRender();
@@ -130,6 +131,24 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         this.GotoPath(this.tbPath.val());
     }));
     this.Req = {};
+    this.DefaultReq = {
+        FolderSize: false,
+        HideFiles: false,
+        HideFolders: false,
+        ImageListColumns: null,
+        ImageListRows: null,
+        IsRecursive: false,
+        KeepView: false,
+        MixFilesAndFolders: false,
+        NoCache: false,
+        Path: "",
+        SearchPattern: "",
+        ShowHiddenFiles: false,
+        Skip: null,
+        Sort: null,
+        Take: null,
+        View: null
+    };
     this.LoadReq();
     this.tbPath.val(this.Req.Path);
     this.ListFiles($CreateDelegate(this, this.Render));
@@ -137,29 +156,46 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         this.LoadReq();
         this.ListAndRender();
     });
+    $(this.Win).keydown($CreateDelegate(this, this.Win_keydown));
+};
+dbr.DefaultPage2.prototype.Win_keydown = function (e){
+    this.FileSelection.KeyDown(e);
+    if (e.isDefaultPrevented())
+        return;
+    if (e.keyCode == dbr.utils.Keys.Enter){
+        var file = this.FileSelection.SelectedItems.last();
+        if (file == null)
+            return;
+        e.preventDefault();
+        this.Open(this.FileSelection.SelectedItems.last());
+    }
 };
 dbr.DefaultPage2.prototype.OpenInNewWindow = function (p){
     this.Win.open(p, "_blank");
 };
 dbr.DefaultPage2.prototype.LoadReq = function (){
-    QueryString.parse(null, this.Req, null);
+    QueryString.parse(null, this.Req, this.DefaultReq);
+    var req = this.Req;
+    var defs = this.DefaultReq;
+    Object.keys(req).forEach($CreateAnonymousDelegate(this, function (key){
+        var value = req[key];
+        var def = defs[key];
+        if (typeof(def) == "boolean"){
+            if (value == "1")
+                req[key] = true;
+            else if (value == "0")
+                req[key] = false;
+            if (Q.isNullOrEmpty(value))
+                req[key] = def;
+        }
+        if (typeof(def) == "number" && Q.isNullOrEmpty(value)){
+            req[key] = parseFloat(value);
+        }
+    }));
     var path = decodeURI(window.location.pathname);
-    if (path == "/"){
-        path = "";
-    }
-    else if (path.startsWith("//")){
-        var tokens = path.split("/");
-        path = tokens.join("\\");
-    }
-    else {
-        path = path.substr(1);
-        var tokens = path.split("/");
-        tokens[0] += ":";
-        path = tokens.join("\\");
-    }
-    if (path.endsWith("\\"))
-        path = dbr.SiteExtensions.removeLast(path, 1);
+    path = this.Path_LinuxToWin(path);
     this.Req.Path = path;
+    console.info("LoadReq", this.Req);
 };
 dbr.DefaultPage2.prototype.AddButton = function (btn){
     this.btnGroup.getAppend("button.btn.btn-default#btn" + btn.Id).text(btn.Text).click(btn.Action);
@@ -188,23 +224,61 @@ dbr.DefaultPage2.prototype.GotoPath = function (path){
     this.Req.Path = path;
     this.SaveReqListAndRender();
 };
+dbr.DefaultPage2.prototype.Path_LinuxToWin = function (path){
+    if (Q.isNullOrEmpty(path))
+        return path;
+    if (path == "/"){
+        path = "";
+    }
+    else if (path.startsWith("//")){
+        var tokens = path.split("/");
+        path = tokens.join("\\");
+    }
+    else {
+        path = path.substr(1);
+        var tokens = path.split("/");
+        tokens[0] += ":";
+        path = tokens.join("\\");
+    }
+    if (path.endsWith("\\"))
+        path = dbr.SiteExtensions.removeLast(path, 1);
+    return path;
+};
+dbr.DefaultPage2.prototype.Path_WinToLinux = function (path){
+    if (Q.isNullOrEmpty(path))
+        return path;
+    var isNetworkShare = path.startsWith("\\\\");
+    if (isNetworkShare)
+        path = path.substr(1);
+    var tokens = path.split("\\");
+    if (!isNetworkShare)
+        tokens[0] = tokens[0].replaceAll(":", "");
+    path = tokens.join("/");
+    path = encodeURI(path);
+    path = "/" + path;
+    if (!path.endsWith("/"))
+        path += "/";
+    return path;
+};
 dbr.DefaultPage2.prototype.SaveReq = function (){
     var state = Q.copy(this.Req);
     var path = state.Path;
-    if (path.length > 0){
-        var isNetworkShare = path.startsWith("\\\\");
-        if (isNetworkShare)
-            path = path.substr(1);
-        var tokens = path.split("\\");
-        if (!isNetworkShare)
-            tokens[0] = tokens[0].replaceAll(":", "");
-        path = tokens.join("/");
-        path = encodeURI(path);
-        path = "/" + path;
-        if (!path.endsWith("/"))
-            path += "/";
-    }
+    path = this.Path_WinToLinux(path);
     delete state.Path;
+    var state2 = state;
+    var defs = this.DefaultReq;
+    Object.keys(state2).forEach($CreateAnonymousDelegate(this, function (key){
+        var val = state2[key];
+        if (val == null || defs[key] == val){
+            delete state2[key];
+            return;
+        }
+        if (val === true)
+            state2[key] = "1";
+        else if (val === false)
+            state2[key] = "0";
+    }));
+    console.info("SaveReq", state);
     var q = QueryString.stringify(state);
     if (Q.isNotNullOrEmpty(q))
         q = "?" + q;

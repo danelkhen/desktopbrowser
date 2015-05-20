@@ -21,6 +21,8 @@ namespace DesktopBrowser.Server
     {
         public ListFilesResponse ListFiles(ListFilesRequest req)
         {
+            if (req.Path.EndsWith(":"))
+                req.Path += "\\";
             var res = new ListFilesResponse
             {
                 Relatives = GetFileRelatives(req.Path),

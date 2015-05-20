@@ -1529,7 +1529,7 @@
     function Q() {
     };
     Q.copy = function (src, target, options, depth) {
-        ///<summary>Copies an object into a target object, 
+        ///<summary>Copies an object into a target object,
         ///recursively cloning any native json object or array on the way, overwrite=true will overwrite a primitive field value even if exists
         ///Custom objects and functions are copied as/is by reference.
         ///</summary>

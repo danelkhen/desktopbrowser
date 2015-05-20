@@ -4,110 +4,116 @@
 }
 
 .Grid > table > thead > tr > th {
-    border:1px solid #eee;
+    border: 1px solid #eee;
     padding: 4px 8px;
-    white-space:nowrap;
-    cursor:default;
-    font-weight:bold;
+    white-space: nowrap;
+    cursor: default;
+    font-weight: bold;
 }
+
 .Grid > table > thead > tr > th:hover {
-    outline:1px solid #337ab7;
+    outline: 1px solid #337ab7;
 }
 
 .Grid > table > thead > tr > th.OrderBy.Asc {
-    background-color:#dddddd;
+    background-color: #dddddd;
 }
+
 .Grid > table > thead > tr > th.OrderBy.Desc {
-    background-color:#d0d0d0;
+    background-color: #d0d0d0;
 }
+
 .Grid > table > tfoot > tr > th {
     padding: 4px 8px;
-    white-space:nowrap;
-    cursor:pointer;
-    font-weight:bold;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: bold;
 }
-.Grid > table > tfoot > tr:hover {
-    outline:1px solid #337ab7;
-}
+
 
 .Grid > table > tbody > tr > td {
-    border:1px solid #eee;
+    border: 1px solid #eee;
     padding: 4px 8px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .Grid > table > tbody > tr:hover {
-    outline:1px solid #337ab7;
+    outline: 1px solid #ccc;
 }
-.Grid > .Pager > .Pages > .Page
-{
-    display:inline-block;
-    width:20px;
-    line-height:20px;
+.Grid > table > tfoot > tr:hover {
+    outline: 1px solid #ccc;
+}
+
+.Grid > .Pager > .Pages > .Page {
+    display: inline-block;
+    width: 20px;
+    line-height: 20px;
 }
 
 
-.Grid > .Search{
-    display:inline-block;
+.Grid > .Search {
+    display: inline-block;
 }
-.Grid > .Pager{
-    display:inline-block;
+
+.Grid > .Pager {
+    display: inline-block;
     margin: 0 5px;
 }
+
 .Grid > .Pager > .PagerInfo {
-    display:inline-block;
-    margin:0 5px;
+    display: inline-block;
+    margin: 0 5px;
 }
 
-.Grid > .Pager > .NextPage{
-    visibility:hidden;
-
+.Grid > .Pager > .NextPage {
+    visibility: hidden;
 }
+
 .Grid.HasNoPages > .Pager {
-    visibility:hidden;
+    visibility: hidden;
 }
+
 .Grid.HasOnePage > .Pager {
-    visibility:hidden;
-}
-.Grid.HasNextPage > .Pager > .NextPage{
-    visibility:visible;
+    visibility: hidden;
 }
 
-.Grid > .Pager > .PrevPage{
-    visibility:hidden;
-
-}
-.Grid.HasPrevPage > .Pager > .PrevPage{
-    visibility:visible;
-
+.Grid.HasNextPage > .Pager > .NextPage {
+    visibility: visible;
 }
 
-
-
-#grdFiles > table
-{
-    width:100%;
+.Grid > .Pager > .PrevPage {
+    visibility: hidden;
 }
-#grdFiles{
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
+
+.Grid.HasPrevPage > .Pager > .PrevPage {
+    visibility: visible;
+}
+
+
+
+#grdFiles > table {
+    width: 100%;
+}
+
+#grdFiles {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .FileRow a,
-.FileRow a:focus, 
-.FileRow a:hover 
-{
-    color:#053e70;
+.FileRow a:focus,
+.FileRow a:hover {
+    color: #053e70;
 }
 
 a:focus, a:hover {
-  color:#337ab7;
+    color: #337ab7;
 }
 
-.Active
-{
-    background-color:yellow;
+.Active {
+    background-color: yellow;
 }

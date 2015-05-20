@@ -50,7 +50,7 @@ namespace DesktopBrowser.client
                 new Page2Button { Id = "Folders",         Text = "Folders",   Action = () => { Req.HideFolders=!Req.HideFolders; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Files",           Text = "Files",     Action = () => { Req.HideFiles=!Req.HideFiles; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Mix",             Text = "Mix",       Action = () => { Req.MixFilesAndFolders=!Req.MixFilesAndFolders; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Size",            Text = "Size",      Action = () => { Req.FolderSize=!Req.FolderSize; SaveReqListAndRender(); } },
+                new Page2Button { Id = "Size",            Text = "Folder Size",      Action = () => { Req.FolderSize=!Req.FolderSize; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Keep",            Text = "Keep",      Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Hidden",          Text = "Hidden",    Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); } },
                 new Page2Button { Id = "Recursive",       Text = "Recursive", Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); } },
@@ -66,6 +66,25 @@ namespace DesktopBrowser.client
 
             //Options = new Page2Options { p = "" };
             Req = new ListFilesRequest();
+            DefaultReq = new ListFilesRequest
+            {
+                FolderSize = false,
+                HideFiles = false,
+                HideFolders = false,
+                ImageListColumns = null,
+                ImageListRows = null,
+                IsRecursive = false,
+                KeepView = false,
+                MixFilesAndFolders = false,
+                NoCache = false,
+                Path = "",
+                SearchPattern = "",
+                ShowHiddenFiles = false,
+                Skip = null,
+                Sort = null,
+                Take = null,
+                View = null,
+            };
             LoadReq();
 
             tbPath.val(Req.Path);
@@ -76,6 +95,23 @@ namespace DesktopBrowser.client
                 ListAndRender();
 
             };
+            new jQuery(Win).keydown(Win_keydown);
+        }
+
+        private void Win_keydown(Event e)
+        {
+            FileSelection.KeyDown(e);
+            if (e.isDefaultPrevented())
+                return;
+            if (e.keyCode == Keys.Enter)
+            {
+                var file = FileSelection.SelectedItems.last();
+                if (file == null)
+                    return;
+                e.preventDefault();
+                Open(FileSelection.SelectedItems.last());
+            }
+
         }
 
         private void OpenInNewWindow(string p)
@@ -85,27 +121,32 @@ namespace DesktopBrowser.client
 
         private void LoadReq()
         {
-            QueryString.parse(null, Req);
+            QueryString.parse(null, Req, DefaultReq);
+            var req = Req.As<JsObject>();
+            var defs = DefaultReq.As<JsObject>();
+            JsObjectEx.keys(req).forEach(key =>
+            {
+                var value = req[key];
+                var def = defs[key];
+
+                if (JsContext.@typeof(def) == "boolean")
+                {
+                    if (value.As<string>() == "1")
+                        req[key] = true;
+                    else if (value.As<string>() == "0")
+                        req[key] = false;
+                    if (value.As<JsString>().isNullOrEmpty())
+                        req[key] = def;
+                }
+                if (JsContext.@typeof(def) == "number" && value.As<JsString>().isNullOrEmpty())
+                {
+                    req[key] = JsContext.parseFloat(value.As<JsString>());
+                }
+            });
             var path = HtmlContext.decodeURI(HtmlContext.window.location.pathname);
-            if (path == "/")
-            {
-                path = "";
-            }
-            else if (path.startsWith("//"))
-            {
-                var tokens = path.split('/');
-                path = tokens.join("\\");
-            }
-            else
-            {
-                path = path.substr(1); //skip first / to get real drive name
-                var tokens = path.split('/');
-                tokens[0] += ":";
-                path = tokens.join("\\");
-            }
-            if (path.endsWith("\\"))
-                path = path.removeLast(1);
+            path = Path_LinuxToWin(path);
             Req.Path = path;
+            HtmlContext.console.info("LoadReq", Req);
         }
         //Page2Options Options;
 
@@ -154,41 +195,87 @@ namespace DesktopBrowser.client
             Req.Path = path;
             SaveReqListAndRender();
         }
+        JsString Path_LinuxToWin(JsString path)
+        {
+            if (path.isNullOrEmpty())
+                return path;
+            if (path == "/")
+            {
+                path = "";
+            }
+            else if (path.startsWith("//"))
+            {
+                var tokens = path.split('/');
+                path = tokens.join("\\");
+            }
+            else
+            {
+                path = path.substr(1); //skip first / to get real drive name
+                var tokens = path.split('/');
+                tokens[0] += ":";
+                path = tokens.join("\\");
+            }
+            if (path.endsWith("\\"))
+                path = path.removeLast(1);
+            return path;
+        }
+        JsString Path_WinToLinux(JsString path)
+        {
+            if (path.isNullOrEmpty())
+                return path;
+            var isNetworkShare = path.startsWith("\\\\");
+            if (isNetworkShare)//network share
+                path = path.substr(1);
+            var tokens = path.split('\\');//.where(t=>t.length>0);
+            if (!isNetworkShare)
+                tokens[0] = tokens[0].replaceAll(":", "");
+            //tokens[0] = tokens[0].replaceAll(":", "");
+            //tokens = tokens;
+            path = tokens.join("/");
+            //path = path.replaceAll(":\\", "/").replaceAll("\\", "/");
+            //path = "/" + path;
+            path = HtmlContext.encodeURI(path);
+            path = "/" + path;
+            //if (!path.startsWith("/"))
+            //    path = "/" + path;
+            if (!path.endsWith("/"))
+                path += "/";
+            return path;
+        }
         void SaveReq()
         {
             var state = Q.copy(Req);
             var path = state.Path.AsJsString();
-            if (path.length > 0)
-            {
-                var isNetworkShare = path.startsWith("\\\\");
-                if (isNetworkShare)//network share
-                    path = path.substr(1);
-                var tokens = path.split('\\');//.where(t=>t.length>0);
-                if (!isNetworkShare)
-                    tokens[0] = tokens[0].replaceAll(":", "");
-                //tokens[0] = tokens[0].replaceAll(":", "");
-                //tokens = tokens;
-                path = tokens.join("/");
-                //path = path.replaceAll(":\\", "/").replaceAll("\\", "/");
-                //path = "/" + path;
-                path = HtmlContext.encodeURI(path);
-                path = "/" + path;
-                //if (!path.startsWith("/"))
-                //    path = "/" + path;
-                if (!path.endsWith("/"))
-                    path += "/";
-
-            }
+            path = Path_WinToLinux(path);
 
             JsContext.delete(state.Path);
+            var state2 = state.As<JsObject>();
+            var defs = DefaultReq.As<JsObject>();
+            JsObjectEx.keys(state2).forEach(key =>
+            {
+                var val = state2[key];
+                if (val == null || defs[key] == val)
+                {
+                    JsContext.delete(state2[key]);
+                    return;
+                }
+                if (val.ExactEquals(true))
+                    state2[key] = "1";
+                else if (val.ExactEquals(false))
+                    state2[key] = "0";
+            });
+            HtmlContext.console.info("SaveReq", state);
             var q = QueryString.stringify(state);
             if (q.isNotNullOrEmpty())
                 q = "?" + q;
             var url = HtmlContext.location.origin + path + q;
             var win = HtmlContext.window;
+
             //win.history.pushState(state, Req.Path, "?" + q);
             win.history.pushState(state, Req.Path, url);
         }
+
+
 
         void SaveReqListAndRender()
         {
@@ -374,6 +461,7 @@ namespace DesktopBrowser.client
 
 
         public Grid<File> grdFiles2 { get; set; }
+        public ListFilesRequest DefaultReq { get; private set; }
     }
 
     [JsType(JsMode.Json)]

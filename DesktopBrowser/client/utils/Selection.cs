@@ -1,5 +1,6 @@
 ﻿using System;
 using SharpKit.JavaScript;
+using SharpKit.jQuery;
 
 namespace DesktopBrowser.client.utils
 {
@@ -23,6 +24,7 @@ namespace DesktopBrowser.client.utils
 
         public JsArray<T> SelectedItems { get; set; }
         public JsArray<T> AllItems { get; set; }
+
         public void Click(T item, bool ctrl, bool shift)
         {
             var sel = SelectedItems.toArray();
@@ -52,6 +54,57 @@ namespace DesktopBrowser.client.utils
             }
 
             if (sel.itemsEqual(SelectedItems))
+                return;
+            var prevSelection = SelectedItems;
+            SelectedItems = sel;
+
+            OnChanged(new SelectionChangedEventArgs<T> { From = prevSelection, To = SelectedItems });
+        }
+        public void KeyDown(Event e)
+        {
+            var keyCode = e.keyCode;
+            var ctrl = e.ctrlKey;
+            var sel = SelectedItems.toArray();
+            var lastActive = SelectedItems.last();
+            if (lastActive == null)
+            {
+                if (AllItems.length > 0)
+                {
+                    SetSelection(new JsArray<T> { AllItems[0] });
+                    e.preventDefault();
+                }
+                return;
+            }
+            var offset = 0;
+            if (keyCode == Keys.Down)
+                offset = 1;
+            else if (keyCode == Keys.Up)
+                offset = -1;
+            else if (keyCode == Keys.PageDown)
+                offset = AllItems.length;
+            else if (keyCode == Keys.PageUp)
+                offset = AllItems.length * -1;
+            var sibling = AllItems.GetSiblingOrEdge(lastActive, offset);
+            if (sibling == null || sibling.ExactEquals(lastActive))
+                return;
+            e.preventDefault();
+            if (ctrl)
+                AddToSelection(sibling);
+            else
+                SetSelection(new JsArray<T> { sibling });
+        }
+
+        void AddToSelection(T item)
+        {
+            if (SelectedItems.contains(item))
+                return;
+            var sel = SelectedItems.toArray();
+            sel.push(item);
+            SetSelection(sel);
+        }
+        void SetSelection(JsArray<T> sel)
+        {
+            if (sel.itemsEqual(SelectedItems) || sel == SelectedItems)
                 return;
             var prevSelection = SelectedItems;
             SelectedItems = sel;

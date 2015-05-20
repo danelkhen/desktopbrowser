@@ -131,7 +131,7 @@ dbr.DefaultPage.prototype.Up = function (){
 };
 dbr.DefaultPage.prototype.RestoreSelection = function (){
     var folder = $("#tbFilename").val();
-    var filename = this.GetStorageItem(folder);
+    var filename = dbr.DefaultPage.GetStorageItem(folder);
     if (filename != null && filename.length > 0){
         $("#grdFiles .NameCell A").each($CreateAnonymousDelegate(this, function (i, el){
             var x = $(el);
@@ -142,21 +142,21 @@ dbr.DefaultPage.prototype.RestoreSelection = function (){
         }));
     }
 };
-dbr.DefaultPage.prototype.GetStorageItem = function (key){
-    return this.win.localStorage.getItem(key);
+dbr.DefaultPage.GetStorageItem = function (key){
+    return window.localStorage.getItem(key);
 };
-dbr.DefaultPage.prototype.SetStorageItem = function (key, value){
-    this.win.localStorage.setItem(key, value);
+dbr.DefaultPage.SetStorageItem = function (key, value){
+    window.localStorage.setItem(key, value);
 };
 dbr.DefaultPage.prototype.SaveSelection = function (filename){
     var folder = $("#tbFilename").val();
     var nextYear = new Date();
     nextYear.setFullYear(nextYear.getFullYear() + 4);
-    this.SetStorageItem(folder, filename);
+    dbr.DefaultPage.SetStorageItem(folder, filename);
 };
 dbr.DefaultPage.prototype.UpdateClock = function (){
-    $("#divTime").text(new Date().format("h:MM tt"));
-    $("#divDate").text(new Date().format("ddd, mmm d"));
+    $("#divTime").text(new Date().format("HH:mm"));
+    $("#divDate").text(new Date().format("ddd, MMM d"));
     this.win.setTimeout($CreateDelegate(this, this.UpdateClock), 5000);
 };
 dbr.DefaultPage.prototype.Execute = function (path){

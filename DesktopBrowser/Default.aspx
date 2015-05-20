@@ -65,6 +65,7 @@
     <script src="res/js/sk.js" type="text/javascript"></script>
     <script src="res/js/desktopbrowser.js" type="text/javascript"></script>
     <script src="res/js/default.js" type="text/javascript"></script>
+    <script src="res/libs/corex/corex.js"></script>
     <script>var _page = new dbr.DefaultPage();</script>
 </body>
 </html>

@@ -200,13 +200,13 @@ namespace DesktopBrowser.client
 
         }
 
-        JsString GetStorageItem(JsString key)
+        public static JsString GetStorageItem(JsString key)
         {
-            return win.As<SharpKit.Html.Window>().localStorage.getItem(key).As<JsString>();
+            return HtmlContext.window.localStorage.getItem(key).As<JsString>();
         }
-        void SetStorageItem(JsString key, JsString value)
+        public static void SetStorageItem(JsString key, JsString value)
         {
-            win.As<SharpKit.Html.Window>().localStorage.setItem(key, value);
+            HtmlContext.window.localStorage.setItem(key, value);
         }
         void SaveSelection(JsString filename)
         {
@@ -218,8 +218,8 @@ namespace DesktopBrowser.client
         }
         void UpdateClock()
         {
-            "#divTime".ToJ().text(new JsDate().format("h:MM tt"));
-            "#divDate".ToJ().text(new JsDate().format("ddd, mmm d"));
+            "#divTime".ToJ().text(new JsDate().format("HH:mm"));
+            "#divDate".ToJ().text(new JsDate().format("ddd, MMM d"));
             win.setTimeout(UpdateClock, 5000);
         }
         void Execute(JsString path)

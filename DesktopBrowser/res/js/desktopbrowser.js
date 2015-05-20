@@ -277,6 +277,41 @@ dbr.PropHelper.prototype.Prop = function (prop){
 };
 dbr.Extensions2 = function (){
 };
+dbr.Extensions2.GetNext$1 = function (list, item){
+    var index = list.indexOf(item);
+    if (index < 0 || (index + 1) >= list.length)
+        return null;
+    return list[index + 1];
+};
+dbr.Extensions2.GetPrev$1 = function (list, item){
+    var index = list.indexOf(item);
+    if (index <= 0)
+        return null;
+    return list[index - 1];
+};
+dbr.Extensions2.GetSibling$1 = function (list, item, offset){
+    if (offset == null || offset == 0)
+        return item;
+    var index = list.indexOf(item);
+    if (index < 0)
+        return null;
+    var newIndex = index += offset;
+    if (newIndex < 0 || newIndex >= list.length)
+        return null;
+    return list[newIndex];
+};
+dbr.Extensions2.GetSiblingOrEdge$1 = function (list, item, offset){
+    if (offset == null || offset == 0)
+        return item;
+    var index = list.indexOf(item);
+    var newIndex = index += offset;
+    if (newIndex < 0 || newIndex >= list.length){
+        if (offset > 0)
+            return list.last();
+        return list.first();
+    }
+    return list[newIndex];
+};
 dbr.Extensions2.ToFloatOrNull = function (s){
     var x = parseFloat(s);
     if (isNaN(x))
@@ -382,6 +417,53 @@ dbr.utils.Selection.prototype.Click = function (item, ctrl, shift){
         sel.push(item);
     }
     if (sel.itemsEqual(this.SelectedItems))
+        return;
+    var prevSelection = this.SelectedItems;
+    this.SelectedItems = sel;
+    this.OnChanged({
+        From: prevSelection,
+        To: this.SelectedItems
+    });
+};
+dbr.utils.Selection.prototype.KeyDown = function (e){
+    var keyCode = e.keyCode;
+    var ctrl = e.ctrlKey;
+    var sel = this.SelectedItems.toArray();
+    var lastActive = this.SelectedItems.last();
+    if (lastActive == null){
+        if (this.AllItems.length > 0){
+            this.SetSelection( [this.AllItems[0]]);
+            e.preventDefault();
+        }
+        return;
+    }
+    var offset = 0;
+    if (keyCode == dbr.utils.Keys.Down)
+        offset = 1;
+    else if (keyCode == dbr.utils.Keys.Up)
+        offset = -1;
+    else if (keyCode == dbr.utils.Keys.PageDown)
+        offset = this.AllItems.length;
+    else if (keyCode == dbr.utils.Keys.PageUp)
+        offset = this.AllItems.length * -1;
+    var sibling = dbr.Extensions2.GetSiblingOrEdge$1(this.AllItems, lastActive, offset);
+    if (sibling == null || sibling === lastActive)
+        return;
+    e.preventDefault();
+    if (ctrl)
+        this.AddToSelection(sibling);
+    else
+        this.SetSelection( [sibling]);
+};
+dbr.utils.Selection.prototype.AddToSelection = function (item){
+    if (this.SelectedItems.contains(item))
+        return;
+    var sel = this.SelectedItems.toArray();
+    sel.push(item);
+    this.SetSelection(sel);
+};
+dbr.utils.Selection.prototype.SetSelection = function (sel){
+    if (sel.itemsEqual(this.SelectedItems) || sel == this.SelectedItems)
         return;
     var prevSelection = this.SelectedItems;
     this.SelectedItems = sel;
