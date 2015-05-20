@@ -359,7 +359,7 @@ dbr.utils.Selection.prototype.Toggle = function (list, item){
         list.removeAt(index);
 };
 dbr.utils.Selection.prototype.Click = function (item, ctrl, shift){
-    var sel = this.SelectedItems.toList();
+    var sel = this.SelectedItems.toArray();
     var lastActive = this.SelectedItems.last();
     var anchor = this.SelectedItems.first();
     if (ctrl){
@@ -372,7 +372,10 @@ dbr.utils.Selection.prototype.Click = function (item, ctrl, shift){
         var maxIndex = Math.max(index1, index2);
         var slice = this.AllItems.slice(minIndex, maxIndex + 1);
         sel.clear();
-        sel.addRange(slice);
+        sel.add(anchor);
+        sel.addRange(slice.where($CreateAnonymousDelegate(this, function (t){
+            return t != anchor;
+        })));
     }
     else {
         sel.clear();

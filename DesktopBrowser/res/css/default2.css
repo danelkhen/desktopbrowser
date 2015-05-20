@@ -89,6 +89,12 @@
 {
     width:100%;
 }
+#grdFiles{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
 
 .FileRow a,
 .FileRow a:focus, 

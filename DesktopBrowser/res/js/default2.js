@@ -12,7 +12,6 @@ dbr.DefaultPage2 = function (){
     this.FileSelection = null;
     this.Service = null;
     this.El = null;
-    this.ActiveFile = null;
     this.grdFiles2 = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
@@ -257,12 +256,14 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     };
     this.grdFiles.Grid(gridOptions);
     this.grdFiles2 = corexjs.ui.grid.Grid.Get(this.grdFiles);
+    this.FileSelection.AllItems = this.grdFiles2.CurrentList;
+    this.FileSelection.SelectedItems.clear();
     this.grdFiles.mousedown($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
         var file = this.grdFiles2.GetItem(target);
         if (file == null)
             return;
-        this.ClickFile(file, e.ctrlKey, e.shiftKey);
+        this.FileSelection.Click(file, e.ctrlKey, e.shiftKey);
     }));
     this.grdFiles.click($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
@@ -282,26 +283,6 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
         e.preventDefault();
         this.Open(file);
     }));
-};
-dbr.DefaultPage2.prototype.ClickFile = function (file, ctrl, shift){
-    this.FileSelection.Click(file, ctrl, shift);
-    return;
-    var prev = this.ActiveFile;
-    if (ctrl){
-        if (this.ActiveFile == file)
-            this.ActiveFile = null;
-        else
-            this.ActiveFile = file;
-    }
-    else if (shift){
-        this.ActiveFile = file;
-    }
-    else {
-        this.ActiveFile = file;
-    }
-    this.grdFiles2.RenderRow$$T(prev);
-    if (this.ActiveFile != null)
-        this.grdFiles2.RenderRow$$T(this.ActiveFile);
 };
 dbr.DefaultPage2.prototype.FileSelection_Changed = function (e){
     e.Removed.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
@@ -346,7 +327,7 @@ dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
     var s = "FileRow";
     if (file.IsFolder)
         s = "FolderRow";
-    if (file == this.ActiveFile || this.FileSelection.SelectedItems.contains(file))
+    if (this.FileSelection.SelectedItems.contains(file))
         s += " Active";
     return s;
 };

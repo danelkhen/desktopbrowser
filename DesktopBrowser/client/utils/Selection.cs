@@ -25,7 +25,7 @@ namespace DesktopBrowser.client.utils
         public JsArray<T> AllItems { get; set; }
         public void Click(T item, bool ctrl, bool shift)
         {
-            var sel = SelectedItems.toList();
+            var sel = SelectedItems.toArray();
             var lastActive = SelectedItems.last();
             var anchor = SelectedItems.first();
 
@@ -42,7 +42,8 @@ namespace DesktopBrowser.client.utils
                 var maxIndex = JsMath.max(index1, index2);
                 var slice = AllItems.slice(minIndex, maxIndex + 1);
                 sel.clear();
-                sel.addRange(slice);
+                sel.add(anchor);
+                sel.addRange(slice.where(t => t.As<object>() != anchor.As<object>()));
             }
             else
             {

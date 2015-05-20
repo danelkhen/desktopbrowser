@@ -225,6 +225,8 @@ namespace DesktopBrowser.client
             };
             grdFiles.Grid(gridOptions);
             grdFiles2 = Grid<File>.Get(grdFiles);
+            FileSelection.AllItems = grdFiles2.CurrentList;
+            FileSelection.SelectedItems.clear();
 
             grdFiles.mousedown(e =>
             {
@@ -232,7 +234,7 @@ namespace DesktopBrowser.client
                 var file = grdFiles2.GetItem(target);
                 if (file == null)
                     return;
-                ClickFile(file, e.ctrlKey, e.shiftKey);
+                FileSelection.Click(file, e.ctrlKey, e.shiftKey);
             });
             grdFiles.click(e =>
             {
@@ -257,43 +259,6 @@ namespace DesktopBrowser.client
         }
 
         Selection<File> FileSelection;
-        File ActiveFile { get; set; }
-        //{
-        //    get
-        //    {
-        //        return SelectedFiles[0];
-        //    }
-        //    set
-        //    {
-        //        SelectedFiles.push(value);
-        //    }
-        //}
-        private void ClickFile(File file, bool ctrl, bool shift)
-        {
-            FileSelection.Click(file, ctrl, shift);
-            return;
-            var prev = ActiveFile;
-
-            if (ctrl)
-            {
-                if (ActiveFile == file)
-                    ActiveFile = null;
-                else
-                    ActiveFile = file;
-            }
-            else if (shift)
-            {
-                ActiveFile = file;
-            }
-            else
-            {
-                ActiveFile = file;
-            }
-
-            grdFiles2.RenderRow(prev);
-            if (ActiveFile != null)
-                grdFiles2.RenderRow(ActiveFile);
-        }
 
         private void FileSelection_Changed(SelectionChangedEventArgs<File> e)
         {
@@ -351,7 +316,7 @@ namespace DesktopBrowser.client
             var s = "FileRow";
             if (file.IsFolder)
                 s = "FolderRow";
-            if (file == ActiveFile || FileSelection.SelectedItems.contains(file))
+            if (FileSelection.SelectedItems.contains(file))
                 s += " Active";
             return s;
         }
