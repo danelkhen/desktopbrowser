@@ -131,7 +131,7 @@ dbr.DefaultPage.prototype.Up = function (){
 };
 dbr.DefaultPage.prototype.RestoreSelection = function (){
     var folder = $("#tbFilename").val();
-    var filename = dbr.DefaultPage.GetStorageItem(folder);
+    var filename = dbr.DefaultPage.RestoreSelection(folder);
     if (filename != null && filename.length > 0){
         $("#grdFiles .NameCell A").each($CreateAnonymousDelegate(this, function (i, el){
             var x = $(el);
@@ -142,6 +142,10 @@ dbr.DefaultPage.prototype.RestoreSelection = function (){
         }));
     }
 };
+dbr.DefaultPage.RestoreSelection = function (folder){
+    var filename = dbr.DefaultPage.GetStorageItem(folder);
+    return filename;
+};
 dbr.DefaultPage.GetStorageItem = function (key){
     return window.localStorage.getItem(key);
 };
@@ -150,9 +154,10 @@ dbr.DefaultPage.SetStorageItem = function (key, value){
 };
 dbr.DefaultPage.prototype.SaveSelection = function (filename){
     var folder = $("#tbFilename").val();
-    var nextYear = new Date();
-    nextYear.setFullYear(nextYear.getFullYear() + 4);
-    dbr.DefaultPage.SetStorageItem(folder, filename);
+    dbr.DefaultPage.SaveSelection2(folder, filename);
+};
+dbr.DefaultPage.SaveSelection2 = function (folderName, filename){
+    dbr.DefaultPage.SetStorageItem(folderName, filename);
 };
 dbr.DefaultPage.prototype.UpdateClock = function (){
     $("#divTime").text(new Date().format("HH:mm"));

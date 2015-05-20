@@ -184,7 +184,8 @@ namespace DesktopBrowser.client
         void RestoreSelection()
         {
             var folder = "#tbFilename".ToJ().val().As<JsString>();
-            var filename = GetStorageItem(folder);// jQueryCookie.cookie(folder);
+
+            var filename = RestoreSelection(folder);
             if (filename != null && filename.length > 0)
             {
                 "#grdFiles .NameCell A".ToJ().each((i, el) =>
@@ -199,6 +200,11 @@ namespace DesktopBrowser.client
             }
 
         }
+        public static JsString RestoreSelection(JsString folder)
+        {
+            var filename = GetStorageItem(folder);
+            return filename;
+        }
 
         public static JsString GetStorageItem(JsString key)
         {
@@ -211,10 +217,11 @@ namespace DesktopBrowser.client
         void SaveSelection(JsString filename)
         {
             var folder = "#tbFilename".ToJ().val().As<JsString>();
-            var nextYear = new JsDate();
-            nextYear.setFullYear(nextYear.getFullYear() + 4);
-            SetStorageItem(folder, filename);
-            //jQueryCookie.cookie(folder, filename, new jQueryCookieOptions { expires = nextYear });
+            SaveSelection2(folder, filename);
+        }
+        public static void SaveSelection2(JsString folderName, JsString filename)
+        {
+            SetStorageItem(folderName, filename);
         }
         void UpdateClock()
         {

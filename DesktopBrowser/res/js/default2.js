@@ -181,10 +181,6 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         this.LoadReq();
         this.ListAndRender(null);
     });
-    this.Win.onresize = $CreateAnonymousDelegate(this, function (e){
-        if (this.grdFiles2 != null)
-            this.grdFiles2.Render();
-    });
     $(this.Win).keydown($CreateDelegate(this, this.Win_keydown));
 };
 dbr.DefaultPage2.prototype.Win_keydown = function (e){
@@ -423,10 +419,21 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     this.grdFiles2.Render();
     this.FileSelection.AllItems = this.grdFiles2.CurrentList;
     this.FileSelection.SelectedItems.clear();
+    var selectedFileName = dbr.DefaultPage.RestoreSelection(this.Res.File.Name);
+    if (Q.isNotNullOrEmpty(selectedFileName)){
+        var files = this.FileSelection.AllItems.where($CreateAnonymousDelegate(this, function (t){
+            return t.Name == selectedFileName;
+        }));
+        this.FileSelection.SetSelection(files);
+    }
 };
 dbr.DefaultPage2.prototype.FileSelection_Changed = function (e){
     e.Removed.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
     e.Added.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
+    var file = this.FileSelection.SelectedItems.last();
+    if (file == null)
+        return;
+    dbr.DefaultPage.SaveSelection2(this.Res.File.Name, file.Name);
 };
 dbr.DefaultPage2.prototype.DeleteAndRefresh = function (file, cb){
     if (file == null)

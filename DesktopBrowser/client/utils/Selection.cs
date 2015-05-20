@@ -94,7 +94,7 @@ namespace DesktopBrowser.client.utils
                 SetSelection(new JsArray<T> { sibling });
         }
 
-        void AddToSelection(T item)
+        public void AddToSelection(T item)
         {
             if (SelectedItems.contains(item))
                 return;
@@ -102,7 +102,7 @@ namespace DesktopBrowser.client.utils
             sel.push(item);
             SetSelection(sel);
         }
-        void SetSelection(JsArray<T> sel)
+        public void SetSelection(JsArray<T> sel)
         {
             if (sel.itemsEqual(SelectedItems) || sel == SelectedItems)
                 return;

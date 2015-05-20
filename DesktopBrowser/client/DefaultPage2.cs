@@ -96,11 +96,11 @@ namespace DesktopBrowser.client
                 ListAndRender();
 
             };
-            Win.onresize = e =>
-            {
-                if (grdFiles2 != null)
-                    grdFiles2.Render();
-            };
+            //Win.onresize = e =>
+            //{
+            //    if (grdFiles2 != null)
+            //        grdFiles2.Render();
+            //};
             new jQuery(Win).keydown(Win_keydown);
         }
 
@@ -400,6 +400,12 @@ namespace DesktopBrowser.client
             grdFiles2.Render();
             FileSelection.AllItems = grdFiles2.CurrentList;
             FileSelection.SelectedItems.clear();
+            var selectedFileName = DefaultPage.RestoreSelection(Res.File.Name);
+            if (selectedFileName.isNotNullOrEmpty())
+            {
+                var files = FileSelection.AllItems.where(t => t.Name == selectedFileName);
+                FileSelection.SetSelection(files);
+            }
 
 
             //var prevOptions = grdFiles2 != null ? grdFiles2.Options : new GridOptions<File>();
@@ -414,6 +420,10 @@ namespace DesktopBrowser.client
         {
             e.Removed.forEach(grdFiles2.RenderRow);
             e.Added.forEach(grdFiles2.RenderRow);
+            var file = FileSelection.SelectedItems.last();
+            if (file == null)
+                return;
+            DefaultPage.SaveSelection2(Res.File.Name, file.Name);
         }
 
         private void DeleteAndRefresh(File file, JsAction cb=null)
