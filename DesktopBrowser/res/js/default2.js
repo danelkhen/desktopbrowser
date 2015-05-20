@@ -94,7 +94,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         })
     }, {
         Id: "Keep",
-        Text: "Keep",
+        Text: "Keep View",
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.KeepView = !this.Req.KeepView;
             this.SaveReqListAndRender();
@@ -180,6 +180,10 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.Win.onpopstate = $CreateAnonymousDelegate(this, function (e){
         this.LoadReq();
         this.ListAndRender(null);
+    });
+    this.Win.onresize = $CreateAnonymousDelegate(this, function (e){
+        if (this.grdFiles2 != null)
+            this.grdFiles2.Render();
     });
     $(this.Win).keydown($CreateDelegate(this, this.Win_keydown));
 };

@@ -51,7 +51,7 @@ namespace DesktopBrowser.client
                 new Page2Button { Id = "Files",           Text = "Files",       Action = () => { Req.HideFiles=!Req.HideFiles; SaveReqListAndRender(); }                    , IsActive=()=>Req.HideFolders},
                 new Page2Button { Id = "Mix",             Text = "Mix",         Action = () => { Req.MixFilesAndFolders=!Req.MixFilesAndFolders; SaveReqListAndRender(); }  , IsActive=()=>Req.MixFilesAndFolders },
                 new Page2Button { Id = "Size",            Text = "Folder Size", Action = () => { Req.FolderSize=!Req.FolderSize; SaveReqListAndRender(); }                  , IsActive=()=>Req.FolderSize},
-                new Page2Button { Id = "Keep",            Text = "Keep",        Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); }                      , IsActive=()=>Req.KeepView},
+                new Page2Button { Id = "Keep",            Text = "Keep View",        Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); }                      , IsActive=()=>Req.KeepView},
                 new Page2Button { Id = "Hidden",          Text = "Hidden",      Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); }        , IsActive=()=>Req.ShowHiddenFiles},
                 new Page2Button { Id = "Recursive",       Text = "Recursive",   Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); }                , IsActive=()=>Req.IsRecursive},
                 new Page2Button { Id = "Subs",            Text = "Subs",        Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
@@ -95,6 +95,11 @@ namespace DesktopBrowser.client
                 LoadReq();
                 ListAndRender();
 
+            };
+            Win.onresize = e =>
+            {
+                if (grdFiles2 != null)
+                    grdFiles2.Render();
             };
             new jQuery(Win).keydown(Win_keydown);
         }
