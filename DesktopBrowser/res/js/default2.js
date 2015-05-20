@@ -14,6 +14,7 @@ dbr.DefaultPage2 = function (){
     this.El = null;
     this.grdFiles2 = null;
     this.DefaultReq = null;
+    this.Buttons = null;
     $($CreateDelegate(this, this.OnDomReady));
     this.Service = new dbr.SiteServiceClient();
     this.Res = {
@@ -33,7 +34,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.El = $("body");
     this.grdFiles = this.El.getAppend("#grdFiles.Grid");
     this.btnGroup = this.grdFiles.getAppend(".btn-group");
-    var btns =  [{
+    this.Buttons =  [{
         Id: "GotoParentDir",
         Text: "Up",
         Action: $CreateAnonymousDelegate(this, function (){
@@ -57,6 +58,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.HideFolders = !this.Req.HideFolders;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.HideFiles;
         })
     }, {
         Id: "Files",
@@ -64,6 +68,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.HideFiles = !this.Req.HideFiles;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.HideFolders;
         })
     }, {
         Id: "Mix",
@@ -71,6 +78,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.MixFilesAndFolders = !this.Req.MixFilesAndFolders;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.MixFilesAndFolders;
         })
     }, {
         Id: "Size",
@@ -78,6 +88,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.FolderSize = !this.Req.FolderSize;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.FolderSize;
         })
     }, {
         Id: "Keep",
@@ -85,6 +98,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.KeepView = !this.Req.KeepView;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.KeepView;
         })
     }, {
         Id: "Hidden",
@@ -92,6 +108,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.ShowHiddenFiles = !this.Req.ShowHiddenFiles;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.ShowHiddenFiles;
         })
     }, {
         Id: "Recursive",
@@ -99,6 +118,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Action: $CreateAnonymousDelegate(this, function (){
             this.Req.IsRecursive = !this.Req.IsRecursive;
             this.SaveReqListAndRender();
+        }),
+        IsActive: $CreateAnonymousDelegate(this, function (){
+            return this.Req.IsRecursive;
         })
     }, {
         Id: "Subs",
@@ -115,7 +137,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     }, {
         Id: "Delete",
         Text: "Delete",
-        Action: $CreateDelegate(this, this.GotoNextSibling)
+        Action: $CreateAnonymousDelegate(this, function (){
+            this.DeleteAndRefresh(this.FileSelection.SelectedItems.last(), null);
+        })
     }, {
         Id: "Explore",
         Text: "Explore",
@@ -126,7 +150,6 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         })
     }
     ];
-    btns.forEach($CreateDelegate(this, this.AddButton));
     this.tbPath = this.grdFiles.getAppend("input.form-control.Path").change($CreateAnonymousDelegate(this, function (e){
         this.GotoPath(this.tbPath.val());
     }));
@@ -150,11 +173,13 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         View: null
     };
     this.LoadReq();
+    this.RenderButtons();
+    this.CreateGrid();
     this.tbPath.val(this.Req.Path);
     this.ListFiles($CreateDelegate(this, this.Render));
     this.Win.onpopstate = $CreateAnonymousDelegate(this, function (e){
         this.LoadReq();
-        this.ListAndRender();
+        this.ListAndRender(null);
     });
     $(this.Win).keydown($CreateDelegate(this, this.Win_keydown));
 };
@@ -197,8 +222,32 @@ dbr.DefaultPage2.prototype.LoadReq = function (){
     this.Req.Path = path;
     console.info("LoadReq", this.Req);
 };
-dbr.DefaultPage2.prototype.AddButton = function (btn){
-    this.btnGroup.getAppend("button.btn.btn-default#btn" + btn.Id).text(btn.Text).click(btn.Action);
+dbr.DefaultPage2.prototype.RenderButtons = function (){
+    this.btnGroup.getAppendRemoveForEach("button.btn.btn-default", this.Buttons, $CreateAnonymousDelegate(this, function (el, btn){
+        btn.El = el;
+        if (btn.Id != null)
+            btn.El.attr("id", btn.Id);
+        btn.El.click($CreateAnonymousDelegate(this, function (e){
+            btn.Action();
+            this.RefreshButtonState(btn);
+        }));
+        btn.El.text(btn.Text);
+        this.RefreshButtonState(btn);
+    }));
+};
+dbr.DefaultPage2.prototype.RefreshButtonsState = function (){
+    this.Buttons.forEach($CreateDelegate(this, this.RefreshButtonState));
+};
+dbr.DefaultPage2.prototype.RefreshButtonState = function (btn){
+    this.ToggleClass(btn.El, "active", btn.IsActive);
+};
+dbr.DefaultPage2.prototype.ToggleClass = function (el, className, check){
+    if (check == null)
+        return;
+    var x = check();
+    if (x == null)
+        x = false;
+    el.toggleClass(className, x);
 };
 dbr.DefaultPage2.prototype.ListFiles = function (cb){
     this.Service.ListFiles(this.Req, $CreateAnonymousDelegate(this, function (res){
@@ -221,6 +270,10 @@ dbr.DefaultPage2.prototype.GotoFolder = function (file){
     this.GotoPath(file.Path);
 };
 dbr.DefaultPage2.prototype.GotoPath = function (path){
+    if (!this.Req.KeepView){
+        this.Req = {};
+        this.RefreshButtonsState();
+    }
     this.Req.Path = path;
     this.SaveReqListAndRender();
 };
@@ -288,19 +341,21 @@ dbr.DefaultPage2.prototype.SaveReq = function (){
 };
 dbr.DefaultPage2.prototype.SaveReqListAndRender = function (){
     this.SaveReq();
-    this.ListAndRender();
+    this.ListAndRender(null);
 };
-dbr.DefaultPage2.prototype.ListAndRender = function (){
-    this.ListFiles($CreateDelegate(this, this.Render));
+dbr.DefaultPage2.prototype.ListAndRender = function (cb){
+    this.ListFiles($CreateAnonymousDelegate(this, function (){
+        this.Render();
+        dbr.Extensions2.Trigger(cb);
+    }));
 };
 dbr.DefaultPage2.prototype.Render = function (){
     this.tbPath.val(this.get_Path());
     this.RenderGrid();
 };
-dbr.DefaultPage2.prototype.RenderGrid = function (){
+dbr.DefaultPage2.prototype.CreateGrid = function (){
     this.grdFiles.off();
     var gridOptions = {
-        Items: this.Res.Files,
         Columns: [{
             Prop: function (t){
                 return t.Name;
@@ -330,8 +385,6 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
     };
     this.grdFiles.Grid(gridOptions);
     this.grdFiles2 = corexjs.ui.grid.Grid.Get(this.grdFiles);
-    this.FileSelection.AllItems = this.grdFiles2.CurrentList;
-    this.FileSelection.SelectedItems.clear();
     this.grdFiles.mousedown($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
         var file = this.grdFiles2.GetItem(target);
@@ -358,9 +411,30 @@ dbr.DefaultPage2.prototype.RenderGrid = function (){
         this.Open(file);
     }));
 };
+dbr.DefaultPage2.prototype.RenderGrid = function (){
+    if (this.grdFiles2 == null){
+        this.CreateGrid();
+    }
+    this.grdFiles2.Options.Items = this.Res.Files;
+    this.grdFiles2.Render();
+    this.FileSelection.AllItems = this.grdFiles2.CurrentList;
+    this.FileSelection.SelectedItems.clear();
+};
 dbr.DefaultPage2.prototype.FileSelection_Changed = function (e){
     e.Removed.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
     e.Added.forEach($CreateDelegate(this.grdFiles2, this.grdFiles2.RenderRow$$T));
+};
+dbr.DefaultPage2.prototype.DeleteAndRefresh = function (file, cb){
+    if (file == null)
+        return;
+    var fileOrFolder = file.IsFolder ? "folder" : "file";
+    if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
+        return;
+    this.Service.Delete({
+        Path: file.Path
+    }, $CreateAnonymousDelegate(this, function (res){
+        this.ListAndRender(cb);
+    }));
 };
 dbr.DefaultPage2.prototype.Open = function (file){
     if (file == null)

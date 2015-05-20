@@ -42,25 +42,24 @@ namespace DesktopBrowser.client
             grdFiles = El.getAppend("#grdFiles.Grid");
             btnGroup = grdFiles.getAppend(".btn-group");
 
-            var btns = new JsArray<Page2Button>
+            Buttons = new JsArray<Page2Button>
             {
-                new Page2Button { Id = "GotoParentDir",   Text = "Up",        Action = () => GotoFolder(Res.Relatives.ParentFolder)},
-                new Page2Button { Id = "GotoPrevSibling", Text = "Prev",      Action = () => GotoFolder(Res.Relatives.PreviousSibling)},
-                new Page2Button { Id = "GotoNextSibling", Text = "Next",      Action = () => GotoFolder(Res.Relatives.NextSibling)},
-                new Page2Button { Id = "Folders",         Text = "Folders",   Action = () => { Req.HideFolders=!Req.HideFolders; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Files",           Text = "Files",     Action = () => { Req.HideFiles=!Req.HideFiles; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Mix",             Text = "Mix",       Action = () => { Req.MixFilesAndFolders=!Req.MixFilesAndFolders; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Size",            Text = "Folder Size",      Action = () => { Req.FolderSize=!Req.FolderSize; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Keep",            Text = "Keep",      Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Hidden",          Text = "Hidden",    Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Recursive",       Text = "Recursive", Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); } },
-                new Page2Button { Id = "Subs",            Text = "Subs",      Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
-                new Page2Button { Id = "Imdb",            Text = "Imdb",      Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
-                new Page2Button { Id = "Delete",          Text = "Delete",    Action = GotoNextSibling },
-                new Page2Button { Id = "Explore",         Text = "Explore",   Action = () => Execute(Res.File, res=>HtmlContext.console.info(res))},
+                new Page2Button { Id = "GotoParentDir",   Text = "Up",          Action = () => GotoFolder(Res.Relatives.ParentFolder)},
+                new Page2Button { Id = "GotoPrevSibling", Text = "Prev",        Action = () => GotoFolder(Res.Relatives.PreviousSibling)},
+                new Page2Button { Id = "GotoNextSibling", Text = "Next",        Action = () => GotoFolder(Res.Relatives.NextSibling)},
+                new Page2Button { Id = "Folders",         Text = "Folders",     Action = () => { Req.HideFolders=!Req.HideFolders; SaveReqListAndRender(); }                , IsActive=()=>Req.HideFiles},
+                new Page2Button { Id = "Files",           Text = "Files",       Action = () => { Req.HideFiles=!Req.HideFiles; SaveReqListAndRender(); }                    , IsActive=()=>Req.HideFolders},
+                new Page2Button { Id = "Mix",             Text = "Mix",         Action = () => { Req.MixFilesAndFolders=!Req.MixFilesAndFolders; SaveReqListAndRender(); }  , IsActive=()=>Req.MixFilesAndFolders },
+                new Page2Button { Id = "Size",            Text = "Folder Size", Action = () => { Req.FolderSize=!Req.FolderSize; SaveReqListAndRender(); }                  , IsActive=()=>Req.FolderSize},
+                new Page2Button { Id = "Keep",            Text = "Keep",        Action = () => { Req.KeepView=!Req.KeepView; SaveReqListAndRender(); }                      , IsActive=()=>Req.KeepView},
+                new Page2Button { Id = "Hidden",          Text = "Hidden",      Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); }        , IsActive=()=>Req.ShowHiddenFiles},
+                new Page2Button { Id = "Recursive",       Text = "Recursive",   Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); }                , IsActive=()=>Req.IsRecursive},
+                new Page2Button { Id = "Subs",            Text = "Subs",        Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
+                new Page2Button { Id = "Imdb",            Text = "Imdb",        Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
+                new Page2Button { Id = "Delete",          Text = "Delete",      Action = () => DeleteAndRefresh(FileSelection.SelectedItems.last())},
+                new Page2Button { Id = "Explore",         Text = "Explore",     Action = () => Execute(Res.File, res=>HtmlContext.console.info(res))},
                 //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
             };
-            btns.forEach(AddButton);
 
             tbPath = grdFiles.getAppend("input.form-control.Path").change(e => GotoPath(tbPath.valString()));
 
@@ -86,6 +85,8 @@ namespace DesktopBrowser.client
                 View = null,
             };
             LoadReq();
+            RenderButtons();
+            CreateGrid();
 
             tbPath.val(Req.Path);
             ListFiles(Render);
@@ -97,6 +98,7 @@ namespace DesktopBrowser.client
             };
             new jQuery(Win).keydown(Win_keydown);
         }
+
 
         private void Win_keydown(Event e)
         {
@@ -150,9 +152,41 @@ namespace DesktopBrowser.client
         }
         //Page2Options Options;
 
-        void AddButton(Page2Button btn)
+        private void RenderButtons()
         {
-            btnGroup.getAppend("button.btn.btn-default#btn" + btn.Id).text(btn.Text).click(btn.Action);
+            btnGroup.getAppendRemoveForEach("button.btn.btn-default", Buttons, (el, btn) =>
+            {
+                btn.El = el;
+                if (btn.Id != null)
+                    btn.El.attr("id", btn.Id);
+                btn.El.click(e =>
+                {
+                    btn.Action();
+                    RefreshButtonState(btn);
+                });
+                btn.El.text(btn.Text);
+                RefreshButtonState(btn);
+            });
+        }
+
+        void RefreshButtonsState()
+        {
+            Buttons.forEach(RefreshButtonState);
+        }
+
+        void RefreshButtonState(Page2Button btn)
+        {
+            ToggleClass(btn.El, "active", btn.IsActive);
+        }
+
+        void ToggleClass(jQuery el, JsString className, JsFunc<bool> check)
+        {
+            if (check == null)
+                return;
+            var x = check().As<JsBoolean>();
+            if (x == null)
+                x = false;
+            el.toggleClass(className, x);
         }
 
 
@@ -192,6 +226,11 @@ namespace DesktopBrowser.client
         {
             //if (!path.endsWith("\\"))
             //    path += "\\";
+            if (!Req.KeepView)
+            {
+                Req = new ListFilesRequest();
+                RefreshButtonsState();
+            }
             Req.Path = path;
             SaveReqListAndRender();
         }
@@ -282,9 +321,13 @@ namespace DesktopBrowser.client
             SaveReq();
             ListAndRender();
         }
-        void ListAndRender()
+        void ListAndRender(JsAction cb = null)
         {
-            ListFiles(Render);
+            ListFiles(()=>
+            {
+                Render();
+                cb.Trigger();
+            });
         }
 
 
@@ -294,12 +337,12 @@ namespace DesktopBrowser.client
             RenderGrid();
         }
 
-        void RenderGrid()
+        void CreateGrid()
         {
             grdFiles.off();
             var gridOptions = new GridOptions<File>
             {
-                Items = Res.Files.AsJsArray(),
+                //Items = Res.Files.AsJsArray(),
                 Columns =
                     {
                         new GridCol<File> {Prop = t=>t.Name     ,    Width=null , RenderCell=RenderNameCell},
@@ -312,8 +355,6 @@ namespace DesktopBrowser.client
             };
             grdFiles.Grid(gridOptions);
             grdFiles2 = Grid<File>.Get(grdFiles);
-            FileSelection.AllItems = grdFiles2.CurrentList;
-            FileSelection.SelectedItems.clear();
 
             grdFiles.mousedown(e =>
             {
@@ -344,6 +385,23 @@ namespace DesktopBrowser.client
                 Open(file);
             });
         }
+        void RenderGrid()
+        {
+            if (grdFiles2 == null)
+            {
+                CreateGrid();
+            }
+            grdFiles2.Options.Items = Res.Files.AsJsArray();
+            grdFiles2.Render();
+            FileSelection.AllItems = grdFiles2.CurrentList;
+            FileSelection.SelectedItems.clear();
+
+
+            //var prevOptions = grdFiles2 != null ? grdFiles2.Options : new GridOptions<File>();
+            //OrderBy = prevOptions.OrderBy,
+            //    OrderByDesc = prevOptions.OrderByDesc,
+
+        }
 
         Selection<File> FileSelection;
 
@@ -351,6 +409,19 @@ namespace DesktopBrowser.client
         {
             e.Removed.forEach(grdFiles2.RenderRow);
             e.Added.forEach(grdFiles2.RenderRow);
+        }
+
+        private void DeleteAndRefresh(File file, JsAction cb=null)
+        {
+            if (file == null)
+                return;
+            var fileOrFolder = file.IsFolder ? "folder" : "file";
+            if (!Win.confirm("Are you sure you wan to delete the "+fileOrFolder+"?\n"+file.Path))
+                return;
+            Service.Delete(new PathRequest { Path = file.Path }, res=>
+            {
+                ListAndRender(cb);
+            });
         }
 
 
@@ -462,6 +533,7 @@ namespace DesktopBrowser.client
 
         public Grid<File> grdFiles2 { get; set; }
         public ListFilesRequest DefaultReq { get; private set; }
+        internal JsArray<Page2Button> Buttons { get; private set; }
     }
 
     [JsType(JsMode.Json)]
@@ -480,6 +552,8 @@ namespace DesktopBrowser.client
         public string Id { get; set; }
 
         public JsAction Action { get; set; }
+        public JsFunc<bool> IsActive { get; set; }
+        public jQuery El { get; set; }
     }
 
 

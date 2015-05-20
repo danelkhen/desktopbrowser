@@ -16,11 +16,11 @@
 }
 
 .Grid > table > thead > tr > th.OrderBy.Asc {
-    background-color: #dddddd;
+    background-color: #eee;
 }
 
 .Grid > table > thead > tr > th.OrderBy.Desc {
-    background-color: #d0d0d0;
+    background-color: #ddd;
 }
 
 .Grid > table > tfoot > tr > th {
