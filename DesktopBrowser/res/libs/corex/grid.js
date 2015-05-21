@@ -7,7 +7,7 @@ if (typeof(corexjs.ui) == "undefined")
 if (typeof(corexjs.ui.grid) == "undefined")
     corexjs.ui.grid = {};
 corexjs.ui.grid.Grid = function (){
-    this.SearchTimer = null;
+    this.RenderTimer = null;
     this.TotalPages = null;
     this.tbSearch = null;
     this.OrderByCol = null;
@@ -23,7 +23,7 @@ corexjs.ui.grid.Grid = function (){
     this.Init();
 };
 corexjs.ui.grid.Grid = function (el, opts){
-    this.SearchTimer = null;
+    this.RenderTimer = null;
     this.TotalPages = null;
     this.tbSearch = null;
     this.OrderByCol = null;
@@ -41,9 +41,10 @@ corexjs.ui.grid.Grid = function (el, opts){
     this.Init();
 };
 corexjs.ui.grid.Grid.prototype.Init = function (){
-    this.SearchTimer = new Timer($CreateDelegate(this, this.Search));
+    this.RenderTimer = new Timer($CreateDelegate(this, this.Render));
 };
 corexjs.ui.grid.Grid.prototype.Render = function (){
+    console.info("Grid.Render");
     this.Verify();
     this.RenderSearch();
     this.RenderPager();
@@ -113,7 +114,7 @@ corexjs.ui.grid.Grid.prototype.ApplyQuery = function (){
     }));
 };
 corexjs.ui.grid.Grid.prototype.Search = function (){
-    this.Render();
+    this.RenderTimer.set(100);
 };
 corexjs.ui.grid.Grid.prototype.OrderBy = function (col){
     if (this.OrderByCol != col){
@@ -257,7 +258,7 @@ corexjs.ui.grid.Grid.prototype.RenderSearch = function (){
         this.tbSearch.data("x", true);
         this.tbSearch.on("input", $CreateAnonymousDelegate(this, function (e){
             this.Options.Query = this.tbSearch.val();
-            this.SearchTimer.set(1);
+            this.Search();
         }));
     }
 };

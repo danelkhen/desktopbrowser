@@ -342,6 +342,11 @@ namespace DesktopBrowser.client
             RenderGrid();
         }
 
+        void grdFiles_RenderFinished()
+        {
+            FileSelection.AllItems = grdFiles2.CurrentList;
+        }
+
         void CreateGrid()
         {
             grdFiles.off();
@@ -357,7 +362,7 @@ namespace DesktopBrowser.client
                     },
                 RowClass = GetRowClass,
                 PageSize = 100,
-                RenderFinished = () => FileSelection.AllItems = grdFiles2.CurrentList,
+                RenderFinished = grdFiles_RenderFinished,
             };
             grdFiles2 = new Grid<File>(grdFiles, gridOptions);
             grdFiles2.Render();

@@ -353,6 +353,9 @@ dbr.DefaultPage2.prototype.Render = function (){
     this.tbPath.val(this.get_Path());
     this.RenderGrid();
 };
+dbr.DefaultPage2.prototype.grdFiles_RenderFinished = function (){
+    this.FileSelection.AllItems = this.grdFiles2.CurrentList;
+};
 dbr.DefaultPage2.prototype.CreateGrid = function (){
     this.grdFiles.off();
     var gridOptions = {
@@ -383,9 +386,7 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
         ],
         RowClass: $CreateDelegate(this, this.GetRowClass),
         PageSize: 100,
-        RenderFinished: $CreateAnonymousDelegate(this, function (){
-            this.FileSelection.AllItems = this.grdFiles2.CurrentList;
-        })
+        RenderFinished: $CreateDelegate(this, this.grdFiles_RenderFinished)
     };
     this.grdFiles2 = new corexjs.ui.grid.Grid(this.grdFiles, gridOptions);
     this.grdFiles2.Render();
