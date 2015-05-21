@@ -122,9 +122,9 @@ dbr.SiteExtensions.ToDefaultDateTimeString = function (date){
 dbr.SiteExtensions.ToFriendlyRelative2 = function (dt, rel){
     if (rel == null)
         rel = Date.current();
-    if (dt.Year == rel.Year){
-        if (dt.Month == rel.Month){
-            if (dt.Day == rel.Day){
+    if (dt.year() == rel.year()){
+        if (dt.month() == rel.month()){
+            if (dt.day() == rel.day()){
                 return dt.format("HH:mm").toLowerCase();
             }
             return dt.format("MMM d");
@@ -132,6 +132,21 @@ dbr.SiteExtensions.ToFriendlyRelative2 = function (dt, rel){
         return dt.format("MMM d");
     }
     return dt.format("d/M/yy");
+};
+dbr.SiteExtensions.ToFriendlySize = function (bytes){
+    var kb = bytes / 10240;
+    var mb = kb / 1024;
+    var gb = mb / 1024;
+    var tb = gb / 1024;
+    if (kb < 1)
+        return bytes.toString();
+    if (mb < 1)
+        return kb.toFixed(1) + " kb";
+    if (gb < 1)
+        return mb.toFixed(1) + " mb";
+    if (tb < 1)
+        return gb.toFixed(1) + " gb";
+    return tb.toFixed(1) + " tb";
 };
 dbr.SiteServiceClient = function (){
     this.Url = null;

@@ -352,14 +352,18 @@ namespace DesktopBrowser.client
                     {
                         new GridCol<File> {Prop = t=>t.Name     ,    Width=null , RenderCell=RenderNameCell},
                         new GridCol<File> {Prop = t=>t.Modified ,    Width=150  , Format= FormatFriendlyDate},
-                        new GridCol<File> {Prop = t=>t.Size     ,    Width=150  ,},
+                        new GridCol<File> {Prop = t=>t.Size     ,    Width=150  , Format= FormatFriendlySize},
                         new GridCol<File> {Prop = t=>t.Extension,    Width=150  ,},
                     },
                 RowClass = GetRowClass,
                 PageSize = 100,
+                RenderFinished = () => FileSelection.AllItems = grdFiles2.CurrentList,
             };
-            grdFiles.Grid(gridOptions);
-            grdFiles2 = Grid<File>.Get(grdFiles);
+            grdFiles2 = new Grid<File>(grdFiles, gridOptions);
+            grdFiles2.Render();
+
+            //grdFiles.Grid(gridOptions);
+            //grdFiles2 = Grid<File>.Get(grdFiles);
 
             grdFiles.mousedown(e =>
             {
@@ -474,9 +478,13 @@ namespace DesktopBrowser.client
         }
 
 
-        private JsString FormatFriendlyDate(object arg)
+        private JsString FormatFriendlyDate(object value)
         {
-            return arg.As<JsString>().ToDefaultDate().ToFriendlyRelative2();
+            return value.As<JsString>().ToDefaultDate().ToFriendlyRelative2();
+        }
+        private JsString FormatFriendlySize(object value)
+        {
+            return value.As<JsNumber>().ToFriendlySize();
         }
 
         private void RenderNameCell(GridCol<File> col, File file, jQuery td)
@@ -488,9 +496,11 @@ namespace DesktopBrowser.client
         {
             var s = "FileRow";
             if (file.IsFolder)
-                s = "FolderRow";
+                s += " IsFolder";
+            if (file.IsFolder)
+                s += " IsFile";
             if (FileSelection.SelectedItems.contains(file))
-                s += " Active";
+                s += " Selected";
             return s;
         }
 

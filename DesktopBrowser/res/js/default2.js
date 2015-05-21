@@ -372,7 +372,8 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
             Prop: function (t){
                 return t.Size;
             },
-            Width: 150
+            Width: 150,
+            Format: $CreateDelegate(this, this.FormatFriendlySize)
         }, {
             Prop: function (t){
                 return t.Extension;
@@ -381,10 +382,13 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
         }
         ],
         RowClass: $CreateDelegate(this, this.GetRowClass),
-        PageSize: 100
+        PageSize: 100,
+        RenderFinished: $CreateAnonymousDelegate(this, function (){
+            this.FileSelection.AllItems = this.grdFiles2.CurrentList;
+        })
     };
-    this.grdFiles.Grid(gridOptions);
-    this.grdFiles2 = corexjs.ui.grid.Grid.Get(this.grdFiles);
+    this.grdFiles2 = new corexjs.ui.grid.Grid(this.grdFiles, gridOptions);
+    this.grdFiles2.Render();
     this.grdFiles.mousedown($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);
         var file = this.grdFiles2.GetItem(target);
@@ -476,8 +480,11 @@ dbr.DefaultPage2.prototype.Execute = function (file, cb){
         Path: file.Path
     }, cb);
 };
-dbr.DefaultPage2.prototype.FormatFriendlyDate = function (arg){
-    return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(arg), null);
+dbr.DefaultPage2.prototype.FormatFriendlyDate = function (value){
+    return dbr.SiteExtensions.ToFriendlyRelative2(dbr.SiteExtensions.ToDefaultDate(value), null);
+};
+dbr.DefaultPage2.prototype.FormatFriendlySize = function (value){
+    return dbr.SiteExtensions.ToFriendlySize(value);
 };
 dbr.DefaultPage2.prototype.RenderNameCell = function (col, file, td){
     td.getAppend("a.Name").text(file.Name).attr("href", "javascript:void(0)");
@@ -485,9 +492,11 @@ dbr.DefaultPage2.prototype.RenderNameCell = function (col, file, td){
 dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
     var s = "FileRow";
     if (file.IsFolder)
-        s = "FolderRow";
+        s += " IsFolder";
+    if (file.IsFolder)
+        s += " IsFile";
     if (this.FileSelection.SelectedItems.contains(file))
-        s += " Active";
+        s += " Selected";
     return s;
 };
 dbr.DefaultPage2.prototype.GetSubtitleSearchLink = function (File){

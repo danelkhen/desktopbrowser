@@ -1,4 +1,8 @@
-﻿.Grid > table {
+﻿a:focus, a:hover {
+    color: #337ab7;
+}
+
+.Grid > table {
     border-collapse: collapse;
     table-layout: fixed;
 }
@@ -104,16 +108,26 @@
     user-select: none;
 }
 
-.FileRow a,
-.FileRow a:focus,
-.FileRow a:hover {
+.FileRow.IsFile a,
+.FileRow.IsFile a:focus,
+.FileRow.IsFile a:hover {
     color: #053e70;
 }
 
-a:focus, a:hover {
-    color: #337ab7;
+.FileRow:hover
+{
+    background-color: #d0e5f5;
+    /*color: #1d5987;*/
+}
+.FileRow.Selected
+{
+    background-color: #fbec88;
+    /*color: #363636;*/
 }
 
-.Active {
-    background-color: yellow;
+.FileRow.Selected:hover
+{
+    background-color: #F9E24E;
+    /*color: #363636;*/
 }
+

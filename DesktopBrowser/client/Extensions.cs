@@ -55,5 +55,23 @@ namespace DesktopBrowser.client
             }
             return dt.format("d/M/yy");
         }
+
+        public static JsString ToFriendlySize(this JsNumber bytes)
+        {
+            var kb = bytes / 10240;
+            var mb = kb / 1024.0;
+            var gb = mb / 1024.0;
+            var tb = gb / 1024.0;
+            if (kb < 1)
+                return bytes.toString();
+            if (mb < 1)
+                return kb.toFixed(1) + " kb";
+            if (gb < 1)
+                return mb.toFixed(1) + " mb";
+            if (tb < 1)
+                return gb.toFixed(1) + " gb";
+            return tb.toFixed(1) + " tb";
+        }
+
     }
 }
