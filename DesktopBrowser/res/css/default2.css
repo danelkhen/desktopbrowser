@@ -1,9 +1,19 @@
 ﻿body {
-    padding-top: 51px;
+    padding-top: 50px;
 }
+
+
+@media (max-width: 1500px) {
+.navbar-fixed-top{
+    position:static;
+}
+body{padding:0;}
+}
+
 .container-fluid {
     padding-left: 0;
 }
+
 a:focus, a:hover {
     color: #337ab7;
 }
@@ -25,7 +35,7 @@ a:focus, a:hover {
 }
 
 .Grid > table > thead > tr > th:hover {
-    background-color:#eee;
+    background-color: #eee;
 }
 
 .Grid > table > thead > tr > th.OrderBy.Asc {
@@ -126,7 +136,7 @@ a:focus, a:hover {
 }
 
 
-.FileRow .glyphicon{
+.FileRow .glyphicon {
     color: #92B4D2;
 }
 
@@ -147,17 +157,17 @@ a:focus, a:hover {
 }
 
 #clock {
-  white-space: pre;
-  font-size: 14px;
-  line-height: 1em;
-  text-align: center;
-  padding: 10px;
-
+    white-space: pre;
+    font-size: 14px;
+    line-height: 1em;
+    text-align: center;
+    padding: 10px;
 }
-ul.nav > li:hover{
-    background-color:#eee;
+
+ul.nav > li:hover {
+    background-color: #eee;
 }
 
 #tbPath {
-    width:300px;
+    width: 300px;
 }
