@@ -21,6 +21,7 @@ corexjs.ui.grid.Grid = function (){
     this.OrderByCol = null;
     this.CurrentListBeforePaging = null;
     this.SearchEl = null;
+    this.PagerEl = null;
     this.Init();
 };
 corexjs.ui.grid.Grid = function (el, opts){
@@ -38,6 +39,7 @@ corexjs.ui.grid.Grid = function (el, opts){
     this.OrderByCol = null;
     this.CurrentListBeforePaging = null;
     this.SearchEl = null;
+    this.PagerEl = null;
     this.El = el;
     this.Options = opts;
     this.Init();
@@ -64,13 +66,15 @@ corexjs.ui.grid.Grid.prototype.Verify = function (){
         this.Options.Items =  [];
     this.Options.Columns.forEach($CreateAnonymousDelegate(this, function (col){
         if (col.Name == null && col.Prop != null)
-            col.Name = corexjs.Utils.ItemProp(this.Options.Items, col.Prop);
+            col.Name = corexjs.Utils.ItemProp$1(this.Options.Items, col.Prop);
         if (col.Getter == null && col.Prop != null)
             col.Getter = col.Prop;
         if (col.Getter == null && col.Name != null)
             col.Getter = $CreateAnonymousDelegate(this, function (t){
                 return t[col.Name];
             });
+        if (col.Comparer == null && col.Getter != null)
+            col.Comparer = corexjs.Utils.ToComparer$2(col.Getter, false);
         if (col.Title == null && col.Name != null)
             col.Title = col.Name;
         if (col.Visible == null)
@@ -85,9 +89,9 @@ corexjs.ui.grid.Grid.prototype.ApplyOrderBy = function (){
     if (this.Options.OrderBy == null)
         return;
     if (this.Options.OrderByDesc)
-        this.CurrentList = this.CurrentList.orderByDescending(this.Options.OrderBy);
+        this.CurrentList = corexjs.Utils.Order$1(corexjs.Utils.ToDescending$1(this.Options.OrderBy2), this.CurrentList);
     else
-        this.CurrentList = this.CurrentList.orderBy(this.Options.OrderBy);
+        this.CurrentList = corexjs.Utils.Order$1(this.Options.OrderBy2, this.CurrentList);
 };
 corexjs.ui.grid.Grid.prototype.ApplyPaging = function (){
     this.TotalPages = Math.ceil(this.CurrentList.length / this.Options.PageSize);
@@ -125,6 +129,7 @@ corexjs.ui.grid.Grid.prototype.OrderBy = function (col){
             return this.OrderByCol.Getter(t);
         });
         this.Options.OrderByDesc = false;
+        this.Options.OrderBy2 = this.OrderByCol.Comparer;
     }
     else {
         this.OrderByColClickCount++;
@@ -253,16 +258,16 @@ corexjs.ui.grid.Grid.prototype.RenderCell = function (col, obj, td){
         td[0].className = cn;
 };
 corexjs.ui.grid.Grid.prototype.RenderSearch = function (){
-    if (this.SearchEl == null)
+    if (this.SearchEl == null && this.SearchInputEl == null)
         this.SearchEl = this.El.getAppend(".Search").addClass("form-inline");
     if (this.SearchInputEl == null)
         this.SearchInputEl = this.SearchEl.getAppend("input.tbSearch").addClass("form-control").attr("placeholder", "Find");
-    if (!corexjs.Utils.DataGetSet(this.SearchInputEl, "GridSearchInputEventAttached", true)){
-        this.SearchInputEl.on("input", $CreateAnonymousDelegate(this, function (e){
-            this.Options.Query = this.SearchInputEl.val();
-            this.Search();
-        }));
-    }
+    if (corexjs.Utils.DataGetSet$1(this.SearchInputEl, "GridSearchInputEventAttached", true))
+        return;
+    this.SearchInputEl.on("input", $CreateAnonymousDelegate(this, function (e){
+        this.Options.Query = this.SearchInputEl.val();
+        this.Search();
+    }));
 };
 corexjs.ui.grid.Grid.prototype.RenderPager = function (){
     this.El.toggleClass("HasNoPages", this.TotalPages == 0);
@@ -271,15 +276,16 @@ corexjs.ui.grid.Grid.prototype.RenderPager = function (){
     this.El.toggleClass("HasPrevPage", this.Options.PageIndex > 0);
     this.El.toggleClass("HasNextPage", this.Options.PageIndex < this.TotalPages - 1);
     var pages = Array.generateNumbers(0, this.TotalPages);
-    var pager = this.El.getAppend(".Pager");
-    pager.getAppend("a.PrevPage").text("Prev").off().mousedown($CreateAnonymousDelegate(this, function (e){
+    if (this.PagerEl == null)
+        this.PagerEl = this.El.getAppend(".Pager").addClass("btn-group");
+    this.PagerEl.getAppend("a.btn.btn-default.PrevPage").getAppend("span.glyphicon.glyphicon-backward").parent().off().mousedown($CreateAnonymousDelegate(this, function (e){
         e.preventDefault();
         this.Options.PageIndex--;
         this.Render();
     }));
-    var info = pager.getAppend(".PagerInfo");
+    var info = this.PagerEl.getAppend("a.btn.btn-default.PagerInfo");
     info.text(this.Options.PageIndex + 1 + " / " + this.TotalPages + " (Total: " + this.CurrentListBeforePaging.length + ")");
-    pager.getAppend("a.NextPage").text("Next").off().mousedown($CreateAnonymousDelegate(this, function (e){
+    this.PagerEl.getAppend("a.btn.btn-default.NextPage").getAppend("span.glyphicon.glyphicon-forward").parent().off().mousedown($CreateAnonymousDelegate(this, function (e){
         e.preventDefault();
         this.Options.PageIndex++;
         this.Render();

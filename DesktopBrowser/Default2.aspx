@@ -42,6 +42,15 @@
                         <input type="text" id="tbSearch" class="form-control" placeholder="Find" />
                     </div>
                 </form>
+                <div class="navbar-right">
+                    <div class="btn-toolbar">
+                        <div id="pager" class="Pager btn-group">
+                            <a class="btn btn-default navbar-btn PrevPage"><span class="glyphicon glyphicon-backward"></span></a>
+                            <a class="btn btn-default navbar-btn PagerInfo">1 / 2 (Total: 173)</a>
+                            <a class="btn btn-default navbar-btn NextPage"><span class="glyphicon glyphicon-forward"></span></a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!--/.nav-collapse -->
         </div>

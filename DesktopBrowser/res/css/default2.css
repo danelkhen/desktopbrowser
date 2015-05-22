@@ -125,6 +125,12 @@ a:focus, a:hover {
     color: #053e70;
 }
 
+
+.FileRow .glyphicon{
+    color: #92B4D2;
+}
+
+
 .FileRow:hover {
     background-color: #E5EEF5;
     /*color: #1d5987;*/

@@ -4,6 +4,7 @@ using DesktopBrowser.Server;
 using SharpKit.Html;
 using SharpKit.JavaScript;
 using SharpKit.jQuery;
+using corexjs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,7 @@ namespace DesktopBrowser.client
             navleft = "#navleft".ToJ();
             clock = "#clock".ToJ();
             tbSearch = "#tbSearch".ToJ();
+            pagerEl = "#pager".ToJ();
             UpdateClock();
 
             Buttons = new JsArray<Page2Button>
@@ -356,18 +358,26 @@ namespace DesktopBrowser.client
             FileSelection.AllItems = grdFiles2.CurrentList;
         }
 
+        private JsFunc<File, File, JsNumber> GetDefaultFileComparer()
+        {
+            return new JsArray<File>().ItemGetter(t => t.IsFolder).ToComparer();
+        }
+
+
         void CreateGrid()
         {
             grdFiles.off();
+            var p = Res.Files.AsJsArray();
             var gridOptions = new GridOptions<File>
             {
                 //Items = Res.Files.AsJsArray(),
                 Columns =
                     {
-                        new GridCol<File> {Prop = t=>t.Name     ,    Width=null , RenderCell=RenderNameCell},
-                        new GridCol<File> {Prop = t=>t.Modified ,    Width=150  , Format= FormatFriendlyDate},
-                        new GridCol<File> {Prop = t=>t.Size     ,    Width=150  , Format= FormatFriendlySize},
-                        new GridCol<File> {Prop = t=>t.Extension,    Width=150  ,},
+                        new GridCol<File> {Prop = t=>t.IsFolder ,    Width=20   , RenderCell=RenderIconCell, Title="",                                                                   },
+                        new GridCol<File> {Prop = t=>t.Name     ,    Width=null , RenderCell=RenderNameCell,  /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Name)         */},
+                        new GridCol<File> {Prop = t=>t.Modified ,    Width=150  , Format= FormatFriendlyDate, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Modified)     */},
+                        new GridCol<File> {Prop = t=>t.Size     ,    Width=150  , Format= FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Size)         */},
+                        new GridCol<File> {Prop = t=>t.Extension,    Width=150  , Format= FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Extension)    */},
                     },
                 RowClass = GetRowClass,
                 PageSize = 100,
@@ -378,6 +388,7 @@ namespace DesktopBrowser.client
                 El = grdFiles,
                 Options = gridOptions,
                 SearchInputEl = tbSearch,
+                PagerEl = pagerEl,
             };
 
             grdFiles2.Render();
@@ -414,6 +425,13 @@ namespace DesktopBrowser.client
                 Open(file);
             });
         }
+
+        private void RenderIconCell(GridCol<File> col, File file, jQuery td)
+        {
+            var icon = file.IsFolder ? "folder-open" : "file";
+            td.getAppend("span")[0].className = "glyphicon glyphicon-"+icon;
+        }
+
         void RenderGrid()
         {
             if (grdFiles2 == null)
@@ -441,6 +459,7 @@ namespace DesktopBrowser.client
         Selection<File> FileSelection;
         private jQuery clock;
         private jQuery tbSearch;
+        private jQuery pagerEl;
 
         private void FileSelection_Changed(SelectionChangedEventArgs<File> e)
         {
@@ -519,7 +538,7 @@ namespace DesktopBrowser.client
             var s = "FileRow";
             if (file.IsFolder)
                 s += " IsFolder";
-            if (file.IsFolder)
+            if (!file.IsFolder)
                 s += " IsFile";
             if (FileSelection.SelectedItems.contains(file))
                 s += " Selected";

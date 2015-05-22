@@ -12,6 +12,7 @@ dbr.DefaultPage2 = function (){
     this.FileSelection = null;
     this.clock = null;
     this.tbSearch = null;
+    this.pagerEl = null;
     this.Service = null;
     this.El = null;
     this.grdFiles2 = null;
@@ -38,6 +39,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.navleft = $("#navleft");
     this.clock = $("#clock");
     this.tbSearch = $("#tbSearch");
+    this.pagerEl = $("#pager");
     this.UpdateClock();
     this.Buttons =  [{
         Id: "GotoParentDir",
@@ -364,10 +366,23 @@ dbr.DefaultPage2.prototype.Render = function (){
 dbr.DefaultPage2.prototype.grdFiles_RenderFinished = function (){
     this.FileSelection.AllItems = this.grdFiles2.CurrentList;
 };
+dbr.DefaultPage2.prototype.GetDefaultFileComparer = function (){
+    return corexjs.Utils.ToComparer$2(corexjs.Utils.ItemGetter$2( [], $CreateAnonymousDelegate(this, function (t){
+        return t.IsFolder;
+    })), false);
+};
 dbr.DefaultPage2.prototype.CreateGrid = function (){
     this.grdFiles.off();
+    var p = this.Res.Files;
     var gridOptions = {
         Columns: [{
+            Prop: function (t){
+                return t.IsFolder;
+            },
+            Width: 20,
+            RenderCell: $CreateDelegate(this, this.RenderIconCell),
+            Title: ""
+        }, {
             Prop: function (t){
                 return t.Name;
             },
@@ -389,7 +404,8 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
             Prop: function (t){
                 return t.Extension;
             },
-            Width: 150
+            Width: 150,
+            Format: $CreateDelegate(this, this.FormatFriendlySize)
         }
         ],
         RowClass: $CreateDelegate(this, this.GetRowClass),
@@ -401,6 +417,7 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
         $v2.El = this.grdFiles;
         $v2.Options = gridOptions;
         $v2.SearchInputEl = this.tbSearch;
+        $v2.PagerEl = this.pagerEl;
         return $v2;
     }).call(this);
     this.grdFiles2.Render();
@@ -429,6 +446,10 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
         e.preventDefault();
         this.Open(file);
     }));
+};
+dbr.DefaultPage2.prototype.RenderIconCell = function (col, file, td){
+    var icon = file.IsFolder ? "folder-open" : "file";
+    td.getAppend("span")[0].className = "glyphicon glyphicon-" + icon;
 };
 dbr.DefaultPage2.prototype.RenderGrid = function (){
     if (this.grdFiles2 == null){
@@ -508,7 +529,7 @@ dbr.DefaultPage2.prototype.GetRowClass = function (file, index){
     var s = "FileRow";
     if (file.IsFolder)
         s += " IsFolder";
-    if (file.IsFolder)
+    if (!file.IsFolder)
         s += " IsFile";
     if (this.FileSelection.SelectedItems.contains(file))
         s += " Selected";

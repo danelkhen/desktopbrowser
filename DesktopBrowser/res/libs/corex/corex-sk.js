@@ -4,19 +4,28 @@ if (typeof(corexjs) == "undefined")
     var corexjs = {};
 corexjs.Utils = function (){
 };
-corexjs.Utils.ToComparer = function (getter){
-    var valueComparer = corexjs.Utils.GetDefaultComparer();
+corexjs.Utils.ToComparer$2 = function (getter, desc){
+    if (desc)
+        return corexjs.Utils.ToDescendingComparer$2(getter);
+    var valueComparer = corexjs.Utils.GetDefaultComparer$1();
     var comparer = function (x, y){
         return valueComparer(getter(x), getter(y));
     };
     return comparer;
 };
-corexjs.Utils.ToDescending = function (comparer){
+corexjs.Utils.ToDescendingComparer$2 = function (getter){
+    var valueComparer = corexjs.Utils.GetDefaultComparer$1();
+    var comparer = function (x, y){
+        return valueComparer(getter(x), getter(y)) * -1;
+    };
+    return comparer;
+};
+corexjs.Utils.ToDescending$1 = function (comparer){
     return function (x, y){
         return comparer(x, y) * -1;
     };
 };
-corexjs.Utils.ThenBy = function (comparer, comparer2){
+corexjs.Utils.ThenBy$1$$JsFunc$$JsFunc = function (comparer, comparer2){
     return function (x, y){
         var diff = comparer(x, y);
         if (diff == 0)
@@ -24,16 +33,19 @@ corexjs.Utils.ThenBy = function (comparer, comparer2){
         return diff;
     };
 };
-corexjs.Utils.Order = function (comparer, list){
+corexjs.Utils.ThenBy$2$$JsFunc$$JsFunc$$Boolean = function (comparer, getter, desc){
+    return corexjs.Utils.ThenBy$1$$JsFunc$$JsFunc(comparer, corexjs.Utils.ToComparer$2(getter, desc));
+};
+corexjs.Utils.Order$1 = function (comparer, list){
     var list2 = list.toArray();
-    SharpKit.JavaScript.Extensions.sort(list2, comparer);
+    list2.sort(comparer);
     return list2;
 };
-corexjs.Utils.GetDefaultComparer = function (){
-    var comparer = $CreateDelegate(Comaprer._default, Comaprer._default.compare);
+corexjs.Utils.GetDefaultComparer$1 = function (){
+    var comparer = $CreateDelegate(Comparer._default, Comparer._default.compare);
     return comparer;
 };
-corexjs.Utils.DataGetSet = function (j, name, value){
+corexjs.Utils.DataGetSet$1 = function (j, name, value){
     var val = value;
     var value2 = j.data(name);
     if (value2 == val)
@@ -41,7 +53,7 @@ corexjs.Utils.DataGetSet = function (j, name, value){
     j.data(name, val);
     return value2;
 };
-corexjs.Utils.Prop = function (prop){
+corexjs.Utils.Prop$1 = function (prop){
     var code;
     if (prop["isDelegate"])
         code = prop["func"].toString();
@@ -49,10 +61,10 @@ corexjs.Utils.Prop = function (prop){
         code = prop.toString();
     return code.substringBetween(".", ";");
 };
-corexjs.Utils.ItemProp = function (list, prop){
-    return corexjs.Utils.Prop(prop);
+corexjs.Utils.ItemProp$1 = function (list, prop){
+    return corexjs.Utils.Prop$1(prop);
 };
-corexjs.Utils.ItemGetter = function (list, prop){
+corexjs.Utils.ItemGetter$2 = function (list, prop){
     return prop;
 };
 
