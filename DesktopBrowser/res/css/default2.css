@@ -147,10 +147,12 @@ a:focus, a:hover {
 }
 
 #clock {
-    white-space: pre;
-    font-size: 16px;
-    text-align: center;
-    padding: 5px;
+  white-space: pre;
+  font-size: 14px;
+  line-height: 1em;
+  text-align: center;
+  padding: 10px;
+
 }
 ul.nav > li:hover{
     background-color:#eee;
