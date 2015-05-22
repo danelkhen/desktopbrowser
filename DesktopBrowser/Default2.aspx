@@ -6,6 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/res/img/clapperboard.png">
+
     <title>Desktop Browser v1.0.0</title>
     <link href="/res/libs/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="/res/libs/bootstrap-3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -23,5 +27,27 @@
     <script>var _page = new dbr.DefaultPage2();</script>
 </head>
 <body>
+    <!-- Fixed navbar view-source:http://getbootstrap.com/examples/navbar-fixed-top/ -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+<%--        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>--%>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul id="navleft" class="nav navbar-nav">
+          </ul>
+          <ul id="navright" class="nav navbar-nav navbar-right">
+            <li><a id="clock"></a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div id="main" class="container-fluid"></div>
 </body>
 </html>

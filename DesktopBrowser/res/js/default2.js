@@ -6,10 +6,11 @@ dbr.DefaultPage2 = function (){
     this.Res = null;
     this.grdFiles = null;
     this.tbPath = null;
-    this.btnGroup = null;
+    this.navleft = null;
     this.Req = null;
     this.Win = null;
     this.FileSelection = null;
+    this.clock = null;
     this.Service = null;
     this.El = null;
     this.grdFiles2 = null;
@@ -33,7 +34,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.Win = window;
     this.El = $("body");
     this.grdFiles = this.El.getAppend("#grdFiles.Grid");
-    this.btnGroup = this.grdFiles.getAppend(".btn-group");
+    this.navleft = $("#navleft");
+    this.clock = $("#clock");
+    this.UpdateClock();
     this.Buttons =  [{
         Id: "GotoParentDir",
         Text: "Up",
@@ -183,6 +186,10 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     });
     $(this.Win).keydown($CreateDelegate(this, this.Win_keydown));
 };
+dbr.DefaultPage2.prototype.UpdateClock = function (){
+    this.clock.text(new Date().format("HH:mm\nddd, MMM d"));
+    window.setTimeout($CreateDelegate(this, this.UpdateClock), 5000);
+};
 dbr.DefaultPage2.prototype.Win_keydown = function (e){
     this.FileSelection.KeyDown(e);
     if (e.isDefaultPrevented())
@@ -223,7 +230,8 @@ dbr.DefaultPage2.prototype.LoadReq = function (){
     console.info("LoadReq", this.Req);
 };
 dbr.DefaultPage2.prototype.RenderButtons = function (){
-    this.btnGroup.getAppendRemoveForEach("button.btn.btn-default", this.Buttons, $CreateAnonymousDelegate(this, function (el, btn){
+    this.navleft.getAppendRemoveForEach("li", this.Buttons, $CreateAnonymousDelegate(this, function (el, btn){
+        el = el.getAppend("a").attr("href", "javascript:void(0);");
         btn.El = el;
         if (btn.Id != null)
             btn.El.attr("id", btn.Id);
@@ -239,7 +247,7 @@ dbr.DefaultPage2.prototype.RefreshButtonsState = function (){
     this.Buttons.forEach($CreateDelegate(this, this.RefreshButtonState));
 };
 dbr.DefaultPage2.prototype.RefreshButtonState = function (btn){
-    this.ToggleClass(btn.El, "active", btn.IsActive);
+    this.ToggleClass(btn.El.parent("li"), "active", btn.IsActive);
 };
 dbr.DefaultPage2.prototype.ToggleClass = function (el, className, check){
     if (check == null)

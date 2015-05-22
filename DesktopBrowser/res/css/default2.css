@@ -1,4 +1,10 @@
-﻿a:focus, a:hover {
+﻿body {
+    padding-top: 51px;
+}
+.container-fluid {
+    padding-left: 0;
+}
+a:focus, a:hover {
     color: #337ab7;
 }
 
@@ -10,6 +16,7 @@
 .Grid > table > thead > tr {
     border-bottom: 1px solid #ddd;
 }
+
 .Grid > table > thead > tr > th {
     padding: 4px 8px;
     white-space: nowrap;
@@ -118,20 +125,27 @@
     color: #053e70;
 }
 
-.FileRow:hover
-{
+.FileRow:hover {
     background-color: #E5EEF5;
     /*color: #1d5987;*/
 }
-.FileRow.Selected
-{
+
+.FileRow.Selected {
     background-color: #fbec88;
     /*color: #363636;*/
 }
 
-.FileRow.Selected:hover
-{
+.FileRow.Selected:hover {
     background-color: #F9E24E;
     /*color: #363636;*/
 }
 
+#clock {
+    white-space: pre;
+    font-size: 16px;
+    text-align: center;
+    padding: 5px;
+}
+ul.nav > li:hover{
+    background-color:#eee;
+}

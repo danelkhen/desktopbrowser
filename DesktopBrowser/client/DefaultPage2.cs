@@ -33,14 +33,16 @@ namespace DesktopBrowser.client
         ListFilesResponse Res;
         private jQuery grdFiles;
         private jQuery tbPath;
-        private jQuery btnGroup;
+        private jQuery navleft;
 
         private void OnDomReady()
         {
             Win = HtmlContext.window;
             El = "body".ToJ();
             grdFiles = El.getAppend("#grdFiles.Grid");
-            btnGroup = grdFiles.getAppend(".btn-group");
+            navleft = "#navleft".ToJ();
+            clock = "#clock".ToJ();
+            UpdateClock();
 
             Buttons = new JsArray<Page2Button>
             {
@@ -104,6 +106,11 @@ namespace DesktopBrowser.client
             new jQuery(Win).keydown(Win_keydown);
         }
 
+        void UpdateClock()
+        {
+            clock.text(new JsDate().format("HH:mm\nddd, MMM d"));
+            HtmlContext.window.setTimeout(UpdateClock, 5000);
+        }
 
         private void Win_keydown(Event e)
         {
@@ -159,8 +166,9 @@ namespace DesktopBrowser.client
 
         private void RenderButtons()
         {
-            btnGroup.getAppendRemoveForEach("button.btn.btn-default", Buttons, (el, btn) =>
+            navleft.getAppendRemoveForEach("li", Buttons, (el, btn) =>
             {
+                el = el.getAppend("a").attr("href","javascript:void(0);");
                 btn.El = el;
                 if (btn.Id != null)
                     btn.El.attr("id", btn.Id);
@@ -181,7 +189,7 @@ namespace DesktopBrowser.client
 
         void RefreshButtonState(Page2Button btn)
         {
-            ToggleClass(btn.El, "active", btn.IsActive);
+            ToggleClass(btn.El.parent("li"), "active", btn.IsActive);
         }
 
         void ToggleClass(jQuery el, JsString className, JsFunc<bool> check)
@@ -424,6 +432,7 @@ namespace DesktopBrowser.client
         }
 
         Selection<File> FileSelection;
+        private jQuery clock;
 
         private void FileSelection_Changed(SelectionChangedEventArgs<File> e)
         {
