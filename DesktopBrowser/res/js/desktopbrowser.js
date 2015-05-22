@@ -504,12 +504,12 @@ dbr.Utils.CalcChangePct = function (from, to){
 dbr.Utils.ObjToClass = function (obj, defaultTypeForNull){
     var sb =  [];
     var mappings = (function (){
-        var $v2 = new Object();
-        $v2 ["object"] = "JsObject";
-        $v2 ["number"] = "JsNumber";
-        $v2 ["boolean"] = "JsBoolean";
-        $v2 ["string"] = "JsString";
-        return $v2;
+        var $v3 = new Object();
+        $v3 ["object"] = "JsObject";
+        $v3 ["number"] = "JsNumber";
+        $v3 ["boolean"] = "JsBoolean";
+        $v3 ["string"] = "JsString";
+        return $v3;
     })();
     sb.push("public class Obj");
     sb.push("{");

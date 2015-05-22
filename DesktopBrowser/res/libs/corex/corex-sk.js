@@ -4,6 +4,43 @@ if (typeof(corexjs) == "undefined")
     var corexjs = {};
 corexjs.Utils = function (){
 };
+corexjs.Utils.ToComparer = function (getter){
+    var valueComparer = corexjs.Utils.GetDefaultComparer();
+    var comparer = function (x, y){
+        return valueComparer(getter(x), getter(y));
+    };
+    return comparer;
+};
+corexjs.Utils.ToDescending = function (comparer){
+    return function (x, y){
+        return comparer(x, y) * -1;
+    };
+};
+corexjs.Utils.ThenBy = function (comparer, comparer2){
+    return function (x, y){
+        var diff = comparer(x, y);
+        if (diff == 0)
+            diff = comparer2(x, y);
+        return diff;
+    };
+};
+corexjs.Utils.Order = function (comparer, list){
+    var list2 = list.toArray();
+    SharpKit.JavaScript.Extensions.sort(list2, comparer);
+    return list2;
+};
+corexjs.Utils.GetDefaultComparer = function (){
+    var comparer = $CreateDelegate(Comaprer._default, Comaprer._default.compare);
+    return comparer;
+};
+corexjs.Utils.DataGetSet = function (j, name, value){
+    var val = value;
+    var value2 = j.data(name);
+    if (value2 == val)
+        return value2;
+    j.data(name, val);
+    return value2;
+};
 corexjs.Utils.Prop = function (prop){
     var code;
     if (prop["isDelegate"])
@@ -14,5 +51,8 @@ corexjs.Utils.Prop = function (prop){
 };
 corexjs.Utils.ItemProp = function (list, prop){
     return corexjs.Utils.Prop(prop);
+};
+corexjs.Utils.ItemGetter = function (list, prop){
+    return prop;
 };
 

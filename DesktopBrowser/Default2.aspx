@@ -29,24 +29,22 @@
 <body>
     <!-- Fixed navbar view-source:http://getbootstrap.com/examples/navbar-fixed-top/ -->
     <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-<%--        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>--%>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul id="navleft" class="nav navbar-nav">
-          </ul>
-          <ul id="navright" class="nav navbar-nav navbar-right">
-            <li><a id="clock"></a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
+        <div class="container-fluid">
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul id="navleft" class="nav navbar-nav">
+                </ul>
+                <ul id="navright" class="nav navbar-nav navbar-right">
+                    <li><a id="clock"></a></li>
+                </ul>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" id="tbPath" class="form-control" placeholder="Path" />
+                        <input type="text" id="tbSearch" class="form-control" placeholder="Find" />
+                    </div>
+                </form>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
     </nav>
     <div id="main" class="container-fluid"></div>
 </body>

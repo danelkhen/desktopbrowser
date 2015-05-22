@@ -25,7 +25,7 @@ a:focus, a:hover {
 }
 
 .Grid > table > thead > tr > th:hover {
-    outline: 1px solid #337ab7;
+    background-color:#eee;
 }
 
 .Grid > table > thead > tr > th.OrderBy.Asc {
@@ -148,4 +148,8 @@ a:focus, a:hover {
 }
 ul.nav > li:hover{
     background-color:#eee;
+}
+
+#tbPath {
+    width:300px;
 }

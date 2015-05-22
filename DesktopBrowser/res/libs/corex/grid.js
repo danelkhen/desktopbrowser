@@ -9,8 +9,6 @@ if (typeof(corexjs.ui.grid) == "undefined")
 corexjs.ui.grid.Grid = function (){
     this.RenderTimer = null;
     this.TotalPages = null;
-    this.tbSearch = null;
-    this.OrderByCol = null;
     this.OrderByColClickCount = null;
     this.DataRows = null;
     this.VisibleColumns = null;
@@ -19,14 +17,15 @@ corexjs.ui.grid.Grid = function (){
     this.Options = null;
     this.El = null;
     this.CurrentList = null;
+    this.SearchInputEl = null;
+    this.OrderByCol = null;
     this.CurrentListBeforePaging = null;
+    this.SearchEl = null;
     this.Init();
 };
 corexjs.ui.grid.Grid = function (el, opts){
     this.RenderTimer = null;
     this.TotalPages = null;
-    this.tbSearch = null;
-    this.OrderByCol = null;
     this.OrderByColClickCount = null;
     this.DataRows = null;
     this.VisibleColumns = null;
@@ -35,7 +34,10 @@ corexjs.ui.grid.Grid = function (el, opts){
     this.Options = null;
     this.El = null;
     this.CurrentList = null;
+    this.SearchInputEl = null;
+    this.OrderByCol = null;
     this.CurrentListBeforePaging = null;
+    this.SearchEl = null;
     this.El = el;
     this.Options = opts;
     this.Init();
@@ -44,7 +46,6 @@ corexjs.ui.grid.Grid.prototype.Init = function (){
     this.RenderTimer = new Timer($CreateDelegate(this, this.Render));
 };
 corexjs.ui.grid.Grid.prototype.Render = function (){
-    console.info("Grid.Render");
     this.Verify();
     this.RenderSearch();
     this.RenderPager();
@@ -252,12 +253,13 @@ corexjs.ui.grid.Grid.prototype.RenderCell = function (col, obj, td){
         td[0].className = cn;
 };
 corexjs.ui.grid.Grid.prototype.RenderSearch = function (){
-    var searchEl = this.El.getAppend(".Search").addClass("form-inline");
-    this.tbSearch = searchEl.getAppend("input.tbSearch").addClass("form-control").attr("placeholder", "Find");
-    if (this.tbSearch.data("x") == null){
-        this.tbSearch.data("x", true);
-        this.tbSearch.on("input", $CreateAnonymousDelegate(this, function (e){
-            this.Options.Query = this.tbSearch.val();
+    if (this.SearchEl == null)
+        this.SearchEl = this.El.getAppend(".Search").addClass("form-inline");
+    if (this.SearchInputEl == null)
+        this.SearchInputEl = this.SearchEl.getAppend("input.tbSearch").addClass("form-control").attr("placeholder", "Find");
+    if (!corexjs.Utils.DataGetSet(this.SearchInputEl, "GridSearchInputEventAttached", true)){
+        this.SearchInputEl.on("input", $CreateAnonymousDelegate(this, function (e){
+            this.Options.Query = this.SearchInputEl.val();
             this.Search();
         }));
     }

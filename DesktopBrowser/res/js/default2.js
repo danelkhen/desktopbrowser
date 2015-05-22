@@ -11,6 +11,7 @@ dbr.DefaultPage2 = function (){
     this.Win = null;
     this.FileSelection = null;
     this.clock = null;
+    this.tbSearch = null;
     this.Service = null;
     this.El = null;
     this.grdFiles2 = null;
@@ -36,6 +37,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     this.grdFiles = this.El.getAppend("#grdFiles.Grid");
     this.navleft = $("#navleft");
     this.clock = $("#clock");
+    this.tbSearch = $("#tbSearch");
     this.UpdateClock();
     this.Buttons =  [{
         Id: "GotoParentDir",
@@ -153,9 +155,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         })
     }
     ];
-    this.tbPath = this.grdFiles.getAppend("input.form-control.Path").change($CreateAnonymousDelegate(this, function (e){
-        this.GotoPath(this.tbPath.val());
-    }));
+    this.tbPath = $("#tbPath");
     this.Req = {};
     this.DefaultReq = {
         FolderSize: false,
@@ -396,7 +396,13 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
         PageSize: 100,
         RenderFinished: $CreateDelegate(this, this.grdFiles_RenderFinished)
     };
-    this.grdFiles2 = new corexjs.ui.grid.Grid(this.grdFiles, gridOptions);
+    this.grdFiles2 = (function (){
+        var $v2 = new corexjs.ui.grid.Grid();
+        $v2.El = this.grdFiles;
+        $v2.Options = gridOptions;
+        $v2.SearchInputEl = this.tbSearch;
+        return $v2;
+    }).call(this);
     this.grdFiles2.Render();
     this.grdFiles.mousedown($CreateAnonymousDelegate(this, function (e){
         var target = $(e.target);

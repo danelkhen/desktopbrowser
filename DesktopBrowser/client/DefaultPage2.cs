@@ -42,6 +42,7 @@ namespace DesktopBrowser.client
             grdFiles = El.getAppend("#grdFiles.Grid");
             navleft = "#navleft".ToJ();
             clock = "#clock".ToJ();
+            tbSearch = "#tbSearch".ToJ();
             UpdateClock();
 
             Buttons = new JsArray<Page2Button>
@@ -63,7 +64,7 @@ namespace DesktopBrowser.client
                 //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
             };
 
-            tbPath = grdFiles.getAppend("input.form-control.Path").change(e => GotoPath(tbPath.valString()));
+            tbPath = "#tbPath".ToJ();//.getAppend("input.form-control.Path").change(e => GotoPath(tbPath.valString()));
 
             //Options = new Page2Options { p = "" };
             Req = new ListFilesRequest();
@@ -168,7 +169,7 @@ namespace DesktopBrowser.client
         {
             navleft.getAppendRemoveForEach("li", Buttons, (el, btn) =>
             {
-                el = el.getAppend("a").attr("href","javascript:void(0);");
+                el = el.getAppend("a").attr("href", "javascript:void(0);");
                 btn.El = el;
                 if (btn.Id != null)
                     btn.El.attr("id", btn.Id);
@@ -336,7 +337,7 @@ namespace DesktopBrowser.client
         }
         void ListAndRender(JsAction cb = null)
         {
-            ListFiles(()=>
+            ListFiles(() =>
             {
                 Render();
                 cb.Trigger();
@@ -372,7 +373,13 @@ namespace DesktopBrowser.client
                 PageSize = 100,
                 RenderFinished = grdFiles_RenderFinished,
             };
-            grdFiles2 = new Grid<File>(grdFiles, gridOptions);
+            grdFiles2 = new Grid<File>
+            {
+                El = grdFiles,
+                Options = gridOptions,
+                SearchInputEl = tbSearch,
+            };
+
             grdFiles2.Render();
 
             //grdFiles.Grid(gridOptions);
@@ -433,6 +440,7 @@ namespace DesktopBrowser.client
 
         Selection<File> FileSelection;
         private jQuery clock;
+        private jQuery tbSearch;
 
         private void FileSelection_Changed(SelectionChangedEventArgs<File> e)
         {
@@ -444,14 +452,14 @@ namespace DesktopBrowser.client
             DefaultPage.SaveSelection2(Res.File.Name, file.Name);
         }
 
-        private void DeleteAndRefresh(File file, JsAction cb=null)
+        private void DeleteAndRefresh(File file, JsAction cb = null)
         {
             if (file == null)
                 return;
             var fileOrFolder = file.IsFolder ? "folder" : "file";
-            if (!Win.confirm("Are you sure you wan to delete the "+fileOrFolder+"?\n"+file.Path))
+            if (!Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
                 return;
-            Service.Delete(new PathRequest { Path = file.Path }, res=>
+            Service.Delete(new PathRequest { Path = file.Path }, res =>
             {
                 ListAndRender(cb);
             });
