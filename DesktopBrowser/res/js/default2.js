@@ -404,8 +404,7 @@ dbr.DefaultPage2.prototype.CreateGrid = function (){
             Prop: function (t){
                 return t.Extension;
             },
-            Width: 150,
-            Format: $CreateDelegate(this, this.FormatFriendlySize)
+            Width: 150
         }
         ],
         RowClass: $CreateDelegate(this, this.GetRowClass),

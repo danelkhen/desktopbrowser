@@ -39,6 +39,10 @@
                 <form class="navbar-form navbar-right" role="search">
                     <div class="form-group">
                         <input type="text" id="tbPath" class="form-control" placeholder="Path" />
+                    </div>
+                </form>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
                         <input type="text" id="tbSearch" class="form-control" placeholder="Find" />
                     </div>
                 </form>

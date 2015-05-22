@@ -377,7 +377,7 @@ namespace DesktopBrowser.client
                         new GridCol<File> {Prop = t=>t.Name     ,    Width=null , RenderCell=RenderNameCell,  /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Name)         */},
                         new GridCol<File> {Prop = t=>t.Modified ,    Width=150  , Format= FormatFriendlyDate, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Modified)     */},
                         new GridCol<File> {Prop = t=>t.Size     ,    Width=150  , Format= FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Size)         */},
-                        new GridCol<File> {Prop = t=>t.Extension,    Width=150  , Format= FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Extension)    */},
+                        new GridCol<File> {Prop = t=>t.Extension,    Width=150  ,                             /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Extension)    */},
                     },
                 RowClass = GetRowClass,
                 PageSize = 100,

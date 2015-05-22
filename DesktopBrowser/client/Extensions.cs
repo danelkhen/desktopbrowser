@@ -58,7 +58,7 @@ namespace DesktopBrowser.client
 
         public static JsString ToFriendlySize(this JsNumber bytes)
         {
-            var kb = bytes / 10240;
+            var kb = bytes / 1024.0;
             var mb = kb / 1024.0;
             var gb = mb / 1024.0;
             var tb = gb / 1024.0;

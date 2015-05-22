@@ -134,7 +134,7 @@ dbr.SiteExtensions.ToFriendlyRelative2 = function (dt, rel){
     return dt.format("d/M/yy");
 };
 dbr.SiteExtensions.ToFriendlySize = function (bytes){
-    var kb = bytes / 10240;
+    var kb = bytes / 1024;
     var mb = kb / 1024;
     var gb = mb / 1024;
     var tb = gb / 1024;
