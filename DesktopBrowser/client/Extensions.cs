@@ -56,6 +56,23 @@ namespace DesktopBrowser.client
             return dt.format("d/M/yy");
         }
 
+        static JsString toFriendlyNumber(this JsNumber x)
+        {
+            JsString s;
+            if (x >= 0 && x < 10)
+                s = x.toFixed(2);
+            if (x >= 10 && x < 100)
+                s = x.toFixed(1);
+            else
+   //         if (x >= 100 && x < 1000)
+                s = x.toFixed(0);
+            while (s.endsWith("0"))
+                s = s.removeLast(1);
+            if (s.endsWith("."))
+                s = s.removeLast(1);
+            return s;
+        }
+
         public static JsString ToFriendlySize(this JsNumber bytes)
         {
             var kb = bytes / 1024.0;
@@ -63,14 +80,16 @@ namespace DesktopBrowser.client
             var gb = mb / 1024.0;
             var tb = gb / 1024.0;
             if (kb < 1)
-                return bytes.toString();
+                return bytes.toFriendlyNumber();
             if (mb < 1)
-                return kb.toFixed(1) + " kb";
+                return kb.toFriendlyNumber() + " kb";
+            if (mb < 1)
+                return kb.toFriendlyNumber() + " kb";
             if (gb < 1)
-                return mb.toFixed(1) + " mb";
+                return mb.toFriendlyNumber() + " mb";
             if (tb < 1)
-                return gb.toFixed(1) + " gb";
-            return tb.toFixed(1) + " tb";
+                return gb.toFriendlyNumber() + " gb";
+            return tb.toFriendlyNumber() + " tb";
         }
 
     }

@@ -158,6 +158,9 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
     }
     ];
     this.tbPath = $("#tbPath");
+    this.tbPath.change($CreateAnonymousDelegate(this, function (e){
+        this.GotoPath(this.tbPath.val());
+    }));
     this.Req = {};
     this.DefaultReq = {
         FolderSize: false,
@@ -193,6 +196,8 @@ dbr.DefaultPage2.prototype.UpdateClock = function (){
     window.setTimeout($CreateDelegate(this, this.UpdateClock), 5000);
 };
 dbr.DefaultPage2.prototype.Win_keydown = function (e){
+    if ($(e.target).is("input"))
+        return;
     this.FileSelection.KeyDown(e);
     if (e.isDefaultPrevented())
         return;

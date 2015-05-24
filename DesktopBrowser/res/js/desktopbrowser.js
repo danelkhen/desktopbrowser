@@ -133,20 +133,36 @@ dbr.SiteExtensions.ToFriendlyRelative2 = function (dt, rel){
     }
     return dt.format("d/M/yy");
 };
+dbr.SiteExtensions.toFriendlyNumber = function (x){
+    var s;
+    if (x >= 0 && x < 10)
+        s = x.toFixed(2);
+    if (x >= 10 && x < 100)
+        s = x.toFixed(1);
+    else
+        s = x.toFixed(0);
+    while (s.endsWith("0"))
+        s = dbr.SiteExtensions.removeLast(s, 1);
+    if (s.endsWith("."))
+        s = dbr.SiteExtensions.removeLast(s, 1);
+    return s;
+};
 dbr.SiteExtensions.ToFriendlySize = function (bytes){
     var kb = bytes / 1024;
     var mb = kb / 1024;
     var gb = mb / 1024;
     var tb = gb / 1024;
     if (kb < 1)
-        return bytes.toString();
+        return dbr.SiteExtensions.toFriendlyNumber(bytes);
     if (mb < 1)
-        return kb.toFixed(1) + " kb";
+        return dbr.SiteExtensions.toFriendlyNumber(kb) + " kb";
+    if (mb < 1)
+        return dbr.SiteExtensions.toFriendlyNumber(kb) + " kb";
     if (gb < 1)
-        return mb.toFixed(1) + " mb";
+        return dbr.SiteExtensions.toFriendlyNumber(mb) + " mb";
     if (tb < 1)
-        return gb.toFixed(1) + " gb";
-    return tb.toFixed(1) + " tb";
+        return dbr.SiteExtensions.toFriendlyNumber(gb) + " gb";
+    return dbr.SiteExtensions.toFriendlyNumber(tb) + " tb";
 };
 dbr.SiteServiceClient = function (){
     this.Url = null;

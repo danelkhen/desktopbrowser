@@ -67,6 +67,7 @@ namespace DesktopBrowser.client
             };
 
             tbPath = "#tbPath".ToJ();//.getAppend("input.form-control.Path").change(e => GotoPath(tbPath.valString()));
+            tbPath.change(e => GotoPath(tbPath.valString()));
 
             //Options = new Page2Options { p = "" };
             Req = new ListFilesRequest();
@@ -117,6 +118,8 @@ namespace DesktopBrowser.client
 
         private void Win_keydown(Event e)
         {
+            if (e.target.ToJ().@is("input"))
+                return;
             FileSelection.KeyDown(e);
             if (e.isDefaultPrevented())
                 return;
