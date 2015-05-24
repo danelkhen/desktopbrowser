@@ -13,6 +13,9 @@ body{padding:0;}
 .container-fluid {
     padding-left: 0;
 }
+.navbar-default .navbar-nav>li>a {
+  padding: 10px;
+}
 
 a:focus, a:hover {
     color: #337ab7;
@@ -158,16 +161,11 @@ a:focus, a:hover {
 
 #clock {
     white-space: pre;
-    font-size: 14px;
     line-height: 1em;
     text-align: center;
-    padding: 10px;
 }
 
 ul.nav > li:hover {
     background-color: #eee;
 }
 
-#tbPath {
-    width: 300px;
-}
