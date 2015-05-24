@@ -28,7 +28,7 @@
 </head>
 <body>
     <!-- Fixed navbar view-source:http://getbootstrap.com/examples/navbar-fixed-top/ -->
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top small">
         <div class="container-fluid">
             <div id="navbar" class="navbar-collapse collapse">
                 <ul id="navleft" class="nav navbar-nav">
@@ -37,18 +37,14 @@
                     <li><a id="clock"></a></li>
                 </ul>
                 <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
+                    <div class="form-group form-group-sm">
                         <input type="text" id="tbPath" class="form-control" placeholder="Path" />
-                    </div>
-                </form>
-                <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
                         <input type="text" id="tbSearch" class="form-control" placeholder="Find" />
                     </div>
                 </form>
                 <div class="navbar-right">
                     <div class="btn-toolbar">
-                        <div id="pager" class="Pager btn-group">
+                        <div id="pager" class="Pager btn-group btn-group-sm">
                             <a class="btn btn-default navbar-btn PrevPage"><span class="glyphicon glyphicon-backward"></span></a>
                             <a class="btn btn-default navbar-btn PagerInfo">1 / 2 (Total: 173)</a>
                             <a class="btn btn-default navbar-btn NextPage"><span class="glyphicon glyphicon-forward"></span></a>

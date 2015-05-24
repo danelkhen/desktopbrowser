@@ -139,7 +139,7 @@ dbr.DefaultPage2.prototype.OnDomReady = function (){
         Id: "Imdb",
         Text: "Imdb",
         Action: $CreateAnonymousDelegate(this, function (){
-            this.OpenInNewWindow(this.GetSubtitleSearchLink(this.Res.File));
+            this.OpenInNewWindow(this.GetGoogleSearchLink(this.Res.File));
         })
     }, {
         Id: "Delete",

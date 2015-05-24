@@ -60,7 +60,7 @@ namespace DesktopBrowser.client
                 new Page2Button { Id = "Hidden",          Text = "Hidden",      Action = () => { Req.ShowHiddenFiles=!Req.ShowHiddenFiles; SaveReqListAndRender(); }        , IsActive=()=>Req.ShowHiddenFiles},
                 new Page2Button { Id = "Recursive",       Text = "Recursive",   Action = () => { Req.IsRecursive=!Req.IsRecursive; SaveReqListAndRender(); }                , IsActive=()=>Req.IsRecursive},
                 new Page2Button { Id = "Subs",            Text = "Subs",        Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
-                new Page2Button { Id = "Imdb",            Text = "Imdb",        Action = () => OpenInNewWindow(GetSubtitleSearchLink(Res.File)) },
+                new Page2Button { Id = "Imdb",            Text = "Imdb",        Action = () => OpenInNewWindow(GetGoogleSearchLink(Res.File)) },
                 new Page2Button { Id = "Delete",          Text = "Delete",      Action = () => DeleteAndRefresh(FileSelection.SelectedItems.last())},
                 new Page2Button { Id = "Explore",         Text = "Explore",     Action = () => Execute(Res.File, res=>HtmlContext.console.info(res))},
                 //new Page2Button { Id = "ToggleView",      Text = "View",      Action = () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
