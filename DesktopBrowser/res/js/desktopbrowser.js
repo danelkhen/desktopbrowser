@@ -137,7 +137,7 @@ dbr.SiteExtensions.toFriendlyNumber = function (x){
     var s;
     if (x >= 0 && x < 10)
         s = x.toFixed(2);
-    if (x >= 10 && x < 100)
+    else if (x >= 10 && x < 100)
         s = x.toFixed(1);
     else
         s = x.toFixed(0);

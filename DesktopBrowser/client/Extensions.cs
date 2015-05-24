@@ -61,7 +61,7 @@ namespace DesktopBrowser.client
             JsString s;
             if (x >= 0 && x < 10)
                 s = x.toFixed(2);
-            if (x >= 10 && x < 100)
+            else if (x >= 10 && x < 100)
                 s = x.toFixed(1);
             else
    //         if (x >= 100 && x < 1000)
