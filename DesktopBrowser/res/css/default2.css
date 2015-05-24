@@ -1,17 +1,12 @@
 ﻿body {
-    padding-top: 50px;
-}
-
-
-@media (max-width: 1500px) {
-.navbar-fixed-top{
-    position:static;
-}
-body{padding:0;}
+    padding-top: 80px;
 }
 
 .container-fluid {
     padding-left: 0;
+}
+.form-group {
+  margin-bottom: 0;
 }
 .navbar-default .navbar-nav>li>a {
   padding: 10px;
@@ -168,4 +163,5 @@ a:focus, a:hover {
 ul.nav > li:hover {
     background-color: #eee;
 }
+
 
