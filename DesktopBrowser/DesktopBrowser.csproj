@@ -50,6 +50,9 @@
     <Reference Include="CorexJs">
       <HintPath>..\..\corex-js\CorexJs\bin\CorexJs.dll</HintPath>
     </Reference>
+    <Reference Include="Grid">
+      <HintPath>..\..\corex-js\Grid\bin\Debug\Grid.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SharpKit.Html, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2575297a09c47a96, processorArchitecture=MSIL" />
     <Reference Include="SharpKit.jQuery, Version=1.6.4.0, Culture=neutral, PublicKeyToken=2575297a09c47a96, processorArchitecture=MSIL" />
