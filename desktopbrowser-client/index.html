@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>DesktopBrowser</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/img/clapperboard.png">
+    <link rel="stylesheet/less" type="text/css" href="/css/default.less" />
+    <link href="/lib/linearicons/style.css" rel="stylesheet" />
+    <!--<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">-->
+    <script src="/node_modules/less/dist/less.js" type="text/javascript"></script>
+    <script src="/node_modules/systemjs/dist/system.src.js"></script>
+    <script src="/systemjs.config.js"></script>
+    <script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+    <script src="/lib/corex-js/corex.js"></script>
+    <script src="/lib/corex-jquery/corex-jquery.js"></script>
+    <script src="/lib/grid/grid.js"></script>
+    <script>
+        System.import('app').catch(function (err) { console.error(err); });
+    </script>
+</head>
+<body>
+    <nav id="navbar">
+        <span class="clock" id="clock"></span>
+        <div class="menu">
+            <ul class="nav navbar-nav navleft"></ul>
+            <form role="search" class="find"><input type="text" id="tbSearch" class="form-control" placeholder="Find" /></form>
+            <span id="pager" class="Pager btn-group btn-group-sm">
+                <a class="btn btn-default navbar-btn PrevPage"><span class="glyphicon glyphicon-backward"></span></a>
+                <a class="btn btn-default navbar-btn PagerInfo">1 / 1 (Total: 000)</a>
+                <a class="btn btn-default navbar-btn NextPage"><span class="glyphicon glyphicon-forward"></span></a>
+            </span>
+            <select id="ddThemes">
+                <option value="light">light</option>
+                <option value="dark">dark</option>
+            </select>
+        </div>
+        <form><input type="text" id="tbPath" class="form-control" placeholder="Path" /></form>
+    </nav>
+    <input id="tbQuickFind" />
+    <div class="palette">
+        <div>
+            <div class="bg1 fg1">bg1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+            <div class="bg2 fg1">bg2<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+            <div class="bg3 fg1">bg3<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        </div>
+        <div>
+            <div class="bg-sel1 fg1">bg-sel1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+            <div class="bg-sel2 fg1">bg-sel2<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+            <div class="bg-sel3 fg1">bg-sel3<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+            <div class="bg-sel4 fg1">bg-sel4<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+            <div class="bg-sel5 fg1">bg-sel5<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        </div>
+    </div>
+    <div id="grdFiles" class="Grid"></div>
+</body>
+</html>

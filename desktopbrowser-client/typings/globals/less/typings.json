@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/00b9a0f82109c7af8c5935296ec167677019f9af/less/less.d.ts",
+    "raw": "registry:dt/less#0.0.0+20160608105036",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/00b9a0f82109c7af8c5935296ec167677019f9af/less/less.d.ts"
+  }
+}

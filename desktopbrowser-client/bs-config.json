@@ -1,0 +1,7 @@
+{
+  "port": 80,
+  "files": ["./**/*.{html,htm,css,js}"],
+  "server": { "baseDir": "./" },
+  "open": false,
+  "codeSync": false
+}
