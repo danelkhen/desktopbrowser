@@ -1,1 +1,0 @@
-copy ..\..\..\corex-js\CorexJs\js\* ..\res\libs\corex\
