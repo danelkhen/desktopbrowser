@@ -1,0 +1,17 @@
+{
+    "name": "desktopbrowser",
+    "version": "0.0.7",
+    "description": "",
+    "main": "server/out/server.js",
+    "scripts": {
+        "start": "node server/out/server",
+        "postinstall": "npm install client/ --prefix client/ && npm install server/ --prefix server/"
+    },
+    "bin": {
+        "desktopbrowser": "./bin/desktopbrowser"
+    },
+    "author": "Dan-el Khen",
+    "license": "MIT",
+    "dependencies": {
+    }
+}

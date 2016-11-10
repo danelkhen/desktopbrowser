@@ -8,7 +8,7 @@ import { DriveInfo } from "./utils/io"
 import * as child_process from "child_process"
 import * as https from "https"
 
-let root = path.join(__dirname, '../../desktopbrowser-client/');
+let root = path.join(__dirname, '../../client/');
 let nodeModulesDir = path.join(root, "../");
 let service = new SiteService();
 
@@ -18,10 +18,10 @@ let app = express();
 console.log({ root, nodeModulesDir, baseName:path.basename(nodeModulesDir) });
 app.use(express.static(root));
 
-if (path.basename(nodeModulesDir) == "node_modules") {
-    console.log("setting up node_modules dir");
-    app.use("/node_modules", express.static(nodeModulesDir));
-}
+//if (path.basename(nodeModulesDir) == "node_modules") {
+//    console.log("setting up node_modules dir");
+//    app.use("/node_modules", express.static(nodeModulesDir));
+//}
 
 
 app.get('/api/:action', (req: express.Request, res: express.Response) => {

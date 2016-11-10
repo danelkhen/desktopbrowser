@@ -1,13 +1,10 @@
 {
     "name": "desktopbrowser-server",
-    "version": "0.0.2",
+    "version": "0.0.5",
     "description": "",
     "main": "index.js",
     "author": "Dan-el Khen",
     "license": "MIT",
-    "bin": {
-        "desktopbrowser": "./bin/desktopbrowser"
-    },
     "dependencies": {
         "diskinfo": "0.0.3",
         "express": "^4.14.0"
