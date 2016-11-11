@@ -1,11 +1,11 @@
 {
     "name": "desktopbrowser",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Web based file explorer, runs locally on your browser, designed for media desktops.",
     "main": "server/out/server.js",
     "scripts": {
         "start": "node server/out/server",
-        "postinstall": "npm install client/ --prefix client/ && npm install server/ --prefix server/",
+        "postinstall": "npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
         "compile": "tsc -p client && tsc -p server",
         "dev": "start cmd /C tsc -p client -w && start cmd /C tsc -p server -w && npm start"
     },
