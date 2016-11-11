@@ -1,17 +1,17 @@
 {
     "name": "desktopbrowser",
-    "version": "0.0.7",
-    "description": "",
+    "version": "0.0.8",
+    "description": "Web based file explorer, runs locally on your browser, designed for media desktops.",
     "main": "server/out/server.js",
     "scripts": {
         "start": "node server/out/server",
-        "postinstall": "npm install client/ --prefix client/ && npm install server/ --prefix server/"
+        "postinstall": "npm install client/ --prefix client/ && npm install server/ --prefix server/",
+        "compile": "tsc -p client && tsc -p server",
+        "dev": "start cmd /C tsc -p client -w && start cmd /C tsc -p server -w && npm start"
     },
     "bin": {
         "desktopbrowser": "./bin/desktopbrowser"
     },
     "author": "Dan-el Khen",
-    "license": "MIT",
-    "dependencies": {
-    }
+    "license": "MIT"
 }

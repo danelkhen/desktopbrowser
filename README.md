@@ -7,12 +7,12 @@ Web based file explorer, runs locally on your browser, designed for media deskto
 Install Node.js
 
 ```
-npm install desktopbrowser-server desktopbrowser-client -g
+npm install desktopbrowser -g
 ```
 
 ### Run
 ```
-node node_modules/server/out/server
+desktopbrowser
 ```
 browse to http://localhost:7777/
 
