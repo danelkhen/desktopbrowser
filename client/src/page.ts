@@ -67,7 +67,8 @@ export class DefaultPage2 {
             { Id: "Hidden", Text: "Hidden", Action: () => { this.Req.ShowHiddenFiles = !this.Req.ShowHiddenFiles; this.SaveReqListAndRender(); }, IsActive: () => this.Req.ShowHiddenFiles },
             { Id: "Recursive", Text: "Recursive", Action: () => { this.Req.IsRecursive = !this.Req.IsRecursive; this.SaveReqListAndRender(); }, IsActive: () => this.Req.IsRecursive },
             { Id: "Subs", Text: "Subs", Action: () => this.OpenInNewWindow(this.GetSubtitleSearchLink(this.Res.File)) },
-            { Id: "Imdb", Text: "Imdb", Action: () => this.OpenInNewWindow(this.GetGoogleSearchLink(this.Res.File)) },
+            { Id: "Imdb", Text: "Imdb", Action: () => this.imdb(this.Res.File) },
+            { Id: "Google", Text: "Google", Action: () => this.OpenInNewWindow(this.GetGoogleSearchLink(this.Res.File)) },
             { Id: "Delete", Text: "Delete", Action: () => this.DeleteAndRefresh(this.FileSelection.SelectedItems.last()) },
             { Id: "Explore", Text: "Explore", Action: () => this.Explore(this.Res.File).then(res => console.info(res)) },
             //new Page2Button { Id = "ToggleView",      Text: "View",      Action: () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
@@ -590,6 +591,35 @@ export class DefaultPage2 {
         if (isNaN(x))
             return null;
         return x;
+    }
+
+    imdb(file: File) {
+        let name = this.GetFilenameForSearch(file.Name);
+        this.Service.omdbGet({ name }).then(res => {
+            console.log(res);
+            let el = $(".imdb");
+            Object.keys(res).forEach(key => {
+                let el2 = el.find("." + key);
+                let value = res[key];
+                if (key == "released")
+                    value = value.substr(0, 10);
+                else if (key == "series") {
+                    value = "series";
+                }
+                else if (key == "poster") {
+                    el2.find("img").attr("src", value);
+                }
+                else if (key == "imdburl") {
+                    let a = el2.find("a").attr("href", value);
+                    if (a.children().length == 0)
+                        a.text(value);
+                }
+                else {
+                    el2.text(value);
+                }
+            });
+            el.show();
+        });
     }
 
 

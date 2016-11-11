@@ -1,4 +1,5 @@
 ﻿import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
+import {Movie, MovieRequest} from 'imdb-api';
 
 export class SiteServiceClient {
     Url: string;
@@ -17,18 +18,18 @@ export class SiteServiceClient {
         return this.Invoke("GetFileRelatives", req);
     }
 
-    GetFile(req: PathRequest):Promise<File> {
+    GetFile(req: PathRequest): Promise<File> {
         return this.Invoke("GetFile", req);
     }
 
-    Execute(req: PathRequest):Promise<any> {
+    Execute(req: PathRequest): Promise<any> {
         return this.Invoke("Execute", req);
     }
 
-    Delete(req: PathRequest):Promise<any> {
+    Delete(req: PathRequest): Promise<any> {
         return this.Invoke("Delete", req);
     }
-    Explore(req: PathRequest):Promise<any> {
+    Explore(req: PathRequest): Promise<any> {
         return this.Invoke("Explore", req);
     }
 
@@ -41,6 +42,10 @@ export class SiteServiceClient {
                 complete: (a, b) => resolve(a.responseJSON),
             });
         });
+    }
+
+    omdbGet(req: MovieRequest): Promise<Movie> {
+        return this.Invoke("omdbGet", req);
     }
 
 

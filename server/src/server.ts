@@ -15,7 +15,7 @@ let service = new SiteService();
 process.on("uncaughtException", e => console.log("uncaughtException", e));
 
 let app = express();
-console.log({ root, nodeModulesDir, baseName:path.basename(nodeModulesDir) });
+console.log({ root, nodeModulesDir, baseName: path.basename(nodeModulesDir) });
 app.use(express.static(root));
 
 //if (path.basename(nodeModulesDir) == "node_modules") {
@@ -29,7 +29,13 @@ app.get('/api/:action', (req: express.Request, res: express.Response) => {
     console.log(action, req.params, req.query);
     try {
         let result = service[action](req.query);
-        res.json(result)
+        if (result instanceof Promise || typeof (result.then) == "function") {
+            let promise: Promise<any> = result;
+            promise.then(t => res.json(t));
+        }
+        else {
+            res.json(result)
+        }
     }
     catch (e) {
         console.log("api action error", e);

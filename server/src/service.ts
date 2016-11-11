@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import { HttpContext } from "./utils/http-context"
 import * as child_process from "child_process"
+import {getReq as omdbGetReq, Movie, MovieRequest} from 'imdb-api';
 
 
 export class SiteService {
@@ -91,7 +92,7 @@ export class SiteService {
     }
 
     public Explore(req: PathRequest): void {
-        child_process.exec(`explorer ${ this.quote(req.Path) }`);
+        child_process.exec(`explorer ${this.quote(req.Path)}`);
     }
 
     quote(s: string): string {
@@ -311,7 +312,9 @@ export class SiteService {
         this.cache = {};
     }
 
-
+    omdbGet(req: MovieRequest): Promise<Movie> {
+        return omdbGetReq(req);
+    }
 }
 
 

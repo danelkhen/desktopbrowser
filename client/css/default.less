@@ -45,29 +45,62 @@
 @bg-sel5: ~"@{@{theme}-bg-sel5}";
 
 
-.fg1 { color: @fg1; }
-.fg2 { color: @fg2;}
-.fg3 { color: @fg3;}
+.fg1 {
+    color: @fg1;
+}
 
-.bg1 { background-color: @bg1; }
-.bg2 { background-color: @bg2; }
-.bg3 { background-color: @bg3;}
-.bg-sel1 { background-color: @bg-sel1;}
-.bg-sel2 { background-color: @bg-sel2;}
-.bg-sel3 { background-color: @bg-sel3;}
-.bg-sel4 { background-color: @bg-sel4;}
-.bg-sel5 { background-color: @bg-sel5;}
+.fg2 {
+    color: @fg2;
+}
+
+.fg3 {
+    color: @fg3;
+}
+
+.bg1 {
+    background-color: @bg1;
+}
+
+.bg2 {
+    background-color: @bg2;
+}
+
+.bg3 {
+    background-color: @bg3;
+}
+
+.bg-sel1 {
+    background-color: @bg-sel1;
+}
+
+.bg-sel2 {
+    background-color: @bg-sel2;
+}
+
+.bg-sel3 {
+    background-color: @bg-sel3;
+}
+
+.bg-sel4 {
+    background-color: @bg-sel4;
+}
+
+.bg-sel5 {
+    background-color: @bg-sel5;
+}
 
 .palette {
-    display:none;
+    display: none;
 }
+
 .palette > div > div {
-    height:100px;
-    width:100px;
-    display:inline-block;
-    text-align:center;
-    vertical-align:top;
+    height: 100px;
+    width: 100px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
 }
+
 html {
     margin: 0;
     padding: 0;
@@ -83,20 +116,22 @@ body {
     padding: 0 0 50px 0;
 }
 
-input,select {
+input, select {
     box-sizing: border-box;
     color: @fg1;
     background-color: @bg1;
-    font-size:inherit;
+    font-size: inherit;
 }
-button{
+
+button {
     color: @fg1;
     background-color: @bg1;
-    font-size:inherit;
+    font-size: inherit;
 }
+
 a {
     color: inherit;
-    cursor: default;
+    /*cursor: default;*/
 }
 
 .active {
@@ -152,6 +187,7 @@ nav.fixed {
 ul.nav > li:hover > a {
     background-color: @bg2;
 }
+
 ul.nav > li.active:hover > a {
     background-color: @bg3;
 }
@@ -205,7 +241,7 @@ a.Name:hover {
 .Grid > table {
     border-collapse: collapse;
     table-layout: fixed;
-    border-spacing:0;
+    border-spacing: 0;
 }
 
 .Grid > table > thead > tr {
@@ -213,11 +249,11 @@ a.Name:hover {
 }
 
 .Grid > table > thead > tr > th > button {
-    width:100%;
-    min-height:100%;
-    border:none;
-    background-color:inherit;
-    padding:4px;
+    width: 100%;
+    min-height: 100%;
+    border: none;
+    background-color: inherit;
+    padding: 4px;
 }
 
 .Grid > table > thead > tr > th {
@@ -226,7 +262,7 @@ a.Name:hover {
     cursor: default;
     font-weight: normal;
     text-align: left;
-    vertical-align:top;
+    vertical-align: top;
 }
 
 .Grid > table > thead > tr > th:hover {
@@ -348,7 +384,7 @@ a.Name:hover {
 
 .FileRow.Selected {
     background-color: @bg-sel2;
-    color:@bg1;
+    color: @bg1;
 }
 
 .FileRow.HasInnerSelection {
@@ -357,9 +393,10 @@ a.Name:hover {
 
 .FileRow.Selected:hover {
     background-color: @bg-sel1;
-    color:@bg1;
+    color: @bg1;
 }
-.FileRow.HasInnerSelection:hover{
+
+.FileRow.HasInnerSelection:hover {
     background-color: @bg-sel4;
 }
 
@@ -383,19 +420,32 @@ a.Name:hover {
   designed on a 20 by 20 grid. */
 }
 
-#grdFiles{
-    border-bottom:1px solid @bg3;
+#grdFiles {
+    border-bottom: 1px solid @bg3;
 }
 
 #tbQuickFind {
-    position:absolute;
-    top:0;
-    right:0;
-    border:0;
-    background-color:transparent;
-    opacity:0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    background-color: transparent;
+    opacity: 0;
 }
 
-#tbQuickFind.HasValue{
-    opacity:1;
+#tbQuickFind.HasValue {
+    opacity: 1;
+}
+
+.imdb label {
+    margin-right: 10px;
+}
+
+.imdb .poster {
+    float: right;
+}
+
+.imdb .poster img {
+    max-width: 300px;
+    max-height: 300px;
 }
