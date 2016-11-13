@@ -2,7 +2,6 @@
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import ptn = require('parse-torrent-name');
-import * as xmltojson from "xmltojson";
 import * as imdb from "../typings2/imdb-rss"
 
 
