@@ -639,7 +639,7 @@ export class DefaultPage2 {
 
     getImdbUserId() {
         let id = localStorage.getItem("imdbUserId");
-        if(Q.isNotNullOrEmpty(id))
+        if(Q.isNullOrEmpty(id))
             console.info("set your imdbUserId storage key");
         return id;
     }
