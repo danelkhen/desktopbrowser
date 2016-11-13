@@ -4,7 +4,6 @@
     "globalDependencies": {
         "core-js": "registry:dt/core-js#0.0.0+20160914114559",
         "jquery": "registry:dt/jquery#1.10.0+20160929162922",
-        "less": "registry:dt/less#0.0.0+20160608105036",
-        "xmltojson": "registry:dt/xmltojson#0.0.0+20160316171810"
+        "less": "registry:dt/less#0.0.0+20160608105036"
     }
 }
