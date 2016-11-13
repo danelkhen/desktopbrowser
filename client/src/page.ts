@@ -2,6 +2,9 @@
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import ptn = require('parse-torrent-name');
+import * as xmltojson from "xmltojson";
+import * as imdb from "../typings2/imdb-rss"
+
 
 export class DefaultPage2 {
     constructor() {
@@ -626,9 +629,52 @@ export class DefaultPage2 {
                 }
             });
             el.show();
+            el.find(".yourRating").text("NA");
+            this.getImdbRatings().then(list => {
+                let yourRating = list.first(t => t.id == res.imdbid);
+                if (yourRating != null)
+                    el.find(".yourRating").text(yourRating.rating);
+            });
         });
     }
 
+    getImdbUserId() {
+        let id = localStorage.getItem("imdbUserId");
+        if(Q.isNotNullOrEmpty(id))
+            console.info("set your imdbUserId storage key");
+        return id;
+    }
+    setImdbUserId(value: string) {
+        return localStorage.setItem("imdbUserId", value);
+    }
+    _imdbRatings: ImdbRssItem[];
+    getImdbRatings(): Promise<ImdbRssItem[]> {
+        let json = localStorage.getItem("imdbRatings");
+        if (json != null && json != "") {
+            return Promise.resolve(JSON.parse(json));
+        }
+        if (this._imdbRatings != null)
+            return Promise.resolve(this._imdbRatings)
+        let userId = this.getImdbUserId();
+        if (userId == null || userId == "")
+            return Promise.resolve(null);
+        return this.Service.imdbRss({ path: `/user/${userId}/ratings` }).then(e => {
+            let doc = $.parseXML(e);
+            let items = $(doc).find("item").toArray();
+            let items2 = items.map(item => {
+                let item3 = $(item);
+                let item2: ImdbRssItem = {
+                    id: item3.children("guid").text().split("/")[4],
+                    rating: parseInt(item3.children("description").text().split(/[ \.]+/)[4]),
+                    title: item3.children("title").text(),
+                };
+                return item2;
+            });
+            localStorage.setItem("imdbRatings", JSON.stringify(items2));
+            return items2;
+        });
+
+    }
 
     onPathChanged() {
         $(".imdb").hide();
@@ -673,4 +719,10 @@ class DefaultPage {
         localStorage.setItem(key, value);
     }
 
+}
+
+export interface ImdbRssItem {
+    id: string;
+    rating: number;
+    title: string;
 }

@@ -7,7 +7,7 @@ import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } fro
 import { HttpContext } from "./utils/http-context"
 import * as child_process from "child_process"
 import { getReq as omdbGetReq, Movie, MovieRequest } from 'imdb-api';
-
+import XMLHttpRequest = require('xhr2');
 
 export class SiteService {
     ListFiles(req: ListFilesRequest): ListFilesResponse {
@@ -319,6 +319,21 @@ export class SiteService {
             });
         });
     }
+
+    imdbRss(req: { path: string }): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            let url = `http://rss.imdb.com${req.path}`;
+            console.log(url);
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener("readystatechange", e => {
+                if (xhr.readyState == 4)
+                    resolve(xhr.responseText);
+            });
+            xhr.open("GET", url);
+            xhr.send();
+        });
+    }
+
 }
 
 export interface OmdbGetResponse {

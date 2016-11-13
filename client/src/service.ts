@@ -1,5 +1,5 @@
 ﻿import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
-import {Movie, MovieRequest} from 'imdb-api';
+import { Movie, MovieRequest } from 'imdb-api';
 
 export class SiteServiceClient {
     Url: string;
@@ -47,6 +47,11 @@ export class SiteServiceClient {
     omdbGet(req: MovieRequest): Promise<OmdbGetResponse> {
         return this.Invoke("omdbGet", req);
     }
+
+    imdbRss(req: { path: string }): Promise<string> {
+        return this.Invoke("imdbRss", req);
+    }
+
 
 
 }

@@ -10,6 +10,7 @@
             app: '/out',
             'parse-torrent-name': 'npm:parse-torrent-name/index.js',
             'events': 'npm:events/events.js',
+            'xmltojson': "npm:xmltojson/lib/xmltojson.js",
         },
         packages: {
             app: { main: '/main.js', defaultExtension: 'js' },

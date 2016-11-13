@@ -8,6 +8,7 @@
   "dependencies": {
     "diskinfo": "0.0.3",
     "express": "^4.14.0",
-    "imdb-api": "^2.2.0"
+    "imdb-api": "^2.2.0",
+    "xhr2": "^0.1.3"
   }
 }

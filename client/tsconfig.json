@@ -9,7 +9,8 @@
         "noImplicitAny": false,
         "sourceMap": false,
         "outDir": "out",
-        "newLine": "LF"
+        "newLine": "LF",
+        "rootDir": "src"
     },
     "exclude": [
         "node_modules"
