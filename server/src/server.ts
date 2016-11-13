@@ -31,7 +31,7 @@ app.get('/api/:action', (req: express.Request, res: express.Response) => {
         let result = service[action](req.query);
         if (result instanceof Promise || typeof (result.then) == "function") {
             let promise: Promise<any> = result;
-            promise.then(t => res.json(t));
+            promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
         }
         else {
             res.json(result)

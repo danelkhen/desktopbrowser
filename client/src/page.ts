@@ -1,6 +1,7 @@
 ﻿import { SiteServiceClient } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
+import ptn = require('parse-torrent-name');
 
 export class DefaultPage2 {
     constructor() {
@@ -199,6 +200,7 @@ export class DefaultPage2 {
         var path = decodeURI(window.location.pathname);
         path = this.Path_LinuxToWin(path);
         this.Req.Path = path;
+        this.onPathChanged();
         console.info("LoadReq", this.Req);
     }
     //Page2Options Options;
@@ -274,6 +276,7 @@ export class DefaultPage2 {
             this.RefreshButtonsState();
         }
         this.Req.Path = path;
+        this.onPathChanged();
         this.SaveReqListAndRender();
     }
     Path_LinuxToWin(path: string): string {
@@ -381,7 +384,7 @@ export class DefaultPage2 {
                 //Items = Res.Files.AsJsArray(),
                 Columns:
                 [
-                    { Prop: t => t.IsFolder, Width: 20, RenderCell: this.RenderIconCell, Title: "", },
+                    { Prop: t => t.IsFolder, Width: 25, RenderCell: this.RenderIconCell, Title: "", },
                     { Prop: t => t.Name, Width: null, RenderCell: (a, b, c) => this.RenderNameCell(a, b, c),  /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Name)         */ },
                     { Prop: t => t.Modified, Width: 150, Format: this.FormatFriendlyDate, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Modified)     */ },
                     { Prop: t => t.Size, Width: 150, Format: this.FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Size)         */ },
@@ -594,9 +597,13 @@ export class DefaultPage2 {
     }
 
     imdb(file: File) {
-        let name = this.GetFilenameForSearch(file.Name);
-        this.Service.omdbGet({ name }).then(res => {
-            console.log(res);
+        let info = ptn(file.Name);
+        console.log(info);
+        this.Service.omdbGet({ name: info.title, year: info.year }).then(res2 => {
+            console.log(res2);
+            if (res2.err != null)
+                return;
+            let res = res2.data;
             let el = $(".imdb");
             Object.keys(res).forEach(key => {
                 let el2 = el.find("." + key);
@@ -623,6 +630,9 @@ export class DefaultPage2 {
     }
 
 
+    onPathChanged() {
+        $(".imdb").hide();
+    }
 
     grdFiles2: Grid<File>;
     DefaultReq: ListFilesRequest;

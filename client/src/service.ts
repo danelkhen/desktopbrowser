@@ -44,13 +44,18 @@ export class SiteServiceClient {
         });
     }
 
-    omdbGet(req: MovieRequest): Promise<Movie> {
+    omdbGet(req: MovieRequest): Promise<OmdbGetResponse> {
         return this.Invoke("omdbGet", req);
     }
 
 
 }
 
+
+export interface OmdbGetResponse {
+    data: Movie;
+    err: { meesage: string, name: string };
+}
 
 
 

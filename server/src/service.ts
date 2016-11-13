@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import { HttpContext } from "./utils/http-context"
 import * as child_process from "child_process"
-import {getReq as omdbGetReq, Movie, MovieRequest} from 'imdb-api';
+import { getReq as omdbGetReq, Movie, MovieRequest } from 'imdb-api';
 
 
 export class SiteService {
@@ -313,11 +313,18 @@ export class SiteService {
     }
 
     omdbGet(req: MovieRequest): Promise<Movie> {
-        return omdbGetReq(req);
+        return new Promise((resolve, reject) => {
+            omdbGetReq(req, (err, data) => {
+                resolve({ data, err });
+            });
+        });
     }
 }
 
-
+export interface OmdbGetResponse {
+    data: Movie;
+    err: { meesage: string, name: string };
+}
 class Stopwatch {
     Start() { }
     Stop() { }
