@@ -1,0 +1,6 @@
+{
+  "name": "DesktopBrowser",
+  "tagline": "Web based file explorer, runs locally on your browser, designed for media desktops.",
+  "body": "DesktopBrowser\r\n==============\r\n\r\nWeb based file explorer, runs locally on your browser, designed for media desktops.\r\n\r\n### Installation\r\nInstall Node.js\r\n\r\n```\r\nnpm install desktopbrowser -g\r\n```\r\n\r\n### Run\r\n```\r\ndesktopbrowser\r\n```\r\nbrowse to http://localhost:7777/\r\n\r\n### Features\r\nQuick find\r\nSorting by any column(s)\r\nFolder size calculation\r\nNext / previous sibling folder navigation\r\nBrowser navigation and bookmarks\r\nColumns: Name, Last Modified, Size, Extension\r\nFile/Folder operations: Delete\r\n\r\n### Roadmap\r\nUI and graphics\r\nFile/Folder operations (cut, copy, paste)\r\nCustom operations - play all, unzip\r\n\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
