@@ -29,6 +29,9 @@ export class SiteServiceClient {
     Delete(req: PathRequest): Promise<any> {
         return this.Invoke("Delete", req);
     }
+    trash(req: PathRequest): Promise<any> {
+        return this.Invoke("trash", req);
+    }
     Explore(req: PathRequest): Promise<any> {
         return this.Invoke("Explore", req);
     }

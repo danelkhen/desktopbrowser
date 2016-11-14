@@ -24,9 +24,9 @@
 @dark-fg1: #eee;
 @dark-fg2: #ddd;
 @dark-fg3: #bbb;
-@dark-bg-sel1: #d4c116;
-@dark-bg-sel2: #a29524;
-@dark-bg-sel3: #807832;
+@dark-bg-sel1: #2468a2;
+@dark-bg-sel2: #164783;
+@dark-bg-sel3: #002552;
 @dark-bg-sel4: #5d5517;
 @dark-bg-sel5: #423e22;
 
@@ -140,7 +140,7 @@ a {
 
 nav {
     background-color: @bg1;
-    font-size: 11px;
+    font-size: 10px;
     color: @fg2;
 }
 
@@ -384,21 +384,22 @@ a.Name:hover {
 
 .FileRow.Selected {
     background-color: @bg-sel2;
-    color: @bg1;
+    /*color: @bg1;*/
 }
 
 .FileRow.HasInnerSelection {
-    background-color: @bg-sel5;
+    /*background-color: @bg-sel5;*/
+    opacity:0.5;
 }
 
 .FileRow.Selected:hover {
     background-color: @bg-sel1;
-    color: @bg1;
+    /*color: @fg3;*/
 }
 
-.FileRow.HasInnerSelection:hover {
+/*.FileRow.HasInnerSelection:hover {
     background-color: @bg-sel4;
-}
+}*/
 
 #clock {
     white-space: pre;

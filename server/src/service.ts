@@ -8,6 +8,8 @@ import { HttpContext } from "./utils/http-context"
 import * as child_process from "child_process"
 import { getReq as omdbGetReq, Movie, MovieRequest } from 'imdb-api';
 import XMLHttpRequest = require('xhr2');
+import * as rimraf from "rimraf";
+import * as trash from 'trash';
 
 export class SiteService {
     ListFiles(req: ListFilesRequest): ListFilesResponse {
@@ -100,15 +102,34 @@ export class SiteService {
     }
 
 
-    public Delete(req: PathRequest): void {
+    Delete(req: PathRequest): Promise<any> {
         var path = req.Path;
         if (IoFile.Exists(path))
             IoFile.Delete(path);
         else if (IoDir.Exists(path)) {
             if (path.split('\\').length <= 2)
                 throw new Error("Delete protection, cannot delete path so short, should be at least depth of 3 levels or more");
-            IoDir.Delete(path, true);
+            //IoDir.Delete(path, true);
+            return this.rimraf(path, { glob: false });//, maxBusyTries: null, emfileWait: null, disableGlob: null });
         }
+        return Promise.resolve();
+    }
+
+    trash(req: PathRequest): Promise<any> {
+        let path = req.Path;
+        return trash([path]);
+    }
+
+    rimraf(pattern: string, options?: rimraf.Options) {
+        return new Promise((resolve, reject) => {
+            rimraf(pattern, options, err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+
     }
 
 
@@ -116,11 +137,11 @@ export class SiteService {
     ApplyRequest(files: IEnumerable<File>, req: SiteRequest): IEnumerable<File> {
         var calculatedFolderSize = false;
         if (!req.ShowHiddenFiles)
-            files = files.where(t => !t.IsHidden);;
+            files = files.where(t => !t.IsHidden);
         if (req.HideFolders)
-            files = files.where(t => !t.IsFolder);;
+            files = files.where(t => !t.IsFolder);
         if (req.HideFiles)
-            files = files.where(t => t.IsFolder);;
+            files = files.where(t => t.IsFolder);
         if (req.Sort != null && req.Sort.Columns != null) {
             req.Sort.Columns.forEach(t => {
                 if (t.Name == "Name")

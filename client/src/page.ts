@@ -72,7 +72,7 @@ export class DefaultPage2 {
             { Id: "Subs", Text: "Subs", Action: () => this.OpenInNewWindow(this.GetSubtitleSearchLink(this.Res.File)) },
             { Id: "Imdb", Text: "Imdb", Action: () => this.imdb(this.Res.File) },
             { Id: "Google", Text: "Google", Action: () => this.OpenInNewWindow(this.GetGoogleSearchLink(this.Res.File)) },
-            { Id: "Delete", Text: "Delete", Action: () => this.DeleteAndRefresh(this.FileSelection.SelectedItems.last()) },
+            { Id: "Delete", Text: "Delete", Action: () => this.DeleteOrTrash(this.FileSelection.SelectedItems.last()) },
             { Id: "Explore", Text: "Explore", Action: () => this.Explore(this.Res.File).then(res => console.info(res)) },
             //new Page2Button { Id = "ToggleView",      Text: "View",      Action: () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
         ];
@@ -117,10 +117,13 @@ export class DefaultPage2 {
         //        grdFiles2.Render();
         //};
         $(this.Win).keydown(e => this.Win_keydown(e));
+        $(this.Win).on('keyup keydown', e => { this.isShiftDown = e.shiftKey });
         //$(this.Win).keypress(e => this.Win_keypress(e));
         this.tbQuickFind.on("input", e => this.tbQuickFind_input(e));
         this.tbQuickFind.keydown(e => this.tbQuickFind_keydown(e));
     }
+
+    isShiftDown: boolean;
 
     UpdateClock(): void {
         this.clock.text(new Date().format("HH:mm\nddd, MMM d"));
@@ -484,6 +487,17 @@ export class DefaultPage2 {
             return;
         return this.Service.Delete({ Path: file.Path }).then(res => this.ListAndRender());
     }
+    TrashAndRefresh(file: File): Promise<any> {
+        if (file == null)
+            return;
+        var fileOrFolder = file.IsFolder ? "folder" : "file";
+        return this.Service.trash({ Path: file.Path }).then(res => this.ListAndRender());
+    }
+    DeleteOrTrash(file: File): Promise<any> {
+        if(this.isShiftDown)
+            return this.DeleteAndRefresh(file);
+        return this.TrashAndRefresh(file);
+    }
 
 
     Open(file: File): Promise<any> {
@@ -639,7 +653,7 @@ export class DefaultPage2 {
 
     getImdbUserId() {
         let id = localStorage.getItem("imdbUserId");
-        if(Q.isNullOrEmpty(id))
+        if (Q.isNullOrEmpty(id))
             console.info("set your imdbUserId storage key");
         return id;
     }

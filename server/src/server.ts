@@ -23,13 +23,17 @@ app.use(express.static(root));
 //    app.use("/node_modules", express.static(nodeModulesDir));
 //}
 
-
+function isPromise(obj) {
+    if(obj==null)
+        return false;
+    return obj instanceof Promise || typeof (obj.then) == "function";
+}
 app.get('/api/:action', (req: express.Request, res: express.Response) => {
     let action = req.params["action"];
     console.log(action, req.params, req.query);
     try {
         let result = service[action](req.query);
-        if (result instanceof Promise || typeof (result.then) == "function") {
+        if (isPromise(result)) {
             let promise: Promise<any> = result;
             promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
         }

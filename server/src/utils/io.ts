@@ -2,13 +2,14 @@
 import * as fs from "fs"
 import { getDrives, DiskInfoItem } from "diskinfo"
 
+
 export class IoDir {
     static Exists(s: string): boolean { return fs.existsSync(s) && fs.statSync(s).isDirectory(); }
     static Delete(s: string, x?: boolean): boolean { throw new Error(); }
 }
 export class IoFile {
     static Exists(s: string): boolean { return fs.existsSync(s) && fs.statSync(s).isFile(); }
-    static Delete(s: string): boolean { 
+    static Delete(s: string): boolean {
         fs.unlinkSync(s);
         return true;
     }
@@ -89,7 +90,7 @@ export class FileSystemInfo {
 export class DriveInfo extends FileSystemInfo {
     constructor(mount: string) {
         super(null);
-        this.path = mount+"\\";
+        this.path = mount + "\\";
         this.Name = mount;
     }
     static drives: DriveInfo[] = [];
