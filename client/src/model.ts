@@ -9,6 +9,7 @@ export interface File {
     IsHidden?: boolean;
     Size?: number;
     Extension?: string;
+    type?:string;
 }
 
 export interface FileRelativesInfo {

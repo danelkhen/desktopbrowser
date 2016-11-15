@@ -6,6 +6,7 @@
     IsHidden?: boolean;
     Size?: number;
     Extension?: string;
+    type?: "file" | "folder" | "link" | string;
 }
 
 export interface FileRelativesInfo {

@@ -389,7 +389,7 @@ export class DefaultPage2 {
                 //Items = Res.Files.AsJsArray(),
                 Columns:
                 [
-                    { Prop: t => t.IsFolder, Width: 25, RenderCell: this.RenderIconCell, Title: "", },
+                    { Prop: t => t.type, Width: 25, RenderCell: this.RenderIconCell, Title: "", },
                     { Prop: t => t.Name, Width: null, RenderCell: (a, b, c) => this.RenderNameCell(a, b, c),  /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Name)         */ },
                     { Prop: t => t.Modified, Width: 150, Format: this.FormatFriendlyDate, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Modified)     */ },
                     { Prop: t => t.Size, Width: 150, Format: this.FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Size)         */ },
@@ -439,7 +439,12 @@ export class DefaultPage2 {
     }
 
     RenderIconCell(col: GridCol1<File>, file: File, td: JQuery): void {
-        var icon = file.IsFolder ? "layers" : "file-empty";
+        let map = {
+            folder: "layers",
+            file: "file-empty",
+            link: "link",
+        };
+        var icon = map[file.type];
         td.getAppend("span")[0].className = "lnr lnr-" + icon;
     }
 
@@ -494,7 +499,7 @@ export class DefaultPage2 {
         return this.Service.trash({ Path: file.Path }).then(res => this.ListAndRender());
     }
     DeleteOrTrash(file: File): Promise<any> {
-        if(this.isShiftDown)
+        if (this.isShiftDown)
             return this.DeleteAndRefresh(file);
         return this.TrashAndRefresh(file);
     }

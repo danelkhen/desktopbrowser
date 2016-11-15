@@ -269,6 +269,7 @@ export class SiteService {
 
     ToFile(file: FileSystemInfo): File {
         var file2: File = {
+            type: null,
             Name: file.Name,
             IsFolder: file.isDir,
             Modified: file.LastWriteTime != null ? file.LastWriteTime.ToDefaultString() : null,
@@ -276,6 +277,12 @@ export class SiteService {
             IsHidden: file.Attributes.HasFlag(FileAttributes.Hidden),
             Extension: file != null ? file.Extension : null,
         };
+        if(file.isDir)
+            file2.type = "folder";
+        else if(file.isFile)
+            file2.type = "file";
+        else if(file.isLink)
+            file2.type = "link";
         try {
             file2.Path = file.FullName;
         }

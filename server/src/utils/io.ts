@@ -5,7 +5,6 @@ import { getDrives, DiskInfoItem } from "diskinfo"
 
 export class IoDir {
     static Exists(s: string): boolean { return fs.existsSync(s) && fs.statSync(s).isDirectory(); }
-    static Delete(s: string, x?: boolean): boolean { throw new Error(); }
 }
 export class IoFile {
     static Exists(s: string): boolean { return fs.existsSync(s) && fs.statSync(s).isFile(); }
@@ -50,16 +49,19 @@ export class FileSystemInfo {
         this.Name = path.basename(path2);
         this.Extension = path.extname(path2);
         try {
-            let x = fs.statSync(path2);
-            this.Length = x.size;
-            this.isFile = x.isFile();
-            this.isDir = x.isDirectory();
-            this.LastWriteTime = x.mtime;
+            this.stats = fs.lstatSync(path2);
+            this.Length = this.stats.size;
+            this.isFile = this.stats.isFile();
+            this.isDir = this.stats.isDirectory();
+            this.LastWriteTime = this.stats.mtime;
+            this.isLink = this.stats.isSymbolicLink();
         }
         catch (e) {
         }
     }
+    stats:fs.Stats;
     path: string;
+    isLink:boolean;
     isFile: boolean;
     isDir: boolean;
     Name: string;
