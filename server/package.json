@@ -6,6 +6,7 @@
   "author": "Dan-el Khen",
   "license": "MIT",
   "dependencies": {
+    "dirty": "^1.1.0",
     "diskinfo": "0.0.3",
     "express": "^4.14.0",
     "imdb-api": "^2.2.0",

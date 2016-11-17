@@ -11,6 +11,7 @@ import * as https from "https"
 let root = path.join(__dirname, '../../client/');
 let nodeModulesDir = path.join(root, "../");
 let service = new SiteService();
+service.init();
 
 process.on("uncaughtException", e => console.log("uncaughtException", e));
 
@@ -24,7 +25,7 @@ app.use(express.static(root));
 //}
 
 function isPromise(obj) {
-    if(obj==null)
+    if (obj == null)
         return false;
     return obj instanceof Promise || typeof (obj.then) == "function";
 }
@@ -63,3 +64,5 @@ DriveInfo.GetDrives3().then(drives => {
         console.log('Example app listening on port 7777!');
     });
 });
+
+

@@ -10,8 +10,24 @@ import { getReq as omdbGetReq, Movie, MovieRequest } from 'imdb-api';
 import XMLHttpRequest = require('xhr2');
 import * as rimraf from "rimraf";
 import * as trash from 'trash';
+import * as path from "path";
+import { KeyValueStorage } from "./db";
 
 export class SiteService {
+    init() {
+        let dir = path.join(getUserHome(), "desktopbrowser");
+        //this.baseDb = new KeyValueStorage<BaseDbItem>(path.join(dir, "base.db"));
+        //this.baseDb.init().then(() => {
+        //    //this.baseDb.db.update(
+        //    this.baseDb.db.forEach((key, value) => {
+        //        console.log("base.db", { key, value });
+        //    });
+        //    //this.baseDb.set("a", { a: "a" });
+        //    this.baseDb.set("a", { b: "b" });
+        //    //this.baseDb.set("a", { c: "c" });
+        //});
+    }
+    baseDb: KeyValueStorage<any>;
     ListFiles(req: ListFilesRequest): ListFilesResponse {
         if (req.Path.endsWith(":"))
             req.Path += "\\";
@@ -277,11 +293,11 @@ export class SiteService {
             IsHidden: file.Attributes.HasFlag(FileAttributes.Hidden),
             Extension: file != null ? file.Extension : null,
         };
-        if(file.isDir)
+        if (file.isDir)
             file2.type = "folder";
-        else if(file.isFile)
+        else if (file.isFile)
             file2.type = "file";
-        else if(file.isLink)
+        else if (file.isLink)
             file2.type = "link";
         try {
             file2.Path = file.FullName;
@@ -372,4 +388,13 @@ class Stopwatch {
     Start() { }
     Stop() { }
     ElapsedMilliseconds: number;
+}
+
+
+function getUserHome() {
+    return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+interface BaseDbItem {
+    a?: string, b?: string, c?: string;
 }
