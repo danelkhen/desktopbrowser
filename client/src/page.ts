@@ -11,9 +11,24 @@ export class DefaultPage2 {
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
         this.FileSelection = new Selection<File>();
         this.FileSelection.Changed = e => this.FileSelection_Changed(e);
-        this.Service.baseDbGetAll().then(list => this.baseDbBuckets = list).then(() => $(() => this.OnDomReady()));
+        this.Service.baseDbGetAll().then(list => this.baseDbBuckets = list).then(() => this.migrateDbIfNeeded()).then(() => $(() => this.OnDomReady()));
     }
 
+    migrateDbIfNeeded() {
+        if (this.baseDbBuckets == null && this.baseDbBuckets.length > 0)
+            return;
+        if (localStorage.length == 0)
+            return;
+        console.log("migrating db");
+        let i = 0;
+        while (i < localStorage.length) {
+            let key = localStorage.key(i);
+            let value = localStorage.getItem(key);
+            this.SetStorageItem(key, value);
+            localStorage.removeItem(key);
+        }
+        console.log("done");
+    }
     baseDbBuckets: Bucket<BaseDbItem>[];
 
     get Path(): string { return this.Req.Path; }
@@ -658,17 +673,17 @@ export class DefaultPage2 {
     }
 
     getImdbUserId() {
-        let id = localStorage.getItem("imdbUserId");
+        let id = this.GetStorageItem("imdbUserId");
         if (Q.isNullOrEmpty(id))
             console.info("set your imdbUserId storage key");
         return id;
     }
     setImdbUserId(value: string) {
-        return localStorage.setItem("imdbUserId", value);
+        return this.SetStorageItem("imdbUserId", value);
     }
     _imdbRatings: ImdbRssItem[];
     getImdbRatings(): Promise<ImdbRssItem[]> {
-        let json = localStorage.getItem("imdbRatings");
+        let json = this.GetStorageItem("imdbRatings");
         if (json != null && json != "") {
             return Promise.resolve(JSON.parse(json));
         }
@@ -689,7 +704,7 @@ export class DefaultPage2 {
                 };
                 return item2;
             });
-            localStorage.setItem("imdbRatings", JSON.stringify(items2));
+            this.SetStorageItem("imdbRatings", JSON.stringify(items2));
             return items2;
         });
 
