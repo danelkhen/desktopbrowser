@@ -11,23 +11,23 @@ import XMLHttpRequest = require('xhr2');
 import * as rimraf from "rimraf";
 import * as trash from 'trash';
 import * as path from "path";
-import { KeyValueStorage } from "./db";
+import { KeyValueStorage, Bucket } from "./db";
 
 export class SiteService {
     init() {
         let dir = path.join(getUserHome(), "desktopbrowser");
-        //this.baseDb = new KeyValueStorage<BaseDbItem>(path.join(dir, "base.db"));
-        //this.baseDb.init().then(() => {
-        //    //this.baseDb.db.update(
-        //    this.baseDb.db.forEach((key, value) => {
-        //        console.log("base.db", { key, value });
-        //    });
-        //    //this.baseDb.set("a", { a: "a" });
-        //    this.baseDb.set("a", { b: "b" });
-        //    //this.baseDb.set("a", { c: "c" });
-        //});
+        this.baseDb = new KeyValueStorage<BaseDbItem>(path.join(dir, "base.db"));
+        this.baseDb.init().then(() => {
+            //this.baseDb.db.update(
+            //this.baseDb.db.forEach((key, value) => {
+            //    console.log("base.db", { key, value });
+            //});
+            ////this.baseDb.set("a", { a: "a" });
+            //this.baseDb.set("a", { b: "b" });
+            //this.baseDb.set("a", { c: "c" });
+        });
     }
-    baseDb: KeyValueStorage<any>;
+    baseDb: KeyValueStorage<BaseDbItem>;
     ListFiles(req: ListFilesRequest): ListFilesResponse {
         if (req.Path.endsWith(":"))
             req.Path += "\\";
@@ -378,6 +378,20 @@ export class SiteService {
         });
     }
 
+    baseDbGet(req: { key: string }): BaseDbItem {
+        return this.baseDb.get(req.key);
+    }
+    baseDbDelete(req: { key: string }): Promise<any> {
+        return this.baseDb.delete(req.key);
+    }
+    baseDbGetAll(): Bucket<BaseDbItem>[] {
+        return this.baseDb.getAll();
+    }
+    baseDbSet(req: Bucket<BaseDbItem>): Promise<any> {
+        return this.baseDb.set(req.key, req.value);
+    }
+
+
 }
 
 export interface OmdbGetResponse {
@@ -396,5 +410,5 @@ function getUserHome() {
 }
 
 interface BaseDbItem {
-    a?: string, b?: string, c?: string;
+    selectedFiles?: string[];
 }

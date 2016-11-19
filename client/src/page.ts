@@ -1,4 +1,4 @@
-﻿import { SiteServiceClient } from "./service"
+﻿import { SiteServiceClient, Bucket, BaseDbItem } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import ptn = require('parse-torrent-name');
@@ -12,8 +12,10 @@ export class DefaultPage2 {
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
         this.FileSelection = new Selection<File>();
         this.FileSelection.Changed = e => this.FileSelection_Changed(e);
+        this.Service.baseDbGetAll().then(list => this.baseDbBuckets = list).then(() => $(() => this.OnDomReady()));
     }
 
+    baseDbBuckets: Bucket<BaseDbItem>[];
 
     get Path(): string { return this.Req.Path; }
     Service: SiteServiceClient;
@@ -456,7 +458,7 @@ export class DefaultPage2 {
         this.grdFiles2.Render();
         this.FileSelection.AllItems = this.grdFiles2.CurrentList;
         this.FileSelection.SelectedItems.clear();
-        var selectedFileName = DefaultPage.GetSelection(this.Res.File.Name);
+        var selectedFileName = this.GetSelection(this.Res.File.Name);
         if (String.isNotNullOrEmpty(selectedFileName)) {
             var files = this.FileSelection.AllItems.where(t => t.Name == selectedFileName);
             this.FileSelection.SetSelection(files);
@@ -481,7 +483,7 @@ export class DefaultPage2 {
         let filename: string = null;
         if (file != null)
             filename = file.Name;
-        DefaultPage.SaveSelection2(this.Res.File.Name, filename);
+        this.SaveSelection2(this.Res.File.Name, filename);
     }
 
     DeleteAndRefresh(file: File): Promise<any> {
@@ -563,7 +565,7 @@ export class DefaultPage2 {
         var s = "FileRow";
         if (file.IsFolder) {
             s += " IsFolder";
-            let folderHasSelection = DefaultPage.GetSelection(file.Name) != null;
+            let folderHasSelection = this.GetSelection(file.Name) != null;
             if (folderHasSelection)
                 s += " HasInnerSelection";
         }
@@ -701,6 +703,40 @@ export class DefaultPage2 {
     grdFiles2: Grid<File>;
     DefaultReq: ListFilesRequest;
     Buttons: Page2Button[];
+
+    GetSelection(folder: string): string {
+        var filename = this.GetStorageItem(folder);
+        return filename;
+    }
+    SaveSelection2(folderName: string, filename: string) {
+        if (filename == null)
+            localStorage.removeItem(folderName);
+        else
+            this.SetStorageItem(folderName, filename);
+    }
+    GetStorageItem(key: string): string {
+        let x = this.baseDbBuckets.first(t => t.key == key);
+        if (x == null || x.value == null || x.value.selectedFiles == null)
+            return null;
+        return x.value.selectedFiles[0];
+    }
+    SetStorageItem(key: string, value: string): void {
+        if (value == null) {
+            this.baseDbBuckets.removeAll(t => t.key == key);
+            this.Service.baseDbDelete({ key });
+            return;
+        }
+        let x = this.baseDbBuckets.first(t => t.key == key);
+        if (x == null) {
+            x = { key: key, value: null };
+            this.baseDbBuckets.push(x);
+        }
+        if (x.value == null)
+            x.value = {};
+        x.value.selectedFiles = [value];
+        this.Service.baseDbSet(x);
+    }
+
 }
 
 
@@ -719,25 +755,6 @@ export interface Page2Button {
 }
 
 
-class DefaultPage {
-    static GetSelection(folder: string): string {
-        var filename = this.GetStorageItem(folder);
-        return filename;
-    }
-    static SaveSelection2(folderName: string, filename: string) {
-        if (filename == null)
-            localStorage.removeItem(folderName);
-        else
-            this.SetStorageItem(folderName, filename);
-    }
-    static GetStorageItem(key: string): string {
-        return localStorage.getItem(key);
-    }
-    static SetStorageItem(key: string, value: string): void {
-        localStorage.setItem(key, value);
-    }
-
-}
 
 export interface ImdbRssItem {
     id: string;

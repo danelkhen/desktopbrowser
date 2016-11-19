@@ -27,11 +27,19 @@ export class KeyValueStorage<T> {
     getBucket(key: string): Bucket<T> {
         return { key, value: this.get(key) };
     }
+    getAll(): Bucket<T>[] {
+        let list: Bucket<T>[] = [];
+        this.db.forEach((key, value) => list.push({ key, value }));
+        return list;
+    }
     get(key: string): T {
         return this.db.get(key);
     }
     set(key: string, value: T): Promise<any> {
         return new Promise((resolve, reject) => this.db.set(key, value, resolve));
+    }
+    delete(key: string): Promise<any> {
+        return new Promise((resolve, reject) => this.db.rm(key, resolve));
     }
 }
 
@@ -42,12 +50,14 @@ function cleanupDirtyDb(filename: string) {
     let map: any = {};
     let list = lines.forEach(t => {
         let x = JSON.parse(t) as { key: string, value: any };
+        if (x == null || x.key == null)
+            return;
         map[x.key] = t;
     });
     let newKeys = Object.keys(map);
     if (newKeys.length >= lines.length)
         return;
-    let newLines = newKeys.map(key => map[key]+"\n");
+    let newLines = newKeys.map(key => map[key] + "\n");
     fs.writeFileSync(filename + ".bak", src, { encoding: "utf-8" });
     fs.writeFileSync(filename, newLines.join(""), { encoding: "utf-8" });
 

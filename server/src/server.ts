@@ -7,6 +7,7 @@ import * as express from "express"
 import { DriveInfo } from "./utils/io"
 import * as child_process from "child_process"
 import * as https from "https"
+import * as bodyParser from "body-parser";
 
 let root = path.join(__dirname, '../../client/');
 let nodeModulesDir = path.join(root, "../");
@@ -16,6 +17,7 @@ service.init();
 process.on("uncaughtException", e => console.log("uncaughtException", e));
 
 let app = express();
+app.use(bodyParser.json());
 console.log({ root, nodeModulesDir, baseName: path.basename(nodeModulesDir) });
 app.use(express.static(root));
 
@@ -29,11 +31,12 @@ function isPromise(obj) {
         return false;
     return obj instanceof Promise || typeof (obj.then) == "function";
 }
-app.get('/api/:action', (req: express.Request, res: express.Response) => {
+app.use('/api/:action', (req: express.Request, res: express.Response) => {
     let action = req.params["action"];
+    let arg = req.method == "POST" ? (req as any).body : req.query;
     console.log(action, req.params, req.query);
     try {
-        let result = service[action](req.query);
+        let result = service[action](arg);
         if (isPromise(result)) {
             let promise: Promise<any> = result;
             promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
