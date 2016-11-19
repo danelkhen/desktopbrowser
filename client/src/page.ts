@@ -7,7 +7,6 @@ import * as imdb from "../typings2/imdb-rss"
 
 export class DefaultPage2 {
     constructor() {
-        $(() => this.OnDomReady());
         this.Service = new SiteServiceClient();
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
         this.FileSelection = new Selection<File>();
@@ -709,10 +708,7 @@ export class DefaultPage2 {
         return filename;
     }
     SaveSelection2(folderName: string, filename: string) {
-        if (filename == null)
-            localStorage.removeItem(folderName);
-        else
-            this.SetStorageItem(folderName, filename);
+        this.SetStorageItem(folderName, filename);
     }
     GetStorageItem(key: string): string {
         let x = this.baseDbBuckets.first(t => t.key == key);
