@@ -15,7 +15,7 @@ export class DefaultPage2 {
     }
 
     migrateDbIfNeeded() {
-        if (this.baseDbBuckets == null && this.baseDbBuckets.length > 0)
+        if (this.baseDbBuckets == null || this.baseDbBuckets.length > 0)
             return;
         if (localStorage.length == 0)
             return;
