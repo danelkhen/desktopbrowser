@@ -3,6 +3,7 @@
 /* light theme  */
 
 @light-fg1: #333;
+@light-fg1a: fade(@light-fg1, 30%);
 @light-fg2: #666;
 @light-fg3: #999;
 @light-bg1: #fff;
@@ -22,6 +23,7 @@
 @dark-bg2: #333;
 @dark-bg3: #666;
 @dark-fg1: #eee;
+@dark-fg1a: fade(@dark-fg1, 30%);
 @dark-fg2: #ddd;
 @dark-fg3: #bbb;
 @dark-bg-sel1: #2468a2;
@@ -33,6 +35,7 @@
 /**************/
 
 @fg1: ~"@{@{theme}-fg1}";
+@fg1a: ~"@{@{theme}-fg1a}";
 @fg2: ~"@{@{theme}-fg2}";
 @fg3: ~"@{@{theme}-fg3}";
 @bg1: ~"@{@{theme}-bg1}";
@@ -388,8 +391,7 @@ a.Name:hover {
 }
 
 .FileRow.HasInnerSelection {
-    /*background-color: @bg-sel5;*/
-    opacity:0.5;
+    color: @fg1a;
 }
 
 .FileRow.Selected:hover {

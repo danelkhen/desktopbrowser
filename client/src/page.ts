@@ -678,9 +678,11 @@ export class DefaultPage2 {
             console.info("set your imdbUserId storage key");
         return id;
     }
+
     setImdbUserId(value: string) {
         return this.SetStorageItem("imdbUserId", value);
     }
+
     _imdbRatings: ImdbRssItem[];
     getImdbRatings(): Promise<ImdbRssItem[]> {
         let json = this.GetStorageItem("imdbRatings");
@@ -722,22 +724,25 @@ export class DefaultPage2 {
         var filename = this.GetStorageItem(folder);
         return filename;
     }
+
     SaveSelection2(folderName: string, filename: string) {
         this.SetStorageItem(folderName, filename);
     }
+
     GetStorageItem(key: string): string {
         let x = this.baseDbBuckets.first(t => t.key == key);
         if (x == null || x.value == null || x.value.selectedFiles == null)
             return null;
         return x.value.selectedFiles[0];
     }
+
     SetStorageItem(key: string, value: string): void {
         if (value == null) {
             this.baseDbBuckets.removeAll(t => t.key == key);
             this.Service.baseDbDelete({ key });
             return;
         }
-        let x = this.baseDbBuckets.first(t => t.key == key);
+        let x = this.baseDbBuckets.last(t => t.key == key);
         if (x == null) {
             x = { key: key, value: null };
             this.baseDbBuckets.push(x);
@@ -745,6 +750,28 @@ export class DefaultPage2 {
         if (x.value == null)
             x.value = {};
         x.value.selectedFiles = [value];
+        this.Service.baseDbSet(x);
+    }
+
+    GetBaseDbItem(key: string): BaseDbItem {
+        let x = this.baseDbBuckets.first(t => t.key == key);
+        if (x == null)
+            return null;
+        return x.value;
+    }
+
+    SetBaseDbItem(key: string, value: BaseDbItem): void {
+        if (value == null) {
+            this.baseDbBuckets.removeAll(t => t.key == key);
+            this.Service.baseDbDelete({ key });
+            return;
+        }
+        let x = this.baseDbBuckets.first(t => t.key == key);
+        if (x == null) {
+            x = { key, value };
+            this.baseDbBuckets.push(x);
+        }
+        x.value = value;
         this.Service.baseDbSet(x);
     }
 
