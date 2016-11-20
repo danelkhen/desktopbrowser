@@ -1,5 +1,5 @@
 {
-  "port": 80,
+  "port": 7777,
   "files": ["./**/*.{html,htm,css,js}"],
   "server": { "baseDir": "./" },
   "open": false,

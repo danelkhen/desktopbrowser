@@ -1,0 +1,70 @@
+<nav id="navbar">
+    <span class="clock" id="clock"></span>
+    <div class="menu">
+        <ul class="nav navbar-nav navleft"></ul>
+        <span class="find"><input type="text" id="tbSearch" [(ngModel)]="search" class="form-control" placeholder="Find" /></span>
+        <span id="pager" class="Pager btn-group btn-group-sm">
+            <a class="btn btn-default navbar-btn PrevPage"><span class="glyphicon glyphicon-backward"></span></a>
+            <a class="btn btn-default navbar-btn PagerInfo">1 / 1 (Total: 000)</a>
+            <a class="btn btn-default navbar-btn NextPage"><span class="glyphicon glyphicon-forward"></span></a>
+        </span>
+        <select id="ddThemes" class="form-control" [(ngModel)]="theme" (change)="this.setTheme($event.target.value)">
+            <option value="light">light</option>
+            <option value="dark">dark</option>
+        </select>
+    </div>
+    <span><input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" /></span>
+</nav>
+<input id="tbQuickFind" />
+<div class="palette">
+    <div>
+        <div class="bg1 fg1">bg1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg2 fg1">bg2<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg3 fg1">bg3<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+    </div>
+    <div>
+        <div class="bg-sel1 fg1">bg-sel1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel2 fg1">bg-sel2<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel3 fg1">bg-sel3<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel4 fg1">bg-sel4<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel5 fg1">bg-sel5<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+    </div>
+</div>
+<div class="imdb" style="display:none">
+    <div class="imdburl poster"><a target="_blank" href="#"><img /></a></div>
+    <h1>
+        <label class="title"></label>
+    </h1>
+    <h4>
+        <label class="year"></label>
+        <label class="rating"></label>
+        <span>Yours: </span><label class="yourRating"></label>
+        <label class="genres"></label>
+        <label class="rated"></label>
+    </h4>
+    <h5>
+        <label class="released"></label>
+        <label class="runtime"></label>
+        <label class="languages"></label>
+        <label class="country"></label>
+        <label class="director"></label>
+        <label class="writer"></label>
+        <label class="awards"></label>
+        <label class="metascore"></label>
+        <label class="votes"></label>
+        <label class="type"></label>
+        <label class="series"></label>
+    </h5>
+    <p class="actors"></p>
+    <p class="plot"></p>
+</div>
+<div id="grdFiles" class="Grid"></div>
+<div *ngIf="Res!=null && Res.Files!=null">
+    <table>
+        <tr *ngFor="let file of Res.Files">
+            <td *ngFor="let col of columns">
+                <span [class]="col.classGetter!=null && col.classGetter(file)">{{col.getter!=null && col.getter(file)}}</span>
+            </td>
+        </tr>
+    </table>
+</div>
