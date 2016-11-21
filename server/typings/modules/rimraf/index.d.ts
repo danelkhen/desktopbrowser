@@ -312,10 +312,10 @@ namespace rimraf {
     lstatSync?: typeof lstatSync;
     rmdirSync?: typeof rmdirSync;
     readdirSync?: typeof readdirSync;
-    maxBusyTries?: number;
-    emfileWait?: number;
-    glob?: boolean | glob.Options;
-    disableGlob?: boolean;
+    maxBusyTries: number;
+    emfileWait: number;
+    glob: boolean | glob.Options;
+    disableGlob: boolean;
   }
 
   export function sync (pattern: string, options?: rimraf.Options): void;
