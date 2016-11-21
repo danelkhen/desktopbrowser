@@ -58,13 +58,25 @@
     <p class="actors"></p>
     <p class="plot"></p>
 </div>
-<div id="grdFiles" class="Grid"></div>
-<div *ngIf="Res!=null && Res.Files!=null">
+<div id="grdFiles" *ngIf="Res!=null && Res.Files!=null" class="Grid">
     <table>
-        <tr *ngFor="let file of Res.Files">
-            <td *ngFor="let col of columns">
-                <span [class]="col.classGetter!=null && col.classGetter(file)">{{col.getter!=null && col.getter(file)}}</span>
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th class="type"></th>
+                <th class="name">Name</th>
+                <th class="modified">Modified</th>
+                <th class="size">Size</th>
+                <th class="extension">Ext</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let file of Res.Files" [class]="GetRowClass(file, index)" (mousedown)="grdFiles_mousedown($event, file)" (click)="grdFiles_click($event, file)" (dblclick)="grdFiles_dblclick($event, file)">
+                <td class="type"><span [class]="this.GetFileClass(file)"></span></td>
+                <td class="name"><span><a class="Name">{{file.Name}}</a></span></td>
+                <td class="modified"><span>{{FormatFriendlyDate(file.Modified)}}</span></td>
+                <td class="size"><span>{{FormatFriendlySize(file.Size)}}</span></td>
+                <td class="extension"><span *ngIf="!file.IsFolder">{{file.Extension}}</span></td>
+            </tr>
+        </tbody>
     </table>
 </div>

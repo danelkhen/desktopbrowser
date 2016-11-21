@@ -19,7 +19,8 @@ process.on("uncaughtException", e => console.log("uncaughtException", e));
 let app = express();
 app.use(bodyParser.json());
 console.log({ root, nodeModulesDir, baseName: path.basename(nodeModulesDir) });
-app.use("_res_", express.static(root));
+//let x = express.static(root);
+app.use("/_res_", express.static(root));
 app.use(express.static(root));
 
 //if (path.basename(nodeModulesDir) == "node_modules") {

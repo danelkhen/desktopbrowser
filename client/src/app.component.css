@@ -1,0 +1,12 @@
+#grdFiles > table > thead > tr > .type {
+    width:25px;
+}
+#grdFiles > table > thead > tr > .modified {
+    width:150px;
+}
+#grdFiles > table > thead > tr > .size {
+    width:150px;
+}
+#grdFiles > table > thead > tr > .extension {
+    width:150px;
+}

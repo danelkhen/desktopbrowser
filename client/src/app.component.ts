@@ -8,7 +8,8 @@ import { ArrayView } from "./array-view";
 
 @Component({
     selector: 'my-app',
-    templateUrl: '/src/app.component.html'
+    templateUrl: '/src/app.component.html',
+    styleUrls: ['_res_/src/app.component.css'],
 })
 export class AppComponent implements OnInit, OnChanges {
     baseDbBuckets: Bucket<BaseDbItem>[];
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit, OnChanges {
     Service: SiteServiceClient;
     Res: ListFilesResponse;
     El: JQuery;
-    grdFiles: JQuery;
+    //grdFiles: JQuery;
     //tbPath: JQuery;
     navleft: JQuery;
     tbQuickFind: JQuery;
@@ -99,7 +100,7 @@ export class AppComponent implements OnInit, OnChanges {
         //nav2.insertAfter(nav);
         this.Win = window;
         this.El = $("body");
-        this.grdFiles = this.El.getAppend("#grdFiles.Grid");
+        //this.grdFiles = this.El.getAppend("#grdFiles.Grid");
         this.navleft = $(".navleft");
         this.clock = $(".clock");
         //this.tbSearch = $("#tbSearch");
@@ -150,7 +151,6 @@ export class AppComponent implements OnInit, OnChanges {
         };
         this.LoadReq();
         this.RenderButtons();
-        this.CreateGrid();
 
         //this.tbPath.val(this.Req.Path);
         this.ListFiles().then(() => this.Render());
@@ -416,7 +416,6 @@ export class AppComponent implements OnInit, OnChanges {
 
 
     Render(): void {
-        //this.tbPath.val(this.Path);
         this.RenderGrid();
     }
 
@@ -429,61 +428,23 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
 
-    CreateGrid(): void {
-        this.grdFiles.off();
-        var p = this.Res.Files;
-        var gridOptions: GridOptions<File> =
-            {
-                //Items = Res.Files.AsJsArray(),
-                Columns:
-                [
-                    { Prop: t => t.type, Width: 25, RenderCell: this.RenderIconCell, Title: "", },
-                    { Prop: t => t.Name, Width: null, RenderCell: (a, b, c) => this.RenderNameCell(a, b, c),  /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Name)         */ },
-                    { Prop: t => t.Modified, Width: 150, Format: this.FormatFriendlyDate, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Modified)     */ },
-                    { Prop: t => t.Size, Width: 150, Format: this.FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Size)         */ },
-                    { Prop: t => t.Extension, Width: 150,                             /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Extension)    */ },
-                ],
-                RowClass: (file, index) => this.GetRowClass(file, index),
-                PageSize: 100,
-                RenderFinished: () => this.grdFiles_RenderFinished(),
-            };
-        this.grdFiles2 = new Grid<File>();
-        this.grdFiles2.El = this.grdFiles;
-        this.grdFiles2.Options = gridOptions;
-        //this.grdFiles2.SearchInputEl = this.tbSearch;
-        this.grdFiles2.PagerEl = this.pagerEl;
-
-
-        //this.grdFiles2.Render();
-
-        //grdFiles.Grid(gridOptions);
-        //grdFiles2 = Grid<File>.Get(grdFiles);
-
-        this.grdFiles.mousedown(e => {
-            var target = $(e.target);
-            var file = this.grdFiles2.GetItem(target);
-            if (file == null)
-                return;
-            this.FileSelection.Click(file, e.ctrlKey, e.shiftKey);
-        });
-        this.grdFiles.click(e => {
-            var target = $(e.target);
-            var file = this.grdFiles2.GetItem(target);
-            if (file == null)
-                return;
-            if (!target.is("a.Name"))
-                return;
-            e.preventDefault();
-            this.Open(file);
-        });
-        this.grdFiles.dblclick(e => {
-            var target = $(e.target);
-            var file = this.grdFiles2.GetItem(target);
-            if (file == null)
-                return;
-            e.preventDefault();
-            this.Open(file);
-        });
+    grdFiles_mousedown(e: MouseEvent, file: File) {
+        this.FileSelection.Click(file, e.ctrlKey, e.shiftKey);
+    }
+    grdFiles_click(e: MouseEvent, file: File) {
+        var target = $(e.target);
+        if (!target.is("a.Name"))
+            return;
+        e.preventDefault();
+        this.Open(file);
+    }
+    grdFiles_dblclick(e: MouseEvent, file: File) {
+        var target = $(e.target);
+        var file = this.grdFiles2.GetItem(target);
+        if (file == null)
+            return;
+        e.preventDefault();
+        this.Open(file);
     }
 
     RenderIconCell(col: GridCol1<File>, file: File, td: JQuery): void {
@@ -506,12 +467,8 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
     RenderGrid(): void {
-        if (this.grdFiles2 == null) {
-            this.CreateGrid();
-        }
         this.filesView.refresh();
         this.grdFiles2.Options.Items = this.Res.Files;
-        //this.grdFiles2.Render();
         this.FileSelection.AllItems = this.filesView.target;
         this.FileSelection.SelectedItems.clear();
         var selectedFileName = this.GetSelection(this.Res.File.Name);
@@ -519,12 +476,6 @@ export class AppComponent implements OnInit, OnChanges {
             var files = this.FileSelection.AllItems.where(t => t.Name == selectedFileName);
             this.FileSelection.SetSelection(files);
         }
-
-
-        //var prevOptions = grdFiles2 != null ? grdFiles2.Options : new GridOptions<File>();
-        //OrderBy = prevOptions.OrderBy,
-        //    OrderByDesc = prevOptions.OrderByDesc,
-
     }
 
     FileSelection: Selection<File>;
@@ -596,9 +547,13 @@ export class AppComponent implements OnInit, OnChanges {
 
 
     FormatFriendlyDate(value: string): string {
+        if (value == null)
+            return "";
         return value.ToDefaultDate().ToFriendlyRelative2();
     }
     FormatFriendlySize(value: number): string {
+        if (value == null)
+            return "";
         return value.ToFriendlySize();
     }
 
