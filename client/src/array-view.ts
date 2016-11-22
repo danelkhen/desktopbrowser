@@ -1,3 +1,5 @@
+import {EventEmitter} from "./event-emitter"
+
 export class ArrayView<T> {
     constructor(source: () => T[]) {
         this.source = source;
@@ -15,7 +17,9 @@ export class ArrayView<T> {
         this.target = this.source().toArray();
         this.applyOrderBy();
         this.applyPaging();
+        this.targetChanged.emit();
     }
+    targetChanged = new EventEmitter();
 
     _orderBy: string | Function;
     _orderByDescending: boolean;

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { SiteServiceClient, Bucket, BaseDbItem } from "./service"
+import { Movie, MovieRequest } from 'imdb-api';
+import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import ptn = require('parse-torrent-name');
@@ -16,15 +17,18 @@ export class AppComponent implements OnInit, OnChanges {
     get Path(): string { return this.Req.Path; }
     Service: SiteServiceClient;
     Res: ListFilesResponse;
-    El: JQuery;
-    //grdFiles: JQuery;
-    //tbPath: JQuery;
-    navleft: JQuery;
-    tbQuickFind: JQuery;
-    //ddThemes: JQuery;
+    quickFindText: string = "";
     theme: string = "dark";
     filesView: ArrayView<File>;
-    columns: Column<File>[];
+    FileSelection: Selection<File>;
+    clockText: string = "";
+    search: string;
+    Req: ListFilesRequest;
+    Win: Window;
+    imdbRatings: ImdbRssItem[];
+    imdb: Movie;
+
+
     constructor() {
         this.Service = new SiteServiceClient();
         this.Req = {};
@@ -32,24 +36,18 @@ export class AppComponent implements OnInit, OnChanges {
         this.FileSelection = new Selection<File>();
         this.FileSelection.Changed = e => this.FileSelection_Changed(e);
         this.filesView = new ArrayView<File>(() => this.Res.Files);
-        this.columns =
-            [
-                { getter: t => "", Width: 25, classGetter: t => this.GetFileClass(t) },
-                { getter: t => t.Name, Width: null, RenderCell: (a, b, c) => this.RenderNameCell(a, b, c),  /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Name)         */ },
-                { getter: t => t.Modified, Width: 150, Format: this.FormatFriendlyDate, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Modified)     */ },
-                { getter: t => t.Size, Width: 150, Format: this.FormatFriendlySize, /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Size)         */ },
-                { getter: t => t.Extension, Width: 150,                             /*Comparer = GetDefaultFileComparer().ThenBy(t=>t.Extension)    */ },
-            ];
+        this.filesView.pageSize = 200;
 
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        console.log("ngOnChanges");
-    }
     ngOnInit(): void {
         console.log("ngOnOnit");
+        this.filesView.targetChanged.on(() => this.FileSelection.AllItems = this.filesView.target);
         this.Service.baseDbGetAll().then(list => this.baseDbBuckets = list).then(() => this.migrateDbIfNeeded()).then(() => this.OnDomReady());
 
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log("ngOnChanges", changes);
     }
 
     migrateDbIfNeeded() {
@@ -69,68 +67,28 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
     enableThemes() {
-        //this.ddThemes = $("#ddThemes");
         let theme = localStorage.getItem("theme");
-        if (theme != null && theme != "") {
+        if (theme != null && theme != "")
             this.setTheme(theme, false);
-        }
-        //this.ddThemes.change(e => this.setTheme(this.ddThemes.val()));
     }
-    //ddThemes_change(e: Event) {
-    //    console.log("ddThemes_change", e);
-    //    this.setTheme(e.target.value);
-    //}
-
+    toggle(name: string) {
+        this.Req[name] = !this.Req[name];
+        this.SaveReqAndListFiles();
+    }
 
     setTheme(theme: string, remember: boolean = true) {
+        //TODO:
         //less.modifyVars({ theme });
-        //this.ddThemes.val(theme);
         if (!remember)
             return;
         localStorage.setItem("theme", theme);
     }
     OnDomReady(): void {
-        this.tbQuickFind = $("#tbQuickFind");
         this.enableThemes();
-
-        //let nav = $("nav");
-        //let nav2 = nav.clone();
-        //nav.addClass("fixed");
-        //nav2.addClass("hidden");
-        //nav2.insertAfter(nav);
         this.Win = window;
-        this.El = $("body");
-        //this.grdFiles = this.El.getAppend("#grdFiles.Grid");
-        this.navleft = $(".navleft");
-        this.clock = $(".clock");
-        //this.tbSearch = $("#tbSearch");
-        this.pagerEl = $(".Pager");
         this.UpdateClock();
 
-        this.Buttons = [
-            { Id: "GotoParentDir", Text: "Up", Action: () => this.GotoFolder(this.Res.Relatives.ParentFolder) },
-            { Id: "GotoPrevSibling", Text: "Prev", Action: () => this.GotoFolder(this.Res.Relatives.PreviousSibling) },
-            { Id: "GotoNextSibling", Text: "Next", Action: () => this.GotoFolder(this.Res.Relatives.NextSibling) },
-            { Id: "Folders", Text: "Folders", Action: () => { this.Req.HideFolders = !this.Req.HideFolders; this.SaveReqListAndRender(); }, IsActive: () => this.Req.HideFiles },
-            { Id: "Files", Text: "Files", Action: () => { this.Req.HideFiles = !this.Req.HideFiles; this.SaveReqListAndRender(); }, IsActive: () => this.Req.HideFolders },
-            { Id: "Mix", Text: "Mix", Action: () => { this.Req.MixFilesAndFolders = !this.Req.MixFilesAndFolders; this.SaveReqListAndRender(); }, IsActive: () => this.Req.MixFilesAndFolders },
-            { Id: "Size", Text: "Folder Size", Action: () => { this.Req.FolderSize = !this.Req.FolderSize; this.SaveReqListAndRender(); }, IsActive: () => this.Req.FolderSize },
-            { Id: "Keep", Text: "Keep View", Action: () => { this.Req.KeepView = !this.Req.KeepView; this.SaveReqListAndRender(); }, IsActive: () => this.Req.KeepView },
-            { Id: "Hidden", Text: "Hidden", Action: () => { this.Req.ShowHiddenFiles = !this.Req.ShowHiddenFiles; this.SaveReqListAndRender(); }, IsActive: () => this.Req.ShowHiddenFiles },
-            { Id: "Recursive", Text: "Recursive", Action: () => { this.Req.IsRecursive = !this.Req.IsRecursive; this.SaveReqListAndRender(); }, IsActive: () => this.Req.IsRecursive },
-            { Id: "Subs", Text: "Subs", Action: () => this.OpenInNewWindow(this.GetSubtitleSearchLink(this.Res.File)) },
-            { Id: "Imdb", Text: "Imdb", Action: () => this.imdb(this.Res.File) },
-            { Id: "Google", Text: "Google", Action: () => this.OpenInNewWindow(this.GetGoogleSearchLink(this.Res.File)) },
-            { Id: "Delete", Text: "Delete", Action: () => this.DeleteOrTrash(this.FileSelection.SelectedItems.last()) },
-            { Id: "Explore", Text: "Explore", Action: () => this.Explore(this.Res.File).then(res => console.info(res)) },
-            //new Page2Button { Id = "ToggleView",      Text: "View",      Action: () => { Req.=!Req.HideFolders; SaveReqListAndRender(); } },
-        ];
-
-        //this.tbPath = $("#tbPath");//.getAppend("input.form-control.Path").change(e => GotoPath(tbPath.valString()));
-        //this.tbPath.change(e => this.GotoPath(this.tbPath.val()));
-
-        //Options = new Page2Options { p = "" };
-        this.Req = {};//new ListFilesRequest();
+        this.Req = {};
         this.DefaultReq = {
             FolderSize: false,
             HideFiles: false,
@@ -150,71 +108,52 @@ export class AppComponent implements OnInit, OnChanges {
             View: null,
         };
         this.LoadReq();
-        this.RenderButtons();
-
-        //this.tbPath.val(this.Req.Path);
-        this.ListFiles().then(() => this.Render());
+        this.ListFiles().then(() => this.onFilesChanged());
         this.Win.onpopstate = e => {
             this.LoadReq();
-            this.ListAndRender();
+            this.ListFiles();
 
         };
-        //Win.onresize = e =>
-        //{
-        //    if (grdFiles2 != null)
-        //        grdFiles2.Render();
-        //};
-        $(this.Win).keydown(e => this.Win_keydown(e));
+        $(this.Win).keydown(e => this.Win_keydown(e.originalEvent as KeyboardEvent));
         $(this.Win).on('keyup keydown', e => { this.isShiftDown = e.shiftKey });
-        //$(this.Win).keypress(e => this.Win_keypress(e));
-        this.tbQuickFind.on("input", e => this.tbQuickFind_input(e));
-        this.tbQuickFind.keydown(e => this.tbQuickFind_keydown(e));
     }
 
     isShiftDown: boolean;
 
     UpdateClock(): void {
-        this.clock.text(new Date().format("HH:mm\nddd, MMM d"));
+        this.clockText = new Date().format("HH:mm\nddd, MMM d");
         window.setTimeout(() => this.UpdateClock(), 5000);
     }
 
     quickFindTimer = new Timer(() => this.quickFindTimer_tick());
 
     quickFindTimer_tick() {
-        this.tbQuickFind.val("");
-        this.tbQuickFind.toggleClass("HasValue", this.tbQuickFind.val().length > 0);
+        this.quickFindText = "";
     }
 
-    quickFindText: string;
-    tbQuickFind_input(e: JQueryEventObject): void {
-        this.quickFindText = this.tbQuickFind.val();
-        this.tbQuickFind.toggleClass("HasValue", this.tbQuickFind.val().length > 0);
+    tbQuickFind_input(e: Event): void {
         this.quickFind();
         this.quickFindTimer.set(2000);
     }
 
     quickFind() {
         let list = this.filesView.target;
-        let item = list.first(t => t.Name.contains(this.quickFindText));
+        let s = this.quickFindText.toLowerCase();
+        let item = list.first(t => t.Name.toLowerCase().contains(s));
         if (item == null)
             return;
         this.FileSelection.SetSelection([item]);
     }
 
-    //Win_keypress(e: JQueryKeyEventObject): void {
-    //    if ($(e.target).is("input"))
-    //        return;
-    //    this.tbQuickFind.focus();
-    //}
-    Win_keydown(e: JQueryKeyEventObject): void {
+    Win_keydown(e: KeyboardEvent): void {
         if ($(e.target).is("input"))
             return;
-        this.tbQuickFind.focus();
+        $("#tbQuickFind").focus();
         this.tbQuickFind_keydown(e);
     }
-    tbQuickFind_keydown(e: JQueryKeyEventObject): void {
+    tbQuickFind_keydown(e: KeyboardEvent): void {
         this.FileSelection.KeyDown(e);
-        if (e.isDefaultPrevented())
+        if (e.defaultPrevented)
             return;
         if (e.keyCode == Keys.Enter) {
             var file = this.FileSelection.SelectedItems.last();
@@ -256,53 +195,8 @@ export class AppComponent implements OnInit, OnChanges {
         this.onPathChanged();
         console.info("LoadReq", this.Req);
     }
-    //Page2Options Options;
-
-    RenderButtons(): void {
-        this.navleft.toArray().forEach(container => {
-            $(container).getAppendRemoveForEach("li", this.Buttons, (el, btn) => {
-                el = el.getAppend("a").attr("href", "javascript:void(0);");
-                if (btn.El == null)
-                    btn.El = el;
-                else
-                    btn.El = btn.El.add(el);
-            });
-        });
-        this.Buttons.forEach(btn => {
-            if (btn.Id != null)
-                btn.El.attr("id", btn.Id);
-            btn.El.click(e => {
-                btn.Action();
-                this.RefreshButtonState(btn);
-            });
-            btn.El.text(btn.Text);
-            this.RefreshButtonState(btn);
-        });
-    }
-
-    RefreshButtonsState(): void {
-        this.Buttons.forEach(t => this.RefreshButtonState(t));
-    }
-
-    RefreshButtonState(btn: Page2Button): void {
-        this.ToggleClass(btn.El.parent("li"), "active", btn.IsActive);
-    }
-
-    ToggleClass(el: JQuery, className: string, check: JsFunc<boolean>): void {
-        if (check == null)
-            return;
-        let x = check();
-        if (x == null)
-            x = false;
-        el.toggleClass(className, x);
-    }
-
-
-    Req: ListFilesRequest;
-    Win: Window;
-
     ListFiles(): Promise<any> {
-        return this.Service.ListFiles(this.Req).then(res => this.Res = res);
+        return this.Service.ListFiles(this.Req).then(res => this.Res = res).then(() => this.onFilesChanged());
     }
 
     GotoPrevSibling(): void {
@@ -322,15 +216,12 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
     GotoPath(path: string): void {
-        //if (!path.endsWith("\\"))
-        //    path += "\\";
         if (!this.Req.KeepView) {
             this.Req = {};
-            this.RefreshButtonsState();
         }
         this.Req.Path = path;
         this.onPathChanged();
-        this.SaveReqListAndRender();
+        this.SaveReqAndListFiles();
     }
     Path_LinuxToWin(path: string): string {
         if (String.isNullOrEmpty(path))
@@ -404,29 +295,14 @@ export class AppComponent implements OnInit, OnChanges {
         win.history.pushState(state, this.Req.Path, url);
     }
 
-
-
-    SaveReqListAndRender(): void {
+    SaveReqAndListFiles(): void {
         this.SaveReq();
-        this.ListAndRender();
-    }
-    ListAndRender(): Promise<void> {
-        return this.ListFiles().then(() => this.Render());
-    }
-
-
-    Render(): void {
-        this.RenderGrid();
-    }
-
-    grdFiles_RenderFinished(): void {
-        this.FileSelection.AllItems = this.filesView.target;
+        this.ListFiles();
     }
 
     GetDefaultFileComparer(): JsFunc2<File, File, number> {
         return new Array<File>().ItemGetter(t => t.IsFolder).ToComparer();
     }
-
 
     grdFiles_mousedown(e: MouseEvent, file: File) {
         this.FileSelection.Click(file, e.ctrlKey, e.shiftKey);
@@ -440,22 +316,12 @@ export class AppComponent implements OnInit, OnChanges {
     }
     grdFiles_dblclick(e: MouseEvent, file: File) {
         var target = $(e.target);
-        var file = this.grdFiles2.GetItem(target);
         if (file == null)
             return;
         e.preventDefault();
         this.Open(file);
     }
 
-    RenderIconCell(col: GridCol1<File>, file: File, td: JQuery): void {
-        let map = {
-            folder: "layers",
-            file: "file-empty",
-            link: "link",
-        };
-        var icon = map[file.type];
-        td.getAppend("span")[0].className = "lnr lnr-" + icon;
-    }
     GetFileClass(file: File): string {
         let map = {
             folder: "layers",
@@ -466,9 +332,8 @@ export class AppComponent implements OnInit, OnChanges {
         return "lnr lnr-" + icon;
     }
 
-    RenderGrid(): void {
+    onFilesChanged(): void {
         this.filesView.refresh();
-        //this.grdFiles2.Options.Items = this.Res.Files;
         this.FileSelection.AllItems = this.filesView.target;
         this.FileSelection.SelectedItems.clear();
         var selectedFileName = this.GetSelection(this.Res.File.Name);
@@ -478,16 +343,8 @@ export class AppComponent implements OnInit, OnChanges {
         }
     }
 
-    FileSelection: Selection<File>;
-    clock: JQuery;
-    search: string;
-    //tbSearch: JQuery;
-    pagerEl: JQuery;
 
     FileSelection_Changed(e: SelectionChangedEventArgs<File>): void {
-        //TEMP
-        //e.Removed.forEach(t => this.grdFiles2.RenderRow(t));
-        //e.Added.forEach(t => this.grdFiles2.RenderRow(t));
         var file = this.FileSelection.SelectedItems.last();
         let filename: string = null;
         if (file != null)
@@ -501,13 +358,13 @@ export class AppComponent implements OnInit, OnChanges {
         var fileOrFolder = file.IsFolder ? "folder" : "file";
         if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
             return;
-        return this.Service.Delete({ Path: file.Path }).then(res => this.ListAndRender());
+        return this.Service.Delete({ Path: file.Path }).then(res => this.ListFiles());
     }
     TrashAndRefresh(file: File): Promise<any> {
         if (file == null)
             return;
         var fileOrFolder = file.IsFolder ? "folder" : "file";
-        return this.Service.trash({ Path: file.Path }).then(res => this.ListAndRender());
+        return this.Service.trash({ Path: file.Path }).then(res => this.ListFiles());
     }
     DeleteOrTrash(file: File): Promise<any> {
         if (this.isShiftDown)
@@ -569,11 +426,6 @@ export class AppComponent implements OnInit, OnChanges {
         return s;
     }
 
-    RenderNameCell(col: GridCol1<File>, file: File, td: JQuery): void {
-        let filename = file.Name;//this.getFileNameWithoutExtension(file);
-        td.getAppend("a.Name").text(filename).attr("href", "javascript:void(0)");
-    }
-
     GetRowClass(file: File, index: number): string {
         var s = "FileRow";
         if (file.IsFolder) {
@@ -632,44 +484,46 @@ export class AppComponent implements OnInit, OnChanges {
         return x;
     }
 
-    imdb(file: File) {
+    getImdbInfo(file: File) {
         let info = ptn(file.Name);
         console.log(info);
         this.Service.omdbGet({ name: info.title, year: info.year }).then(res2 => {
             console.log(res2);
             if (res2.err != null)
                 return;
+            this.imdb = res2.data;
             let res = res2.data;
-            let el = $(".imdb");
-            Object.keys(res).forEach(key => {
-                let el2 = el.find("." + key);
-                let value = res[key];
-                if (key == "released")
-                    value = value.substr(0, 10);
-                else if (key == "series") {
-                    value = "series";
-                }
-                else if (key == "poster") {
-                    el2.find("img").attr("src", value);
-                }
-                else if (key == "imdburl") {
-                    let a = el2.find("a").attr("href", value);
-                    if (a.children().length == 0)
-                        a.text(value);
-                }
-                else {
-                    el2.text(value);
-                }
-            });
-            el.show();
-            el.find(".yourRating").text("NA");
+            //let el = $(".imdb");
+            //Object.keys(res).forEach(key => {
+            //    let el2 = el.find("." + key);
+            //    let value = res[key];
+            //    //if (key == "released")
+            //    //    value = value.substr(0, 10);
+            //    //else if (key == "series") {
+            //    //    value = "series";
+            //    //}
+            //    //else if (key == "poster") {
+            //    //    el2.find("img").attr("src", value);
+            //    //}
+            //    //else if (key == "imdburl") {
+            //    //    let a = el2.find("a").attr("href", value);
+            //    //    if (a.children().length == 0)
+            //    //        a.text(value);
+            //    //}
+            //    //else {
+            //    //    el2.text(value);
+            //    //}
+            //});
+            //el.show();
+            //el.find(".yourRating").text("NA");
             this.getImdbRatings().then(list => {
-                let yourRating = list.first(t => t.id == res.imdbid);
-                if (yourRating != null)
-                    el.find(".yourRating").text(yourRating.rating);
+                this.yourRating = list.first(t => t.id == res.imdbid);
+                //if (yourRating != null)
+                //    el.find(".yourRating").text(yourRating.rating);
             });
         });
     }
+    yourRating:ImdbRssItem;
 
     getImdbUserId() {
         let id = this.GetStorageItem("imdbUserId");
@@ -682,14 +536,13 @@ export class AppComponent implements OnInit, OnChanges {
         return this.SetStorageItem("imdbUserId", value);
     }
 
-    _imdbRatings: ImdbRssItem[];
     getImdbRatings(): Promise<ImdbRssItem[]> {
         let json = this.GetStorageItem("imdbRatings");
         if (json != null && json != "") {
             return Promise.resolve(JSON.parse(json));
         }
-        if (this._imdbRatings != null)
-            return Promise.resolve(this._imdbRatings)
+        if (this.imdbRatings != null)
+            return Promise.resolve(this.imdbRatings)
         let userId = this.getImdbUserId();
         if (userId == null || userId == "")
             return Promise.resolve(null);
@@ -712,12 +565,11 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
     onPathChanged() {
-        $(".imdb").hide();
+        this.imdb = null;
+        //$(".imdb").hide();
     }
 
-    grdFiles2: Grid<File>;
     DefaultReq: ListFilesRequest;
-    Buttons: Page2Button[];
 
     GetSelection(folder: string): string {
         var filename = this.GetStorageItem(folder);
@@ -776,12 +628,9 @@ export class AppComponent implements OnInit, OnChanges {
 
 }
 
-
 export interface Page2Options {
     p: string;
 }
-
-
 
 export interface Page2Button {
     Text: string;
@@ -791,21 +640,11 @@ export interface Page2Button {
     El?: JQuery;
 }
 
-
-
 export interface ImdbRssItem {
     id: string;
     rating: number;
     title: string;
 }
 
-
-export interface Column<T> {
-    getter: JsFunc1<T, any>;
-    classGetter?: JsFunc1<T, string>;
-    Width?;
-    RenderCell?;
-    RenderIconCell?;
-    Title?;
-    Format?;
+export interface ImdbData {
 }

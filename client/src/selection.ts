@@ -48,7 +48,7 @@ export class Selection<T>
 
         this.OnChanged({ From: prevSelection, To: this.SelectedItems });
     }
-    KeyDown(e: JQueryKeyEventObject): void {
+    KeyDown(e: KeyboardEvent): void {
         var keyCode = e.keyCode;
         var ctrl = e.ctrlKey;
         var sel = this.SelectedItems.toArray();

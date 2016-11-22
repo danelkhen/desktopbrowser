@@ -1,19 +1,10 @@
-import "./global";
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app.module';
-const platform = platformBrowserDynamic();
-
-platform.bootstrapModule(AppModule);
+//import "./global";
+//import { DefaultPage2 } from "./page"
 
 //fixArray();
-//$(main);
+//clearTextNodes();
 
-//function main() {
-//    clearTextNodes();
-//}
-
-
-
+//window["_page"] = new DefaultPage2();
 
 //function clearTextNodes(el?: Element) {
 //    if (el == null)
@@ -34,3 +25,6 @@ platform.bootstrapModule(AppModule);
 //        Object.defineProperty(ce, key, { enumerable: false });
 //    });
 //}
+
+
+
