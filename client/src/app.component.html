@@ -1,5 +1,5 @@
 <header>
-    <nav id="navbar">
+    <nav id="navbar" #mynav>
         <span class="clock" id="clock">{{clockText}}</span>
         <div class="menu">
             <span class="buttons">
@@ -33,17 +33,19 @@
         <span><input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" /></span>
     </nav>
     <input id="tbQuickFind" (input)="tbQuickFind_input($event)" (keydown)="tbQuickFind_keydown($event)" [(ngModel)]="quickFindText" [class.HasValue]="quickFindText.length>0" />
-    <table class="grid-header">
-        <thead>
-            <tr>
-                <th class="type"></th>
-                <th class="name">Name</th>
-                <th class="modified">Modified</th>
-                <th class="size">Size</th>
-                <th class="extension">Ext</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="grdFiles Grid">
+        <table class="grid-header">
+            <thead>
+                <tr>
+                    <th [class]="getHeaderClass('type')" (click)="filesView.orderBy('type')"></th>
+                    <th [class]="getHeaderClass('Name')" (click)="filesView.orderBy('Name')">Name</th>
+                    <th [class]="getHeaderClass('Modified')" (click)="filesView.orderBy('Modified', null, true)">Modified</th>
+                    <th [class]="getHeaderClass('Size')" (click)="filesView.orderBy('Size', null, true)">Size</th>
+                    <th [class]="getHeaderClass('Extension')" (click)="filesView.orderBy('Extension')">Ext</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </header>
 <div class="fixed-placeholder"></div>
 <div class="palette">
@@ -88,15 +90,15 @@
     <p class="actors">{{imdb.actors}}</p>
     <p class="plot">{{imdb.plot}}</p>
 </div>
-<div id="grdFiles" *ngIf="Res!=null && Res.Files!=null" class="Grid">
+<div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">
     <table>
         <tbody>
             <tr *ngFor="let file of filesView.target" [class]="GetRowClass(file, index)" (mousedown)="grdFiles_mousedown($event, file)" (click)="grdFiles_click($event, file)" (dblclick)="grdFiles_dblclick($event, file)">
                 <td class="type"><span [class]="GetFileClass(file)"></span></td>
-                <td class="name"><span><a class="Name">{{file.Name}}</a></span></td>
-                <td class="modified"><span>{{FormatFriendlyDate(file.Modified)}}</span></td>
-                <td class="size"><span>{{FormatFriendlySize(file.Size)}}</span></td>
-                <td class="extension"><span *ngIf="!file.IsFolder">{{file.Extension}}</span></td>
+                <td class="Name"><span><a class="Name">{{file.Name}}</a></span></td>
+                <td class="Modified"><span>{{FormatFriendlyDate(file.Modified)}}</span></td>
+                <td class="Size"><span>{{FormatFriendlySize(file.Size)}}</span></td>
+                <td class="Extension"><span *ngIf="!file.IsFolder">{{file.Extension}}</span></td>
             </tr>
         </tbody>
     </table>

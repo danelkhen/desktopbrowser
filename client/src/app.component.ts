@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, } from '@angular/core';
 import { Movie, MovieRequest } from 'imdb-api';
 import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnChanges {
     Win: Window;
     imdbRatings: ImdbRssItem[];
     imdb: Movie;
+    @ViewChild('mynav') mynav: ElementRef;
 
 
     constructor() {
@@ -37,17 +38,32 @@ export class AppComponent implements OnInit, OnChanges {
         this.FileSelection.Changed = e => this.FileSelection_Changed(e);
         this.filesView = new ArrayView<File>(() => this.Res.Files);
         this.filesView.pageSize = 200;
+    }
 
+    getHeaderClass(prop: string) {
+        if (this.filesView.isOrderedBy(prop, false))
+            return prop + " sorted asc";
+        if (this.filesView.isOrderedBy(prop, true))
+            return prop + " sorted desc";
+        return prop;
     }
 
     ngOnInit(): void {
         console.log("ngOnOnit");
         this.filesView.targetChanged.on(() => this.FileSelection.AllItems = this.filesView.target);
         this.Service.baseDbGetAll().then(list => this.baseDbBuckets = list).then(() => this.migrateDbIfNeeded()).then(() => this.OnDomReady());
+        $(window).resize(e => { console.log("resize", e); this.recalcHeight(); });
+        this.recalcHeight();
 
     }
     ngOnChanges(changes: SimpleChanges): void {
         console.log("ngOnChanges", changes);
+    }
+    lastHeight: number;
+
+    recalcHeight() {
+        let el = this.mynav.nativeElement as HTMLElement;
+        this.lastHeight = el.offsetHeight;
     }
 
     migrateDbIfNeeded() {
@@ -523,7 +539,7 @@ export class AppComponent implements OnInit, OnChanges {
             });
         });
     }
-    yourRating:ImdbRssItem;
+    yourRating: ImdbRssItem;
 
     getImdbUserId() {
         let id = this.GetStorageItem("imdbUserId");

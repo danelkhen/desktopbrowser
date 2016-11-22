@@ -1,28 +1,36 @@
-header{
-    position:fixed;
-    width:100%;
-    background-color:#222;
-
-}
-.fixed-placeholder{
-    height:80px;
-
+header {
+    position: fixed;
+    width: 100%;
+    background-color: #222;
 }
 
-.grid-header {
-    width:100%;
+.fixed-placeholder {
+    height: 80px;
 }
 
-#grdFiles tr > .type {
-    width:25px;
-}
-#grdFiles tr > .modified {
-    width:150px;
-}
-#grdFiles tr > .size {
-    width:150px;
-}
-#grdFiles tr > .extension {
-    width:150px;
+.grdFiles > table {
+    width: 100%;
 }
 
+.grid-header th {
+    font-weight: normal;
+    text-align: left;
+}
+
+.grdFiles tr > .type {
+    width: 35px;
+    text-overflow:clip;
+}
+
+
+.grdFiles tr > .Modified {
+    width: 150px;
+}
+
+.grdFiles tr > .Size {
+    width: 150px;
+}
+
+.grdFiles tr > .Extension {
+    width: 150px;
+}
