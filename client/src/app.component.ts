@@ -468,7 +468,7 @@ export class AppComponent implements OnInit, OnChanges {
 
     RenderGrid(): void {
         this.filesView.refresh();
-        this.grdFiles2.Options.Items = this.Res.Files;
+        //this.grdFiles2.Options.Items = this.Res.Files;
         this.FileSelection.AllItems = this.filesView.target;
         this.FileSelection.SelectedItems.clear();
         var selectedFileName = this.GetSelection(this.Res.File.Name);
@@ -485,8 +485,9 @@ export class AppComponent implements OnInit, OnChanges {
     pagerEl: JQuery;
 
     FileSelection_Changed(e: SelectionChangedEventArgs<File>): void {
-        e.Removed.forEach(t => this.grdFiles2.RenderRow(t));
-        e.Added.forEach(t => this.grdFiles2.RenderRow(t));
+        //TEMP
+        //e.Removed.forEach(t => this.grdFiles2.RenderRow(t));
+        //e.Added.forEach(t => this.grdFiles2.RenderRow(t));
         var file = this.FileSelection.SelectedItems.last();
         let filename: string = null;
         if (file != null)

@@ -126,7 +126,7 @@ export class SiteService {
             if (path.split('\\').length <= 2)
                 throw new Error("Delete protection, cannot delete path so short, should be at least depth of 3 levels or more");
             //IoDir.Delete(path, true);
-            return this.rimraf(path, { glob: false });//, maxBusyTries: null, emfileWait: null, disableGlob: null });
+            return this.rimraf(path, { glob: false, maxBusyTries: null, emfileWait: null, disableGlob: null });
         }
         return Promise.resolve();
     }

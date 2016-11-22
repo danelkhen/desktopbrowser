@@ -1,21 +1,35 @@
-<nav id="navbar">
-    <span class="clock" id="clock"></span>
-    <div class="menu">
-        <ul class="nav navbar-nav navleft"></ul>
-        <span class="find"><input type="text" id="tbSearch" [(ngModel)]="search" class="form-control" placeholder="Find" /></span>
-        <span id="pager" class="Pager btn-group btn-group-sm">
-            <a class="btn btn-default navbar-btn PrevPage"><span class="glyphicon glyphicon-backward"></span></a>
-            <a class="btn btn-default navbar-btn PagerInfo">1 / 1 (Total: 000)</a>
-            <a class="btn btn-default navbar-btn NextPage"><span class="glyphicon glyphicon-forward"></span></a>
-        </span>
-        <select id="ddThemes" class="form-control" [(ngModel)]="theme" (change)="this.setTheme($event.target.value)">
-            <option value="light">light</option>
-            <option value="dark">dark</option>
-        </select>
-    </div>
-    <span><input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" /></span>
-</nav>
-<input id="tbQuickFind" />
+<header>
+    <nav id="navbar">
+        <span class="clock" id="clock"></span>
+        <div class="menu">
+            <ul class="nav navbar-nav navleft"></ul>
+            <span class="find"><input type="text" id="tbSearch" [(ngModel)]="search" class="form-control" placeholder="Find" /></span>
+            <span id="pager" class="Pager btn-group btn-group-sm">
+                <a class="btn btn-default navbar-btn PrevPage"><span class="glyphicon glyphicon-backward"></span></a>
+                <a class="btn btn-default navbar-btn PagerInfo">1 / 1 (Total: 000)</a>
+                <a class="btn btn-default navbar-btn NextPage"><span class="glyphicon glyphicon-forward"></span></a>
+            </span>
+            <select id="ddThemes" class="form-control" [(ngModel)]="theme" (change)="this.setTheme($event.target.value)">
+                <option value="light">light</option>
+                <option value="dark">dark</option>
+            </select>
+        </div>
+        <span><input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" /></span>
+    </nav>
+    <input id="tbQuickFind" />
+    <table class="grid-header">
+        <thead>
+            <tr>
+                <th class="type"></th>
+                <th class="name">Name</th>
+                <th class="modified">Modified</th>
+                <th class="size">Size</th>
+                <th class="extension">Ext</th>
+            </tr>
+        </thead>
+    </table>
+</header>
+<div class="fixed-placeholder"></div>
 <div class="palette">
     <div>
         <div class="bg1 fg1">bg1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
@@ -60,15 +74,6 @@
 </div>
 <div id="grdFiles" *ngIf="Res!=null && Res.Files!=null" class="Grid">
     <table>
-        <thead>
-            <tr>
-                <th class="type"></th>
-                <th class="name">Name</th>
-                <th class="modified">Modified</th>
-                <th class="size">Size</th>
-                <th class="extension">Ext</th>
-            </tr>
-        </thead>
         <tbody>
             <tr *ngFor="let file of Res.Files" [class]="GetRowClass(file, index)" (mousedown)="grdFiles_mousedown($event, file)" (click)="grdFiles_click($event, file)" (dblclick)="grdFiles_dblclick($event, file)">
                 <td class="type"><span [class]="this.GetFileClass(file)"></span></td>

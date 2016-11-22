@@ -1,12 +1,25 @@
-#grdFiles > table > thead > tr > .type {
+header{
+    position:fixed;
+
+}
+.fixed-placeholder{
+    height:80px;
+
+}
+
+.grid-header {
+    width:100%;
+}
+
+#grdFiles tr > .type {
     width:25px;
 }
-#grdFiles > table > thead > tr > .modified {
+#grdFiles tr > .modified {
     width:150px;
 }
-#grdFiles > table > thead > tr > .size {
+#grdFiles tr > .size {
     width:150px;
 }
-#grdFiles > table > thead > tr > .extension {
+#grdFiles tr > .extension {
     width:150px;
 }
