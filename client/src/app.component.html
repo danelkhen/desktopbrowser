@@ -2,7 +2,7 @@
     <nav id="navbar" #mynav>
         <span class="clock" id="clock">{{clockText}}</span>
         <div class="menu">
-            <span class="buttons">
+            <div class="buttons">
                 <button class="btn GotoParentDir" (click)="GotoFolder(Res.Relatives.ParentFolder)">Up</button>
                 <button class="btn GotoPrevSibling" (click)="GotoFolder(Res.Relatives.PreviousSibling)">Prev</button>
                 <button class="btn GotoNextSibling" (click)="GotoFolder(Res.Relatives.NextSibling)">Next</button>
@@ -18,19 +18,24 @@
                 <button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button>
                 <button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
                 <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
-            </span>
-            <span class="find"><input type="text" id="tbSearch" [(ngModel)]="search" class="form-control" placeholder="Find" /></span>
-            <span id="pager" class="Pager btn-group btn-group-sm">
-                <a class="btn btn-default navbar-btn PrevPage" (click)="filesView.prevPage()"><span class="glyphicon glyphicon-backward"></span></a>
-                <a class="btn btn-default navbar-btn PagerInfo">{{filesView.pageIndex+1}} / {{filesView.totalPages}}</a>
-                <a class="btn btn-default navbar-btn NextPage" (click)="filesView.nextPage()"><span class="glyphicon glyphicon-forward"></span></a>
-            </span>
-            <select id="ddThemes" class="form-control" [(ngModel)]="theme" (change)="setTheme($event.target.value)">
-                <option value="light">light</option>
-                <option value="dark">dark</option>
-            </select>
+            </div>
         </div>
-        <span><input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" /></span>
+        <div class="addressBar">
+            <input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" />
+           
+            <div class="right-side"> 
+                <span id="pager" class="Pager btn-group btn-group-sm">
+                    <a class="btn btn-default navbar-btn PrevPage" (click)="filesView.prevPage()"><span class="glyphicon glyphicon-backward"></span></a>
+                    <a class="btn btn-default navbar-btn PagerInfo">{{filesView.pageIndex+1}} / {{filesView.totalPages}}</a>
+                    <a class="btn btn-default navbar-btn NextPage" (click)="filesView.nextPage()"><span class="glyphicon glyphicon-forward"></span></a>
+                </span>
+                <span class="find"><input type="text" id="tbSearch" [(ngModel)]="search" class="form-control" placeholder="Find Something" /></span>
+                <select id="ddThemes" class="form-control" [(ngModel)]="theme" (change)="setTheme($event.target.value)">
+                    <option value="light">light</option>
+                    <option value="dark">dark</option>
+                </select>
+            </div>
+        </div>
     </nav>
     <input id="tbQuickFind" (input)="tbQuickFind_input($event)" (keydown)="tbQuickFind_keydown($event)" [(ngModel)]="quickFindText" [class.HasValue]="quickFindText.length>0" />
     <div class="grdFiles Grid">

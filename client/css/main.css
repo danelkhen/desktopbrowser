@@ -1,0 +1,189 @@
+@import url("https://fonts.googleapis.com/css?family=Space+Mono");
+@import url("https://fonts.googleapis.com/css?family=PT+Sans:400,700");
+html {
+  box-sizing: border-box; }
+
+*, *::after, *::before {
+  box-sizing: inherit; }
+
+@font-face {
+  font-family: 'Post Grotesk Light';
+  src: url("../font/PostGrotesk-Light.eot");
+  /* IE9 Compat Modes */
+  src: url("../font/PostGrotesk-Light.eot?#iefix") format("embedded-opentype"), url("../font/PostGrotesk-Light.woff") format("woff"), url("../font/PostGrotesk-Light.ttf") format("truetype"), url("../font/PostGrotesk-Light.svg#ec78e0ded1b914c296d930227e24b648") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: 200; }
+@font-face {
+  font-family: 'Post Grotesk Medium';
+  src: url("PostGrotesk-Medium.eot");
+  /* IE9 Compat Modes */
+  src: url("PostGrotesk-Medium.eot?#iefix") format("embedded-opentype"), url("PostGrotesk-Medium.woff") format("woff"), url("PostGrotesk-Medium.ttf") format("truetype"), url("PostGrotesk-Medium.svg#fc2ec193a4dc6f599ea22ef186bc31e2") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: 400; }
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* Colours */
+/* utilities */
+/* Typography */
+/* Font Sizes */
+/* Font-Sizes */
+/* Mixins */
+/* transition Mixins */
+body {
+  background-color: #0A0A09;
+  font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
+  line-height: 1.5;
+  font-size: 1em; }
+
+nav {
+  background-color: #181818; }
+  nav .menu {
+    padding: 1em;
+    border-bottom: 1px solid #282828;
+    margin-right: 0;
+    /* default.less override */
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto; }
+    nav .menu::after {
+      clear: both;
+      content: "";
+      display: block; }
+    nav .menu .buttons {
+      display: inline-block; }
+      nav .menu .buttons button {
+        font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
+        border: none;
+        font-size: 0.833em;
+        color: #999;
+        padding: 5px 15px;
+        -webkit-font-smoothing: antialiased;
+        background: #0c0c0c;
+        border-radius: 20px;
+        cursor: pointer;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease; }
+        nav .menu .buttons button:hover {
+          background-color: #A276F8;
+          color: #fff; }
+        nav .menu .buttons button:active, nav .menu .buttons button:focus {
+          outline: none;
+          background: #A276F8;
+          color: #fff; }
+  nav .addressBar {
+    padding: 0.5em 1em;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto; }
+    nav .addressBar::after {
+      clear: both;
+      content: "";
+      display: block; }
+    nav .addressBar #tbPath {
+      float: left;
+      display: block;
+      margin-right: 2.74614%;
+      width: 65.75129%;
+      border: none;
+      font-size: .8em;
+      -webkit-font-smoothing: antialiased;
+      padding: .5em;
+      border-bottom: 1px solid #282828;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -ms-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      transition: all 0.3s ease; }
+      nav .addressBar #tbPath:last-child {
+        margin-right: 0; }
+      nav .addressBar #tbPath:hover {
+        border-bottom: 1px solid #323232; }
+      nav .addressBar #tbPath:active, nav .addressBar #tbPath:focus {
+        outline: none; }
+    nav .addressBar .right-side {
+      float: left;
+      display: block;
+      margin-right: 2.74614%;
+      width: 31.50258%;
+      text-align: right; }
+      nav .addressBar .right-side:last-child {
+        margin-right: 0; }
+      nav .addressBar .right-side #tbSearch {
+        border-radius: 20px;
+        border: 1px solid #141414;
+        font-size: 0.833em;
+        -webkit-font-smoothing: antialiased;
+        padding: 0.5em 1em;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease; }
+        nav .addressBar .right-side #tbSearch:hover {
+          border-bottom: 1px solid #323232; }
+        nav .addressBar .right-side #tbSearch:active, nav .addressBar .right-side #tbSearch:focus {
+          outline: none; }
+
+.grid-header thead tr {
+  background-color: #0A0A09;
+  border-bottom: 1px solid #141414;
+  text-align: left; }
+  .grid-header thead tr th {
+    padding: 1em;
+    font-size: 0.694em;
+    text-transform: uppercase;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 1px;
+    color: #999; }
+
+/*# sourceMappingURL=main.css.map */

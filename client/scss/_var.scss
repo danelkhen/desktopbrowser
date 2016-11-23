@@ -1,0 +1,71 @@
+/* Colours */
+
+$background: #0A0A09;
+$background-variant : #181818;
+$border-color : #282828;
+$grey-color : #999;
+
+$hover-color: #A276F8;
+
+
+/* utilities */
+$g-spacing : 1em;
+$s-spacing : .5em;
+
+
+/* Typography */
+
+$regular-font: 'PT Sans', 'helvetica-neue', helvetica, sans-serif;
+$mono-font: 'PT Mono', monospace, 'helvetica-neue', helvetica, sans-serif;
+
+
+/* Font Sizes */
+
+/* Font-Sizes */
+
+$ms10:7.43em;
+$ms9:6.192em;
+$ms8:5.16em;
+$ms7:4.3em;
+$ms6:3.583em;
+$ms5:2.986em;
+$ms4:2.488em;
+$ms3:2.074em;
+$ms2:1.728em;
+$ms1: 1.44em;
+$ms0: 1.2em;
+$ms-1: 1em;
+$ms-2: 0.833em;
+$ms-3: 0.694em;
+
+
+
+/* Mixins */
+
+/* transition Mixins */
+
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

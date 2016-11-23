@@ -1,0 +1,126 @@
+@import "grid-settings";
+@import "neat/neat";
+@import 'modular-scale';
+@import "font";
+@import "reset";
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+@import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700');
+@import "var";
+
+
+
+body {
+	background-color: $background;
+	font-family: $regular-font;
+	line-height: 1.5;
+	font-size: $ms-1;
+}
+
+nav {
+	background-color: $background-variant;
+
+	.menu {
+		padding: $g-spacing;
+		border-bottom: 1px solid $border-color;
+		margin-right: 0; /* default.less override */
+		@include outer-container();
+
+		.buttons {
+			display: inline-block;
+			
+			button {
+				font-family: $regular-font;
+				border: none;
+			    font-size: $ms-2;
+			    color: $grey-color;
+			    padding: 5px 15px;
+			    -webkit-font-smoothing: antialiased;
+			    background: #0c0c0c;
+			    border-radius: 20px;
+			    cursor: pointer;
+			    @include transition(all .3s ease);
+
+			    &:hover {
+			    	background-color: $hover-color;
+			    	color: #fff;
+			    }
+
+			    &:active, &:focus {
+			    	outline: none;
+			    	background: $hover-color;
+			    	color: #fff;
+			    }
+			}
+		}
+	}
+
+	.addressBar {
+		padding: $s-spacing $g-spacing;
+		@include outer-container();
+
+		#tbPath	 {
+			@include span-columns(8);
+			border: none;
+		    font-size: .8em;
+		    -webkit-font-smoothing: antialiased;
+		    padding: .5em;
+		    border-bottom: 1px solid $border-color;
+		    @include transition(all .3s ease);
+
+		    &:hover {
+		    	border-bottom: 1px solid  lighten($border-color, 4%);
+		    }
+
+		    &:active, &:focus {
+		    	outline: none;
+		    }
+		}
+
+		.right-side {
+			@include span-columns(4);
+			text-align: right;
+
+			#tbSearch {
+				border-radius: 20px;
+				border: 1px solid darken($border-color, 8%); 
+				font-size: $ms-2;
+			    -webkit-font-smoothing: antialiased;
+			    padding: $s-spacing $g-spacing;
+			    @include transition(all .3s ease);
+			    
+			    &:hover {
+			    	border-bottom: 1px solid  lighten($border-color, 4%);
+			    }
+
+			    &:active, &:focus {
+			    	outline: none;
+			    }
+
+			}
+		}
+	}
+}
+
+
+.grid-header {
+
+	thead {
+
+		tr {
+			background-color: $background;
+			border-bottom: 1px solid darken($border-color, 8%);
+			text-align: left;
+
+			th {
+				padding: $g-spacing;
+				font-size: $ms-3;
+				text-transform: uppercase;
+				-webkit-font-smoothing: antialiased;
+				letter-spacing: 1px;
+				color: $grey-color;	
+			}
+		}
+	}
+}
+
+		
