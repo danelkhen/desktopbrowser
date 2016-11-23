@@ -21,9 +21,11 @@
             </div>
         </div>
         <div class="addressBar">
-            <input type="text" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="Req.Path" (change)="GotoPath($event.value)" />
-           
-            <div class="right-side"> 
+            <form (submit)="GotoPath(tbPathText)">
+                <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" />
+            </form>
+
+            <div class="right-side">
                 <span id="pager" class="Pager btn-group btn-group-sm">
                     <a class="btn btn-default navbar-btn PrevPage" (click)="filesView.prevPage()"><span class="glyphicon glyphicon-backward"></span></a>
                     <a class="btn btn-default navbar-btn PagerInfo">{{filesView.pageIndex+1}} / {{filesView.totalPages}}</a>

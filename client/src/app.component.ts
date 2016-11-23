@@ -3,7 +3,7 @@ import { Movie, MovieRequest } from 'imdb-api';
 import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
-import ptn = require('parse-torrent-name');
+import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
 import { ArrayView } from "./array-view";
 
@@ -14,7 +14,6 @@ import { ArrayView } from "./array-view";
 })
 export class AppComponent implements OnInit, OnChanges {
     baseDbBuckets: Bucket<BaseDbItem>[];
-    get Path(): string { return this.Req.Path; }
     Service: SiteServiceClient;
     Res: ListFilesResponse;
     quickFindText: string = "";
@@ -27,6 +26,7 @@ export class AppComponent implements OnInit, OnChanges {
     Win: Window;
     imdbRatings: ImdbRssItem[];
     imdb: Movie;
+    tbPathText: string = "";
     @ViewChild('header') header: ElementRef;
 
 
@@ -128,7 +128,7 @@ export class AppComponent implements OnInit, OnChanges {
             View: null,
         };
         this.LoadReq();
-        this.ListFiles().then(() => this.onFilesChanged());
+        this.ListFiles();
         this.Win.onpopstate = e => {
             this.LoadReq();
             this.ListFiles();
@@ -166,7 +166,9 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
     Win_keydown(e: KeyboardEvent): void {
-        if ($(e.target).is("input"))
+        if (e.defaultPrevented)
+            return;
+        if ($(e.target).is("input,select"))
             return;
         $("#tbQuickFind").focus();
         this.tbQuickFind_keydown(e);
@@ -446,6 +448,10 @@ export class AppComponent implements OnInit, OnChanges {
         return s;
     }
 
+    hasInnerSelection(file: File) {
+        return file != null && file.IsFolder && this.GetSelection(file.Name) != null;
+    }
+
     GetRowClass(file: File, index: number): string {
         var s = "FileRow";
         if (file.IsFolder) {
@@ -505,7 +511,7 @@ export class AppComponent implements OnInit, OnChanges {
     }
 
     getImdbInfo(file: File) {
-        let info = ptn(file.Name);
+        let info = parseTorrentName(file.Name);
         console.log(info);
         this.Service.omdbGet({ name: info.title, year: info.year }).then(res2 => {
             console.log(res2);
@@ -586,6 +592,7 @@ export class AppComponent implements OnInit, OnChanges {
 
     onPathChanged() {
         this.imdb = null;
+        this.tbPathText = this.Req.Path;
         //$(".imdb").hide();
     }
 
