@@ -3,3 +3,4 @@ out/
 node_modules/
 .sass-cache/
 npm-debug.log
+base.db
