@@ -8,8 +8,8 @@
         "postinstall": "npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
         "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css",
         "compilesass": "sass client/scss/main.scss:client/css/main.css",
-        "devsass": "sass --watch client/scss/main.scss:client/css/main.css",
-        "dev": "start cmd /C tsc -p client -w && start cmd /C tsc -p server -w && start cmd /C sass --watch client/scss/main.scss:client/css/main.css && npm start"
+        "design": "sass --watch client/scss/main.scss:client/css/main.css",
+        "dev": "start cmd /C tsc -p client -w && start cmd /C tsc -p server -w && npm start"
     },
     "bin": {
         "desktopbrowser": "./bin/desktopbrowser"
