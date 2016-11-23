@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, OnChanges {
     Win: Window;
     imdbRatings: ImdbRssItem[];
     imdb: Movie;
-    @ViewChild('mynav') mynav: ElementRef;
+    @ViewChild('header') header: ElementRef;
 
 
     constructor() {
@@ -62,8 +62,12 @@ export class AppComponent implements OnInit, OnChanges {
     lastHeight: number;
 
     recalcHeight() {
-        let el = this.mynav.nativeElement as HTMLElement;
+        if (this.header == null)
+            return;
+        let el = this.header.nativeElement as HTMLElement;
         this.lastHeight = el.offsetHeight;
+        console.log("recalcHeight", this.lastHeight);
+        $(".fixed-placeholder").css({ height: this.lastHeight + "px" });
     }
 
     migrateDbIfNeeded() {
