@@ -6,9 +6,9 @@
     "scripts": {
         "start": "node server/out/server",
         "postinstall": "npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
-        "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css",
-        "compilesass": "sass client/scss/main.scss:client/css/main.css",
-        "design": "sass --watch client/scss/main.scss:client/css/main.css",
+        "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css --unix-newlines --sourcemap=none",
+        "compilesass": "sass client/scss/main.scss:client/css/main.css --unix-newlines --sourcemap=none",
+        "design": "sass --watch client/scss/main.scss:client/css/main.css  --unix-newlines --sourcemap=none",
         "dev": "start cmd /C tsc -p client -w && start cmd /C tsc -p server -w && npm start"
     },
     "bin": {
