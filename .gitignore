@@ -3,4 +3,6 @@ out/
 node_modules/
 .sass-cache/
 npm-debug.log
+.DS_Store
+*.map
 base.db
