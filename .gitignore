@@ -1,3 +1,4 @@
 .vs/
 out/
 node_modules/
+.sass-cache/
