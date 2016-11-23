@@ -222,7 +222,7 @@ export class SiteService {
         var config = this.GetConfig();
         if (config != null && config.HomePage != null)
             return config.HomePage.Files;
-        return DriveInfo.GetDrives().select(t => /*new File*/({ IsFolder: true, Name: t.Name, Path: t.Name, Size: t.IsReady ? t.AvailableFreeSpace : null })).toArray();
+        return DriveInfo.GetDrives().select(t => /*new File*/({ IsFolder: true, Name: t.Name, Path: t.Name, Size: t.IsReady ? parseInt(t.AvailableFreeSpace as string) : null })).toArray();
     }
 
     CalculateFoldersSize(folders: File[]): IEnumerable<File> {

@@ -121,7 +121,7 @@ export class DriveInfo extends FileSystemInfo {
         });
     }
     IsReady: boolean;
-    AvailableFreeSpace: number;
+    AvailableFreeSpace: number|string; /*in mac a string returns */
     Capacity: number;
 
 }
