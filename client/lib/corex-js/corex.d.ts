@@ -80,11 +80,11 @@ interface Array<T> {
     select<R>(selector: (value: T, index?: number, array?: T[]) => R, thisArg?: any): R[];
     select<R>(selector: string, thisArg?: any): R[];
     selectMany<R>(callbackfn: (value: T, index: number, array: T[]) => R[], thisArg?: any): R[];
-    orderBy<R>(selector: (value: T, index?: number, array?: T[]) => R, desc?: boolean, comparer?: Comparer): T[];
-    orderBy<R>(selectors: Array<(value: T, index?: number, array?: T[]) => any>): T[];
-    orderByDescending<R>(selector: (value: T, index?: number, array?: T[]) => R, desc?: boolean): T[];
-    sortBy<R>(selector: (value: T, index?: number, array?: T[]) => R, desc?: boolean, comparer?: Comparer): T[];
-    sortByDescending<R>(selector: (value: T, index?: number, array?: T[]) => R): any;
+    orderBy<R>(selector: SelectorFunc<T, R>, desc?: boolean, valueComparer?: ComparerFunc<R>): T[];
+    orderBy(selectors: SelectorFunc<T, any>[]): T[];
+    orderByDescending<R>(selector: SelectorFunc<T, R>, desc?: boolean): T[];
+    sortBy<R>(selector: SelectorFunc<T, R>, desc?: boolean, comparer?: ComparerFunc<R>): T[];
+    sortByDescending<R>(selector: SelectorFunc<T, R>): any;
     groupBy<K>(callbackfn: (value: T, index?: number, array?: T[]) => K, thisArg?: any): Grouping<K, T>[];
     addRange(items: T[]): any;
     distinct(): T[];
@@ -227,7 +227,7 @@ interface Function {
     callNew(varargs: any): any;
     getName(): any;
     addTo(target: any): any;
-    comparers: Comparer[];
+    comparers: ComparerFunc<any>[];
 }
 interface StringConstructor {
     isInt(s: any): any;
@@ -280,9 +280,6 @@ interface Math {
 }
 interface ComparerConstructor {
 }
-interface Comparer {
-    compare(x: any, y: any): any;
-}
 interface TimerConstructor {
 }
 interface Timer {
@@ -319,9 +316,6 @@ declare class ArrayEnumerator<T> {
     moveNext: () => boolean;
     getCurrent: () => any;
 }
-declare class Comparer {
-    static _default: Comparer;
-}
 declare class Timer {
     action: any;
     _ms: any;
@@ -335,9 +329,6 @@ declare class QueryString {
 }
 declare class ValueOfEqualityComparer {
 }
-declare function combineCompareFuncs(compareFuncs: any): (a: any, b: any) => any;
-declare function createCompareFuncFromSelector(selector: any, desc: any): (x: any, y: any) => number;
-declare function toStringOrEmpty(val: any): any;
 declare class Dictionary<K, T> {
     _obj: any;
     count: any;
@@ -349,9 +340,33 @@ declare class Dictionary<K, T> {
     set(key: any, value: any): void;
     values(): any[];
 }
+declare class MultiComparer<T> implements Comparer<T> {
+    constructor(comparers?: Comparer<T>[], comparerFuncs?: ComparerFunc<T>[]);
+    comparers: Comparer<T>[];
+    comparerFuncs: ComparerFunc<T>[];
+    compare(x: T, y: T): number;
+}
+declare class DefaultComparer<T> implements Comparer<T> {
+    compare(x: any, y: any): number;
+}
 declare class ComparerHelper {
-    static combine(comparers: any[]): (x: any, y: any) => any;
-    static _default(x: any, y: any): number;
-    static createCombined(list: any): (x: any, y: any) => any;
-    static create(selector: any, desc?: any, comparer?: any): (x: any, y: any) => any;
+    static combine<T>(comparers: Comparer<T>[]): MultiComparer<T>;
+    static combineFuncs<T>(comparerFuncs: ComparerFunc<T>[]): ComparerFunc<T>;
+    static _default: DefaultComparer<any>;
+    static createCombined<T>(list: SelectorComparer<T, any>[]): ComparerFunc<T>;
+    static create<T, R>(cfg: SelectorComparer<T, R>): ComparerFunc<T>;
+}
+interface SelectorComparer<T, R> {
+    selector: SelectorFunc<T, R>;
+    descending?: boolean;
+    valueComparerFunc?: ComparerFunc<R>;
+}
+interface SelectorFunc<T, R> {
+    (obj: T, index: number): R;
+}
+interface Comparer<T> {
+    compare: ComparerFunc<T>;
+}
+interface ComparerFunc<T> {
+    (x: T, y: T): number;
 }

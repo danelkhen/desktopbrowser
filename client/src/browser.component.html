@@ -1,4 +1,3 @@
-<router-outlet></router-outlet>
 <header #header>
     <nav id="navbar">
         <span class="clock" id="clock">{{clockText}}</span>
@@ -25,7 +24,6 @@
             <form (submit)="GotoPath(tbPathText)">
                 <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" />
             </form>
-
             <div class="right-side">
                 <span id="pager" class="Pager btn-group btn-group-sm">
                     <a class="btn btn-default navbar-btn PrevPage" (click)="filesView.prevPage()"><span class="glyphicon glyphicon-backward"></span></a>

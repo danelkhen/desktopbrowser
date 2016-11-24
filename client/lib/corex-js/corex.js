@@ -125,6 +125,16 @@ Function.addTo = function (target, funcs) {
 };
 ///<reference path="function.ts" />
 "use strict";
+Array.prototype.takeWhile = function (pred) {
+    var took = [];
+    this.first(function (t) {
+        var take = pred(t);
+        if (take)
+            took.push(t);
+        return !take;
+    });
+    return took;
+};
 Array.prototype.forEachJoin = function (action, actionBetweenItems) {
     var first = true;
     for (var i = 0; i < this.length; i++) {
@@ -365,7 +375,7 @@ Array.prototype.sortBy = function (selector, desc, comparer) {
     if (arguments.length == 1 && selector instanceof Array)
         compareFunc = ComparerHelper.createCombined(selector);
     else
-        compareFunc = ComparerHelper.create(selector, desc, comparer);
+        compareFunc = ComparerHelper.create({ selector: selector, descending: desc, valueComparerFunc: comparer });
     this.sort(compareFunc);
     return this;
 };
@@ -1893,19 +1903,6 @@ var ArrayEnumerator = (function () {
     }
     return ArrayEnumerator;
 }());
-var Comparer = (function () {
-    function Comparer() {
-    }
-    Comparer.prototype.compare = function (x, y) {
-        if (x > y)
-            return 1;
-        if (x < y)
-            return -1;
-        return 0;
-    };
-    Comparer._default = new Comparer();
-    return Comparer;
-}());
 var Timer = (function () {
     function Timer(action, ms) {
         this.action = action;
@@ -2023,35 +2020,8 @@ var ValueOfEqualityComparer = (function () {
     };
     return ValueOfEqualityComparer;
 }());
-function combineCompareFuncs(compareFuncs) {
-    return function (a, b) {
-        var count = compareFuncs.length;
-        for (var i = 0; i < count; i++) {
-            var compare = compareFuncs[i];
-            var x = compare(a, b);
-            if (x != 0)
-                return x;
-        }
-        return 0;
-    };
-}
-function createCompareFuncFromSelector(selector, desc) {
-    desc = desc ? -1 : 1;
-    var compare = Comparer._default.compare;
-    var type = typeof (selector);
-    if (type == "string" || type == "number") {
-        return function (x, y) {
-            return compare(x[selector], y[selector]) * desc;
-        };
-    }
-    return function (x, y) {
-        return compare(selector(x), selector(y)) * desc;
-    };
-}
-function toStringOrEmpty(val) {
-    return val == null ? "" : val.toString();
-}
-Function.addTo(window, [toStringOrEmpty, createCompareFuncFromSelector, combineCompareFuncs]);
+//if (typeof (window) != "undefined")
+//    Function.addTo(window, [toStringOrEmpty, createCompareFuncFromSelector, combineCompareFuncs]);
 var Dictionary = (function () {
     function Dictionary() {
         this._obj = new Object();
@@ -2090,48 +2060,70 @@ var Dictionary = (function () {
     return Dictionary;
 }());
 ;
-var ComparerHelper = (function () {
-    function ComparerHelper() {
+var MultiComparer = (function () {
+    function MultiComparer(comparers, comparerFuncs) {
+        this.comparers = comparers;
+        this.comparerFuncs = comparerFuncs;
+        if (this.comparerFuncs == null && this.comparers != null) {
+            this.comparerFuncs = this.comparers.map(function (t) { return t.compare.bind(t); });
+        }
     }
-    ComparerHelper.combine = function (comparers) {
-        var func = function MultiComparer(x, y) {
-            for (var i = 0; i < comparers.length; i++) {
-                var comparer = comparers[i];
-                var diff = comparer(x, y);
-                if (diff != 0)
-                    return diff;
-            }
+    MultiComparer.prototype.compare = function (x, y) {
+        if (this.comparerFuncs == null)
             return 0;
-        };
-        func.comparers = comparers;
-        return func;
+        for (var _i = 0, _a = this.comparerFuncs; _i < _a.length; _i++) {
+            var comparerFunc = _a[_i];
+            var diff = comparerFunc(x, y);
+            if (diff != 0)
+                return diff;
+        }
+        return 0;
     };
-    ComparerHelper._default = function (x, y) {
+    return MultiComparer;
+}());
+var DefaultComparer = (function () {
+    function DefaultComparer() {
+    }
+    DefaultComparer.prototype.compare = function (x, y) {
         if (x > y)
             return 1;
         if (x < y)
             return -1;
         return 0;
     };
-    //createCombined( [ "name", ["size", true], ["custom", false, customComparer] ] )
+    return DefaultComparer;
+}());
+var ComparerHelper = (function () {
+    function ComparerHelper() {
+    }
+    ComparerHelper.combine = function (comparers) {
+        return new MultiComparer(comparers);
+    };
+    ComparerHelper.combineFuncs = function (comparerFuncs) {
+        var mc = new MultiComparer(null, comparerFuncs);
+        return mc.compare.bind(mc);
+    };
     ComparerHelper.createCombined = function (list) {
         var comparers = list.select(function (item) {
             if (item instanceof Array)
                 return ComparerHelper.create.apply(this, item);
             return ComparerHelper.create(item);
         });
-        var combined = ComparerHelper.combine(comparers);
+        var combined = ComparerHelper.combineFuncs(comparers);
         return combined;
     };
-    ComparerHelper.create = function (selector, desc, comparer) {
+    ComparerHelper.create = function (cfg) {
+        var selector = cfg.selector;
+        var desc = cfg.descending;
+        var valueComparer = cfg.valueComparerFunc;
         var selectorFunc = Q.createSelectorFunction(selector);
-        if (comparer == null)
-            comparer = ComparerHelper._default;
+        if (valueComparer == null)
+            valueComparer = ComparerHelper._default.compare;
         if (desc) {
             var func = function DescendingComparer(x, y) {
                 var x1 = selectorFunc(x);
                 var y1 = selectorFunc(y);
-                var diff = comparer(x1, y1);
+                var diff = valueComparer(x1, y1);
                 diff *= -1;
                 return diff;
             };
@@ -2140,10 +2132,14 @@ var ComparerHelper = (function () {
         var func = function AscendingComparer(x, y) {
             var x1 = selectorFunc(x);
             var y1 = selectorFunc(y);
-            var diff = comparer(x1, y1);
+            var diff = valueComparer(x1, y1);
             return diff;
         };
         return func;
     };
+    ComparerHelper._default = new DefaultComparer();
     return ComparerHelper;
 }());
+//namespace Comparer {
+//    export let _default = new DefaultComparer<any>();
+//}

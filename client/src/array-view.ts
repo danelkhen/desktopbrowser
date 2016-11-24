@@ -56,23 +56,26 @@ export class ArrayView<T> {
         this.orderByDescending = desc;
         this.refresh();
     }
+    static comparerFunc(x, y) {
+        let val: number;
+        if (typeof (x) == "string")
+            val = x.localeCompare(y);
+        else
+            val = y - x;
+        return val;
+    }
+
     applyOrderBy(): void {
         if (this.orderByProp == null)
             return;
-        let list = this.target.toArray();
-        list.sort((a, b) => {
-            let x = a[this.orderByProp];
-            let y = b[this.orderByProp];
-            let val: number;
-            if (typeof (x) == "string")
-                val = x.localeCompare(y);
-            else
-                val = y - x;
-            if (this.orderByDescending)
-                val *= -1;
-            return val;
+        let comparerFunc = ComparerHelper.create<T, any>({
+            selector: t => t[this.orderByProp],
+            valueComparerFunc: ArrayView.comparerFunc,
+            descending: this.orderByDescending,
         });
-        this.target = list; //this.target.orderBy(<any>this.orderByProp, this.orderByDescending);
+        let list = this.target.toArray();
+        list.sort(comparerFunc);
+        this.target = list;
     }
 
     applyPaging(): void {

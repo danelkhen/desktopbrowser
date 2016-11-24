@@ -35,8 +35,9 @@ export class BrowserComponent implements OnInit, OnChanges {
     lastHeight: number;
     url: Observable<string[]>;
     urlSnapshot: string[];
-    @ViewChild('header') header: ElementRef;
-
+    isShiftDown: boolean;
+    quickFindTimer = new Timer(() => this.quickFindTimer_tick());
+    yourRating: ImdbRssItem;
 
     constructor(private route: ActivatedRoute, private router: Router) {
         this.Service = new SiteServiceClient();
@@ -106,10 +107,10 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     recalcHeight() {
-        if (this.header == null)
+        let headerEl = document.querySelector("header");
+        if (headerEl == null)
             return;
-        let el = this.header.nativeElement as HTMLElement;
-        this.lastHeight = el.offsetHeight;
+        this.lastHeight = headerEl.offsetHeight;
         console.log("recalcHeight", this.lastHeight);
         $(".fixed-placeholder").css({ height: this.lastHeight + "px" });
     }
@@ -135,6 +136,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         if (theme != null && theme != "")
             this.setTheme(theme, false);
     }
+
     toggle(name: string) {
         this.Req[name] = !this.Req[name];
         this.SaveReq();
@@ -148,14 +150,10 @@ export class BrowserComponent implements OnInit, OnChanges {
         localStorage.setItem("theme", theme);
     }
 
-    isShiftDown: boolean;
-
     UpdateClock(): void {
         this.clockText = new Date().format("HH:mm\nddd, MMM d");
         window.setTimeout(() => this.UpdateClock(), 5000);
     }
-
-    quickFindTimer = new Timer(() => this.quickFindTimer_tick());
 
     quickFindTimer_tick() {
         this.quickFindText = "";
@@ -183,6 +181,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         $("#tbQuickFind").focus();
         this.tbQuickFind_keydown(e);
     }
+
     tbQuickFind_keydown(e: KeyboardEvent): void {
         this.FileSelection.KeyDown(e);
         if (e.defaultPrevented)
@@ -227,9 +226,12 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.onPathChanged();
         console.info("LoadReq", this.Req);
     }
+
     ListFiles(): Promise<any> {
         console.log("ListFiles");
         return this.Service.ListFiles(this.Req).then(res => {
+            if (res == null)
+                return; //TODO: handle errors
             this.Res = res;
             this.onFilesChanged();
         });
@@ -238,9 +240,11 @@ export class BrowserComponent implements OnInit, OnChanges {
     GotoPrevSibling(): void {
         this.GotoFolder(this.Res.Relatives.PreviousSibling);
     }
+
     GotoNextSibling(): void {
         this.GotoFolder(this.Res.Relatives.NextSibling);
     }
+
     GotoParentDir(): void {
         this.GotoFolder(this.Res.Relatives.ParentFolder);
     }
@@ -267,6 +271,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.SaveReq();
 
     }
+
     Path_LinuxToWin(path: string): string {
         if (String.isNullOrEmpty(path))
             return path;
@@ -287,6 +292,7 @@ export class BrowserComponent implements OnInit, OnChanges {
             path = path.removeLast(1);
         return path;
     }
+
     Path_WinToLinux(path: string): string {
         if (String.isNullOrEmpty(path))
             return path;
@@ -309,6 +315,7 @@ export class BrowserComponent implements OnInit, OnChanges {
             path += "/";
         return path;
     }
+
     SaveReq(): void {
         var state = Q.copy(this.Req);
         var path = state.Path;
@@ -340,11 +347,6 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.router.navigateByUrl(url);
     }
 
-    //SaveReqAndListFiles(): void {
-    //    this.SaveReq();
-    //    this.ListFiles();
-    //}
-
     GetDefaultFileComparer(): JsFunc2<File, File, number> {
         return new Array<File>().ItemGetter(t => t.IsFolder).ToComparer();
     }
@@ -352,6 +354,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     grdFiles_mousedown(e: MouseEvent, file: File) {
         this.FileSelection.Click(file, e.ctrlKey, e.shiftKey);
     }
+
     grdFiles_click(e: MouseEvent, file: File) {
         var target = $(e.target);
         if (!target.is("a.Name"))
@@ -359,6 +362,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         e.preventDefault();
         this.Open(file);
     }
+
     grdFiles_dblclick(e: MouseEvent, file: File) {
         var target = $(e.target);
         if (file == null)
@@ -388,13 +392,12 @@ export class BrowserComponent implements OnInit, OnChanges {
         }
     }
 
-
     FileSelection_Changed(e: SelectionChangedEventArgs<File>): void {
         var file = this.FileSelection.SelectedItems.last();
         let filename: string = null;
         if (file != null)
             filename = file.Name;
-        this.SaveSelection2(this.Res.File.Name, filename);
+        this.SaveSelection(this.Res.File.Name, filename);
     }
 
     DeleteAndRefresh(file: File): Promise<any> {
@@ -405,18 +408,19 @@ export class BrowserComponent implements OnInit, OnChanges {
             return;
         return this.Service.Delete({ Path: file.Path }).then(res => this.ListFiles());
     }
+
     TrashAndRefresh(file: File): Promise<any> {
         if (file == null)
             return;
         var fileOrFolder = file.IsFolder ? "folder" : "file";
         return this.Service.trash({ Path: file.Path }).then(res => this.ListFiles());
     }
+
     DeleteOrTrash(file: File): Promise<any> {
         if (this.isShiftDown)
             return this.DeleteAndRefresh(file);
         return this.TrashAndRefresh(file);
     }
-
 
     Open(file: File): Promise<any> {
         if (file == null)
@@ -444,16 +448,17 @@ export class BrowserComponent implements OnInit, OnChanges {
     Execute(file: File): Promise<any> {
         return this.Service.Execute({ Path: file.Path });
     }
+
     Explore(file: File): Promise<any> {
         return this.Service.Explore({ Path: file.Path });
     }
-
 
     FormatFriendlyDate(value: string): string {
         if (value == null)
             return "";
         return value.ToDefaultDate().ToFriendlyRelative2();
     }
+
     FormatFriendlySize(value: number): string {
         if (value == null)
             return "";
@@ -490,19 +495,20 @@ export class BrowserComponent implements OnInit, OnChanges {
         return s;
     }
 
-
     GetSubtitleSearchLink(File: File): string {
         if (File == null)
             return null;
         var s = this.GetFilenameForSearch(File.Name);
         return "https://www.google.com/search?q=" + encodeURIComponent(s + " eng subscene");
     }
+
     GetGoogleSearchLink(File: File): string {
         if (File == null)
             return null;
         var s = this.GetFilenameForSearch(File.Name);
         return "https://www.google.com/search?q=" + encodeURIComponent(s);
     }
+
     GetFilenameForSearch(s: string): string {
         //s = s.Replace(".", " ").Replace("-", " ");
         var tokens = s.split(/[ \.\-]/).select(t => t.toLowerCase());
@@ -572,7 +578,6 @@ export class BrowserComponent implements OnInit, OnChanges {
             });
         });
     }
-    yourRating: ImdbRssItem;
 
     getImdbUserId() {
         let id = this.GetStorageItem("imdbUserId");
@@ -626,7 +631,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         return filename;
     }
 
-    SaveSelection2(folderName: string, filename: string) {
+    SaveSelection(folderName: string, filename: string) {
         this.SetStorageItem(folderName, filename);
     }
 
@@ -675,6 +680,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         x.value = value;
         this.Service.baseDbSet(x);
     }
+
     getHeaderClass(prop: string) {
         if (this.filesView.isOrderedBy(prop, false))
             return prop + " sorted asc";
@@ -683,26 +689,10 @@ export class BrowserComponent implements OnInit, OnChanges {
         return prop;
     }
 
-
-}
-
-export interface Page2Options {
-    p: string;
-}
-
-export interface Page2Button {
-    Text: string;
-    Id: string;
-    Action: JsAction;
-    IsActive?: JsFunc<boolean>;
-    El?: JQuery;
 }
 
 export interface ImdbRssItem {
     id: string;
     rating: number;
     title: string;
-}
-
-export interface ImdbData {
 }
