@@ -9,6 +9,8 @@ import { ArrayView } from "./array-view";
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from "rxjs"
 import 'rxjs/add/operator/map';
+import { Name, NameFunc, nameof } from "./utils"
+
 
 
 @Component({
@@ -52,7 +54,13 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         console.log("ngOnOnit");
+        let nameof2 = Name.of<File>();
+        
+
+
         this.url = this.route.url.map(t => t.map(x => x.path));
+        this.filesView.getCreateSort(nameof2(t => t.Size)).descendingFirst = true;
+        this.filesView.getCreateSort(nameof2(t => t.Modified)).descendingFirst = true;
         this.filesView.targetChanged.on(() => this.FileSelection.AllItems = this.filesView.target);
         $(window).resize(e => { console.log("resize", e); this.recalcHeight(); });
         this.recalcHeight();

@@ -47,9 +47,9 @@ export class ArrayView<T> {
 
     getCreateSort(key: string): ArrayViewSort<T, any> {
         let def = this.sort[key];
-        if(def!=null)
+        if (def != null)
             return def;
-        this.sort[key] = def = {selector: t=>t[key]};
+        this.sort[key] = def = { selector: t => t[key] };
         return def;
     }
 
@@ -57,6 +57,8 @@ export class ArrayView<T> {
         let def = this.getCreateSort(key);
         if (this.activeSort.contains(key))
             def.descending = !def.descending;
+        else if (def.descendingFirst)
+            def.descending = true;
         else
             this.activeSort = [key];
         this.refresh();
@@ -117,4 +119,7 @@ interface ArrayViewSort<T, R> {
     selector: SelectorFunc<T, R>;
     descending?: boolean;
     valueComparerFunc?: ComparerFunc<R>;
+    descendingFirst?: boolean;
 }
+
+
