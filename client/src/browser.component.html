@@ -1,0 +1,113 @@
+<router-outlet></router-outlet>
+<header #header>
+    <nav id="navbar">
+        <span class="clock" id="clock">{{clockText}}</span>
+        <div class="menu">
+            <div class="buttons">
+                <button class="btn GotoParentDir" (click)="GotoFolder(Res.Relatives.ParentFolder)">Up</button>
+                <button class="btn GotoPrevSibling" (click)="GotoFolder(Res.Relatives.PreviousSibling)">Prev</button>
+                <button class="btn GotoNextSibling" (click)="GotoFolder(Res.Relatives.NextSibling)">Next</button>
+                <button class="btn Folders" (click)="toggle('HideFolders')" [class.active]="Req.HideFiles">Folders</button>
+                <button class="btn Files" (click)="toggle('HideFiles')" [class.active]="Req.HideFolders">Files</button>
+                <button class="btn Mix" (click)="toggle('MixFilesAndFolders')" [class.active]="Req.MixFilesAndFolders">Mix</button>
+                <button class="btn Size" (click)="toggle('FolderSize')" [class.active]="Req.FolderSize">Folder</button>
+                <button class="btn Keep" (click)="toggle('KeepView')" [class.active]="Req.KeepView">Keep</button>
+                <button class="btn Hidden" (click)="toggle('ShowHiddenFiles')" [class.active]="Req.ShowHiddenFiles">Hidden</button>
+                <button class="btn Recursive" (click)="toggle('IsRecursive')" [class.active]="Req.IsRecursive">Recursive</button>
+                <button class="btn Subs" (click)="OpenInNewWindow(GetSubtitleSearchLink(Res.File))">Subs</button>
+                <button class="btn Imdb" (click)="getImdbInfo(Res.File)">Imdb</button>
+                <button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button>
+                <button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
+                <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
+            </div>
+        </div>
+        <div class="addressBar">
+            <form (submit)="GotoPath(tbPathText)">
+                <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" />
+            </form>
+
+            <div class="right-side">
+                <span id="pager" class="Pager btn-group btn-group-sm">
+                    <a class="btn btn-default navbar-btn PrevPage" (click)="filesView.prevPage()"><span class="glyphicon glyphicon-backward"></span></a>
+                    <a class="btn btn-default navbar-btn PagerInfo">{{filesView.pageIndex+1}} / {{filesView.totalPages}}</a>
+                    <a class="btn btn-default navbar-btn NextPage" (click)="filesView.nextPage()"><span class="glyphicon glyphicon-forward"></span></a>
+                </span>
+                <span class="find"><input type="text" id="tbSearch" [(ngModel)]="search" class="form-control" placeholder="Find Something" /></span>
+                <select id="ddThemes" class="form-control" [(ngModel)]="theme" (change)="setTheme($event.target.value)">
+                    <option value="light">light</option>
+                    <option value="dark">dark</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+    <input id="tbQuickFind" (input)="tbQuickFind_input($event)" (keydown)="tbQuickFind_keydown($event)" [(ngModel)]="quickFindText" [class.HasValue]="quickFindText.length>0" />
+    <div class="grdFiles Grid">
+        <table class="grid-header">
+            <thead>
+                <tr>
+                    <th [class]="getHeaderClass('type')" (click)="filesView.orderBy('type')"></th>
+                    <th [class]="getHeaderClass('Name')" (click)="filesView.orderBy('Name')">Name</th>
+                    <th [class]="getHeaderClass('Modified')" (click)="filesView.orderBy('Modified', null, true)">Modified</th>
+                    <th [class]="getHeaderClass('Size')" (click)="filesView.orderBy('Size', null, true)">Size</th>
+                    <th [class]="getHeaderClass('Extension')" (click)="filesView.orderBy('Extension')">Ext</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</header>
+<div class="fixed-placeholder"></div>
+<div class="palette">
+    <div>
+        <div class="bg1 fg1">bg1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg2 fg1">bg2<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg3 fg1">bg3<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+    </div>
+    <div>
+        <div class="bg-sel1 fg1">bg-sel1<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel2 fg1">bg-sel2<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel3 fg1">bg-sel3<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel4 fg1">bg-sel4<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+        <div class="bg-sel5 fg1">bg-sel5<div class="fg1">fg1</div><div class="fg2">fg2</div><div class="fg3">fg3</div></div>
+    </div>
+</div>
+<div class="imdb" *ngIf="imdb!=null">
+    <div class="imdburl poster"><a target="_blank" href="{{imdb.imdburl}}"><img src="{{imdb.poster}}" /></a></div>
+    <h1>
+        <label class="title">{{imdb.title}}</label>
+    </h1>
+    <h4>
+        <label class="year">{{imdb.year}}</label>
+        <label class="rating">{{imdb.rating}}</label>
+        <span>Yours: </span><label class="yourRating">{{yourRating}}</label>
+        <label class="genres">{{imdb.genres}}</label>
+        <label class="rated">{{imdb.rated}}</label>
+    </h4>
+    <h5>
+        <label class="released">{{imdb.released?.substr(0,10)}}</label>
+        <label class="runtime">{{imdb.runtime}}</label>
+        <label class="languages">{{imdb.languages}}</label>
+        <label class="country">{{imdb.country}}</label>
+        <label class="director">{{imdb.director}}</label>
+        <label class="writer">{{imdb.writer}}</label>
+        <label class="awards">{{imdb.awards}}</label>
+        <label class="metascore">{{imdb.metascore}}</label>
+        <label class="votes">{{imdb.votes}}</label>
+        <label class="type">{{imdb.type}}</label>
+        <label class="series">{{imdb.series!=null ? 'series' : 'movie'}}</label>
+    </h5>
+    <p class="actors">{{imdb.actors}}</p>
+    <p class="plot">{{imdb.plot}}</p>
+</div>
+<div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">
+    <table>
+        <tbody>
+            <tr *ngFor="let file of filesView.target" [class]="GetRowClass(file, index)" (mousedown)="grdFiles_mousedown($event, file)" (click)="grdFiles_click($event, file)" (dblclick)="grdFiles_dblclick($event, file)">
+                <td class="type"><span [class]="GetFileClass(file)"></span></td>
+                <td class="Name"><span><a class="Name">{{file.Name}}</a></span></td>
+                <td class="Modified"><span>{{FormatFriendlyDate(file.Modified)}}</span></td>
+                <td class="Size"><span>{{FormatFriendlySize(file.Size)}}</span></td>
+                <td class="Extension"><span *ngIf="!file.IsFolder">{{file.Extension}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
