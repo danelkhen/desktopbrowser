@@ -7,6 +7,8 @@ export class ArrayView<T> {
     }
     source: () => T[];
     target: T[];
+    sort: { [key: string]: ArrayViewSort<T, any> } = {};
+    activeSort: string[] = [];
 
     refresh() {
         let list = this.source();
@@ -21,15 +23,15 @@ export class ArrayView<T> {
     }
     targetChanged = new EventEmitter();
 
-    isOrderedBy(name: string, desc?: boolean): boolean {
-        if (this.orderByProp != name)
+    isOrderedBy(key: string, desc?: boolean): boolean {
+        if (!this.activeSort.contains(key))
             return false;
-        if (desc != null && this.orderByDescending != desc)
-            return false;
+        if (desc != null)
+            return this.sort[key].descending == desc;
         return true;
     }
-    orderByProp: string;
-    orderByDescending: boolean = false;
+    //orderByProp: string;
+    //orderByDescending: boolean = false;
     pageSize: number = 100;
     pageIndex: number = 0;
     totalPages: number;
@@ -43,40 +45,56 @@ export class ArrayView<T> {
         this.refresh();
     }
 
-    orderBy(name: string, desc?: boolean, descFirstByDefault?: boolean) {
-        if (desc == null) {
-            if (this.orderByProp == name)
-                desc = !this.orderByDescending;
-            else if (descFirstByDefault != null)
-                desc = true;
-            else
-                desc = false;
-        }
-        this.orderByProp = name;
-        this.orderByDescending = desc;
+    getCreateSort(key: string): ArrayViewSort<T, any> {
+        let def = this.sort[key];
+        if(def!=null)
+            return def;
+        this.sort[key] = def = {selector: t=>t[key]};
+        return def;
+    }
+
+    orderBy(key: string) {
+        let def = this.getCreateSort(key);
+        if (this.activeSort.contains(key))
+            def.descending = !def.descending;
+        else
+            this.activeSort = [key];
         this.refresh();
     }
+
     static comparerFunc(x, y) {
+        let x1 = x == null ? x : x.valueOf();
+        let y1 = y == null ? y : y.valueOf();
         let val: number;
-        if (typeof (x) == "string")
-            val = x.localeCompare(y);
+        if (typeof (x1) == "string")
+            val = x1.localeCompare(y);
         else
-            val = y - x;
+            val = y1 - x1;
         return val;
     }
 
     applyOrderBy(): void {
-        if (this.orderByProp == null)
+        if (this.activeSort.length == 0)
             return;
-        let comparerFunc = ComparerHelper.create<T, any>({
-            selector: t => t[this.orderByProp],
-            valueComparerFunc: ArrayView.comparerFunc,
-            descending: this.orderByDescending,
-        });
+        let defs = this.activeSort.map(key => this.sort[key]);
+        defs.where(t => t.valueComparerFunc == null).forEach(t => t.valueComparerFunc = ArrayView.comparerFunc);
+        let comparerFunc = ComparerHelper.createCombined(defs);
         let list = this.target.toArray();
         list.sort(comparerFunc);
         this.target = list;
     }
+    //applyOrderBy2(): void {
+    //    if (this.orderByProp == null)
+    //        return;
+    //    let comparerFunc = ComparerHelper.create<T, any>({
+    //        selector: t => t[this.orderByProp],
+    //        valueComparerFunc: ArrayView.comparerFunc,
+    //        descending: this.orderByDescending,
+    //    });
+    //    let list = this.target.toArray();
+    //    list.sort(comparerFunc);
+    //    this.target = list;
+    //}
 
     applyPaging(): void {
         this.totalPages = Math.ceil(this.target.length / this.pageSize);
@@ -93,4 +111,10 @@ export class ArrayView<T> {
     //static of<T>(list: T[]): ArrayView<T> {
     //    return new ArrayView(list);
     //}
+}
+
+interface ArrayViewSort<T, R> {
+    selector: SelectorFunc<T, R>;
+    descending?: boolean;
+    valueComparerFunc?: ComparerFunc<R>;
 }

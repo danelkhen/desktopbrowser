@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="addressBar">
-            <form (submit)="GotoPath(tbPathText)">
+            <form (submit)="frmPath_submit($event)">
                 <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" />
             </form>
             <div class="right-side">

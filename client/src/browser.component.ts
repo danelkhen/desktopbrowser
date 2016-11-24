@@ -47,6 +47,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.FileSelection.Changed = e => this.FileSelection_Changed(e);
         this.filesView = new ArrayView<File>(() => this.Res.Files);
         this.filesView.pageSize = 200;
+        window["_browser"] = this;
     }
 
     ngOnInit(): void {
@@ -257,9 +258,9 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     GotoPath(path: string): void {
         let p2 = this.Path_WinToLinux(path);
-        let p = p2.split('/');
-        console.log(p);
-        this.router.navigate(p);
+        //let p = p2.split('/');
+        //console.log(p);
+        this.router.navigateByUrl(p2);
     }
 
     GotoPath2(path: string): void {
@@ -278,9 +279,9 @@ export class BrowserComponent implements OnInit, OnChanges {
         if (path == "/") {
             path = "";
         }
-        else if (path.startsWith("//")) {
+        else if (path.startsWith("/net/")) {
             var tokens = path.split('/');
-            path = tokens.join("\\");
+            path = "\\\\" + tokens.skip(2).join("\\");
         }
         else {
             path = path.substr(1); //skip first / to get real drive name
@@ -298,7 +299,7 @@ export class BrowserComponent implements OnInit, OnChanges {
             return path;
         var isNetworkShare = path.startsWith("\\\\");
         if (isNetworkShare)//network share
-            path = path.substr(1);
+            path = "net/" + path.substr(2);
         var tokens = path.split('\\');//.where(t=>t.length>0);
         if (!isNetworkShare)
             tokens[0] = tokens[0].replaceAll(":", "");
@@ -687,6 +688,9 @@ export class BrowserComponent implements OnInit, OnChanges {
         if (this.filesView.isOrderedBy(prop, true))
             return prop + " sorted desc";
         return prop;
+    }
+    frmPath_submit(e: Event) {
+        this.GotoPath(this.tbPathText);
     }
 
 }
