@@ -34,3 +34,8 @@ header {
 .grdFiles tr > .Extension {
     width: 150px;
 }
+
+
+.dropdown .menu button{
+    display:block;
+}

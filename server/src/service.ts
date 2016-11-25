@@ -46,23 +46,23 @@ export class SiteService {
     public GetFiles(req: SiteRequest): File[] {
         if (req.HideFiles && req.HideFolders)
             return [];
-        else if (!req.MixFilesAndFolders && !req.HideFiles && !req.HideFolders && !req.IsRecursive) {
-            var folders = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, false, true);
-            var files = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, true, false);
-            folders = this.ApplyRequest(folders, req);
-            files = this.ApplyRequest(files, req);
-            var all = folders.concat(files);
-            all = this.ApplyPaging(all, req);
-            all = this.ApplyCaching(all);
-            return all;
-        }
-        else {
-            var files = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, !req.HideFiles, !req.HideFolders);
-            files = this.ApplyRequest(files, req);
-            files = this.ApplyPaging(files, req);
-            files = this.ApplyCaching(files);
-            return files;
-        }
+        //else if (!req.MixFilesAndFolders && !req.HideFiles && !req.HideFolders && !req.IsRecursive) {
+        //    var folders = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, false, true);
+        //    var files = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, true, false);
+        //    folders = this.ApplyRequest(folders, req);
+        //    files = this.ApplyRequest(files, req);
+        //    var all = folders.concat(files);
+        //    all = this.ApplyPaging(all, req);
+        //    all = this.ApplyCaching(all);
+        //    return all;
+        //}
+        //else {
+        var files = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, !req.HideFiles, !req.HideFolders);
+        files = this.ApplyRequest(files, req);
+        files = this.ApplyPaging(files, req);
+        files = this.ApplyCaching(files);
+        return files;
+        //}
     }
 
     private ApplyCaching(files: IEnumerable<File>): IEnumerable<File> {

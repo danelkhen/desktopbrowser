@@ -45,7 +45,7 @@ nav {
 			    	color: #fff;
 			    }
 
-			    &:active, &:focus {
+			    &.active /*:active, &:focus*/ {
 			    	outline: none;
 			    	background: $hover-color;
 			    	color: #fff;

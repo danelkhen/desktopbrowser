@@ -41,6 +41,13 @@ export class BrowserComponent implements OnInit, OnChanges {
     quickFindTimer = new Timer(() => this.quickFindTimer_tick());
     yourRating: ImdbRssItem;
 
+    TYPE = nameof<File>(t => t.type);
+    NAME = nameof<File>(t => t.Name);
+    SIZE = nameof<File>(t => t.Size);
+    MODIFIED = nameof<File>(t => t.Modified);
+    EXTENSION = nameof<File>(t => t.Extension);
+    HAS_INNER_SELECTION = nameof<this>(t => t.hasInnerSelection);
+
     constructor(private route: ActivatedRoute, private router: Router) {
         this.Service = new SiteServiceClient();
         this.Req = {};
@@ -55,12 +62,16 @@ export class BrowserComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         console.log("ngOnOnit");
         let nameof2 = Name.of<File>();
-        
+
 
 
         this.url = this.route.url.map(t => t.map(x => x.path));
-        this.filesView.getCreateSort(nameof2(t => t.Size)).descendingFirst = true;
-        this.filesView.getCreateSort(nameof2(t => t.Modified)).descendingFirst = true;
+        this.filesView.getCreateSort(this.SIZE).descendingFirst = true;
+        this.filesView.getCreateSort(this.MODIFIED).descendingFirst = true;
+        this.filesView.getCreateSort(this.HAS_INNER_SELECTION).descendingFirst = true;
+        this.filesView.getCreateSort(this.HAS_INNER_SELECTION).selector = t => this.hasInnerSelection(t);
+        this.filesView.getCreateSort(this.TYPE).valueComparerFunc = (x, y) => this.getFileTypeOrder(y) - this.getFileTypeOrder(x);
+        this.filesView.activeSort = [this.TYPE];
         this.filesView.targetChanged.on(() => this.FileSelection.AllItems = this.filesView.target);
         $(window).resize(e => { console.log("resize", e); this.recalcHeight(); });
         this.recalcHeight();
@@ -98,6 +109,14 @@ export class BrowserComponent implements OnInit, OnChanges {
         };
         $(this.Win).keydown(e => this.Win_keydown(e.originalEvent as KeyboardEvent));
         $(this.Win).on('keyup keydown', e => { this.isShiftDown = e.shiftKey });
+        $(this.Win).mousedown(e => {
+            if (e.defaultPrevented)
+                return;
+            let el = $(e.target);
+            if (el.closest(".dropdown.show").length > 0)
+                return;
+            $(".dropdown.show").removeClass("show");
+        });
 
         this.url.subscribe(t => this.onUrlChanged(t));
 
@@ -146,9 +165,20 @@ export class BrowserComponent implements OnInit, OnChanges {
             this.setTheme(theme, false);
     }
 
+    toggleDropDown(e: Event) {
+        $(e.target).closest(".dropdown").toggleClass("show");
+    }
     toggle(name: string) {
         this.Req[name] = !this.Req[name];
         this.SaveReq();
+    }
+
+    orderBy(key: string) {
+        let keepKeys = ["hasInnerSelection", "type"];
+        if (key == "type")
+            keepKeys.remove("type");
+        let view = this.filesView;
+        this.filesView.orderBy(key, keepKeys);
     }
 
     setTheme(theme: string, remember: boolean = true) {
@@ -699,6 +729,11 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
     frmPath_submit(e: Event) {
         this.GotoPath(this.tbPathText);
+    }
+    getFileTypeOrder(type: string): number {
+        let order = ["folder", "link", "file"];
+        order.reverse();
+        return order.indexOf(type);
     }
 
 }

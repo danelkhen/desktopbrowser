@@ -116,7 +116,7 @@ nav {
         nav .menu .buttons button:hover {
           background-color: #A276F8;
           color: #fff; }
-        nav .menu .buttons button:active, nav .menu .buttons button:focus {
+        nav .menu .buttons button.active {
           outline: none;
           background: #A276F8;
           color: #fff; }

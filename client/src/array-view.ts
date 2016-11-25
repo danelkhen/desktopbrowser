@@ -22,11 +22,14 @@ export class ArrayView<T> {
         this.targetChanged.emit();
     }
     targetChanged = new EventEmitter();
+    dumpActiveSort(): string {
+        return this.activeSort.map(t => t + (this.isOrderedBy(t, true) ? " desc" : "")).join(", ");
+    }
 
     isOrderedBy(key: string, desc?: boolean): boolean {
         if (!this.activeSort.contains(key))
             return false;
-        if (desc != null)
+        if (desc != null && this.sort[key] != null)
             return this.sort[key].descending == desc;
         return true;
     }
@@ -53,14 +56,33 @@ export class ArrayView<T> {
         return def;
     }
 
-    orderBy(key: string) {
+    orderBy(key: string, keepKeys?: string[]) {
+        let keep = keepKeys || [];
+        keep.add(key);
+        let active = this.activeSort.toArray();
         let def = this.getCreateSort(key);
-        if (this.activeSort.contains(key))
-            def.descending = !def.descending;
-        else if (def.descendingFirst)
-            def.descending = true;
-        else
-            this.activeSort = [key];
+        if (active.contains(key)) {
+            if (def.descendingFirst) {
+                if (def.descending)
+                    def.descending = !def.descending;
+                else
+                    active.remove(key);
+            }
+            else {
+                if (!def.descending)
+                    def.descending = !def.descending;
+                else
+                    active.remove(key);
+            }
+            //def.descending = !def.descending;
+        }
+        else {
+            if (def.descendingFirst)
+                def.descending = true;
+            active.push(key);
+        }
+        active.removeAll(key => !keep.contains(key));
+        this.activeSort = active;
         this.refresh();
     }
 
@@ -78,7 +100,7 @@ export class ArrayView<T> {
     applyOrderBy(): void {
         if (this.activeSort.length == 0)
             return;
-        let defs = this.activeSort.map(key => this.sort[key]);
+        let defs = this.activeSort.map(key => this.getCreateSort(key));
         defs.where(t => t.valueComparerFunc == null).forEach(t => t.valueComparerFunc = ArrayView.comparerFunc);
         let comparerFunc = ComparerHelper.createCombined(defs);
         let list = this.target.toArray();
@@ -115,11 +137,9 @@ export class ArrayView<T> {
     //}
 }
 
-interface ArrayViewSort<T, R> {
+export interface ArrayViewSort<T, R> {
     selector: SelectorFunc<T, R>;
     descending?: boolean;
     valueComparerFunc?: ComparerFunc<R>;
     descendingFirst?: boolean;
 }
-
-
