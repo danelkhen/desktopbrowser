@@ -1,6 +1,6 @@
 ﻿import * as path from "path"
 import * as fs from "fs"
-import { getDrives, DiskInfoItem } from "diskinfo"
+import { getDrives, DiskInfoItem } from "vox-diskinfo"
 
 
 export class IoDir {
