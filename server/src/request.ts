@@ -8,6 +8,7 @@ export class SiteRequest {
     constructor(cfg: SiteRequest) {
         Object.keys(cfg).forEach(key => this[key] = cfg[key]);
     }
+    pathPrefix?: string;
     SearchPattern?: string;
     IsRecursive?: boolean;
     FolderSize?: boolean;

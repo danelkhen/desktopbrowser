@@ -14,7 +14,7 @@ import { Name, NameFunc, nameof } from "./utils"
 
 
 @Component({
-    selector: 'my-app',
+    selector: 'my-browser',
     templateUrl: '/src/browser.component.html',
     styleUrls: ['_res_/src/browser.component.css'],
 })
@@ -260,7 +260,7 @@ export class BrowserComponent implements OnInit, OnChanges {
             }
         });
         var path = "/" + this.urlSnapshot.join("/");// decodeURI(window.location.pathname);
-        path = this.Path_LinuxToWin(path);
+        //TEMP path = this.Path_LinuxToWin(path);
         this.Req.Path = path;
         this.onPathChanged();
         console.info("LoadReq", this.Req);
@@ -295,10 +295,10 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     GotoPath(path: string): void {
-        let p2 = this.Path_WinToLinux(path);
+        //TEMP let p2 = this.Path_WinToLinux(path);
         //let p = p2.split('/');
         //console.log(p);
-        this.router.navigateByUrl(p2);
+        this.router.navigateByUrl(path);//p2);
     }
 
     GotoPath2(path: string): void {
