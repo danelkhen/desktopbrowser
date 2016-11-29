@@ -113,6 +113,7 @@ export class DriveInfo extends FileSystemInfo {
     static GetDrives2(): Promise<DiskInfoItem[]> {
         return new Promise<DiskInfoItem[]>((resolve, reject) => {
             getDrives((err, list) => {
+                console.log("getDrives", err, list);
                 if (err)
                     reject(err);
                 else

@@ -8,6 +8,10 @@ import { DriveInfo } from "./utils/io"
 import * as child_process from "child_process"
 import * as https from "https"
 import * as bodyParser from "body-parser";
+import * as os from "os";
+
+console.log("os", JSON.stringify(os.platform()));
+
 
 let root = path.join(__dirname, '../../client/');
 let nodeModulesDir = path.join(root, "../");
