@@ -12,6 +12,7 @@ import * as rimraf from "rimraf";
 import * as trash from 'trash';
 import * as path from "path";
 import { KeyValueStorage, Bucket } from "./db";
+import * as os from "os";
 
 export class SiteService {
     init() {
@@ -186,8 +187,12 @@ export class SiteService {
     GetFileAndOrFolders(path: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean): IEnumerable<File> {
         var isFiltered = false;
         let files2: IEnumerable<File>;
-        if (String.isNullOrEmpty(path))
-            files2 = this.GetHomeFiles();
+        if (String.isNullOrEmpty(path)) {
+            if (this.isWindows())
+                files2 = this.GetHomeFiles();
+            else
+                path = "/";
+        }
         else if (!files && !folders)
             files2 = new File[0];
         //var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -218,6 +223,9 @@ export class SiteService {
         return files2;
     }
 
+    isWindows() {
+        return os.platform() == "win32";
+    }
     GetHomeFiles(): File[] {
         var config = this.GetConfig();
         if (config != null && config.HomePage != null)
