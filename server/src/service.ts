@@ -187,11 +187,10 @@ export class SiteService {
     GetFileAndOrFolders(path: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean): IEnumerable<File> {
         var isFiltered = false;
         let files2: IEnumerable<File>;
-        if (String.isNullOrEmpty(path)) {
-            if (this.isWindows())
-                files2 = this.GetHomeFiles();
-            else
+        if (String.isNullOrEmpty(path) && !this.isWindows())
                 path = "/";
+        if (String.isNullOrEmpty(path)) {
+                files2 = this.GetHomeFiles();
         }
         else if (!files && !folders)
             files2 = new File[0];
