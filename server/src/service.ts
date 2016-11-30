@@ -30,7 +30,14 @@ export class SiteService {
     }
     baseDb: KeyValueStorage<BaseDbItem>;
     ListFiles(req: ListFilesRequest): ListFilesResponse {
-        if (req.Path.endsWith(":"))
+        //if (req.Path == null) {
+        //    return {
+        //        Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null },
+        //        File: { Name: "", IsFolder: true },
+        //        Files: this.GetHomeFiles(),
+        //    };
+        //}
+        if (req.Path != null && req.Path.endsWith(":"))
             req.Path += "\\";
         var res: ListFilesResponse =
             {
@@ -188,9 +195,9 @@ export class SiteService {
         var isFiltered = false;
         let files2: IEnumerable<File>;
         if (String.isNullOrEmpty(path) && !this.isWindows())
-                path = "/";
+            path = "/";
         if (String.isNullOrEmpty(path)) {
-                files2 = this.GetHomeFiles();
+            files2 = this.GetHomeFiles();
         }
         else if (!files && !folders)
             files2 = new File[0];

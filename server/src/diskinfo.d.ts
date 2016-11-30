@@ -12,16 +12,16 @@
     }
 }
 
-declare module "vox-diskinfo" {
+//declare module "vox-diskinfo" {
 
-    export function getDrives(cb: (err, aDrives: DiskInfoItem[]) => void): void;
+//    export function getDrives(cb: (err, aDrives: DiskInfoItem[]) => void): void;
 
-    export interface DiskInfoItem {
-        filesystem: string;
-        blocks: number;
-        used: number;
-        available: number;
-        capacity: number;
-        mounted: string;
-    }
-}
+//    export interface DiskInfoItem {
+//        filesystem: string;
+//        blocks: number;
+//        used: number;
+//        available: number;
+//        capacity: number;
+//        mounted: string;
+//    }
+//}

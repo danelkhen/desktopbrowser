@@ -35,8 +35,8 @@ export class BrowserComponent implements OnInit, OnChanges {
     imdb: Movie;
     tbPathText: string = "";
     lastHeight: number;
-    url: Observable<string[]>;
-    urlSnapshot: string[];
+    //url: Observable<string[]>;
+    //urlSnapshot: string[];
     isShiftDown: boolean;
     quickFindTimer = new Timer(() => this.quickFindTimer_tick());
     yourRating: ImdbRssItem;
@@ -65,7 +65,10 @@ export class BrowserComponent implements OnInit, OnChanges {
 
 
 
-        this.url = this.route.url.map(t => t.map(x => x.path));
+        //this.route.url.subscribe(t => console.log("URL SUBSCRIBE", t));
+        //this.route.params.subscribe(t => console.log("PARAMS SUBSCRIBE", t));
+
+        //this.url = this.route.url.map(t => t.map(x => x.path));
         this.filesView.getCreateSort(this.SIZE).descendingFirst = true;
         this.filesView.getCreateSort(this.MODIFIED).descendingFirst = true;
         this.filesView.getCreateSort(this.HAS_INNER_SELECTION).descendingFirst = true;
@@ -118,13 +121,13 @@ export class BrowserComponent implements OnInit, OnChanges {
             $(".dropdown.show").removeClass("show");
         });
 
-        this.url.subscribe(t => this.onUrlChanged(t));
+        this.route.queryParams.subscribe(t => this.onUrlChanged(t));
 
     }
 
-    onUrlChanged(url: string[]) {
-        this.urlSnapshot = url;
-        console.log("onUrlChanged", "/" + url.join("/"));
+    onUrlChanged(req: SiteRequest) {
+        //this.urlSnapshot = url;
+        //console.log("onUrlChanged", "/" + url.join("/"));
         this.LoadReq();
         this.ListFiles();
         //this.GotoPath2(this.Path_LinuxToWin("/" + url.join("/")));
@@ -259,9 +262,9 @@ export class BrowserComponent implements OnInit, OnChanges {
                 req[key] = parseFloat(value);
             }
         });
-        var path = "/" + this.urlSnapshot.join("/");// decodeURI(window.location.pathname);
+        //var path = "/" + this.urlSnapshot.join("/");// decodeURI(window.location.pathname);
         //TEMP path = this.Path_LinuxToWin(path);
-        this.Req.Path = path;
+        //this.Req.Path = path;
         this.onPathChanged();
         console.info("LoadReq", this.Req);
     }
@@ -298,7 +301,10 @@ export class BrowserComponent implements OnInit, OnChanges {
         //TEMP let p2 = this.Path_WinToLinux(path);
         //let p = p2.split('/');
         //console.log(p);
-        this.router.navigateByUrl(path);//p2);
+        //TODO:
+        this.router.navigateByUrl("?Path=" + encodeURIComponent(path));//p2);
+        //this.onUrlChanged([]);
+
     }
 
     GotoPath2(path: string): void {
@@ -357,10 +363,10 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     SaveReq(): void {
         var state = Q.copy(this.Req);
-        var path = state.Path;
-        path = this.Path_WinToLinux(path);
+        //var path = state.Path;
+        //path = this.Path_WinToLinux(path);
 
-        delete (state.Path);
+        //delete (state.Path);
         var state2: any = state;
         var defs: any = this.DefaultReq;
         Object.keys(state2).forEach(key => {
@@ -378,7 +384,8 @@ export class BrowserComponent implements OnInit, OnChanges {
         var q = QueryString.stringify(state);
         if (String.isNotNullOrEmpty(q))
             q = "?" + q;
-        var url = path + q;//location.origin + 
+        let url = q;
+        //var url = path + q;//location.origin + 
         //var win = window;
 
         //win.history.pushState(state, Req.Path, "?" + q);
