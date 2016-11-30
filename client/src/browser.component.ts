@@ -177,11 +177,24 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     orderBy(key: string) {
-        let keepKeys = ["hasInnerSelection", "type"];
-        if (key == "type")
-            keepKeys.remove("type");
-        let view = this.filesView;
-        this.filesView.orderBy(key, keepKeys);
+        this.Req.sortBy = key;
+        this.navigateToReq();
+    }
+    applySort() {
+        let key = this.Req.sortBy;
+        let active: string[] = [];
+        if (!this.Req.MixFilesAndFolders && key != this.TYPE)
+            active.push(this.TYPE);
+        if (this.Req.ByInnerSelection && key != this.HAS_INNER_SELECTION)
+            active.push(this.HAS_INNER_SELECTION);
+        active.push(key);
+        this.filesView.activeSort = active;
+        //this.filesView.refresh();
+        //let keepKeys = ["hasInnerSelection", "type"];
+        //if (key == "type")
+        //    keepKeys.remove("type");
+        //let view = this.filesView;
+        //this.filesView.orderBy(key, keepKeys);
     }
 
     setTheme(theme: string, remember: boolean = true) {
@@ -419,6 +432,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     onFilesChanged(): void {
+        this.applySort();
         this.filesView.refresh();
         this.FileSelection.AllItems = this.filesView.target;
         this.FileSelection.SelectedItems.clear();

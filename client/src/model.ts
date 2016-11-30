@@ -1,5 +1,5 @@
 //TODO:
-declare var Parse:any;
+declare var Parse: any;
 
 export interface File {
     IsFolder: boolean;
@@ -9,7 +9,7 @@ export interface File {
     IsHidden?: boolean;
     Size?: number;
     Extension?: string;
-    type?:string;
+    type?: string;
 }
 
 export interface FileRelativesInfo {
@@ -32,7 +32,9 @@ export class SiteRequest {
     HideFiles?: boolean;
     Path?: string;
     Sort?: SortRequest;
+    sortBy?: string;
     MixFilesAndFolders?: boolean;
+    ByInnerSelection?: boolean;
     ShowHiddenFiles?: boolean;
     NoCache?: boolean;
     View?: string;
