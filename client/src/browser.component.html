@@ -29,7 +29,7 @@
         </div>
         <div class="addressBar">
             <form (submit)="frmPath_submit($event)">
-                <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" />
+                <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" autocorrect="off" autocapitalize="off" spellcheck="false"/>
             </form>
             <div class="right-side">
                 <span id="pager" class="Pager btn-group btn-group-sm">

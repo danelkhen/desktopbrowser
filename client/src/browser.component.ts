@@ -173,7 +173,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
     toggle(name: string) {
         this.Req[name] = !this.Req[name];
-        this.SaveReq();
+        this.navigateToReq();
     }
 
     orderBy(key: string) {
@@ -298,12 +298,8 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     GotoPath(path: string): void {
-        //TEMP let p2 = this.Path_WinToLinux(path);
-        //let p = p2.split('/');
-        //console.log(p);
-        //TODO:
-        this.router.navigateByUrl("?Path=" + encodeURIComponent(path));//p2);
-        //this.onUrlChanged([]);
+        this.Req.Path = path;
+        this.navigateToReq();
 
     }
 
@@ -313,7 +309,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         }
         this.Req.Path = path;
         this.onPathChanged();
-        this.SaveReq();
+        this.navigateToReq();
 
     }
 
@@ -361,12 +357,8 @@ export class BrowserComponent implements OnInit, OnChanges {
         return path;
     }
 
-    SaveReq(): void {
+    serializeReq(req: SiteRequest): string {
         var state = Q.copy(this.Req);
-        //var path = state.Path;
-        //path = this.Path_WinToLinux(path);
-
-        //delete (state.Path);
         var state2: any = state;
         var defs: any = this.DefaultReq;
         Object.keys(state2).forEach(key => {
@@ -384,12 +376,11 @@ export class BrowserComponent implements OnInit, OnChanges {
         var q = QueryString.stringify(state);
         if (String.isNotNullOrEmpty(q))
             q = "?" + q;
-        let url = q;
-        //var url = path + q;//location.origin + 
-        //var win = window;
-
-        //win.history.pushState(state, Req.Path, "?" + q);
-        console.log("SaveReq", url);
+        return q;
+    }
+    navigateToReq(): void {
+        console.log("navigateToReq", this.Req);
+        let url = this.serializeReq(this.Req);
         this.router.navigateByUrl(url);
     }
 
