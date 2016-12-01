@@ -20,6 +20,7 @@ import { Name, NameFunc, nameof } from "./utils"
 })
 export class BrowserComponent implements OnInit, OnChanges {
 
+    FOLDERS_FIRST = "foldersFirst";
     baseDbBuckets: Bucket<BaseDbItem>[];
     Service: SiteServiceClient;
     Res: ListFilesResponse;
@@ -76,7 +77,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.filesView.getCreateSort(this.TYPE).valueComparerFunc = (x, y) => this.getFileTypeOrder(y) - this.getFileTypeOrder(x);
         this.filesView.activeSort = [this.TYPE];
         this.filesView.targetChanged.on(() => this.FileSelection.AllItems = this.filesView.target);
-        $(window).resize(e => { console.log("resize", e); this.recalcHeight(); });
+        $(window).resize(e => this.recalcHeight());
         this.recalcHeight();
         console.log("baseDbGetAll");
         this.Service.baseDbGetAll().then(list => {
@@ -100,7 +101,8 @@ export class BrowserComponent implements OnInit, OnChanges {
             ImageListRows: null,
             IsRecursive: false,
             KeepView: false,
-            MixFilesAndFolders: false,
+            foldersFirst: false,
+            ByInnerSelection: false,
             NoCache: false,
             Path: "",
             SearchPattern: "",
@@ -109,23 +111,28 @@ export class BrowserComponent implements OnInit, OnChanges {
             Sort: null,
             Take: null,
             View: null,
+            sortByDesc: false,
         };
         $(this.Win).keydown(e => this.Win_keydown(e.originalEvent as KeyboardEvent));
         $(this.Win).on('keyup keydown', e => { this.isShiftDown = e.shiftKey });
-        $(this.Win).mousedown(e => {
-            if (e.defaultPrevented)
-                return;
-            let el = $(e.target);
-            if (el.closest(".dropdown.show").length > 0)
-                return;
-            $(".dropdown.show").removeClass("show");
-        });
+
+        this.Win.addEventListener("mousedown", e => this.toggleDropDown(e));
+        //{
+        //    if (e.defaultPrevented)
+        //        return;
+        //    let el = $(e.target);
+        //    if (el.closest(".dropdown.show").length > 0)
+        //        return;
+        //    $(".dropdown.show").removeClass("show");
+        //});
 
         this.route.queryParams.subscribe(t => this.onUrlChanged(t));
 
     }
 
+
     onUrlChanged(req: SiteRequest) {
+        console.log("onUrlChanged", req);
         //this.urlSnapshot = url;
         //console.log("onUrlChanged", "/" + url.join("/"));
         this.LoadReq();
@@ -169,26 +176,65 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     toggleDropDown(e: Event) {
-        $(e.target).closest(".dropdown").toggleClass("show");
+        if (e.defaultPrevented)
+            return;
+
+        let el = $(e.target).closest(".dropdown");
+        $(".dropdown.show").not(el).removeClass("show");
+        if (el.length == 0)
+            return;
+        el.toggleClass("show");
+        e.preventDefault();
+
     }
     toggle(name: string) {
         this.Req[name] = !this.Req[name];
         this.navigateToReq();
     }
 
+    disableSorting() {
+        this.Req.sortBy = null;
+        this.Req.sortByDesc = false;
+        this.Req.foldersFirst = false;
+        this.Req.ByInnerSelection = false;
+        this.navigateToReq();
+    }
+    isSortingDisabled(): boolean {
+        return this.Req.sortBy == null && !this.Req.foldersFirst && this.Req.ByInnerSelection == null;
+    }
+
     orderBy(key: string) {
-        this.Req.sortBy = key;
+        let def = this.filesView.getCreateSort(key);
+        if (this.Req.sortBy == key) {
+            this.Req.sortByDesc = !this.Req.sortByDesc;
+            //if (def.descendingFirst && this.Req.sortByDesc)
+            //    this.Req.sortByDesc = null;
+            //else if (!def.descendingFirst && !this.Req.sortByDesc)
+            //    this.Req.sortByDesc = true;
+            //else {
+            //    this.Req.sortBy = null;
+            //    this.Req.sortByDesc = null;
+            //}
+        }
+        else {
+            this.Req.sortBy = key;
+            this.Req.sortByDesc = def.descendingFirst;
+        }
         this.navigateToReq();
     }
     applySort() {
         let key = this.Req.sortBy;
         let active: string[] = [];
-        if (!this.Req.MixFilesAndFolders && key != this.TYPE)
+        if (this.Req.foldersFirst && key != this.TYPE)
             active.push(this.TYPE);
         if (this.Req.ByInnerSelection && key != this.HAS_INNER_SELECTION)
             active.push(this.HAS_INNER_SELECTION);
-        active.push(key);
+        if (key != null) {
+            active.push(key);
+            this.filesView.getCreateSort(key).descending = this.Req.sortByDesc;
+        }
         this.filesView.activeSort = active;
+        console.log(this.filesView.dumpActiveSort());
         //this.filesView.refresh();
         //let keepKeys = ["hasInnerSelection", "type"];
         //if (key == "type")
@@ -256,6 +302,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     LoadReq(): void {
+        this.Req = {};
         QueryString.parse(null, this.Req, this.DefaultReq);
         var req: any = this.Req;
         var defs: any = this.DefaultReq;

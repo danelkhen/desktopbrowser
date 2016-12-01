@@ -33,7 +33,8 @@ export class SiteRequest {
     Path?: string;
     Sort?: SortRequest;
     sortBy?: string;
-    MixFilesAndFolders?: boolean;
+    sortByDesc?: boolean;
+    foldersFirst?: boolean;
     ByInnerSelection?: boolean;
     ShowHiddenFiles?: boolean;
     NoCache?: boolean;
@@ -107,7 +108,7 @@ export class SiteRequest {
             HideFiles: this.HideFiles,
             HideFolders: this.HideFolders,
             FolderSize: this.FolderSize,
-            MixFilesAndFolders: this.MixFilesAndFolders,
+            foldersFirst: this.foldersFirst,
             ShowHiddenFiles: this.ShowHiddenFiles,
             NoCache: this.NoCache,
             View: this.View,
@@ -132,7 +133,7 @@ export class SiteRequest {
             HideFolders: request.query["hd"] == "1",
             HideFiles: request.query["hf"] == "1",
             FolderSize: request.query["fs"] == "1",
-            MixFilesAndFolders: request.query["mix"] == "1",
+            foldersFirst: request.query["mix"] == "1",
             ShowHiddenFiles: request.query["shf"] == "1",
             NoCache: request.query["noc"] == "1",
             View: request.query["v"],
@@ -171,7 +172,7 @@ export class SiteRequest {
             dic.set("hd", "1");
         if (this.FolderSize)
             dic.set("fs", "1");
-        if (this.MixFilesAndFolders)
+        if (this.foldersFirst)
             dic.set("mix", "1");
         if (this.ShowHiddenFiles)
             dic.set("shf", "1");
