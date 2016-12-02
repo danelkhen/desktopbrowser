@@ -13,7 +13,7 @@
                 <button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
                 <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
                 <div class="dropdown">
-                    <button class="btn More" (mousedown)="toggleDropDown($event)">Sort</button>
+                    <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">Sort</button>
                     <div class="menu">
                         <button class="btn OrderByInnerSelectionFirst" (click)="toggle('ByInnerSelection')" [class.active]="Req.ByInnerSelection">Watched</button>
                         <button class="btn Mix" (click)="toggle(FOLDERS_FIRST)" [class.active]="Req.foldersFirst">Folders First</button>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="dropdown">
-                    <button class="btn More" (mousedown)="toggleDropDown($event)">More</button>
+                    <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">More</button>
                     <div class="menu">
                         <button class="btn Folders" (click)="toggle('HideFolders')" [class.active]="Req.HideFiles">Hide Folders</button>
                         <button class="btn Files" (click)="toggle('HideFiles')" [class.active]="Req.HideFolders">Hide Files</button>

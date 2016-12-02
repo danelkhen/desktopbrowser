@@ -179,16 +179,24 @@ export class BrowserComponent implements OnInit, OnChanges {
         if (e.defaultPrevented)
             return;
 
-        let el = $(e.target).closest(".dropdown");
-        $(".dropdown.show").not(el).removeClass("show");
-        if (el.length == 0)
-            return;
-        el.toggleClass("show");
-        e.preventDefault();
+        let el = $(e.target);
+        let dropDownEl = el.closest(".dropdown");
+        let isInDropDown = dropDownEl.length > 0;
+        let isInToggleBtn = el.closest(".dropdown-toggle").length > 0;
 
+        if (isInDropDown && !isInToggleBtn)
+            return;
+
+        $(".dropdown.show").not(dropDownEl).removeClass("show");
+        dropDownEl.toggleClass("show");
+        e.preventDefault();
     }
+
     toggle(name: string) {
-        this.Req[name] = !this.Req[name];
+        let value = this.Req[name];
+        let newValue = !value;
+        console.log("toggle", { name, value, newValue });
+        this.Req[name] = newValue;
         this.navigateToReq();
     }
 
@@ -234,7 +242,7 @@ export class BrowserComponent implements OnInit, OnChanges {
             this.filesView.getCreateSort(key).descending = this.Req.sortByDesc;
         }
         this.filesView.activeSort = active;
-        console.log(this.filesView.dumpActiveSort());
+        console.log("sort", this.filesView.dumpActiveSort());
         //this.filesView.refresh();
         //let keepKeys = ["hasInnerSelection", "type"];
         //if (key == "type")
@@ -432,7 +440,6 @@ export class BrowserComponent implements OnInit, OnChanges {
             else if (val === false)
                 state2[key] = "0";
         });
-        console.info("SaveReq", state);
         var q = QueryString.stringify(state);
         if (String.isNotNullOrEmpty(q))
             q = "?" + q;
