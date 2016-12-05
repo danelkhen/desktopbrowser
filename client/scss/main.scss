@@ -28,7 +28,7 @@ nav {
         .buttons {
             display: inline-block;
 
-            .navigate, .fOptions {
+            .navigate, .fOptions, .others {
                 display: inline-block;
                 background-color: $tb-background;
                 text-align: center;
@@ -36,13 +36,13 @@ nav {
                 border-radius: 20px;
                 // overflow: hidden;
 
-                button:first-child {
+                > button:first-child {
                     border-left: none;
                     border-top-left-radius: 20px;
                     border-bottom-left-radius: 20px;
                 }
 
-                button:last-child {
+                > button:last-child {
                     border-right: none;
                     border-top-right-radius: 20px;
                     border-bottom-right-radius: 20px;
@@ -87,6 +87,34 @@ nav {
                 &.Delete {
                     background: url(../img/icons/trash.svg) no-repeat 13px 46%;
                     padding-left: 40px;
+                }
+
+                &.Subs {
+                    background: url(../img/icons/subtitle.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
+
+                &.Imdb {
+                    background: url(../img/icons/imdb.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
+
+                &.Explore {
+                    background: url(../img/icons/explore.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
+
+                &.Sort {
+                    background: url(../img/icons/sort.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
+
+                &.More {
+                    background: url(../img/icons/more.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                    border-right: none;
+                    border-top-right-radius: 20px;
+                    border-bottom-right-radius: 20px;
                 }
 
 

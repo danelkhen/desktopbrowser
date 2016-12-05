@@ -9,26 +9,20 @@
                 <div class="fOptions">
                     <button class="btn Size" (click)="toggle('FolderSize')" [class.active]="Req.FolderSize">Folder</button><button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button><button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
                 </div>
-                <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
-                <button class="btn Subs" (click)="OpenInNewWindow(GetSubtitleSearchLink(Res.File))">Subs</button>
-                <button class="btn Imdb" (click)="getImdbInfo(Res.File)">Imdb</button>
-                <div class="dropdown">
-                    <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">Sort</button>
-                    <div class="menu">
-                        <button class="btn OrderByInnerSelectionFirst" (click)="toggle('ByInnerSelection')" [class.active]="Req.ByInnerSelection">Watched</button>
-                        <button class="btn Mix" (click)="toggle(FOLDERS_FIRST)" [class.active]="Req.foldersFirst">Folders First</button>
-                        <button class="btn DisableSorting" (click)="disableSorting()" [class.active]="isSortingDisabled()">Disable Sort</button>
-                    </div>
-                </div>
-                <button class="btn OrderByInnerSelectionFirst" (click)="orderBy(HAS_INNER_SELECTION)" [class.active]="filesView.isOrderedBy(HAS_INNER_SELECTION)">Watched</button>
-                <div class="dropdown" #ddMore>
-                    <button class="btn More" (mousedown)="toggleDropDown($event)">More</button>
-                    <div class="menu">
-                        <button class="btn Folders" (click)="toggle('HideFolders')" [class.active]="Req.HideFiles">Hide Folders</button>
-                        <button class="btn Files" (click)="toggle('HideFiles')" [class.active]="Req.HideFolders">Hide Files</button>
-                        <button class="btn Recursive" (click)="toggle('IsRecursive')" [class.active]="Req.IsRecursive">Recursive</button>
-                        <button class="btn Keep" (click)="toggle('KeepView')" [class.active]="Req.KeepView">Keep</button>
-                        <button class="btn Hidden" (click)="toggle('ShowHiddenFiles')" [class.active]="Req.ShowHiddenFiles">Hidden</button>
+
+                <div class="others">
+                    <button class="btn Explore" (click)="Explore(Res.File)">Explore</button><button class="btn Subs" (click)="OpenInNewWindow(GetSubtitleSearchLink(Res.File))">Subs</button><button class="btn Imdb" (click)="getImdbInfo(Res.File)">Imdb</button><div class="dropdown">
+                        <button class="btn Sort dropdown-toggle" (mousedown)="toggleDropDown($event)">Sort</button><div class="menu"><button class="btn Watched OrderByInnerSelectionFirst" (click)="orderBy(HAS_INNER_SELECTION)" [class.active]="filesView.isOrderedBy(HAS_INNER_SELECTION)">Watched</button><button class="btn Mix" (click)="toggle(FOLDERS_FIRST)" [class.active]="Req.foldersFirst">Folders First</button><button class="btn DisableSorting" (click)="disableSorting()" [class.active]="isSortingDisabled()">Disable Sort</button>
+                        </div>
+                    </div><div class="dropdown" #ddMore>
+                        <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">More</button>
+                        <div class="menu">
+                            <button class="btn Folders" (click)="toggle('HideFolders')" [class.active]="Req.HideFiles">Hide Folders</button>
+                            <button class="btn Files" (click)="toggle('HideFiles')" [class.active]="Req.HideFolders">Hide Files</button>
+                            <button class="btn Recursive" (click)="toggle('IsRecursive')" [class.active]="Req.IsRecursive">Recursive</button>
+                            <button class="btn Keep" (click)="toggle('KeepView')" [class.active]="Req.KeepView">Keep</button>
+                            <button class="btn Hidden" (click)="toggle('ShowHiddenFiles')" [class.active]="Req.ShowHiddenFiles">Hidden</button>
+                        </div>
                     </div>
                 </div>
             </div>

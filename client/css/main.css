@@ -98,17 +98,17 @@ nav {
       display: block; }
     nav .menu .buttons {
       display: inline-block; }
-      nav .menu .buttons .navigate, nav .menu .buttons .fOptions {
+      nav .menu .buttons .navigate, nav .menu .buttons .fOptions, nav .menu .buttons .others {
         display: inline-block;
         background-color: #0c0c0c;
         text-align: center;
         margin-right: 1em;
         border-radius: 20px; }
-        nav .menu .buttons .navigate button:first-child, nav .menu .buttons .fOptions button:first-child {
+        nav .menu .buttons .navigate > button:first-child, nav .menu .buttons .fOptions > button:first-child, nav .menu .buttons .others > button:first-child {
           border-left: none;
           border-top-left-radius: 20px;
           border-bottom-left-radius: 20px; }
-        nav .menu .buttons .navigate button:last-child, nav .menu .buttons .fOptions button:last-child {
+        nav .menu .buttons .navigate > button:last-child, nav .menu .buttons .fOptions > button:last-child, nav .menu .buttons .others > button:last-child {
           border-right: none;
           border-top-right-radius: 20px;
           border-bottom-right-radius: 20px; }
@@ -143,6 +143,24 @@ nav {
         nav .menu .buttons button.Delete {
           background: url(../img/icons/trash.svg) no-repeat 13px 46%;
           padding-left: 40px; }
+        nav .menu .buttons button.Subs {
+          background: url(../img/icons/subtitle.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
+        nav .menu .buttons button.Imdb {
+          background: url(../img/icons/imdb.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
+        nav .menu .buttons button.Explore {
+          background: url(../img/icons/explore.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
+        nav .menu .buttons button.Sort {
+          background: url(../img/icons/sort.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
+        nav .menu .buttons button.More {
+          background: url(../img/icons/more.svg) no-repeat 13px 46%;
+          padding-left: 40px;
+          border-right: none;
+          border-top-right-radius: 20px;
+          border-bottom-right-radius: 20px; }
         nav .menu .buttons button:hover {
           background-color: #A276F8;
           color: #fff; }
