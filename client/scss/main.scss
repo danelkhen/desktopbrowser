@@ -25,6 +25,10 @@ nav {
         margin-right: 0; /* default.less override */
         @include outer-container();
 
+        .clock {
+            display: inline--block;
+        }
+
         .buttons {
             display: inline-block;
 
