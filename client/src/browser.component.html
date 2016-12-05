@@ -3,15 +3,15 @@
         <span class="clock" id="clock">{{clockText}}</span>
         <div class="menu">
             <div class="buttons">
-                <button class="btn GotoParentDir" (click)="GotoFolder(Res.Relatives.ParentFolder)">Up</button>
-                <button class="btn GotoPrevSibling" (click)="GotoFolder(Res.Relatives.PreviousSibling)">Prev</button>
-                <button class="btn GotoNextSibling" (click)="GotoFolder(Res.Relatives.NextSibling)">Next</button>
-                <button class="btn Size" (click)="toggle('FolderSize')" [class.active]="Req.FolderSize">Folder</button>
+                <div class="navigate">
+                    <button class="btn GotoParentDir" (click)="GotoFolder(Res.Relatives.ParentFolder)">Up</button><button class="btn GotoPrevSibling" (click)="GotoFolder(Res.Relatives.PreviousSibling)">Prev</button><button class="btn GotoNextSibling" (click)="GotoFolder(Res.Relatives.NextSibling)">Next</button>
+                </div>
+                <div class="fOptions">
+                    <button class="btn Size" (click)="toggle('FolderSize')" [class.active]="Req.FolderSize">Folder</button><button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button><button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
+                </div>
+                <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
                 <button class="btn Subs" (click)="OpenInNewWindow(GetSubtitleSearchLink(Res.File))">Subs</button>
                 <button class="btn Imdb" (click)="getImdbInfo(Res.File)">Imdb</button>
-                <button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button>
-                <button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
-                <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
                 <div class="dropdown">
                     <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">Sort</button>
                     <div class="menu">
@@ -20,8 +20,9 @@
                         <button class="btn DisableSorting" (click)="disableSorting()" [class.active]="isSortingDisabled()">Disable Sort</button>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">More</button>
+                <button class="btn OrderByInnerSelectionFirst" (click)="orderBy(HAS_INNER_SELECTION)" [class.active]="filesView.isOrderedBy(HAS_INNER_SELECTION)">Watched</button>
+                <div class="dropdown" #ddMore>
+                    <button class="btn More" (mousedown)="toggleDropDown($event)">More</button>
                     <div class="menu">
                         <button class="btn Folders" (click)="toggle('HideFolders')" [class.active]="Req.HideFiles">Hide Folders</button>
                         <button class="btn Files" (click)="toggle('HideFiles')" [class.active]="Req.HideFolders">Hide Files</button>

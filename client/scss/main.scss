@@ -10,117 +10,169 @@
 
 
 body {
-	background-color: $background;
-	font-family: $regular-font;
-	line-height: 1.5;
-	font-size: $ms-1;
+    background-color: $background;
+    font-family: $regular-font;
+    line-height: 1.5;
+    font-size: $ms-1;
 }
 
 nav {
-	background-color: $background-variant;
+    background-color: $background-variant;
 
-	.menu {
-		padding: $g-spacing;
-		border-bottom: 1px solid $border-color;
-		margin-right: 0; /* default.less override */
-		@include outer-container();
+    .menu {
+        padding: $g-spacing;
+        border-bottom: 1px solid $border-color;
+        margin-right: 0; /* default.less override */
+        @include outer-container();
 
-		.buttons {
-			display: inline-block;
-			
-			button {
-				font-family: $regular-font;
-				border: none;
-			    font-size: $ms-2;
-			    color: $grey-color;
-			    padding: 5px 15px;
-			    -webkit-font-smoothing: antialiased;
-			    background: #0c0c0c;
-			    border-radius: 20px;
-			    cursor: pointer;
-			    @include transition(all .3s ease);
+        .buttons {
+            display: inline-block;
 
-			    &:hover {
-			    	background-color: $hover-color;
-			    	color: #fff;
-			    }
+            .navigate, .fOptions {
+                display: inline-block;
+                background-color: $tb-background;
+                text-align: center;
+                margin-right: 1em;
+                border-radius: 20px;
+                // overflow: hidden;
 
-			    &.active /*:active, &:focus*/ {
-			    	outline: none;
-			    	background: $hover-color;
-			    	color: #fff;
-			    }
-			}
-		}
-	}
+                button:first-child {
+                    border-left: none;
+                    border-top-left-radius: 20px;
+                    border-bottom-left-radius: 20px;
+                }
 
-	.addressBar {
-		padding: $s-spacing $g-spacing;
-		@include outer-container();
+                button:last-child {
+                    border-right: none;
+                    border-top-right-radius: 20px;
+                    border-bottom-right-radius: 20px;
+                }
+            }
+            
+            button {
+                font-family: $regular-font;
+                border: none;
+                border-right: 1px solid $border-color;
+                border-radius:0;            
+                font-size: $ms-2;
+                color: $grey-color;
+                padding: 8px 15px 8px 30px;
+                -webkit-font-smoothing: antialiased;
+                background: none; //#0c0c0c;
+                cursor: pointer;
+                @include transition(all .3s ease);
 
-		#tbPath	 {
-			@include span-columns(8);
-			border: none;
-		    font-size: .8em;
-		    -webkit-font-smoothing: antialiased;
-		    padding: .5em;
-		    border-bottom: 1px solid $border-color;
-		    @include transition(all .3s ease);
+                &.GotoParentDir {
+                    background: url(../img/icons/up.svg) no-repeat 13px 46%;
+                }
 
-		    &:hover {
-		    	border-bottom: 1px solid  lighten($border-color, 4%);
-		    }
+                &.GotoPrevSibling {
+                    background: url(../img/icons/prev.svg) no-repeat 13px 46%;
+                }
 
-		    &:active, &:focus {
-		    	outline: none;
-		    }
-		}
+                &.GotoNextSibling {
+                    background: url(../img/icons/next.svg) no-repeat 13px 46%;
+                }
 
-		.right-side {
-			@include span-columns(4);
-			text-align: right;
+                &.Size {
+                    background: url(../img/icons/folder.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
 
-			#tbSearch {
-				border-radius: 20px;
-				border: 1px solid darken($border-color, 8%); 
-				font-size: $ms-2;
-			    -webkit-font-smoothing: antialiased;
-			    padding: $s-spacing $g-spacing;
-			    @include transition(all .3s ease);
-			    
-			    &:hover {
-			    	border-bottom: 1px solid  lighten($border-color, 4%);
-			    }
+                &.Google {
+                    background: url(../img/icons/google.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
 
-			    &:active, &:focus {
-			    	outline: none;
-			    }
+                &.Delete {
+                    background: url(../img/icons/trash.svg) no-repeat 13px 46%;
+                    padding-left: 40px;
+                }
 
-			}
-		}
-	}
+
+
+
+                &:hover {
+                    background-color: $hover-color;
+                    color: #fff;
+                }
+
+                &.active /*:active, &:focus*/ {
+                    outline: none;
+                    background-color: $hover-color;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .addressBar {
+        padding: $s-spacing $g-spacing;
+        @include outer-container();
+
+        #tbPath  {
+            @include span-columns(8);
+            border: none;
+            font-size: .8em;
+            -webkit-font-smoothing: antialiased;
+            padding: .5em;
+            border-bottom: 1px solid $border-color;
+            @include transition(all .3s ease);
+
+            &:hover {
+                border-bottom: 1px solid  lighten($border-color, 4%);
+            }
+
+            &:active, &:focus {
+                outline: none;
+            }
+        }
+
+        .right-side {
+            @include span-columns(4);
+            text-align: right;
+
+            #tbSearch {
+                border-radius: 20px;
+                border: 1px solid darken($border-color, 8%); 
+                font-size: $ms-2;
+                -webkit-font-smoothing: antialiased;
+                padding: $s-spacing $g-spacing;
+                @include transition(all .3s ease);
+                
+                &:hover {
+                    border-bottom: 1px solid  lighten($border-color, 4%);
+                }
+
+                &:active, &:focus {
+                    outline: none;
+                }
+
+            }
+        }
+    }
 }
 
 
 .grid-header {
 
-	thead {
+    thead {
 
-		tr {
-			background-color: $background;
-			border-bottom: 1px solid darken($border-color, 8%);
-			text-align: left;
+        tr {
+            background-color: $background;
+            border-bottom: 1px solid darken($border-color, 8%);
+            text-align: left;
 
-			th {
-				padding: $g-spacing;
-				font-size: $ms-3;
-				text-transform: uppercase;
-				-webkit-font-smoothing: antialiased;
-				letter-spacing: 1px;
-				color: $grey-color;	
-			}
-		}
-	}
+            th {
+                padding: $g-spacing;
+                font-size: $ms-3;
+                text-transform: uppercase;
+                -webkit-font-smoothing: antialiased;
+                letter-spacing: 1px;
+                color: $grey-color; 
+            }
+        }
+    }
 }
 
-		
+        

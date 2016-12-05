@@ -85,7 +85,7 @@ body {
 nav {
   background-color: #181818; }
   nav .menu {
-    padding: 1em;
+    padding: 0.5em;
     border-bottom: 1px solid #282828;
     margin-right: 0;
     /* default.less override */
@@ -98,30 +98,60 @@ nav {
       display: block; }
     nav .menu .buttons {
       display: inline-block; }
+      nav .menu .buttons .navigate, nav .menu .buttons .fOptions {
+        display: inline-block;
+        background-color: #0c0c0c;
+        text-align: center;
+        margin-right: 1em;
+        border-radius: 20px; }
+        nav .menu .buttons .navigate button:first-child, nav .menu .buttons .fOptions button:first-child {
+          border-left: none;
+          border-top-left-radius: 20px;
+          border-bottom-left-radius: 20px; }
+        nav .menu .buttons .navigate button:last-child, nav .menu .buttons .fOptions button:last-child {
+          border-right: none;
+          border-top-right-radius: 20px;
+          border-bottom-right-radius: 20px; }
       nav .menu .buttons button {
         font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
         border: none;
+        border-right: 1px solid #282828;
+        border-radius: 0;
         font-size: 0.833em;
         color: #999;
-        padding: 5px 15px;
+        padding: 8px 15px 8px 30px;
         -webkit-font-smoothing: antialiased;
-        background: #0c0c0c;
-        border-radius: 20px;
+        background: none;
         cursor: pointer;
         -webkit-transition: all 0.3s ease;
         -moz-transition: all 0.3s ease;
         -ms-transition: all 0.3s ease;
         -o-transition: all 0.3s ease;
         transition: all 0.3s ease; }
+        nav .menu .buttons button.GotoParentDir {
+          background: url(../img/icons/up.svg) no-repeat 13px 46%; }
+        nav .menu .buttons button.GotoPrevSibling {
+          background: url(../img/icons/prev.svg) no-repeat 13px 46%; }
+        nav .menu .buttons button.GotoNextSibling {
+          background: url(../img/icons/next.svg) no-repeat 13px 46%; }
+        nav .menu .buttons button.Size {
+          background: url(../img/icons/folder.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
+        nav .menu .buttons button.Google {
+          background: url(../img/icons/google.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
+        nav .menu .buttons button.Delete {
+          background: url(../img/icons/trash.svg) no-repeat 13px 46%;
+          padding-left: 40px; }
         nav .menu .buttons button:hover {
           background-color: #A276F8;
           color: #fff; }
         nav .menu .buttons button.active {
           outline: none;
-          background: #A276F8;
+          background-color: #A276F8;
           color: #fff; }
   nav .addressBar {
-    padding: 0.5em 1em;
+    padding: 0.25em 0.5em;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto; }
@@ -163,7 +193,7 @@ nav {
         border: 1px solid #141414;
         font-size: 0.833em;
         -webkit-font-smoothing: antialiased;
-        padding: 0.5em 1em;
+        padding: 0.25em 0.5em;
         -webkit-transition: all 0.3s ease;
         -moz-transition: all 0.3s ease;
         -ms-transition: all 0.3s ease;
@@ -179,7 +209,7 @@ nav {
   border-bottom: 1px solid #141414;
   text-align: left; }
   .grid-header thead tr th {
-    padding: 1em;
+    padding: 0.5em;
     font-size: 0.694em;
     text-transform: uppercase;
     -webkit-font-smoothing: antialiased;
