@@ -6,3 +6,4 @@ npm-debug.log
 .DS_Store
 *.map
 base.db
+base.db.bak
