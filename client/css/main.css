@@ -77,13 +77,21 @@ table {
 /* Mixins */
 /* transition Mixins */
 body {
-  background-color: #0A0A09;
+  background-color: #060606;
   font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
   line-height: 1.5;
   font-size: 1em; }
 
 nav {
   background-color: #181818; }
+  nav .clock {
+    display: inline-block;
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    color: #999; }
   nav .menu {
     padding: 0.5em;
     border-bottom: 1px solid #282828;
@@ -223,7 +231,7 @@ nav {
           outline: none; }
 
 .grid-header thead tr {
-  background-color: #0A0A09;
+  background-color: #060606;
   border-bottom: 1px solid #141414;
   text-align: left; }
   .grid-header thead tr th {
@@ -233,3 +241,43 @@ nav {
     -webkit-font-smoothing: antialiased;
     letter-spacing: 1px;
     color: #999; }
+
+.Grid > table > tbody > tr {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  border: 1px solid #0c0c0c;
+  color: #999; }
+  .Grid > table > tbody > tr > td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    padding: 10px 0px; }
+
+.grid-header tr thead th {
+  padding: 10px 0; }
+
+.FileRow {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer; }
+  .FileRow:hover {
+    background-color: #000;
+    color: #A276F8; }
+    .FileRow:hover td .Name {
+      text-decoration: none; }
+  .FileRow.Selected {
+    color: #fff;
+    background-color: #A276F8;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease; }

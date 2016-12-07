@@ -19,15 +19,21 @@ body {
 nav {
     background-color: $background-variant;
 
+    .clock {
+        display: inline-block;
+        position: absolute;
+        top: 14px;
+        right: 20px;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        color: $grey-color;
+    }
+
     .menu {
         padding: $g-spacing;
         border-bottom: 1px solid $border-color;
         margin-right: 0; /* default.less override */
         @include outer-container();
-
-        .clock {
-            display: inline--block;
-        }
 
         .buttons {
             display: inline-block;
@@ -206,5 +212,77 @@ nav {
         }
     }
 }
+
+.Grid {
+    > table {
+
+
+        > tbody {
+
+
+             > tr {
+                @include transition(all .3s ease);
+                -webkit-font-smoothing: antialiased;
+                border: 1px solid darken($border-color, 11%);
+                color: $grey-color;
+
+
+                &:hover {
+                   
+                }
+
+                 > td {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        box-sizing: border-box;
+                        padding: 10px 0px;
+                 }
+             }
+        }
+    }
+}
+
+
+.grid-header {
+    tr {
+
+        thead {
+
+            th {
+                padding: 10px 0; 
+            }
+        }
+    }
+}
+
+.FileRow {
+    @include transition(all .3s ease);
+    cursor: pointer;
+
+    &:hover {
+        background-color: #000;
+        color : $hover-color;  
+
+        td {
+            .Name {
+                text-decoration: none;
+            }  
+        }
+
+    }
+
+    &.Selected { 
+        color: #fff;
+        background-color: $hover-color;
+        @include transition(all .3s ease);
+
+        &:hover {
+       
+        }
+    }
+}
+
+
 
         
