@@ -278,7 +278,7 @@ export class SiteService {
             for (var item of list) {
                 if (item.isFile)
                     size += item.Length;
-                else
+                else if (item.isDir)
                     size += this.CalculateFolderSize(item.FullName);
             }
         }

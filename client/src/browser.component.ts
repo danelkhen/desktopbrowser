@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input} from '@angular/core';
 import { Movie, MovieRequest } from 'imdb-api';
 import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
@@ -30,6 +30,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     FileSelection: Selection<File>;
     clockText: string = "";
     search: string;
+    @Input()
     Req: ListFilesRequest;
     Win: Window;
     imdbRatings: ImdbRssItem[];
@@ -189,7 +190,7 @@ export class BrowserComponent implements OnInit, OnChanges {
 
         $(".dropdown.show").not(dropDownEl).removeClass("show");
         dropDownEl.toggleClass("show");
-        e.preventDefault();
+        //e.preventDefault();
     }
 
     toggle(name: string) {

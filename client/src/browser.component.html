@@ -4,18 +4,27 @@
         <div class="menu">
             <div class="buttons">
                 <div class="navigate">
-                    <button class="btn GotoParentDir" (click)="GotoFolder(Res.Relatives.ParentFolder)">Up</button><button class="btn GotoPrevSibling" (click)="GotoFolder(Res.Relatives.PreviousSibling)">Prev</button><button class="btn GotoNextSibling" (click)="GotoFolder(Res.Relatives.NextSibling)">Next</button>
+                    <button class="btn GotoParentDir" (click)="GotoFolder(Res.Relatives.ParentFolder)">Up</button>
+                    <button class="btn GotoPrevSibling" (click)="GotoFolder(Res.Relatives.PreviousSibling)">Prev</button>
+                    <button class="btn GotoNextSibling" (click)="GotoFolder(Res.Relatives.NextSibling)">Next</button>
                 </div>
                 <div class="fOptions">
-                    <button class="btn Size" (click)="toggle('FolderSize')" [class.active]="Req.FolderSize">Folder</button><button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button><button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
+                    <button class="btn Size" (click)="toggle('FolderSize')" [class.active]="Req.FolderSize">Folder</button>
+                    <button class="btn Google" (click)="OpenInNewWindow(GetGoogleSearchLink(Res.File))">Google</button>
+                    <button class="btn Delete" (click)="DeleteOrTrash(FileSelection.SelectedItems.last())">Delete</button>
                 </div>
-
                 <div class="others">
-                    <button class="btn Explore" (click)="Explore(Res.File)">Explore</button><button class="btn Subs" (click)="OpenInNewWindow(GetSubtitleSearchLink(Res.File))">Subs</button><button class="btn Imdb" (click)="getImdbInfo(Res.File)">Imdb</button><div class="dropdown">
-                        <button class="btn Sort dropdown-toggle" (mousedown)="toggleDropDown($event)">Sort</button><div class="menu"><button class="btn Watched OrderByInnerSelectionFirst" (click)="orderBy(HAS_INNER_SELECTION)" [class.active]="filesView.isOrderedBy(HAS_INNER_SELECTION)">Watched</button><button class="btn Mix" (click)="toggle(FOLDERS_FIRST)" [class.active]="Req.foldersFirst">Folders First</button><button class="btn DisableSorting" (click)="disableSorting()" [class.active]="isSortingDisabled()">Disable Sort</button>
+                    <button class="btn Explore" (click)="Explore(Res.File)">Explore</button>
+                    <button class="btn Subs" (click)="OpenInNewWindow(GetSubtitleSearchLink(Res.File))">Subs</button>
+                    <button class="btn Imdb" (click)="getImdbInfo(Res.File)">Imdb</button>
+                    <div class="dropdown">
+                        <button class="btn Sort dropdown-toggle">Sort</button>
+                        <div class="menu">
+                            <button class="btn Watched OrderByInnerSelectionFirst" (click)="orderBy(HAS_INNER_SELECTION)" [class.active]="filesView.isOrderedBy(HAS_INNER_SELECTION)">Watched</button><button class="btn Mix" (click)="toggle(FOLDERS_FIRST)" [class.active]="Req.foldersFirst">Folders First</button><button class="btn DisableSorting" (click)="disableSorting()" [class.active]="isSortingDisabled()">Disable Sort</button>
                         </div>
-                    </div><div class="dropdown" #ddMore>
-                        <button class="btn More dropdown-toggle" (mousedown)="toggleDropDown($event)">More</button>
+                    </div>
+                    <div class="dropdown" #ddMore>
+                        <button class="btn More dropdown-toggle">More</button>
                         <div class="menu">
                             <button class="btn Folders" (click)="toggle('HideFolders')" [class.active]="Req.HideFiles">Hide Folders</button>
                             <button class="btn Files" (click)="toggle('HideFiles')" [class.active]="Req.HideFolders">Hide Files</button>
@@ -23,13 +32,20 @@
                             <button class="btn Keep" (click)="toggle('KeepView')" [class.active]="Req.KeepView">Keep</button>
                             <button class="btn Hidden" (click)="toggle('ShowHiddenFiles')" [class.active]="Req.ShowHiddenFiles">Hidden</button>
                         </div>
+                        <div *ngIf="false">
+                            <label><input type="checkbox" [(ngModel)]="Req.HideFolders" class="btn Folders" />Hide Folders</label>
+                            <label><input type="checkbox" [(ngModel)]="Req.HideFiles" class="btn Files">Hide Files</label>
+                            <label><input type="checkbox" [(ngModel)]="Req.IsRecursive" class="btn Recursive">Recursive</label>
+                            <label><input type="checkbox" [(ngModel)]="Req.KeepView" class="btn Keep">Keep</label>
+                            <label><input type="checkbox" [(ngModel)]="Req.ShowHiddenFiles" class="btn Hidden">Hidden</label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="addressBar">
             <form (submit)="frmPath_submit($event)">
-                <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+                <input type="text" name="path" id="tbPath" class="form-control" placeholder="Path" [(ngModel)]="tbPathText" autocorrect="off" autocapitalize="off" spellcheck="false" />
             </form>
             <div class="right-side">
                 <span id="pager" class="Pager btn-group btn-group-sm">
