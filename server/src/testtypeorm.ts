@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import "reflect-metadata";
 import { createConnection } from "typeorm";
 
 import { Table, Column, PrimaryGeneratedColumn } from "typeorm";
