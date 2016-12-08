@@ -1,5 +1,5 @@
-﻿import { File, FileRelativesInfo } from "./model"
-import { PathRequest, SiteRequest, ListFilesRequest, ListFilesResponse } from "./request"
+﻿import { File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable } from "contracts"
+import { SiteRequest, ListFilesRequest, ListFilesResponse } from "./request"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";

@@ -20,11 +20,6 @@ export class Db {
     connectionOptions: ConnectionOptions = {
         driver: {
             type: "sqlite",
-            host: "localhost",
-            //port: 3306,
-            //username: "root",
-            //password: "admin",
-            //database: "test",
             storage:  path.join(__dirname,"../../db.sqlite"),
         },
         entities: [ByFilename],

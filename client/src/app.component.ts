@@ -1,6 +1,5 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, } from '@angular/core';
 import { Movie, MovieRequest } from 'imdb-api';
-import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import parseTorrentName = require('parse-torrent-name');

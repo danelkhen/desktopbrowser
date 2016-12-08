@@ -1,9 +1,28 @@
 ﻿import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Movie, MovieRequest } from 'imdb-api';
 
-
-export class ServiceBase {
+export class ServiceBase<T> {
     Url: string;
+    extractInstanceFunctionCall(func: Function): { name: string, args: any[] } {
+        let code = func.toString();
+        let index = code.indexOf(".");
+        let index2 = code.indexOf("(", index);
+        let funcName = code.substring(index + 1, index2);
+        let fake: any = {};
+        let args;
+        fake[funcName] = function () {
+            args = Array.from(arguments);
+        };
+        if (args == null)
+            args = [];
+        return { name, args };
+    }
+    
+    invoke<R>(action: (obj: T) => R | Promise<R>): Promise<R> {
+        let info = this.extractInstanceFunctionCall(action);
+        return this.Invoke(info.name, info.args[0]);
+    }
+
     isPrimitive(x: any): boolean {
         if (x == null)
             return true;
@@ -12,7 +31,7 @@ export class ServiceBase {
         return false;
     }
 
-    Invoke<T>(action: string, prms?: any): Promise<T> {
+    Invoke<R>(action: string, prms?: any): Promise<R> {
         let method = "GET";
         let contentType: string = null;
         let data = prms;
@@ -33,7 +52,7 @@ export class ServiceBase {
     }
 }
 
-export class ByFilenameService extends ServiceBase {
+export class ByFilenameService extends ServiceBase<any> {
     constructor() {
         super();
         this.Url = "/api/service.byFilename";
@@ -53,7 +72,7 @@ export class ByFilenameService extends ServiceBase {
     }
 
 }
-export class SiteServiceClient extends ServiceBase {
+export class SiteServiceClient extends ServiceBase<any> {
     constructor() {
         super();
         this.Url = "/api/service";
@@ -124,14 +143,6 @@ export interface OmdbGetResponse {
     err: { meesage: string, name: string };
 }
 
-export interface Bucket<T> {
-    key: string;
-    value: T;
-}
-
-export interface BaseDbItem {
-    selectedFiles?: string[];
-}
 
 export interface ObjectLiteral {
     [key: string]: any;

@@ -1,4 +1,4 @@
-﻿import { File, FileRelativesInfo } from "./model"
+﻿import { File, FileRelativesInfo } from "contracts"
 import * as express from "express";
 import {Parse} from "./utils/parse"
 
@@ -248,8 +248,8 @@ export class SortColumn {
 }
 
 
-export interface PathRequest {
-    Path: string;
-}
+//export interface PathRequest {
+//    Path: string;
+//}
 
 

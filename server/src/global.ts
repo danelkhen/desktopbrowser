@@ -35,20 +35,6 @@ enum Cache {
 
 
 
-interface IEnumerable<T> extends Array<T> {
-    OrderByDescending?(sel): IOrderedEnumerable<T>;
-    OrderBy?(sel): IOrderedEnumerable<T>;
-    ToCachedEnumerable?(): CachedIEnumerable<T>;
-}
-interface IOrderedEnumerable<T> extends IEnumerable<T> {
-    ThenByDescending?(sel): IOrderedEnumerable<T>;
-    ThenBy?(sel): IOrderedEnumerable<T>;
-}
-
-interface CachedIEnumerable<T> extends IEnumerable<T> {
-}
-
-
 
 
 
