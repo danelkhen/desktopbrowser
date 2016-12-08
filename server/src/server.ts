@@ -57,7 +57,7 @@ app.use('/api/:action', (req: express.Request, res: express.Response) => {
     }
 });
 
-app.get('*', (req: express.Request, res: express.Response) => {
+app.get('/', (req: express.Request, res: express.Response) => {
     res.sendFile('index.html', { root });
 });
 
