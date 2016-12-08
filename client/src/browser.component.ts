@@ -1,6 +1,6 @@
-import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input} from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input } from '@angular/core';
 import { Movie, MovieRequest } from 'imdb-api';
-import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, } from "./service"
+import { SiteServiceClient, Bucket, BaseDbItem, OmdbGetResponse, ByFilename } from "./service"
 import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import parseTorrentName = require('parse-torrent-name');
@@ -21,7 +21,7 @@ import { Name, NameFunc, nameof } from "./utils"
 export class BrowserComponent implements OnInit, OnChanges {
 
     FOLDERS_FIRST = "foldersFirst";
-    baseDbBuckets: Bucket<BaseDbItem>[];
+    baseDbBuckets: ByFilename[];
     Service: SiteServiceClient;
     Res: ListFilesResponse;
     quickFindText: string = "";
@@ -63,6 +63,7 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         console.log("ngOnOnit");
+        //this.Service.db.byFilename.find().then(t => console.log(t));
         let nameof2 = Name.of<File>();
 
 
@@ -81,7 +82,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         $(window).resize(e => this.recalcHeight());
         this.recalcHeight();
         console.log("baseDbGetAll");
-        this.Service.baseDbGetAll().then(list => {
+        this.Service.db.byFilename.find().then(list => {
             this.baseDbBuckets = list;
             this.migrateDbIfNeeded();
             this.onReady();
@@ -743,49 +744,43 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     GetStorageItem(key: string): string {
         let x = this.baseDbBuckets.first(t => t.key == key);
-        if (x == null || x.value == null || x.value.selectedFiles == null)
+        if (x == null || x.selectedFiles == null)
             return null;
-        return x.value.selectedFiles[0];
+        return x.selectedFiles[0];
     }
 
     SetStorageItem(key: string, value: string): void {
         if (value == null) {
             this.baseDbBuckets.removeAll(t => t.key == key);
-            this.Service.baseDbDelete({ key });
+            this.Service.db.byFilename.removeById({ id: key });
             return;
         }
         let x = this.baseDbBuckets.last(t => t.key == key);
         if (x == null) {
-            x = { key: key, value: null };
+            x = { key: key, selectedFiles: null };
             this.baseDbBuckets.push(x);
         }
-        if (x.value == null)
-            x.value = {};
-        x.value.selectedFiles = [value];
-        this.Service.baseDbSet(x);
+        x.selectedFiles = [value];
+        this.Service.db.byFilename.persist(x);
     }
 
-    GetBaseDbItem(key: string): BaseDbItem {
+    GetBaseDbItem(key: string): ByFilename {
         let x = this.baseDbBuckets.first(t => t.key == key);
         if (x == null)
             return null;
-        return x.value;
+        return x;
     }
 
-    SetBaseDbItem(key: string, value: BaseDbItem): void {
-        if (value == null) {
-            this.baseDbBuckets.removeAll(t => t.key == key);
-            this.Service.baseDbDelete({ key });
-            return;
-        }
-        let x = this.baseDbBuckets.first(t => t.key == key);
-        if (x == null) {
-            x = { key, value };
-            this.baseDbBuckets.push(x);
-        }
-        x.value = value;
-        this.Service.baseDbSet(x);
-    }
+    //SetBaseDbItem(value: ByFilename): void {
+    //    if (value.selectedFiles == null || value.selectedFiles.length == 0) {
+    //        this.baseDbBuckets.removeAll(t => t.key == value.key);
+    //        this.Service.db.byFilename.removeById({ id: value.key });
+    //        return;
+    //    }
+    //    this.baseDbBuckets.removeAll(t => t.key == value.key);
+    //    this.baseDbBuckets.push(value);
+    //    this.Service.db.byFilename.persist(value);
+    //}
 
     getHeaderClass(prop: string) {
         if (this.filesView.isOrderedBy(prop, false))

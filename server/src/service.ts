@@ -13,22 +13,72 @@ import * as trash from 'trash';
 import * as path from "path";
 import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
+import { Db, ByFilename } from "./db2";
+import { FindOptions } from "typeorm"
 
-export class SiteService {
+export class ByFilenameService {
     init() {
-        let dir = path.join(getUserHome(), "desktopbrowser");
-        this.baseDb = new KeyValueStorage<BaseDbItem>(path.join(dir, "base.db"));
-        this.baseDb.init().then(() => {
-            //this.baseDb.db.update(
-            //this.baseDb.db.forEach((key, value) => {
-            //    console.log("base.db", { key, value });
-            //});
-            ////this.baseDb.set("a", { a: "a" });
-            //this.baseDb.set("a", { b: "b" });
-            //this.baseDb.set("a", { c: "c" });
+        this.db = new Db();
+        return this.db.init();
+    }
+    db: Db;
+    findOneById(req: { id: any, options?: FindOptions }): Promise<ByFilename | undefined> {
+        return this.db.byFilename.findOneById(req.id, req.options);
+    }
+    find(): Promise<ByFilename[]> {
+        return this.db.byFilename.find();
+    }
+    persist(x: ByFilename): Promise<ByFilename> {
+        return this.db.byFilename.persist(x);
+    }
+    removeById(req: { id: any }): Promise<ByFilename> {
+        return this.db.byFilename.findOneById(req.id).then(x => {
+            if (x == null)
+                return null;
+            this.db.byFilename.remove(x);
+            return x;
         });
     }
+
+}
+export class SiteService {
+    init() {
+        this.byFilename = new ByFilenameService();
+        return this.byFilename.init();
+    }
+    byFilename: ByFilenameService;
+    baseDbFilename: string;
+    migrateToSqlite() {
+        let dir = path.join(getUserHome(), "desktopbrowser");
+        this.baseDbFilename = path.join(dir, "base.db");
+        if (!fs.existsSync(this.baseDbFilename))
+            return;
+        console.log("migrating db");
+        console.log(this.baseDbFilename);
+        this.baseDb = new KeyValueStorage<BaseDbItem>(this.baseDbFilename);
+        return this.baseDb.init().then(() => {
+            return Promise.all(this.baseDb.getAll().map(item => {
+                if (item.value == null || item.value.selectedFiles == null)
+                    return;
+                return this.byFilename.db.byFilename.findOneById(item.key).then(x => {
+                    if (x != null)
+                        return;
+                    x.selectedFiles = item.value.selectedFiles;
+                    return this.byFilename.db.byFilename.persist(x).then(t => console.log(t));
+                });
+            })).then(() => {
+                console.log("deleting file", this.baseDbFilename);
+                fs.unlinkSync(this.baseDbFilename);
+                if(fs.existsSync(this.baseDbFilename+".bak"))
+                    fs.unlinkSync(this.baseDbFilename+".bak");
+                console.log("deleting dir", path.dirname(this.baseDbFilename));
+                fs.unlinkSync(path.dirname(this.baseDbFilename));
+            });
+        });
+
+    }
     baseDb: KeyValueStorage<BaseDbItem>;
+
     ListFiles(req: ListFilesRequest): ListFilesResponse {
         //if (req.Path == null) {
         //    return {
@@ -392,18 +442,18 @@ export class SiteService {
         });
     }
 
-    baseDbGet(req: { key: string }): BaseDbItem {
-        return this.baseDb.get(req.key);
-    }
-    baseDbDelete(req: { key: string }): Promise<any> {
-        return this.baseDb.delete(req.key);
-    }
-    baseDbGetAll(): Bucket<BaseDbItem>[] {
-        return this.baseDb.getAll();
-    }
-    baseDbSet(req: Bucket<BaseDbItem>): Promise<any> {
-        return this.baseDb.set(req.key, req.value);
-    }
+    //baseDbGet(req: { key: string }): BaseDbItem {
+    //    return this.db.byFilename.findOneById(req.key);
+    //}
+    //baseDbDelete(req: { key: string }): Promise<any> {
+    //    return this.db.delete(req.key);
+    //}
+    //baseDbGetAll(): Bucket<ByFilename>[] {
+    //    return this.db.getAll();
+    //}
+    //baseDbSet(req: ByFilename): Promise<any> {
+    //    return this.baseDb.set(req.key, req.value);
+    //}
 
 
 }

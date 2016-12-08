@@ -15,8 +15,8 @@ console.log("os", JSON.stringify(os.platform()));
 
 let root = path.join(__dirname, '../../client/');
 let nodeModulesDir = path.join(root, "../");
-let service = new SiteService();
-service.init();
+let _service = new SiteService();
+_service.init().then(() => _service.migrateToSqlite()).then(()=>console.log("done migration"));
 
 process.on("uncaughtException", e => console.log("uncaughtException", e));
 
@@ -37,8 +37,19 @@ function isPromise(obj) {
         return false;
     return obj instanceof Promise || typeof (obj.then) == "function";
 }
-app.use('/api/:action', (req: express.Request, res: express.Response) => {
+app.use('/api/:service/:action', (req: express.Request, res: express.Response) => {
+    let service = null;
+    let serviceName = req.params["service"];
     let action = req.params["action"];
+    console.log("service[action]", serviceName, action);
+    if (serviceName == "service")
+        service = _service;
+    else if (serviceName == "service.byFilename")
+        service = _service.byFilename;
+    if(service==null)
+        console.error("service is null", serviceName);
+    //console.log("service[action]", service, action, service[action]);
+
     let arg = req.method == "POST" ? (req as any).body : req.query;
     console.log(action, req.params, req.query);
     try {

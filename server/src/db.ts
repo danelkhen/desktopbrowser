@@ -1,3 +1,5 @@
+import "./global"
+import "../lib/corex/corex"
 import * as fs from "fs";
 import * as path from "path";
 import * as dirty from 'dirty';

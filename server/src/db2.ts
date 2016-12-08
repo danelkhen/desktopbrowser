@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { Table, Column, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository } from "typeorm";
 import { ColumnTypes } from "typeorm/metadata/types/ColumnTypes";
+import * as path from "path";
+
 
 @Table()
 export class ByFilename {
@@ -22,8 +24,8 @@ export class Db {
             //port: 3306,
             //username: "root",
             //password: "admin",
-            database: "test",
-            storage: "test.sqlite",
+            //database: "test",
+            storage:  path.join(__dirname,"../../db.sqlite"),
         },
         entities: [ByFilename],
         autoSchemaSync: true,
