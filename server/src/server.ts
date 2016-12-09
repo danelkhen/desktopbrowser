@@ -9,12 +9,20 @@ import * as child_process from "child_process"
 import * as https from "https"
 import * as bodyParser from "body-parser";
 import * as os from "os";
+import { ByFilenameService } from "./service"
+import { RequestHandler } from "express"
 
 export class Server {
     _service: SiteService;
     app: express.Application;
     root: string;
     nodeModulesDir: string;
+    //services: {
+    //    fs:SiteService,
+    //    byFilename:ByFilenameService,
+
+    //};
+
 
     init(): Promise<any> {
         console.log("os", JSON.stringify(os.platform()));
@@ -56,7 +64,7 @@ export class Server {
         return new Promise<any>((resolve, reject) => this.app.listen(7777, resolve));
     }
 
-    handleServiceRequest(req: express.Request, res: express.Response): void {
+    handleServiceRequest: RequestHandler = (req, res, next) => {
         let service = null;
         let serviceName = req.params["service"];
         let action = req.params["action"];
