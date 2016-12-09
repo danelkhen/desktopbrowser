@@ -10,79 +10,95 @@ import * as https from "https"
 import * as bodyParser from "body-parser";
 import * as os from "os";
 
-console.log("os", JSON.stringify(os.platform()));
+export class Server {
+    _service: SiteService;
+    app: express.Application;
+    root: string;
+    nodeModulesDir: string;
+
+    init(): Promise<any> {
+        console.log("os", JSON.stringify(os.platform()));
+        process.on("uncaughtException", e => console.log("uncaughtException", e));
+
+        this.root = path.join(__dirname, '../../client/');
+        this.nodeModulesDir = path.join(this.root, "../");
+        this._service = new SiteService();
+        return this._service.init()
+            .then(() => this._service.migrateToSqlite())
+            .then(() => this.initServer())
+            .then(() => DriveInfo.GetDrives3());
+    }
+    initServer() {
+        this.app = express();
+        this.app.use(bodyParser.json());
+        console.log({ root: this.root, nodeModulesDir: this.nodeModulesDir, baseName: path.basename(this.nodeModulesDir) });
+        //let x = express.static(root);
+        this.app.use("/_res_", express.static(this.root));
+        this.app.use(express.static(this.root));
+
+        //if (path.basename(nodeModulesDir) == "node_modules") {
+        //    console.log("setting up node_modules dir");
+        //    app.use("/node_modules", express.static(nodeModulesDir));
+        //}
 
 
-let root = path.join(__dirname, '../../client/');
-let nodeModulesDir = path.join(root, "../");
-let _service = new SiteService();
-_service.init().then(() => _service.migrateToSqlite()).then(()=>console.log("done migration"));
 
-process.on("uncaughtException", e => console.log("uncaughtException", e));
+        this.app.use('/api/:service/:action', this.handleServiceRequest.bind(this));
 
-let app = express();
-app.use(bodyParser.json());
-console.log({ root, nodeModulesDir, baseName: path.basename(nodeModulesDir) });
-//let x = express.static(root);
-app.use("/_res_", express.static(root));
-app.use(express.static(root));
+        this.app.get('/', (req: express.Request, res: express.Response) => {
+            res.sendFile('index.html', { root: this.root });
+        });
+    }
 
-//if (path.basename(nodeModulesDir) == "node_modules") {
-//    console.log("setting up node_modules dir");
-//    app.use("/node_modules", express.static(nodeModulesDir));
-//}
 
+
+    start(): Promise<any> {
+        return new Promise<any>((resolve, reject) => this.app.listen(7777, resolve));
+    }
+
+    handleServiceRequest(req: express.Request, res: express.Response): void {
+        let service = null;
+        let serviceName = req.params["service"];
+        let action = req.params["action"];
+        console.log("service[action]", serviceName, action);
+        if (serviceName == "service")
+            service = this._service;
+        else if (serviceName == "service.byFilename")
+            service = this._service.byFilename;
+        if (service == null)
+            console.error("service is null", serviceName);
+        //console.log("service[action]", service, action, service[action]);
+
+        let arg = req.method == "POST" ? (req as any).body : req.query;
+        console.log(action, req.params, req.query);
+        try {
+            let result = service[action](arg);
+            if (isPromise(result)) {
+                let promise: Promise<any> = result;
+                promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
+            }
+            else {
+                res.json(result)
+            }
+        }
+        catch (e) {
+            console.log("api action error", e);
+            res.status(500).json({ err: e.toString() });
+        }
+    }
+
+}
 function isPromise(obj) {
     if (obj == null)
         return false;
     return obj instanceof Promise || typeof (obj.then) == "function";
 }
-app.use('/api/:service/:action', (req: express.Request, res: express.Response) => {
-    let service = null;
-    let serviceName = req.params["service"];
-    let action = req.params["action"];
-    console.log("service[action]", serviceName, action);
-    if (serviceName == "service")
-        service = _service;
-    else if (serviceName == "service.byFilename")
-        service = _service.byFilename;
-    if(service==null)
-        console.error("service is null", serviceName);
-    //console.log("service[action]", service, action, service[action]);
 
-    let arg = req.method == "POST" ? (req as any).body : req.query;
-    console.log(action, req.params, req.query);
-    try {
-        let result = service[action](arg);
-        if (isPromise(result)) {
-            let promise: Promise<any> = result;
-            promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
-        }
-        else {
-            res.json(result)
-        }
-    }
-    catch (e) {
-        console.log("api action error", e);
-        res.status(500).json({ err: e.toString() });
-    }
-});
+function main() {
+    let server = new Server();
+    return server.init()
+        .then(() => server.start())
+        .then(() => console.log('server started: http://localhost:7777'));
+}
 
-app.get('/', (req: express.Request, res: express.Response) => {
-    res.sendFile('index.html', { root });
-});
-
-//var key = fs.readFileSync(path.join(__dirname, "../ssl/key.pem"));
-//var cert = fs.readFileSync(path.join(__dirname, "../ssl/cert.pem"));
-
-DriveInfo.GetDrives3().then(drives => {
-    console.log(drives.map(t => t.Name));
-    //https.createServer({ key, cert }, app).listen(7777, () => {
-    //    console.log('Example app listening on port 7777!');
-    //});
-    app.listen(7777, () => {
-        console.log('Example app listening on port 7777!');
-    });
-});
-
-
+main();
