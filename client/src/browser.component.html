@@ -32,13 +32,13 @@
                             <button class="btn Keep" (click)="toggle('KeepView')" [class.active]="Req.KeepView">Keep</button>
                             <button class="btn Hidden" (click)="toggle('ShowHiddenFiles')" [class.active]="Req.ShowHiddenFiles">Hidden</button>
                         </div>
-                        <div *ngIf="false">
-                            <label><input type="checkbox" [(ngModel)]="Req.HideFolders" class="btn Folders" />Hide Folders</label>
-                            <label><input type="checkbox" [(ngModel)]="Req.HideFiles" class="btn Files">Hide Files</label>
-                            <label><input type="checkbox" [(ngModel)]="Req.IsRecursive" class="btn Recursive">Recursive</label>
-                            <label><input type="checkbox" [(ngModel)]="Req.KeepView" class="btn Keep">Keep</label>
-                            <label><input type="checkbox" [(ngModel)]="Req.ShowHiddenFiles" class="btn Hidden">Hidden</label>
-                        </div>
+                    </div>
+                    <div style="display:none">
+                        <label><input type="checkbox" [(ngModel)]="Req.HideFolders" class="btn Folders" />Hide Folders</label>
+                        <label><input type="checkbox" [(ngModel)]="Req.HideFiles" class="btn Files">Hide Files</label>
+                        <label><input type="checkbox" [(ngModel)]="Req.IsRecursive" class="btn Recursive">Recursive</label>
+                        <label><input type="checkbox" [(ngModel)]="Req.KeepView" class="btn Keep">Keep</label>
+                        <label><input type="checkbox" [(ngModel)]="Req.ShowHiddenFiles" class="btn Hidden">Hidden</label>
                     </div>
                 </div>
             </div>

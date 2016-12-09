@@ -6,7 +6,7 @@ import { BrowserComponent } from './browser.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const appRoutes: Routes = [
-  { path: '', component: BrowserComponent, },
+  { path: '', component: BrowserComponent,  },
   //{ path: '**', component: BrowserComponent }
 ];
 

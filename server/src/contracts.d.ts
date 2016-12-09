@@ -1,69 +1,39 @@
-﻿
-declare module "contracts" {
+﻿declare module "contracts" {
+
     export interface ByFilename {
         key: string;
         selectedFiles?: string[];
     }
 
-    export interface ByFilenameService {
-        init();
-        findOneById(req: { id: any/*, options?: FindOptions*/ }): Promise<ByFilename | undefined>;
-        find(): Promise<ByFilename[]>;
-
-        persist(x: ByFilename): Promise<ByFilename>;
-
-        removeById(req: { id: any }): Promise<ByFilename>;
-
+    export interface DbService<T> {
+        findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
+        find(): Promise<T[]>;
+        persist(x: T): Promise<T>;
+        removeById(req: { id: any }): Promise<T>;
     }
+
+    export interface ByFilenameService extends DbService<ByFilename> { }
+
     export interface SiteService {
         init();
         migrateToSqlite();
-
         ListFiles(req: ListFilesRequest): ListFilesResponse;
-
-        GetFiles(req: SiteRequest): File[];
-
+        GetFiles(req: ListFilesRequest): File[];
         GetFileRelatives(path: string): FileRelativesInfo;
-
         GetFile(req: PathRequest): File;
-
         Execute(req: PathRequest): void;
-
         Explore(req: PathRequest): void;
-
-
         Delete(req: PathRequest): Promise<any>;
-
         trash(req: PathRequest): Promise<any>;
-
-        //rimraf(pattern: string, options?: rimraf.Options);
-
-
-
-        ApplyRequest(files: IEnumerable<File>, req: SiteRequest): IEnumerable<File>;
-
-        GetFileAndOrFolders(path: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean): IEnumerable<File>;
+        ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File>;
         isWindows();
-
         GetHomeFiles(): File[];
-
         CalculateFoldersSize(folders: File[]): IEnumerable<File>;
-
         CalculateFolderSize(path: string): number;
-
         CalculateFolderSizeNoCache(path: string): number;
-
-        //GetConfig(): SiteConfiguration;
-
-        //GetConfigNoCache(): SiteConfiguration;
-
         clearCache();
-
-        omdbGet(req: MovieRequest): Promise<Movie>;
-
+        omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
         imdbRss(req: { path: string }): Promise<string>;
-
-
     }
 
     export interface OmdbGetResponse {
@@ -71,9 +41,11 @@ declare module "contracts" {
         err: { meesage: string, name: string };
     }
 
-
-    export interface SiteRequest {
-        pathPrefix?: string;
+    export interface ListFilesRequest {
+        sortBy?: string;
+        sortByDesc?: boolean;
+        foldersFirst?: boolean;
+        ByInnerSelection?: boolean;
         SearchPattern?: string;
         IsRecursive?: boolean;
         FolderSize?: boolean;
@@ -85,28 +57,15 @@ declare module "contracts" {
         ShowHiddenFiles?: boolean;
         NoCache?: boolean;
         View?: string;
-        /// <summary>
-        /// Number of columns in ImageListView mode
-        /// </summary>
+        /** Number of columns in ImageListView mode */
         ImageListColumns?: number;
-        /// <summary>
-        /// Number of rows in ImageListView mode
-        /// </summary>
+        /** Number of rows in ImageListView mode */
         ImageListRows?: number;
         KeepView?: boolean;
-
-        /// <summary>
-        /// How many items to skip, null means no skipping
-        /// </summary>
+        /** How many items to skip, null means no skipping */
         Skip?: number;
-        /// <summary>
-        /// How many items to take after skipping, null means all of them
-        /// </summary>
+        /** How many items to take after skipping, null means all of them */
         Take?: number;
-    }
-
-
-    export interface ListFilesRequest extends SiteRequest {
     }
 
     export interface ListFilesResponse {
@@ -131,7 +90,6 @@ declare module "contracts" {
         NextSibling: File;
         PreviousSibling: File;
     }
-
 
     export interface PathRequest {
         Path: string;
@@ -169,34 +127,172 @@ declare module "contracts" {
     interface IEnumerable<T> extends Array<T> {
         OrderByDescending?(sel): IOrderedEnumerable<T>;
         OrderBy?(sel): IOrderedEnumerable<T>;
-        ToCachedEnumerable?(): CachedIEnumerable<T>;
     }
+    
     interface IOrderedEnumerable<T> extends IEnumerable<T> {
         ThenByDescending?(sel): IOrderedEnumerable<T>;
         ThenBy?(sel): IOrderedEnumerable<T>;
     }
 
-    interface CachedIEnumerable<T> extends IEnumerable<T> {
-    }
 
     export interface SortRequest {
         Columns: SortColumn[];
     }
-
 
     export interface SortColumn {
         Name: string;
         Descending?: boolean;
     }
 
-
-    export interface ListFilesRequest extends SiteRequest {
-    }
-
     export interface ListFilesResponse {
         File: File;
         Files: File[];
         Relatives: FileRelativesInfo;
+    }
+
+    export interface ObjectLiteral {
+        [key: string]: any;
+    }
+
+    /**
+     * Options to be passed to find methods.
+     *
+     * Example:
+     *  const options: FindOptions = {
+     *     alias: "photo",
+     *     limit: 100,
+     *     offset: 0,
+     *     firstResult: 5,
+     *     maxResults: 10,
+     *     where: "photo.likesCount > 0 && photo.likesCount < 10",
+     *     having: "photo.viewsCount > 0 && photo.viewsCount < 1000",
+     *     whereConditions: {
+     *         "photo.isPublished": true,
+     *         "photo.name": "Me and Bears"
+     *     },
+     *     havingConditions: {
+     *         "photo.filename": "bears.jpg"
+     *     },
+     *     orderBy: {
+     *         "photo.id": "DESC"
+     *     },
+     *     groupBy: [
+     *         "photo.name"
+     *     ],
+     *     leftJoin: {
+     *         author: "photo.author",
+     *         categories: "categories",
+     *         user: "categories.user",
+     *         profile: "user.profile"
+     *     },
+     *     innerJoin: {
+     *         author: "photo.author",
+     *         categories: "categories",
+     *         user: "categories.user",
+     *         profile: "user.profile"
+     *     },
+     *     leftJoinAndSelect: {
+     *         author: "photo.author",
+     *         categories: "categories",
+     *         user: "categories.user",
+     *         profile: "user.profile"
+     *     },
+     *     innerJoinAndSelect: {
+     *         author: "photo.author",
+     *         categories: "categories",
+     *         user: "categories.user",
+     *         profile: "user.profile"
+     *     }
+     * };
+     */
+    export interface FindOptions {
+        /**
+         * Alias of the selected entity.
+         */
+        alias: string;
+        /**
+         * Selection limitation, e.g. LIMIT expression.
+         */
+        limit?: number;
+        /**
+         * From what position to select, e.g. OFFSET expression.
+         */
+        offset?: number;
+        /**
+         * First results to select (offset using pagination).
+         */
+        firstResult?: number;
+        /**
+         * Maximum result to select (limit using pagination).
+         */
+        maxResults?: number;
+        /**
+         * Regular WHERE expression.
+         */
+        where?: string;
+        /**
+         * Regular HAVING expression.
+         */
+        having?: string;
+        /**
+         * WHERE conditions. Key-value object pair, where each key is a column name and value is a column value.
+         * "AND" is applied between all parameters.
+         */
+        whereConditions?: ObjectLiteral;
+        /**
+         * HAVING conditions. Key-value object pair, where each key is a column name and value is a column value.
+         * "AND" is applied between all parameters.
+         */
+        havingConditions?: ObjectLiteral;
+        /**
+         * Array of ORDER BY expressions.
+         */
+        orderBy?: OrderByCondition;
+        /**
+         * Array of column to GROUP BY.
+         */
+        groupBy?: string[];
+        /**
+         * Array of columns to LEFT JOIN.
+         */
+        leftJoinAndSelect?: {
+            [key: string]: string;
+        };
+        /**
+         * Array of columns to INNER JOIN.
+         */
+        innerJoinAndSelect?: {
+            [key: string]: string;
+        };
+        /**
+         * Array of columns to LEFT JOIN.
+         */
+        leftJoin?: {
+            [key: string]: string;
+        };
+        /**
+         * Array of columns to INNER JOIN.
+         */
+        innerJoin?: {
+            [key: string]: string;
+        };
+        /**
+         * Parameters used in the WHERE and HAVING expressions.
+         */
+        parameters?: Object;
+        /**
+         * Indicates if query builder should add virtual columns to the entity too.
+         */
+        enabledOptions?: ("RELATION_ID_VALUES")[];
+    }
+
+    export type OrderByCondition = {
+        [columnName: string]: "ASC" | "DESC";
+    };
+
+    export interface ByFilename {
+        key: string;
+        selectedFiles?: string[];
     }
 
 }

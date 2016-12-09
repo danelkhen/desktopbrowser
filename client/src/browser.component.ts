@@ -1,7 +1,7 @@
-import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input } from '@angular/core';
-import { Movie, MovieRequest } from 'imdb-api';
-import { SiteServiceClient, OmdbGetResponse, ByFilename } from "./service"
-import { SiteRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File } from "./model"
+import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input, OnDestroy, AfterContentChecked, AfterViewChecked, DoCheck } from '@angular/core';
+import { Location } from '@angular/common';
+import { SiteServiceClient, } from "./service"
+import { Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
 import { Selection, SelectionChangedEventArgs } from "./selection"
 import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
@@ -50,7 +50,9 @@ export class BrowserComponent implements OnInit, OnChanges {
     EXTENSION = nameof<File>(t => t.Extension);
     HAS_INNER_SELECTION = nameof<this>(t => t.hasInnerSelection);
 
-    constructor(private route: ActivatedRoute, private router: Router) {
+    constructor(private route: ActivatedRoute, private router: Router, private location: Location) {
+        console.log("location", this.location);
+
         this.Service = new SiteServiceClient();
         this.Req = {};
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
@@ -63,10 +65,9 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         console.log("ngOnOnit");
-        //this.Service.db.byFilename.find().then(t => console.log(t));
+        this.location.subscribe(t => console.log("location changed", { location: t }));
+
         let nameof2 = Name.of<File>();
-
-
 
         //this.route.url.subscribe(t => console.log("URL SUBSCRIBE", t));
         //this.route.params.subscribe(t => console.log("PARAMS SUBSCRIBE", t));
@@ -82,7 +83,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         $(window).resize(e => this.recalcHeight());
         this.recalcHeight();
         console.log("baseDbGetAll");
-        this.Service.db.byFilename.find().then(list => {
+        this.Service.db.byFilename.invoke(t => t.find()).then(list => {
             this.baseDbBuckets = list;
             this.migrateDbIfNeeded();
             this.onReady();
@@ -95,45 +96,16 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.UpdateClock();
 
         this.Req = {};
-        this.DefaultReq = {
-            FolderSize: false,
-            HideFiles: false,
-            HideFolders: false,
-            ImageListColumns: null,
-            ImageListRows: null,
-            IsRecursive: false,
-            KeepView: false,
-            foldersFirst: false,
-            ByInnerSelection: false,
-            NoCache: false,
-            Path: "",
-            SearchPattern: "",
-            ShowHiddenFiles: false,
-            Skip: null,
-            Sort: null,
-            Take: null,
-            View: null,
-            sortByDesc: false,
-        };
         $(this.Win).keydown(e => this.Win_keydown(e.originalEvent as KeyboardEvent));
         $(this.Win).on('keyup keydown', e => { this.isShiftDown = e.shiftKey });
 
         this.Win.addEventListener("mousedown", e => this.toggleDropDown(e));
-        //{
-        //    if (e.defaultPrevented)
-        //        return;
-        //    let el = $(e.target);
-        //    if (el.closest(".dropdown.show").length > 0)
-        //        return;
-        //    $(".dropdown.show").removeClass("show");
-        //});
-
         this.route.queryParams.subscribe(t => this.onUrlChanged(t));
 
     }
 
 
-    onUrlChanged(req: SiteRequest) {
+    onUrlChanged(req: ListFilesRequest) {
         console.log("onUrlChanged", req);
         //this.urlSnapshot = url;
         //console.log("onUrlChanged", "/" + url.join("/"));
@@ -145,6 +117,16 @@ export class BrowserComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         console.log("ngOnChanges", changes);
     }
+
+    //ngAfterContentChecked(): void {
+    //    console.log("ngAfterContentChecked", this.Req);
+    //}
+    //ngAfterViewChecked(): void {
+    //    console.log("ngAfterViewChecked", this.Req);
+    //}
+    //ngDoCheck(): void {
+    //    console.log("ngDoCheck", this.Req);
+    //}
 
     recalcHeight() {
         let headerEl = document.querySelector("header");
@@ -245,17 +227,10 @@ export class BrowserComponent implements OnInit, OnChanges {
         }
         this.filesView.activeSort = active;
         console.log("sort", this.filesView.dumpActiveSort());
-        //this.filesView.refresh();
-        //let keepKeys = ["hasInnerSelection", "type"];
-        //if (key == "type")
-        //    keepKeys.remove("type");
-        //let view = this.filesView;
-        //this.filesView.orderBy(key, keepKeys);
     }
 
     setTheme(theme: string, remember: boolean = true) {
-        //TODO:
-        //less.modifyVars({ theme });
+        //TODO: less.modifyVars({ theme });
         if (!remember)
             return;
         localStorage.setItem("theme", theme);
@@ -312,36 +287,18 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     LoadReq(): void {
-        this.Req = {};
-        QueryString.parse(null, this.Req, this.DefaultReq);
-        var req: any = this.Req;
-        var defs: any = this.DefaultReq;
-        Object.keys(req).forEach(key => {
-            var value = req[key];
-            var def = defs[key];
-
-            if (typeof (def) == "boolean") {
-                if (value == "1")
-                    req[key] = true;
-                else if (value == "0")
-                    req[key] = false;
-                if (String.isNullOrEmpty(value))
-                    req[key] = def;
-            }
-            if (typeof (def) == "number" && String.isNullOrEmpty(value)) {
-                req[key] = parseFloat(value);
-            }
-        });
-        //var path = "/" + this.urlSnapshot.join("/");// decodeURI(window.location.pathname);
-        //TEMP path = this.Path_LinuxToWin(path);
-        //this.Req.Path = path;
+        let x = { p: null };
+        QueryString.parse(null, x, null);
+        let req = x.p != null && x.p != "" ? JSON.parse(x.p) : {};
+        this.Req = req;
         this.onPathChanged();
         console.info("LoadReq", this.Req);
     }
 
+
     ListFiles(): Promise<any> {
         console.log("ListFiles");
-        return this.Service.ListFiles(this.Req).then(res => {
+        return this.Service.invoke(t => t.ListFiles(this.Req)).then(res => {
             if (res == null)
                 return; //TODO: handle errors
             this.Res = res;
@@ -362,8 +319,6 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     GotoFolder(file: File): void {
-        if (file == null || !file.IsFolder)
-            return;
         this.GotoPath(file.Path);
     }
 
@@ -427,30 +382,17 @@ export class BrowserComponent implements OnInit, OnChanges {
         return path;
     }
 
-    serializeReq(req: SiteRequest): string {
-        var state = Q.copy(this.Req);
-        var state2: any = state;
-        var defs: any = this.DefaultReq;
-        Object.keys(state2).forEach(key => {
-            var val = state2[key];
-            if (val == null || defs[key] == val) {
-                delete (state2[key]);
-                return;
-            }
-            if (val === true)
-                state2[key] = "1";
-            else if (val === false)
-                state2[key] = "0";
-        });
-        var q = QueryString.stringify(state);
-        if (String.isNotNullOrEmpty(q))
-            q = "?" + q;
+    serializeReq(req: ListFilesRequest): string {
+        let q = "?p=" + encodeURIComponent(JSON.stringify(this.Req));
         return q;
     }
     navigateToReq(): void {
         console.log("navigateToReq", this.Req);
         let url = this.serializeReq(this.Req);
-        this.router.navigateByUrl(url);
+        this.location.replaceState(url);
+        this.onUrlChanged(null);
+
+        //this.router.navigateByUrl(url);
     }
 
     GetDefaultFileComparer(): JsFunc2<File, File, number> {
@@ -513,14 +455,14 @@ export class BrowserComponent implements OnInit, OnChanges {
         var fileOrFolder = file.IsFolder ? "folder" : "file";
         if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
             return;
-        return this.Service.Delete({ Path: file.Path }).then(res => this.ListFiles());
+        return this.Service.invoke(t => t.Delete({ Path: file.Path })).then(res => this.ListFiles());
     }
 
     TrashAndRefresh(file: File): Promise<any> {
         if (file == null)
             return;
         var fileOrFolder = file.IsFolder ? "folder" : "file";
-        return this.Service.trash({ Path: file.Path }).then(res => this.ListFiles());
+        return this.Service.invoke(t => t.trash({ Path: file.Path })).then(res => this.ListFiles());
     }
 
     DeleteOrTrash(file: File): Promise<any> {
@@ -532,7 +474,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     Open(file: File): Promise<any> {
         if (file == null)
             return Promise.resolve();
-        if (file.IsFolder) {
+        if (file.IsFolder || file.type == "link") {
             this.GotoFolder(file);
             return Promise.resolve();
         }
@@ -553,11 +495,11 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     Execute(file: File): Promise<any> {
-        return this.Service.Execute({ Path: file.Path });
+        return this.Service.invoke(t => t.Execute({ Path: file.Path }));
     }
 
     Explore(file: File): Promise<any> {
-        return this.Service.Explore({ Path: file.Path });
+        return this.Service.invoke(t => t.Explore({ Path: file.Path }));
     }
 
     FormatFriendlyDate(value: string): string {
@@ -617,7 +559,6 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     GetFilenameForSearch(s: string): string {
-        //s = s.Replace(".", " ").Replace("-", " ");
         var tokens = s.split(/[ \.\-]/).select(t => t.toLowerCase());
         var ignoreWords = ["xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2"].selectToObject(t => t, t => true);
         var list: string[] = [];
@@ -649,40 +590,13 @@ export class BrowserComponent implements OnInit, OnChanges {
     getImdbInfo(file: File) {
         let info = parseTorrentName(file.Name);
         console.log(info);
-        this.Service.omdbGet({ name: info.title, year: info.year }).then(res2 => {
+        this.Service.invoke(t => t.omdbGet({ name: info.title, year: info.year })).then(res2 => {
             console.log(res2);
             if (res2.err != null)
                 return;
             this.imdb = res2.data;
             let res = res2.data;
-            //let el = $(".imdb");
-            //Object.keys(res).forEach(key => {
-            //    let el2 = el.find("." + key);
-            //    let value = res[key];
-            //    //if (key == "released")
-            //    //    value = value.substr(0, 10);
-            //    //else if (key == "series") {
-            //    //    value = "series";
-            //    //}
-            //    //else if (key == "poster") {
-            //    //    el2.find("img").attr("src", value);
-            //    //}
-            //    //else if (key == "imdburl") {
-            //    //    let a = el2.find("a").attr("href", value);
-            //    //    if (a.children().length == 0)
-            //    //        a.text(value);
-            //    //}
-            //    //else {
-            //    //    el2.text(value);
-            //    //}
-            //});
-            //el.show();
-            //el.find(".yourRating").text("NA");
-            this.getImdbRatings().then(list => {
-                this.yourRating = list.first(t => t.id == res.imdbid);
-                //if (yourRating != null)
-                //    el.find(".yourRating").text(yourRating.rating);
-            });
+            this.getImdbRatings().then(list => this.yourRating = list.first(t => t.id == res.imdbid));
         });
     }
 
@@ -706,8 +620,8 @@ export class BrowserComponent implements OnInit, OnChanges {
             return Promise.resolve(this.imdbRatings)
         let userId = this.getImdbUserId();
         if (userId == null || userId == "")
-            return Promise.resolve(null);
-        return this.Service.imdbRss({ path: `/user/${userId}/ratings` }).then(e => {
+            return Promise.resolve([]);
+        return this.Service.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
             let doc = $.parseXML(e);
             let items = $(doc).find("item").toArray();
             let items2 = items.map(item => {
@@ -728,10 +642,9 @@ export class BrowserComponent implements OnInit, OnChanges {
     onPathChanged() {
         this.imdb = null;
         this.tbPathText = this.Req.Path;
-        //$(".imdb").hide();
     }
 
-    DefaultReq: ListFilesRequest;
+    //DefaultReq: ListFilesRequest;
 
     GetSelection(folder: string): string {
         var filename = this.GetStorageItem(folder);
@@ -739,29 +652,18 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     SaveSelection(folderName: string, filename: string) {
-        this.SetStorageItem(folderName, filename);
+        this.SetBaseDbItem({ key: folderName, selectedFiles: filename == null ? null : [filename] });
     }
 
     GetStorageItem(key: string): string {
-        let x = this.baseDbBuckets.first(t => t.key == key);
+        let x = this.GetBaseDbItem(key);
         if (x == null || x.selectedFiles == null)
             return null;
         return x.selectedFiles[0];
     }
 
     SetStorageItem(key: string, value: string): void {
-        if (value == null) {
-            this.baseDbBuckets.removeAll(t => t.key == key);
-            this.Service.db.byFilename.removeById({ id: key });
-            return;
-        }
-        let x = this.baseDbBuckets.last(t => t.key == key);
-        if (x == null) {
-            x = { key: key, selectedFiles: null };
-            this.baseDbBuckets.push(x);
-        }
-        x.selectedFiles = [value];
-        this.Service.db.byFilename.persist(x);
+        return this.SetBaseDbItem({ key, selectedFiles: [value] });
     }
 
     GetBaseDbItem(key: string): ByFilename {
@@ -771,16 +673,16 @@ export class BrowserComponent implements OnInit, OnChanges {
         return x;
     }
 
-    //SetBaseDbItem(value: ByFilename): void {
-    //    if (value.selectedFiles == null || value.selectedFiles.length == 0) {
-    //        this.baseDbBuckets.removeAll(t => t.key == value.key);
-    //        this.Service.db.byFilename.removeById({ id: value.key });
-    //        return;
-    //    }
-    //    this.baseDbBuckets.removeAll(t => t.key == value.key);
-    //    this.baseDbBuckets.push(value);
-    //    this.Service.db.byFilename.persist(value);
-    //}
+    SetBaseDbItem(value: ByFilename): void {
+        if (value.selectedFiles == null || value.selectedFiles.length == 0) {
+            this.baseDbBuckets.removeAll(t => t.key == value.key);
+            this.Service.db.byFilename.invoke(t => t.removeById({ id: value.key }));
+            return;
+        }
+        this.baseDbBuckets.removeAll(t => t.key == value.key);
+        this.baseDbBuckets.push(value);
+        this.Service.db.byFilename.invoke(t => t.persist(value));
+    }
 
     getHeaderClass(prop: string) {
         if (this.filesView.isOrderedBy(prop, false))
@@ -805,3 +707,51 @@ export interface ImdbRssItem {
     rating: number;
     title: string;
 }
+
+    //LoadReq2(): void {
+    //    this.Req = {};
+    //    QueryString.parse(null, this.Req, this.DefaultReq);
+    //    var req: any = this.Req;
+    //    var defs: any = this.DefaultReq;
+    //    Object.keys(req).forEach(key => {
+    //        var value = req[key];
+    //        var def = defs[key];
+
+    //        if (typeof (def) == "boolean") {
+    //            if (value == "1")
+    //                req[key] = true;
+    //            else if (value == "0")
+    //                req[key] = false;
+    //            if (String.isNullOrEmpty(value))
+    //                req[key] = def;
+    //        }
+    //        if (typeof (def) == "number" && String.isNullOrEmpty(value)) {
+    //            req[key] = parseFloat(value);
+    //        }
+    //    });
+    //    //var path = "/" + this.urlSnapshot.join("/");// decodeURI(window.location.pathname);
+    //    //TEMP path = this.Path_LinuxToWin(path);
+    //    //this.Req.Path = path;
+    //    this.onPathChanged();
+    //    console.info("LoadReq", this.Req);
+    //}
+    //serializeReq2(req: SiteRequest): string {
+    //    var state = Q.copy(this.Req);
+    //    var state2: any = state;
+    //    var defs: any = this.DefaultReq;
+    //    Object.keys(state2).forEach(key => {
+    //        var val = state2[key];
+    //        if (val == null || defs[key] == val) {
+    //            delete (state2[key]);
+    //            return;
+    //        }
+    //        if (val === true)
+    //            state2[key] = "1";
+    //        else if (val === false)
+    //            state2[key] = "0";
+    //    });
+    //    var q = QueryString.stringify(state);
+    //    if (String.isNotNullOrEmpty(q))
+    //        q = "?" + q;
+    //    return q;
+    //}

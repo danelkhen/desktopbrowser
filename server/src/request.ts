@@ -1,4 +1,4 @@
-﻿import { File, FileRelativesInfo, SiteRequest, SortRequest as SortRequestContract, SortColumn as SortColumnContract } from "contracts"
+﻿import { File, FileRelativesInfo, ListFilesRequest, SortRequest as SortRequestContract, SortColumn as SortColumnContract } from "contracts"
 import * as express from "express";
 import {Parse} from "./utils/parse"
 
@@ -191,14 +191,6 @@ import {Parse} from "./utils/parse"
 //}
 
 
-export interface ListFilesRequest extends SiteRequest {
-}
-
-export interface ListFilesResponse {
-    File: File;
-    Files: File[];
-    Relatives: FileRelativesInfo;
-}
 
 
 

@@ -59,10 +59,12 @@ export class FileSystemInfo {
         }
         catch (e) {
         }
+        if (this.Name == null || this.Name == "")
+            this.Name = this.path; //console.log(path2, this);
     }
-    stats:fs.Stats;
+    stats: fs.Stats;
     path: string;
-    isLink:boolean;
+    isLink: boolean;
     isFile: boolean;
     isDir: boolean;
     Name: string;
@@ -123,7 +125,7 @@ export class DriveInfo extends FileSystemInfo {
         });
     }
     IsReady: boolean;
-    AvailableFreeSpace: number|string; /*in mac a string returns */
+    AvailableFreeSpace: number | string; /*in mac a string returns */
     Capacity: number;
 
 }

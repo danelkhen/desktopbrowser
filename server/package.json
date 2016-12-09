@@ -6,6 +6,7 @@
   "author": "Dan-el Khen",
   "license": "MIT",
   "dependencies": {
+    "@types/request-promise-native": "^1.0.2",
     "body-parser": "^1.15.2",
     "dirty": "^1.1.0",
     "diskinfo": "0.0.3",
@@ -13,6 +14,8 @@
     "imdb-api": "^2.2.0",
     "ref": "^1.3.3",
     "reflect-metadata": "^0.1.8",
+    "request-promise": "^4.1.1",
+    "request-promise-native": "^1.0.3",
     "rimraf": "^2.5.4",
     "sqlite3": "^3.1.8",
     "trash": "^4.0.0",

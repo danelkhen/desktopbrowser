@@ -1,11 +1,11 @@
-﻿import { ListFilesRequest, ListFilesResponse, SiteRequest, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable } from "contracts"
+﻿import { ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilenameService as ByFilenameServiceContract, SiteService as SiteServiceContract, OmdbGetResponse, Movie } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import { HttpContext } from "./utils/http-context"
 import * as child_process from "child_process"
-import { getReq as omdbGetReq, Movie, MovieRequest } from 'imdb-api';
+import * as omdb from 'imdb-api';
 import XMLHttpRequest = require('xhr2');
 import * as rimraf from "rimraf";
 import * as trash from 'trash';
@@ -13,35 +13,57 @@ import * as path from "path";
 import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
 import { Db, ByFilename } from "./db2";
-import { FindOptions } from "typeorm"
+import { FindOptions, Repository } from "typeorm"
 
-export class ByFilenameService {
-    init() {
-        this.db = new Db();
-        return this.db.init();
-    }
+
+export class DbService<T> implements DbServiceContract<T> {
     db: Db;
-    findOneById(req: { id: any, options?: FindOptions }): Promise<ByFilename | undefined> {
-        return this.db.byFilename.findOneById(req.id, req.options);
+    repo: Repository<T>;
+    findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> {
+        return this.repo.findOneById(req.id, req.options);
     }
-    find(): Promise<ByFilename[]> {
-        return this.db.byFilename.find();
+    find(): Promise<T[]> {
+        return this.repo.find();
     }
-    persist(x: ByFilename): Promise<ByFilename> {
-        return this.db.byFilename.persist(x);
+    getIdPropName() {
+        let md = this.db.connection.getMetadata(this.repo.target);
+        return md.primaryColumn.propertyName;
     }
-    removeById(req: { id: any }): Promise<ByFilename> {
-        return this.db.byFilename.findOneById(req.id).then(x => {
+    persist(obj: T): Promise<T> {
+        let id = obj[this.getIdPropName()];
+        if (id != null) {
+            return this.repo.findOneById(id).then(obj2 => {
+                if (obj2 == null)
+                    return this.repo.persist(obj);
+                let final = this.repo.merge(obj2, obj);
+                return this.repo.persist(final);
+            });
+        }
+        return this.repo.persist(obj);
+    }
+
+    removeById(req: { id: any }): Promise<T> {
+        return this.repo.findOneById(req.id).then(x => {
             if (x == null)
                 return null;
-            this.db.byFilename.remove(x);
+            this.repo.remove(x);
             return x;
         });
     }
-
 }
-export class SiteService {
-    init() {
+
+export class ByFilenameService extends DbService<ByFilename> {
+    init(): Promise<any> {
+        console.log("ByFilenameService init");
+        this.db = new Db();
+        return this.db.init().then(() => this.repo = this.db.byFilename);
+    }
+}
+
+
+export class SiteService implements SiteServiceContract {
+    init(): Promise<any> {
+        console.log("SiteService init");
         this.byFilename = new ByFilenameService();
         return this.byFilename.init();
     }
@@ -62,14 +84,17 @@ export class SiteService {
                 return this.byFilename.db.byFilename.findOneById(item.key).then(x => {
                     if (x != null)
                         return;
+                    x = new ByFilename();
+                    x.key = item.key;
                     x.selectedFiles = item.value.selectedFiles;
                     return this.byFilename.db.byFilename.persist(x).then(t => console.log(t));
                 });
             })).then(() => {
+                this.baseDb.db.close();
                 console.log("deleting file", this.baseDbFilename);
                 fs.unlinkSync(this.baseDbFilename);
-                if(fs.existsSync(this.baseDbFilename+".bak"))
-                    fs.unlinkSync(this.baseDbFilename+".bak");
+                if (fs.existsSync(this.baseDbFilename + ".bak"))
+                    fs.unlinkSync(this.baseDbFilename + ".bak");
                 console.log("deleting dir", path.dirname(this.baseDbFilename));
                 fs.unlinkSync(path.dirname(this.baseDbFilename));
             });
@@ -100,7 +125,7 @@ export class SiteService {
         return res;
     }
 
-    public GetFiles(req: SiteRequest): File[] {
+    public GetFiles(req: ListFilesRequest): File[] {
         if (req.HideFiles && req.HideFolders)
             return [];
         //else if (!req.MixFilesAndFolders && !req.HideFiles && !req.HideFolders && !req.IsRecursive) {
@@ -126,7 +151,7 @@ export class SiteService {
         return files;//TODO: new CachedEnumerable<File>(files);
     }
 
-    private ApplyPaging(files: IEnumerable<File>, req: SiteRequest): IEnumerable<File> {
+    private ApplyPaging(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File> {
         if (req.Skip != null)
             files = files.skip(req.Skip);
         if (req.Take != null)
@@ -155,7 +180,7 @@ export class SiteService {
         if (absPath.IsFile) {
             return this.ToFile(new FileSystemInfo(absPath.Value));
         }
-        else if (absPath.IsDirectory) {
+        else if (absPath.IsDirectory || absPath.IsRoot) {
             return this.ToFile(new FileSystemInfo(absPath.Value));
         }
         return null;
@@ -207,7 +232,7 @@ export class SiteService {
 
 
 
-    ApplyRequest(files: IEnumerable<File>, req: SiteRequest): IEnumerable<File> {
+    ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File> {
         var calculatedFolderSize = false;
         if (!req.ShowHiddenFiles)
             files = files.where(t => !t.IsHidden);
@@ -419,10 +444,13 @@ export class SiteService {
         this.cache = {};
     }
 
-    omdbGet(req: MovieRequest): Promise<Movie> {
-        return new Promise((resolve, reject) => {
-            omdbGetReq(req, (err, data) => {
-                resolve({ data, err });
+    omdbGet(req: omdb.MovieRequest): Promise<OmdbGetResponse> {
+        return new Promise<OmdbGetResponse>((resolve, reject) => {
+            omdb.getReq(req, (err, data) => {
+                let movie: Movie = data;
+                if (data != null) {
+                }
+                resolve({ data, err: err as any });
             });
         });
     }
@@ -441,26 +469,9 @@ export class SiteService {
         });
     }
 
-    //baseDbGet(req: { key: string }): BaseDbItem {
-    //    return this.db.byFilename.findOneById(req.key);
-    //}
-    //baseDbDelete(req: { key: string }): Promise<any> {
-    //    return this.db.delete(req.key);
-    //}
-    //baseDbGetAll(): Bucket<ByFilename>[] {
-    //    return this.db.getAll();
-    //}
-    //baseDbSet(req: ByFilename): Promise<any> {
-    //    return this.baseDb.set(req.key, req.value);
-    //}
-
-
 }
 
-export interface OmdbGetResponse {
-    data: Movie;
-    err: { meesage: string, name: string };
-}
+
 class Stopwatch {
     Start() { }
     Stop() { }
