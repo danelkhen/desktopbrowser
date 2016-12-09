@@ -222,7 +222,7 @@ export class SortRequest implements SortRequestContract {
         return req;
     }
     toString(): string {
-        return this.Columns.StringConcat(t => t.Descending ? t.Name + " d" : t.Name, "", ",", "");
+        return this.Columns.map(t => t.Descending ? t.Name + " d" : t.Name).join(",");
     }
 }
 

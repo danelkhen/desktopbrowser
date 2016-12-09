@@ -2,14 +2,14 @@ import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Inp
 import { Location } from '@angular/common';
 import { SiteServiceClient, } from "./service"
 import { Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
-import { Selection, SelectionChangedEventArgs } from "./selection"
+import { Selection, SelectionChangedEventArgs } from "./utils/selection"
 import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
-import { ArrayView } from "./array-view";
+import { ArrayView } from "./utils/array-view";
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from "rxjs"
 import 'rxjs/add/operator/map';
-import { Name, NameFunc, nameof } from "./utils"
+import { Name, NameFunc, nameof } from "./utils/utils"
 
 
 

@@ -1,11 +1,6 @@
 interface StringConstructor {
     isNullOrEmpty(s: string): boolean;
     isNotNullOrEmpty(s: string): boolean;
-    //Format(format: string, ...args: any[]): string;
-}
-
-interface Array<T> {
-    StringConcat(selector: (obj: T) => any, prefix: string, separator: string, suffix: string): string;
 }
 
 interface String {
@@ -27,14 +22,6 @@ String.prototype.removeLast = function (x?: number): string {
     return s.substr(0, s.length - x);
 
 }
-
-
-enum Cache {
-    NoSlidingExpiration,
-}
-
-
-
 
 
 

@@ -1,27 +1,10 @@
-﻿import {  OmdbGetResponse, Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilenameService as ByFilenameServiceContract, SiteService as SiteServiceContract } from "contracts"
-//import { Movie, MovieRequest } from 'imdb-api';
+﻿import { Proxy, ProxyCall } from "./utils/proxy"
+import { OmdbGetResponse, Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilenameService as ByFilenameServiceContract, SiteService as SiteServiceContract } from "contracts"
 
-export class ServiceBase<T> {
+export class ServiceBase<T> extends Proxy<T> {
     Url: string;
-    extractInstanceFunctionCall(func: Function): { name: string, args: any[] } {
-        let code = func.toString();
-        let index = code.indexOf(".");
-        let index2 = code.indexOf("(", index);
-        let funcName = code.substring(index + 1, index2);
-        let fake: any = {};
-        let args;
-        fake[funcName] = function () {
-            args = Array.from(arguments);
-        };
-        func(fake);
-        if (args == null)
-            args = [];
-        return { name: funcName, args };
-    }
-
-    invoke<R>(action: (obj: T) => R | Promise<R>): Promise<R> {
-        let info = this.extractInstanceFunctionCall(action);
-        return this.Invoke(info.name, info.args[0]);
+    onInvoke<R>(pc: ProxyCall): Promise<R> {
+        return this.Invoke(pc.name, pc.args[0]);
     }
 
     isPrimitive(x: any): boolean {

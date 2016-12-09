@@ -1,6 +1,6 @@
 ﻿import { File } from "contracts"
 import { IoFile, IoDir, IoPath } from "./utils/io"
-import { HttpContext } from "./utils/http-context"
+import * as path from "path"
 
 export class SiteConfiguration {
     Filename: string;
@@ -11,7 +11,7 @@ export class SiteConfiguration {
         new XmlSerializer().SerializeToFile(this, filename);
     }
     static Load(): SiteConfiguration {
-        var file = HttpContext.Current.MapPath("~/SiteConfiguration.xml");
+        var file = path.join(__dirname, "../../config.json");
         if (!IoFile.Exists(file))
             return new SiteConfiguration();
         var config = new XmlSerializer().DeserializeFromFile<SiteConfiguration>(file);

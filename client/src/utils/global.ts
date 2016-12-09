@@ -145,7 +145,8 @@ Number.prototype.toFriendlyNumber = function (): string {
 //}
 
 
-
-
+interface LessStatic {
+    modifyVars(obj:any);
+}
 
 
