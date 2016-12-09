@@ -1,6 +1,7 @@
 ﻿import * as path from "path"
 import * as fs from "fs"
 import { getDrives, DiskInfoItem } from "diskinfo"
+import { IEnumerable } from "contracts"
 
 
 export class IoDir {

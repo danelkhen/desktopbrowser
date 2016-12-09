@@ -1,4 +1,4 @@
-﻿import { File } from "./model"
+﻿import { File } from "contracts"
 import { IoFile, IoDir, IoPath } from "./utils/io"
 import { HttpContext } from "./utils/http-context"
 

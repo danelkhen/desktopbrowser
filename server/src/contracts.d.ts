@@ -80,7 +80,7 @@ declare module "contracts" {
         HideFolders?: boolean;
         HideFiles?: boolean;
         Path?: string;
-        //Sort?: SortRequest;
+        Sort?: SortRequest;
         MixFilesAndFolders?: boolean;
         ShowHiddenFiles?: boolean;
         NoCache?: boolean;
@@ -179,6 +179,24 @@ declare module "contracts" {
     interface CachedIEnumerable<T> extends IEnumerable<T> {
     }
 
+    export interface SortRequest {
+        Columns: SortColumn[];
+    }
 
+
+    export interface SortColumn {
+        Name: string;
+        Descending?: boolean;
+    }
+
+
+    export interface ListFilesRequest extends SiteRequest {
+    }
+
+    export interface ListFilesResponse {
+        File: File;
+        Files: File[];
+        Relatives: FileRelativesInfo;
+    }
 
 }

@@ -1,5 +1,4 @@
-﻿import { File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable } from "contracts"
-import { SiteRequest, ListFilesRequest, ListFilesResponse } from "./request"
+﻿import { ListFilesRequest, ListFilesResponse, SiteRequest, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
