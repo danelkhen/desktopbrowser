@@ -151,10 +151,10 @@ export class SiteService implements SiteServiceContract {
     }
 
     private ApplyPaging(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File> {
-        if (req.Skip != null)
-            files = files.skip(req.Skip);
-        if (req.Take != null)
-            files = files.take(req.Take + 1);
+        if (req.skip != null)
+            files = files.skip(req.skip);
+        if (req.take != null)
+            files = files.take(req.take + 1);
         return files;
     }
 

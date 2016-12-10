@@ -39,14 +39,14 @@ export class ServiceBase<T> extends Proxy<T> {
 export class ByFilenameService extends ServiceBase<ByFilenameServiceContract> {
     constructor() {
         super();
-        this.Url = "/api/service.byFilename";
+        this.Url = "/api/byFilename";
     }
 
 }
 export class SiteServiceClient extends ServiceBase<SiteServiceContract> {
     constructor() {
         super();
-        this.Url = "/api/service";
+        this.Url = "/api/fs";
         this.db = { byFilename: new ByFilenameService() };
     }
     db: { byFilename: ByFilenameService };

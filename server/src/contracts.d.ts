@@ -53,20 +53,22 @@
         HideFiles?: boolean;
         Path?: string;
         Sort?: SortRequest;
-        MixFilesAndFolders?: boolean;
         ShowHiddenFiles?: boolean;
         NoCache?: boolean;
         View?: string;
         /** Number of columns in ImageListView mode */
-        ImageListColumns?: number;
+        //ImageListColumns?: number;
         /** Number of rows in ImageListView mode */
-        ImageListRows?: number;
-        KeepView?: boolean;
+        //ImageListRows?: number;
         /** How many items to skip, null means no skipping */
-        Skip?: number;
+        skip?: number;
         /** How many items to take after skipping, null means all of them */
-        Take?: number;
+        take?: number;
     }
+    export interface ListFilesRequest2 extends ListFilesRequest {
+        KeepView?: boolean;
+    }
+
 
     export interface ListFilesResponse {
         File: File;
@@ -128,7 +130,7 @@
         OrderByDescending?(sel): IOrderedEnumerable<T>;
         OrderBy?(sel): IOrderedEnumerable<T>;
     }
-    
+
     interface IOrderedEnumerable<T> extends IEnumerable<T> {
         ThenByDescending?(sel): IOrderedEnumerable<T>;
         ThenBy?(sel): IOrderedEnumerable<T>;

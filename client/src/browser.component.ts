@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input, OnDestroy, AfterContentChecked, AfterViewChecked, DoCheck } from '@angular/core';
 import { Location } from '@angular/common';
 import { SiteServiceClient, } from "./service"
-import { Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
+import { Movie, MovieRequest, ListFilesRequest2, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
 import { Selection, SelectionChangedEventArgs } from "./utils/selection"
 import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
@@ -31,7 +31,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     clockText: string = "";
     search: string;
     @Input()
-    Req: ListFilesRequest;
+    Req: ListFilesRequest2;
     Win: Window;
     imdbRatings: ImdbRssItem[];
     imdb: Movie;
@@ -105,7 +105,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
 
-    onUrlChanged(req: ListFilesRequest) {
+    onUrlChanged(req: ListFilesRequest2) {
         console.log("onUrlChanged", req);
         //this.urlSnapshot = url;
         //console.log("onUrlChanged", "/" + url.join("/"));
@@ -382,7 +382,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         return path;
     }
 
-    serializeReq(req: ListFilesRequest): string {
+    serializeReq(req: ListFilesRequest2): string {
         let q = "?p=" + encodeURIComponent(JSON.stringify(this.Req));
         return q;
     }

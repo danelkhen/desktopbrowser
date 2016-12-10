@@ -17,11 +17,10 @@ export class Server {
     app: express.Application;
     root: string;
     nodeModulesDir: string;
-    //services: {
-    //    fs:SiteService,
-    //    byFilename:ByFilenameService,
-
-    //};
+    services: {
+        fs: SiteService,
+        byFilename: ByFilenameService,
+    };
 
 
     init(): Promise<any> {
@@ -37,6 +36,10 @@ export class Server {
             .then(() => DriveInfo.GetDrives3());
     }
     initServer() {
+        this.services = {
+            fs: this._service,
+            byFilename: this._service.byFilename,
+        };
         this.app = express();
         this.app.use(bodyParser.json());
         console.log({ root: this.root, nodeModulesDir: this.nodeModulesDir, baseName: path.basename(this.nodeModulesDir) });
@@ -65,16 +68,16 @@ export class Server {
     }
 
     handleServiceRequest: RequestHandler = (req, res, next) => {
-        let service = null;
         let serviceName = req.params["service"];
         let action = req.params["action"];
-        console.log("service[action]", serviceName, action);
-        if (serviceName == "service")
-            service = this._service;
-        else if (serviceName == "service.byFilename")
-            service = this._service.byFilename;
+        let service = this.services[serviceName];
+        //console.log("service[action]", serviceName, action);
+        //if (serviceName == "service")
+        //    service = this._service;
+        //else if (serviceName == "service.byFilename")
+        //    service = this._service.byFilename;
         if (service == null)
-            console.error("service is null", serviceName);
+            console.error("No such service by that name:", serviceName);
         //console.log("service[action]", service, action, service[action]);
 
         let arg = req.method == "POST" ? (req as any).body : req.query;
