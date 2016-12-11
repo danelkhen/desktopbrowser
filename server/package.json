@@ -6,6 +6,7 @@
   "author": "Dan-el Khen",
   "license": "MIT",
   "dependencies": {
+    "@types/core-js": "^0.9.35",
     "@types/request-promise-native": "^1.0.2",
     "body-parser": "^1.15.2",
     "dirty": "^1.1.0",
