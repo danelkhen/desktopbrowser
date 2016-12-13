@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input, OnDestroy, AfterContentChecked, AfterViewChecked, DoCheck } from '@angular/core';
 import { Location } from '@angular/common';
 import { SiteServiceClient, } from "./service"
-import { Movie, MovieRequest, ListFilesRequest2, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
+import { Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
 import { Selection, SelectionChangedEventArgs } from "./utils/selection"
 import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from "rxjs"
 import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
-
+import { FilenameParser } from "./filename-parser"
 
 
 @Component({
@@ -31,7 +31,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     clockText: string = "";
     search: string;
     @Input()
-    Req: ListFilesRequest2;
+    Req: ListFilesRequest;
     Win: Window;
     imdbRatings: ImdbRssItem[];
     imdb: Movie;
@@ -50,6 +50,8 @@ export class BrowserComponent implements OnInit, OnChanges {
     EXTENSION = nameof<File>(t => t.Extension);
     HAS_INNER_SELECTION = nameof<this>(t => t.hasInnerSelection);
 
+    columns: string[] = [this.TYPE, this.NAME, this.MODIFIED, this.SIZE, this.EXTENSION];
+
     constructor(private route: ActivatedRoute, private router: Router, private location: Location) {
         console.log("location", this.location);
 
@@ -61,6 +63,8 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.filesView = new ArrayView<File>(() => this.Res.Files);
         this.filesView.pageSize = 200;
         window["_browser"] = this;
+        var x = new FilenameParser();
+        window["filenameParser"] = x;
     }
 
     ngOnInit(): void {
@@ -105,7 +109,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
 
-    onUrlChanged(req: ListFilesRequest2) {
+    onUrlChanged(req: ListFilesRequest) {
         console.log("onUrlChanged", req);
         //this.urlSnapshot = url;
         //console.log("onUrlChanged", "/" + url.join("/"));
@@ -382,7 +386,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         return path;
     }
 
-    serializeReq(req: ListFilesRequest2): string {
+    serializeReq(req: ListFilesRequest): string {
         let q = "?p=" + encodeURIComponent(JSON.stringify(this.Req));
         return q;
     }
@@ -430,6 +434,8 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     onFilesChanged(): void {
+        this.Res.Files.forEach(t=>t.parsed = new FilenameParser().parse(t.Name));
+        console.log(this.Res.Files.map(t=>t.parsed));
         this.applySort();
         this.filesView.refresh();
         this.FileSelection.AllItems = this.filesView.target;
@@ -439,6 +445,7 @@ export class BrowserComponent implements OnInit, OnChanges {
             var files = this.FileSelection.AllItems.where(t => t.Name == selectedFileName);
             this.FileSelection.SetSelection(files);
         }
+        this.recalcHeight();
     }
 
     FileSelection_Changed(e: SelectionChangedEventArgs<File>): void {
