@@ -294,4 +294,14 @@
         selectedFiles?: string[];
     }
 
+    export interface FilenameParsedInfo {
+        name: string;
+        season: number;
+        episode: number;
+        year: number;
+        tags: string[];
+        filename: string;
+    }
+
+
 }

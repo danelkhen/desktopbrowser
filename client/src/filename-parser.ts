@@ -1,9 +1,11 @@
+import {FilenameParsedInfo} from "contracts";
+
 export class FilenameParser {
     parse(name: string): FilenameParsedInfo {
         if (name == null || name == "")
             return null;
         let x: FilenameParsedInfo = { episode: null, name: null, season: null, tags: [], year: null, filename: name };
-        let tokens = name.split('.');
+        let tokens = name.split(/[\. ]/);
         if (tokens.length == 1)
             return x;
         let tokens2 = tokens.map(token => this.parseToken(token));
@@ -77,11 +79,3 @@ export interface Token {
     value: any;
 }
 
-export interface FilenameParsedInfo {
-    name: string;
-    season: number;
-    episode: number;
-    year: number;
-    tags: string[];
-    filename: string;
-}
