@@ -56,7 +56,7 @@ export class Server {
 
         this.app.use('/api/:service/:action', this.handleServiceRequest.bind(this));
 
-        this.app.get('/', (req: express.Request, res: express.Response) => {
+        this.app.get(['/', '/media'], (req: express.Request, res: express.Response) => {
             res.sendFile('index.html', { root: this.root });
         });
     }

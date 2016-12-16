@@ -1,0 +1,5 @@
+<div *ngFor="let movie of movies">
+    <span>{{movie.title}}</span>
+    <img src="{{getImageUrl(movie, 'poster_path')}}" />
+    <img src="{{getImageUrl(movie, 'backdrop_path')}}" />
+</div>

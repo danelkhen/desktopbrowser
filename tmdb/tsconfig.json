@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "target": "es5",
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "outDir": "out",
+        "newLine": "LF",
+        "declaration": true,
+        "outFile": "out/out.js",
+        "rootDir": "src"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -1,0 +1,41 @@
+header {
+    position: fixed;
+    width: 100%;
+    background-color: #222;
+}
+
+.fixed-placeholder {
+    height: 80px;
+}
+
+.grdFiles > table {
+    width: 100%;
+}
+
+.grid-header th {
+    font-weight: normal;
+    text-align: left;
+}
+
+.grdFiles tr > .type {
+    width: 35px;
+    text-overflow:clip;
+}
+
+
+.grdFiles tr > .Modified {
+    width: 150px;
+}
+
+.grdFiles tr > .Size {
+    width: 150px;
+}
+
+.grdFiles tr > .Extension {
+    width: 150px;
+}
+
+
+.dropdown .menu button{
+    display:block;
+}
