@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "system",
+        "module": "commonjs",
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
@@ -10,8 +10,6 @@
         "sourceMap": false,
         "outDir": "out",
         "newLine": "LF",
-        "declaration": true,
-        "outFile": "out/out.js",
         "rootDir": "src"
     },
     "exclude": [

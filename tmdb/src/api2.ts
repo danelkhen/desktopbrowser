@@ -1,7 +1,3 @@
-import { Http, Headers, RequestOptionsArgs, Response, URLSearchParams } from '@angular/http';
-import { Injectable, Optional } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/Rx';
 import {
     InlineResponse2001,
     InlineResponse20010,
@@ -57,7 +53,7 @@ import {
 
 export interface TmdbApi {
     basePath: string;
-    defaultHeaders: Headers;
+    //defaultHeaders: Headers;
     apiKey: string;
     /**
      Delete Rating
@@ -68,7 +64,7 @@ export interface TmdbApi {
      @param guestSessionId 
      @param sessionId 
     */
-    deleteMovieMovieIdRating(movieId: number, guestSessionId?: string, sessionId?: string): Observable<DeleteMovieMovieIdRatingResponse>
+    deleteMovieMovieIdRating(movieId: number, guestSessionId?: string, sessionId?: string): Promise<DeleteMovieMovieIdRatingResponse>
     //'/movie/{movie_id}/rating'
     /**
      Delete Rating
@@ -79,7 +75,7 @@ export interface TmdbApi {
      @param guestSessionId 
      @param sessionId 
     */
-    deleteTvTvIdRating(tvId: number, guestSessionId?: string, sessionId?: string): Observable<DeleteMovieMovieIdRatingResponse>
+    deleteTvTvIdRating(tvId: number, guestSessionId?: string, sessionId?: string): Promise<DeleteMovieMovieIdRatingResponse>
     //'/tv/{tv_id}/rating'
     /**
      Delete Rating
@@ -92,7 +88,7 @@ export interface TmdbApi {
      @param guestSessionId 
      @param sessionId 
     */
-    deleteTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberRating(tvId: number, seasonNumber: number, episodeNumber: number, guestSessionId?: string, sessionId?: string): Observable<DeleteMovieMovieIdRatingResponse>
+    deleteTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberRating(tvId: number, seasonNumber: number, episodeNumber: number, guestSessionId?: string, sessionId?: string): Promise<DeleteMovieMovieIdRatingResponse>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating'
     /**
      Get Details
@@ -100,7 +96,7 @@ export interface TmdbApi {
      @param apiKey 
      @param sessionId 
     */
-    getAccount(sessionId: string): Observable<GetAccountResponse>
+    getAccount(sessionId: string): Promise<GetAccountResponse>
     //'/account';
     /**
      Get Favorite Movies
@@ -111,7 +107,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdFavoriteMovies(accountId: number, sessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getAccountAccountIdFavoriteMovies(accountId: number, sessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/account/{account_id}/favorite/movies'
     /**
      Get Favorite TV Shows
@@ -122,7 +118,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdFavoriteTv(accountId: number, sessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getAccountAccountIdFavoriteTv(accountId: number, sessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/account/{account_id}/favorite/tv'
     /**
      Get Created Lists
@@ -132,7 +128,7 @@ export interface TmdbApi {
      @param sessionId 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getAccountAccountIdLists(accountId: number, sessionId: string, language?: string): Observable<InlineResponse2001>
+    getAccountAccountIdLists(accountId: number, sessionId: string, language?: string): Promise<InlineResponse2001>
     //'/account/{account_id}/lists'
     /**
      Get Rated Movies
@@ -143,7 +139,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdRatedMovies(accountId: number, sessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getAccountAccountIdRatedMovies(accountId: number, sessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/account/{account_id}/rated/movies'
     /**
      Get Rated TV Shows
@@ -154,7 +150,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdRatedTv(accountId: number, sessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getAccountAccountIdRatedTv(accountId: number, sessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/account/{account_id}/rated/tv'
     /**
      Get Rated TV Episodes
@@ -165,7 +161,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdRatedTvEpisodes(accountId: string, sessionId: string, language?: string, sortBy?: string): Observable<InlineResponse2002>
+    getAccountAccountIdRatedTvEpisodes(accountId: string, sessionId: string, language?: string, sortBy?: string): Promise<InlineResponse2002>
     //'/account/{account_id}/rated/tv/episodes'
     /**
      Get Movie Watchlist
@@ -176,7 +172,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdWatchlistMovies(accountId: number, sessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getAccountAccountIdWatchlistMovies(accountId: number, sessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/account/{account_id}/watchlist/movies'
     /**
      Get TV Show Watchlist
@@ -187,14 +183,14 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getAccountAccountIdWatchlistTv(accountId: number, sessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getAccountAccountIdWatchlistTv(accountId: number, sessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/account/{account_id}/watchlist/tv'
     /**
      Create Guest Session
      This method will let you create a new guest session. Guest sessions are a type of session that will let a user rate movies and TV shows but not require them to have a TMDb user account. More information about user authentication can be found &lt;a href&#x3D;\&quot;/3/authentication/how-do-i-generate-a-session-id\&quot; class&#x3D;\&quot;undefined\&quot;&gt;here&lt;/a&gt;.Please note, you should only generate a single guest session per user (or device) as you will be able to attach the ratings to a TMDb user account in the future. There is also IP limits in place so you should always make sure it&#39;s the end user doing the guest session actions.If a guest session is not used for the first time within 24 hours, it will be automatically deleted.
      @param apiKey 
     */
-    getAuthenticationGuestSessionNew(extraHttpRequestParams?: any): Observable<InlineResponse2003>
+    getAuthenticationGuestSessionNew(extraHttpRequestParams?: any): Promise<InlineResponse2003>
     //'/authentication/guest_session/new';
     /**
      Create Session
@@ -202,14 +198,14 @@ export interface TmdbApi {
      @param apiKey 
      @param requestToken 
     */
-    getAuthenticationSessionNew(requestToken: string): Observable<InlineResponse2004>
+    getAuthenticationSessionNew(requestToken: string): Promise<InlineResponse2004>
     //'/authentication/session/new';
     /**
      Create Request Token
      Create a temporary request token that can be used to validate a TMDb user login. More details about how this works can be found &lt;a href&#x3D;\&quot;/3/authentication/how-do-i-generate-a-session-id\&quot; class&#x3D;\&quot;undefined\&quot;&gt;here&lt;/a&gt;.
      @param apiKey 
     */
-    getAuthenticationTokenNew(extraHttpRequestParams?: any): Observable<InlineResponse2005>
+    getAuthenticationTokenNew(extraHttpRequestParams?: any): Promise<InlineResponse2005>
     //'/authentication/token/new';
     /**
      Validate Request Token
@@ -219,21 +215,21 @@ export interface TmdbApi {
      @param password 
      @param requestToken 
     */
-    getAuthenticationTokenValidateWithLogin(username: string, password: string, requestToken: string): Observable<InlineResponse2006>
+    getAuthenticationTokenValidateWithLogin(username: string, password: string, requestToken: string): Promise<InlineResponse2006>
     //'/authentication/token/validate_with_login';
     /**
      Get Movie Certifications
      Get an up to date list of the officially supported movie certifications on TMDb.
      @param apiKey 
     */
-    getCertificationMovieList(extraHttpRequestParams?: any): Observable<InlineResponse2007>
+    getCertificationMovieList(extraHttpRequestParams?: any): Promise<InlineResponse2007>
     //'/certification/movie/list';
     /**
      Get TV Certifications
      Get an up to date list of the officially supported TV show certifications on TMDb.
      @param apiKey 
     */
-    getCertificationTvList(extraHttpRequestParams?: any): Observable<InlineResponse2008>
+    getCertificationTvList(extraHttpRequestParams?: any): Promise<InlineResponse2008>
     //'/certification/tv/list';
     /**
      Get Details
@@ -242,7 +238,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getCollectionCollectionId(collectionId: number, language?: string): Observable<InlineResponse2009>
+    getCollectionCollectionId(collectionId: number, language?: string): Promise<InlineResponse2009>
     //'/collection/{collection_id}'
     /**
      Get Images
@@ -251,7 +247,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getCollectionCollectionIdImages(collectionId: number, language?: string): Observable<InlineResponse20010>
+    getCollectionCollectionIdImages(collectionId: number, language?: string): Promise<InlineResponse20010>
     //'/collection/{collection_id}/images'
     /**
      Get Details
@@ -259,7 +255,7 @@ export interface TmdbApi {
      @param companyId 
      @param apiKey 
     */
-    getCompanyCompanyId(companyId: number): Observable<InlineResponse20011>
+    getCompanyCompanyId(companyId: number): Promise<InlineResponse20011>
     //'/company/{company_id}'
     /**
      Get Movies
@@ -268,14 +264,14 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getCompanyCompanyIdMovies(companyId: number, language?: string): Observable<{}>
+    getCompanyCompanyIdMovies(companyId: number, language?: string): Promise<{}>
     //'/company/{company_id}/movies'
     /**
      Get API Configuration
      Get the system wide configuration information. Some elements of the API require some knowledge of this configuration data. The purpose of this is to try and keep the actual API responses as light as possible. It is recommended you cache this data within your application and check for updates every few days.This method currently holds the data relevant to building image URLs as well as the change key map.To build an image URL, you will need 3 pieces of data. The &lt;code&gt;base_url&lt;/code&gt;, &lt;code&gt;size&lt;/code&gt; and &lt;code&gt;file_path&lt;/code&gt;. Simply combine them all and you will have a fully qualified URL. Here’s an example URL:&lt;pre&gt;&lt;code&gt;https://image.tmdb.org/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg &lt;/code&gt;&lt;/pre&gt; The configuration method also contains the list of change keys which can be useful if you are building an app that consumes data from the change feed.
      @param apiKey 
     */
-    getConfiguration(extraHttpRequestParams?: any): Observable<InlineResponse20012>
+    getConfiguration(extraHttpRequestParams?: any): Promise<InlineResponse20012>
     //'/configuration';
     /**
      Get Details
@@ -283,7 +279,7 @@ export interface TmdbApi {
      @param creditId 
      @param apiKey 
     */
-    getCreditCreditId(creditId: string): Observable<InlineResponse20013>
+    getCreditCreditId(creditId: string): Promise<InlineResponse20013>
     //'/credit/{credit_id}'
     /**
      Movie Discover
@@ -320,7 +316,7 @@ export interface TmdbApi {
      @param withReleaseType Specify a comma (AND) or pipe (OR) separated value to filter release types by. These release types map to the same values found on the movie release date method.
      @param withOriginalLanguage Specify an ISO 639-1 string to filter results by their original language value.
     */
-    getDiscoverMovie(language?: string, region?: string, sortBy?: string, certificationCountry?: string, certification?: string, certificationLte?: string, includeAdult?: boolean, includeVideo?: boolean, page?: number, primaryReleaseYear?: number, primaryReleaseDateGte?: Date, primaryReleaseDateLte?: Date, releaseDateGte?: Date, releaseDateLte?: Date, voteCountGte?: number, voteCountLte?: number, voteAverageGte?: number, voteAverageLte?: number, withCast?: string, withCrew?: string, withCompanies?: string, withGenres?: string, withKeywords?: string, withPeople?: string, year?: number, withoutGenres?: string, withRuntimeGte?: number, withRuntimeLte?: number, withReleaseType?: number, withOriginalLanguage?: string): Observable<{}>
+    getDiscoverMovie(language?: string, region?: string, sortBy?: string, certificationCountry?: string, certification?: string, certificationLte?: string, includeAdult?: boolean, includeVideo?: boolean, page?: number, primaryReleaseYear?: number, primaryReleaseDateGte?: Date, primaryReleaseDateLte?: Date, releaseDateGte?: Date, releaseDateLte?: Date, voteCountGte?: number, voteCountLte?: number, voteAverageGte?: number, voteAverageLte?: number, withCast?: string, withCrew?: string, withCompanies?: string, withGenres?: string, withKeywords?: string, withPeople?: string, year?: number, withoutGenres?: string, withRuntimeGte?: number, withRuntimeLte?: number, withReleaseType?: number, withOriginalLanguage?: string): Promise<{}>
     //'/discover/movie';
     /**
      TV Discover
@@ -345,7 +341,7 @@ export interface TmdbApi {
      @param includeNullFirstAirDates Use this filter to include TV shows that don&#39;t have an air date while using any of the \&quot;first_air_date\&quot; filters.
      @param withOriginalLanguage Specify an ISO 639-1 string to filter results by their original language value.
     */
-    getDiscoverTv(language?: string, sortBy?: string, airDateGte?: Date, airDateLte?: Date, firstAirDateGte?: Date, firstAirDateLte?: Date, firstAirDateYear?: number, page?: number, timezone?: string, voteAverageGte?: number, voteCountGte?: number, withGenres?: string, withNetworks?: string, withoutGenres?: string, withRuntimeGte?: number, withRuntimeLte?: number, includeNullFirstAirDates?: boolean, withOriginalLanguage?: string): Observable<{}>
+    getDiscoverTv(language?: string, sortBy?: string, airDateGte?: Date, airDateLte?: Date, firstAirDateGte?: Date, firstAirDateLte?: Date, firstAirDateYear?: number, page?: number, timezone?: string, voteAverageGte?: number, voteCountGte?: number, withGenres?: string, withNetworks?: string, withoutGenres?: string, withRuntimeGte?: number, withRuntimeLte?: number, includeNullFirstAirDates?: boolean, withOriginalLanguage?: string): Promise<{}>
     //'/discover/tv';
     /**
      Find by ID
@@ -355,7 +351,7 @@ export interface TmdbApi {
      @param externalSource 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getFindExternalId(externalId: string, externalSource: string, language?: string): Observable<{}>
+    getFindExternalId(externalId: string, externalSource: string, language?: string): Promise<{}>
     //'/find/{external_id}'
     /**
      Get Movies
@@ -366,7 +362,7 @@ export interface TmdbApi {
      @param includeAdult Choose whether to inlcude adult (pornography) content in the results.
      @param sortBy Sort the results.
     */
-    getGenreGenreIdMovies(genreId: number, language?: string, includeAdult?: boolean, sortBy?: string): Observable<{}>
+    getGenreGenreIdMovies(genreId: number, language?: string, includeAdult?: boolean, sortBy?: string): Promise<{}>
     //'/genre/{genre_id}/movies'
     /**
      Get Movie List
@@ -374,7 +370,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getGenreMovieList(language?: string): Observable<InlineResponse20014>
+    getGenreMovieList(language?: string): Promise<InlineResponse20014>
     //'/genre/movie/list';
     /**
      Get TV List
@@ -382,7 +378,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getGenreTvList(language?: string): Observable<InlineResponse20014>
+    getGenreTvList(language?: string): Promise<InlineResponse20014>
     //'/genre/tv/list';
     /**
      Get Rated Movies
@@ -392,7 +388,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getGuestSessionGuestSessionIdRatedMovies(guestSessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getGuestSessionGuestSessionIdRatedMovies(guestSessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/guest_session/{guest_session_id}/rated/movies'
     /**
      Get Rated TV Shows
@@ -402,7 +398,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getGuestSessionGuestSessionIdRatedTv(guestSessionId: string, language?: string, sortBy?: string): Observable<{}>
+    getGuestSessionGuestSessionIdRatedTv(guestSessionId: string, language?: string, sortBy?: string): Promise<{}>
     //'/guest_session/{guest_session_id}/rated/tv'
     /**
      Get Rated TV Episodes
@@ -412,14 +408,14 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param sortBy Sort the results.
     */
-    getGuestSessionGuestSessionIdRatedTvEpisodes(guestSessionId: string, language?: string, sortBy?: string): Observable<InlineResponse20015>
+    getGuestSessionGuestSessionIdRatedTvEpisodes(guestSessionId: string, language?: string, sortBy?: string): Promise<InlineResponse20015>
     //'/guest_session/{guest_session_id}/rated/tv/episodes'
     /**
      Get Jobs
      The the list of official jobs that are used on TMDb.
      @param apiKey 
     */
-    getJobList(extraHttpRequestParams?: any): Observable<InlineResponse20016>
+    getJobList(extraHttpRequestParams?: any): Promise<InlineResponse20016>
     //'/job/list';
     /**
      Get Details
@@ -427,7 +423,7 @@ export interface TmdbApi {
      @param keywordId 
      @param apiKey 
     */
-    getKeywordKeywordId(keywordId: number): Observable<InlineResponse20014Genres>
+    getKeywordKeywordId(keywordId: number): Promise<InlineResponse20014Genres>
     //'/keyword/{keyword_id}'
     /**
      Get Movies
@@ -437,7 +433,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param includeAdult Choose whether to inlcude adult (pornography) content in the results.
     */
-    getKeywordKeywordIdMovies(keywordId: number, language?: string, includeAdult?: boolean): Observable<{}>
+    getKeywordKeywordIdMovies(keywordId: number, language?: string, includeAdult?: boolean): Promise<{}>
     //'/keyword/{keyword_id}/movies'
     /**
      Get Details
@@ -446,7 +442,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getListListId(listId: string, language?: string): Observable<{}>
+    getListListId(listId: string, language?: string): Promise<{}>
     //'/list/{list_id}'
     /**
      Check Item Status
@@ -455,7 +451,7 @@ export interface TmdbApi {
      @param apiKey 
      @param movieId 
     */
-    getListListIdItemStatus(listId: string, movieId: number): Observable<InlineResponse20017>
+    getListListIdItemStatus(listId: string, movieId: number): Promise<InlineResponse20017>
     //'/list/{list_id}/item_status'
     /**
      Get Movie Change List
@@ -464,7 +460,7 @@ export interface TmdbApi {
      @param startDate Filter the results with a start date.
      @param endDate Filter the results with a end date.
     */
-    getMovieChanges(startDate?: Date, endDate?: Date): Observable<InlineResponse20018>
+    getMovieChanges(startDate?: Date, endDate?: Date): Promise<InlineResponse20018>
     //'/movie/changes';
     /**
      Get Latest
@@ -472,7 +468,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getMovieLatest(language?: string): Observable<InlineResponse20019>
+    getMovieLatest(language?: string): Promise<InlineResponse20019>
     //'/movie/latest';
     /**
      Get Details
@@ -482,7 +478,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param appendToResponse Append requests within the same namespace to the response.
     */
-    getMovieMovieId(movieId: number, language?: string, appendToResponse?: string): Observable<InlineResponse20020>
+    getMovieMovieId(movieId: number, language?: string, appendToResponse?: string): Promise<InlineResponse20020>
     //'/movie/{movie_id}'
     /**
      Get Account States
@@ -492,7 +488,7 @@ export interface TmdbApi {
      @param sessionId 
      @param guestSessionId 
     */
-    getMovieMovieIdAccountStates(movieId: string, sessionId: string, guestSessionId?: string): Observable<InlineResponse20021>
+    getMovieMovieIdAccountStates(movieId: string, sessionId: string, guestSessionId?: string): Promise<InlineResponse20021>
     //'/movie/{movie_id}/account_states'
     /**
      Get Alternative Titles
@@ -501,7 +497,7 @@ export interface TmdbApi {
      @param apiKey 
      @param country 
     */
-    getMovieMovieIdAlternativeTitles(movieId: number, country?: string): Observable<InlineResponse20022>
+    getMovieMovieIdAlternativeTitles(movieId: number, country?: string): Promise<InlineResponse20022>
     //'/movie/{movie_id}/alternative_titles'
     /**
      Get Changes
@@ -512,7 +508,7 @@ export interface TmdbApi {
      @param endDate Filter the results with a end date.
      @param page Specify which page to query.
     */
-    getMovieMovieIdChanges(movieId: string, startDate?: Date, endDate?: Date, page?: number): Observable<InlineResponse20023>
+    getMovieMovieIdChanges(movieId: string, startDate?: Date, endDate?: Date, page?: number): Promise<InlineResponse20023>
     //'/movie/{movie_id}/changes'
     /**
      Get Credits
@@ -520,7 +516,7 @@ export interface TmdbApi {
      @param movieId 
      @param apiKey 
     */
-    getMovieMovieIdCredits(movieId: number): Observable<InlineResponse20024>
+    getMovieMovieIdCredits(movieId: number): Promise<InlineResponse20024>
     //'/movie/{movie_id}/credits'
     /**
      Get Images
@@ -530,7 +526,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param includeImageLanguage 
     */
-    getMovieMovieIdImages(movieId: number, language?: string, includeImageLanguage?: string): Observable<InlineResponse20025>
+    getMovieMovieIdImages(movieId: number, language?: string, includeImageLanguage?: string): Promise<InlineResponse20025>
     //'/movie/{movie_id}/images'
     /**
      Get Keywords
@@ -538,7 +534,7 @@ export interface TmdbApi {
      @param movieId 
      @param apiKey 
     */
-    getMovieMovieIdKeywords(movieId: number): Observable<InlineResponse20026>
+    getMovieMovieIdKeywords(movieId: number): Promise<InlineResponse20026>
     //'/movie/{movie_id}/keywords'
     /**
      Get Lists
@@ -548,7 +544,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getMovieMovieIdLists(movieId: number, language?: string, page?: number): Observable<InlineResponse20027>
+    getMovieMovieIdLists(movieId: number, language?: string, page?: number): Promise<InlineResponse20027>
     //'/movie/{movie_id}/lists'
     /**
      Get Recommendations
@@ -558,7 +554,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getMovieMovieIdRecommendations(movieId: number, language?: string, page?: number): Observable<InlineResponse20028>
+    getMovieMovieIdRecommendations(movieId: number, language?: string, page?: number): Promise<InlineResponse20028>
     //'/movie/{movie_id}/recommendations'
     /**
      Get Release Dates
@@ -566,7 +562,7 @@ export interface TmdbApi {
      @param movieId 
      @param apiKey 
     */
-    getMovieMovieIdReleaseDates(movieId: number): Observable<InlineResponse20029>
+    getMovieMovieIdReleaseDates(movieId: number): Promise<InlineResponse20029>
     //'/movie/{movie_id}/release_dates'
     /**
      Get Reviews
@@ -576,7 +572,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getMovieMovieIdReviews(movieId: number, language?: string, page?: number): Observable<InlineResponse20030>
+    getMovieMovieIdReviews(movieId: number, language?: string, page?: number): Promise<InlineResponse20030>
     //'/movie/{movie_id}/reviews'
     /**
      Get Similar Movies
@@ -586,7 +582,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getMovieMovieIdSimilar(movieId: number, language?: string, page?: number): Observable<InlineResponse20028>
+    getMovieMovieIdSimilar(movieId: number, language?: string, page?: number): Promise<InlineResponse20028>
     //'/movie/{movie_id}/similar'
     /**
      Get Translations
@@ -594,7 +590,7 @@ export interface TmdbApi {
      @param movieId 
      @param apiKey 
     */
-    getMovieMovieIdTranslations(movieId: number): Observable<InlineResponse20031>
+    getMovieMovieIdTranslations(movieId: number): Promise<InlineResponse20031>
     //'/movie/{movie_id}/translations'
     /**
      Get Videos
@@ -603,7 +599,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getMovieMovieIdVideos(movieId: string, language?: string): Observable<InlineResponse20032>
+    getMovieMovieIdVideos(movieId: string, language?: string): Promise<InlineResponse20032>
     //'/movie/{movie_id}/videos'
     /**
      Get Now Playing
@@ -613,7 +609,7 @@ export interface TmdbApi {
      @param page Specify which page to query.
      @param region Specify a ISO 3166-1 code to filter release dates.
     */
-    getMovieNowPlaying(language?: string, page?: number, region?: string): Observable<{}>
+    getMovieNowPlaying(language?: string, page?: number, region?: string): Promise<{}>
     //'/movie/now_playing';
     /**
      Get Popular
@@ -623,7 +619,7 @@ export interface TmdbApi {
      @param page Specify which page to query.
      @param region Specify a ISO 3166-1 code to filter release dates.
     */
-    getMoviePopular(language?: string, page?: number, region?: string): Observable<{}>
+    getMoviePopular(language?: string, page?: number, region?: string): Promise<{}>
     //'/movie/popular';
     /**
      Get Top Rated
@@ -633,7 +629,7 @@ export interface TmdbApi {
      @param page Specify which page to query.
      @param region Specify a ISO 3166-1 code to filter release dates.
     */
-    getMovieTopRated(language?: string, page?: number, region?: string): Observable<{}>
+    getMovieTopRated(language?: string, page?: number, region?: string): Promise<{}>
     //'/movie/top_rated';
     /**
      Get Upcoming
@@ -643,7 +639,7 @@ export interface TmdbApi {
      @param page Specify which page to query.
      @param region Specify a ISO 3166-1 code to filter release dates.
     */
-    getMovieUpcoming(language?: string, page?: number, region?: string): Observable<{}>
+    getMovieUpcoming(language?: string, page?: number, region?: string): Promise<{}>
     //'/movie/upcoming';
     /**
      Get Details
@@ -651,7 +647,7 @@ export interface TmdbApi {
      @param networkId 
      @param apiKey 
     */
-    getNetworkNetworkId(networkId: number): Observable<InlineResponse20014Genres>
+    getNetworkNetworkId(networkId: number): Promise<InlineResponse20014Genres>
     //'/network/{network_id}'
     /**
      Get Person Change List
@@ -660,7 +656,7 @@ export interface TmdbApi {
      @param startDate Filter the results with a start date.
      @param endDate Filter the results with a end date.
     */
-    getPersonChanges(startDate?: Date, endDate?: Date): Observable<InlineResponse20018>
+    getPersonChanges(startDate?: Date, endDate?: Date): Promise<InlineResponse20018>
     //'/person/changes';
     /**
      Get Latest
@@ -668,7 +664,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getPersonLatest(language?: string): Observable<InlineResponse20033>
+    getPersonLatest(language?: string): Promise<InlineResponse20033>
     //'/person/latest';
     /**
      Get Details
@@ -678,7 +674,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param appendToResponse Append requests within the same namespace to the response.
     */
-    getPersonPersonId(personId: number, language?: string, appendToResponse?: string): Observable<InlineResponse20034>
+    getPersonPersonId(personId: number, language?: string, appendToResponse?: string): Promise<InlineResponse20034>
     //'/person/{person_id}'
     /**
      Get Changes
@@ -690,7 +686,7 @@ export interface TmdbApi {
      @param endDate Filter the results with a end date.
      @param page Specify which page to query.
     */
-    getPersonPersonIdChanges(personId: number, language?: string, startDate?: Date, endDate?: Date, page?: number): Observable<InlineResponse20035>
+    getPersonPersonIdChanges(personId: number, language?: string, startDate?: Date, endDate?: Date, page?: number): Promise<InlineResponse20035>
     //'/person/{person_id}/changes'
     /**
      Get Combined Credits
@@ -699,7 +695,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getPersonPersonIdCombinedCredits(personId: number, language?: string): Observable<InlineResponse20036>
+    getPersonPersonIdCombinedCredits(personId: number, language?: string): Promise<InlineResponse20036>
     //'/person/{person_id}/combined_credits'
     /**
      Get External IDs
@@ -708,7 +704,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getPersonPersonIdExternalIds(personId: number, language?: string): Observable<InlineResponse20037>
+    getPersonPersonIdExternalIds(personId: number, language?: string): Promise<InlineResponse20037>
     //'/person/{person_id}/external_ids'
     /**
      Get Images
@@ -716,7 +712,7 @@ export interface TmdbApi {
      @param personId 
      @param apiKey 
     */
-    getPersonPersonIdImages(personId: number): Observable<InlineResponse20038>
+    getPersonPersonIdImages(personId: number): Promise<InlineResponse20038>
     //'/person/{person_id}/images'
     /**
      Get Movie Credits
@@ -725,7 +721,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getPersonPersonIdMovieCredits(personId: number, language?: string): Observable<InlineResponse20039>
+    getPersonPersonIdMovieCredits(personId: number, language?: string): Promise<InlineResponse20039>
     //'/person/{person_id}/movie_credits'
     /**
      Get Tagged Images
@@ -735,7 +731,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getPersonPersonIdTaggedImages(personId: number, language?: string, page?: number): Observable<{}>
+    getPersonPersonIdTaggedImages(personId: number, language?: string, page?: number): Promise<{}>
     //'/person/{person_id}/tagged_images'
     /**
      Get TV Credits
@@ -744,7 +740,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getPersonPersonIdTvCredits(personId: number, language?: string): Observable<InlineResponse20040>
+    getPersonPersonIdTvCredits(personId: number, language?: string): Promise<InlineResponse20040>
     //'/person/{person_id}/tv_credits'
     /**
      Get Popular
@@ -753,7 +749,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getPersonPopular(language?: string, page?: number): Observable<{}>
+    getPersonPopular(language?: string, page?: number): Promise<{}>
     //'/person/popular';
     /**
      Get Details
@@ -761,7 +757,7 @@ export interface TmdbApi {
      @param reviewId 
      @param apiKey 
     */
-    getReviewReviewId(reviewId: string): Observable<InlineResponse20041>
+    getReviewReviewId(reviewId: string): Promise<InlineResponse20041>
     //'/review/{review_id}'
     /**
      Search Collections
@@ -771,7 +767,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getSearchCollection(query: string, language?: string, page?: number): Observable<InlineResponse20042>
+    getSearchCollection(query: string, language?: string, page?: number): Promise<InlineResponse20042>
     //'/search/collection';
     /**
      Search Companies
@@ -780,7 +776,7 @@ export interface TmdbApi {
      @param query Pass a text query to search. This value should be URI encoded.
      @param page Specify which page to query.
     */
-    getSearchCompany(query: string, page?: number): Observable<InlineResponse20042>
+    getSearchCompany(query: string, page?: number): Promise<InlineResponse20042>
     //'/search/company';
     /**
      Search Keywords
@@ -789,7 +785,7 @@ export interface TmdbApi {
      @param query Pass a text query to search. This value should be URI encoded.
      @param page Specify which page to query.
     */
-    getSearchKeyword(query: string, page?: number): Observable<InlineResponse20042>
+    getSearchKeyword(query: string, page?: number): Promise<InlineResponse20042>
     //'/search/keyword';
     /**
      Search Movies
@@ -803,7 +799,7 @@ export interface TmdbApi {
      @param year 
      @param primaryReleaseYear 
     */
-    getSearchMovie(query: string, language?: string, page?: number, includeAdult?: boolean, region?: string, year?: number, primaryReleaseYear?: number): Observable<{}>
+    getSearchMovie(query: string, language?: string, page?: number, includeAdult?: boolean, region?: string, year?: number, primaryReleaseYear?: number): Promise<{}>
     //'/search/movie';
     /**
      Multi Search
@@ -815,7 +811,7 @@ export interface TmdbApi {
      @param includeAdult Choose whether to inlcude adult (pornography) content in the results.
      @param region Specify a ISO 3166-1 code to filter release dates.
     */
-    getSearchMulti(query: string, language?: string, page?: number, includeAdult?: boolean, region?: string): Observable<{}>
+    getSearchMulti(query: string, language?: string, page?: number, includeAdult?: boolean, region?: string): Promise<{}>
     //'/search/multi';
     /**
      Search People
@@ -827,7 +823,7 @@ export interface TmdbApi {
      @param includeAdult Choose whether to inlcude adult (pornography) content in the results.
      @param region Specify a ISO 3166-1 code to filter release dates.
     */
-    getSearchPerson(query: string, language?: string, page?: number, includeAdult?: boolean, region?: string): Observable<{}>
+    getSearchPerson(query: string, language?: string, page?: number, includeAdult?: boolean, region?: string): Promise<{}>
     //'/search/person';
     /**
      Search TV Shows
@@ -838,14 +834,14 @@ export interface TmdbApi {
      @param page Specify which page to query.
      @param firstAirDateYear 
     */
-    getSearchTv(query: string, language?: string, page?: number, firstAirDateYear?: number): Observable<{}>
+    getSearchTv(query: string, language?: string, page?: number, firstAirDateYear?: number): Promise<{}>
     //'/search/tv';
     /**
      Get List
      Get the list of supported timezones on TMDb.
      @param apiKey 
     */
-    getTimezonesList(extraHttpRequestParams?: any): Observable<Array<any>>
+    getTimezonesList(extraHttpRequestParams?: any): Promise<Array<any>>
     //'/timezones/list';
     /**
      Get TV Airing Today
@@ -854,7 +850,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getTvAiringToday(language?: string, page?: number): Observable<{}>
+    getTvAiringToday(language?: string, page?: number): Promise<{}>
     //'/tv/airing_today';
     /**
      Get TV Change List
@@ -863,7 +859,7 @@ export interface TmdbApi {
      @param startDate Filter the results with a start date.
      @param endDate Filter the results with a end date.
     */
-    getTvChanges(startDate?: Date, endDate?: Date): Observable<InlineResponse20018>
+    getTvChanges(startDate?: Date, endDate?: Date): Promise<InlineResponse20018>
     //'/tv/changes';
     /**
      Get Changes
@@ -874,7 +870,7 @@ export interface TmdbApi {
      @param endDate Filter the results with a end date.
      @param page Specify which page to query.
     */
-    getTvEpisodeEpisodeIdChanges(episodeId: number, startDate?: Date, endDate?: Date, page?: number): Observable<InlineResponse20043>
+    getTvEpisodeEpisodeIdChanges(episodeId: number, startDate?: Date, endDate?: Date, page?: number): Promise<InlineResponse20043>
     //'/tv/episode/{episode_id}/changes'
     /**
      Get Latest
@@ -882,7 +878,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvLatest(language?: string): Observable<InlineResponse20044>
+    getTvLatest(language?: string): Promise<InlineResponse20044>
     //'/tv/latest';
     /**
      Get TV On The Air
@@ -891,7 +887,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getTvOnTheAir(language?: string, page?: number): Observable<{}>
+    getTvOnTheAir(language?: string, page?: number): Promise<{}>
     //'/tv/on_the_air';
     /**
      Get Popular
@@ -900,7 +896,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getTvPopular(language?: string, page?: number): Observable<{}>
+    getTvPopular(language?: string, page?: number): Promise<{}>
     //'/tv/popular';
     /**
      Get  Changes
@@ -911,7 +907,7 @@ export interface TmdbApi {
      @param endDate Filter the results with a end date.
      @param page Specify which page to query.
     */
-    getTvSeasonSeasonIdChanges(seasonId: number, startDate?: Date, endDate?: Date, page?: number): Observable<InlineResponse20045>
+    getTvSeasonSeasonIdChanges(seasonId: number, startDate?: Date, endDate?: Date, page?: number): Promise<InlineResponse20045>
     //'/tv/season/{season_id}/changes'
     /**
      Get Top Rated
@@ -920,7 +916,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getTvTopRated(language?: string, page?: number): Observable<{}>
+    getTvTopRated(language?: string, page?: number): Promise<{}>
     //'/tv/top_rated';
     /**
      Get Details
@@ -930,7 +926,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param appendToResponse Append requests within the same namespace to the response.
     */
-    getTvTvId(tvId: number, language?: string, appendToResponse?: string): Observable<InlineResponse20046>
+    getTvTvId(tvId: number, language?: string, appendToResponse?: string): Promise<InlineResponse20046>
     //'/tv/{tv_id}'
     /**
      Get Account States
@@ -941,7 +937,7 @@ export interface TmdbApi {
      @param guestSessionId 
      @param sessionId 
     */
-    getTvTvIdAccountStates(tvId: number, language?: string, guestSessionId?: string, sessionId?: string): Observable<InlineResponse20021>
+    getTvTvIdAccountStates(tvId: number, language?: string, guestSessionId?: string, sessionId?: string): Promise<InlineResponse20021>
     //'/tv/{tv_id}/account_states'
     /**
      Get Alternative Titles
@@ -950,7 +946,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdAlternativeTitles(tvId: number, language?: string): Observable<InlineResponse20047>
+    getTvTvIdAlternativeTitles(tvId: number, language?: string): Promise<InlineResponse20047>
     //'/tv/{tv_id}/alternative_titles'
     /**
      Get Changes
@@ -961,7 +957,7 @@ export interface TmdbApi {
      @param endDate Filter the results with a end date.
      @param page Specify which page to query.
     */
-    getTvTvIdChanges(tvId: number, startDate?: Date, endDate?: Date, page?: number): Observable<InlineResponse20048>
+    getTvTvIdChanges(tvId: number, startDate?: Date, endDate?: Date, page?: number): Promise<InlineResponse20048>
     //'/tv/{tv_id}/changes'
     /**
      Get Content Ratings
@@ -970,7 +966,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdContentRatings(tvId: number, language?: string): Observable<InlineResponse20049>
+    getTvTvIdContentRatings(tvId: number, language?: string): Promise<InlineResponse20049>
     //'/tv/{tv_id}/content_ratings'
     /**
      Get Credits
@@ -979,7 +975,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdCredits(tvId: number, language?: string): Observable<InlineResponse20050>
+    getTvTvIdCredits(tvId: number, language?: string): Promise<InlineResponse20050>
     //'/tv/{tv_id}/credits'
     /**
      Get External IDs
@@ -988,7 +984,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdExternalIds(tvId: number, language?: string): Observable<InlineResponse20037>
+    getTvTvIdExternalIds(tvId: number, language?: string): Promise<InlineResponse20037>
     //'/tv/{tv_id}/external_ids'
     /**
      Get Images
@@ -997,7 +993,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdImages(tvId: number, language?: string): Observable<InlineResponse20051>
+    getTvTvIdImages(tvId: number, language?: string): Promise<InlineResponse20051>
     //'/tv/{tv_id}/images'
     /**
      Get Keywords
@@ -1005,7 +1001,7 @@ export interface TmdbApi {
      @param tvId 
      @param apiKey 
     */
-    getTvTvIdKeywords(tvId: number): Observable<InlineResponse20052>
+    getTvTvIdKeywords(tvId: number): Promise<InlineResponse20052>
     //'/tv/{tv_id}/keywords'
     /**
      Get Recommendations
@@ -1015,7 +1011,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getTvTvIdRecommendations(tvId: number, language?: string, page?: number): Observable<{}>
+    getTvTvIdRecommendations(tvId: number, language?: string, page?: number): Promise<{}>
     //'/tv/{tv_id}/recommendations'
     /**
      Get Details
@@ -1026,7 +1022,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param appendToResponse Append requests within the same namespace to the response.
     */
-    getTvTvIdSeasonSeasonNumber(tvId: number, seasonNumber: number, language?: string, appendToResponse?: string): Observable<InlineResponse20053>
+    getTvTvIdSeasonSeasonNumber(tvId: number, seasonNumber: number, language?: string, appendToResponse?: string): Promise<InlineResponse20053>
     //'/tv/{tv_id}/season/{season_number}'
     /**
      Get Account States
@@ -1038,7 +1034,7 @@ export interface TmdbApi {
      @param guestSessionId 
      @param sessionId 
     */
-    getTvTvIdSeasonSeasonNumberAccountStates(tvId: number, seasonNumber: number, language?: string, guestSessionId?: string, sessionId?: string): Observable<InlineResponse20054>
+    getTvTvIdSeasonSeasonNumberAccountStates(tvId: number, seasonNumber: number, language?: string, guestSessionId?: string, sessionId?: string): Promise<InlineResponse20054>
     //'/tv/{tv_id}/season/{season_number}/account_states'
     /**
      Get Credits
@@ -1048,7 +1044,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdSeasonSeasonNumberCredits(tvId: number, seasonNumber: number, language?: string): Observable<InlineResponse20050>
+    getTvTvIdSeasonSeasonNumberCredits(tvId: number, seasonNumber: number, language?: string): Promise<InlineResponse20050>
     //'/tv/{tv_id}/season/{season_number}/credits'
     /**
      Get Details
@@ -1060,7 +1056,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param appendToResponse Append requests within the same namespace to the response.
     */
-    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumber(tvId: number, seasonNumber: number, episodeNumber: number, language?: string, appendToResponse?: string): Observable<InlineResponse20055>
+    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumber(tvId: number, seasonNumber: number, episodeNumber: number, language?: string, appendToResponse?: string): Promise<InlineResponse20055>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}'
     /**
      Get Account States
@@ -1072,7 +1068,7 @@ export interface TmdbApi {
      @param guestSessionId 
      @param sessionId 
     */
-    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberAccountStates(tvId: number, seasonNumber: number, episodeNumber: number, guestSessionId?: string, sessionId?: string): Observable<InlineResponse20018Results>
+    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberAccountStates(tvId: number, seasonNumber: number, episodeNumber: number, guestSessionId?: string, sessionId?: string): Promise<InlineResponse20018Results>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/account_states'
     /**
      Get Credits
@@ -1082,7 +1078,7 @@ export interface TmdbApi {
      @param episodeNumber 
      @param apiKey 
     */
-    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberCredits(tvId: number, seasonNumber: number, episodeNumber: number): Observable<InlineResponse20056>
+    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberCredits(tvId: number, seasonNumber: number, episodeNumber: number): Promise<InlineResponse20056>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/credits'
     /**
      Get TV Episode External IDs
@@ -1092,7 +1088,7 @@ export interface TmdbApi {
      @param episodeNumber 
      @param apiKey 
     */
-    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberExternalIds(tvId: number, seasonNumber: number, episodeNumber: number): Observable<InlineResponse20018Results>
+    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberExternalIds(tvId: number, seasonNumber: number, episodeNumber: number): Promise<InlineResponse20018Results>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/external_ids'
     /**
      Get Images
@@ -1102,7 +1098,7 @@ export interface TmdbApi {
      @param episodeNumber 
      @param apiKey 
     */
-    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberImages(tvId: number, seasonNumber: number, episodeNumber: number): Observable<InlineResponse20057>
+    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberImages(tvId: number, seasonNumber: number, episodeNumber: number): Promise<InlineResponse20057>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/images'
     /**
      Get  Videos
@@ -1113,7 +1109,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberVideos(tvId: number, seasonNumber: number, episodeNumber: number, language?: string): Observable<InlineResponse20058>
+    getTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberVideos(tvId: number, seasonNumber: number, episodeNumber: number, language?: string): Promise<InlineResponse20058>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/videos'
     /**
      Get External IDs
@@ -1123,7 +1119,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdSeasonSeasonNumberExternalIds(tvId: number, seasonNumber: number, language?: string): Observable<InlineResponse20018Results>
+    getTvTvIdSeasonSeasonNumberExternalIds(tvId: number, seasonNumber: number, language?: string): Promise<InlineResponse20018Results>
     //'/tv/{tv_id}/season/{season_number}/external_ids'
     /**
      Get Images
@@ -1133,7 +1129,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdSeasonSeasonNumberImages(tvId: number, seasonNumber: number, language?: string): Observable<InlineResponse20059>
+    getTvTvIdSeasonSeasonNumberImages(tvId: number, seasonNumber: number, language?: string): Promise<InlineResponse20059>
     //'/tv/{tv_id}/season/{season_number}/images'
     /**
      Get Videos
@@ -1143,7 +1139,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdSeasonSeasonNumberVideos(tvId: number, seasonNumber: number, language?: string): Observable<InlineResponse20058>
+    getTvTvIdSeasonSeasonNumberVideos(tvId: number, seasonNumber: number, language?: string): Promise<InlineResponse20058>
     //'/tv/{tv_id}/season/{season_number}/videos'
     /**
      Get Similar TV Shows
@@ -1153,7 +1149,7 @@ export interface TmdbApi {
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
      @param page Specify which page to query.
     */
-    getTvTvIdSimilar(tvId: number, language?: string, page?: number): Observable<{}>
+    getTvTvIdSimilar(tvId: number, language?: string, page?: number): Promise<{}>
     //'/tv/{tv_id}/similar'
     /**
      Get Translations
@@ -1162,7 +1158,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdTranslations(tvId: number, language?: string): Observable<InlineResponse20060>
+    getTvTvIdTranslations(tvId: number, language?: string): Promise<InlineResponse20060>
     //'/tv/{tv_id}/translations'
     /**
      Get Videos
@@ -1171,7 +1167,7 @@ export interface TmdbApi {
      @param apiKey 
      @param language Pass a ISO 639-1 value to display translated data for the fields that support it.
     */
-    getTvTvIdVideos(tvId: number, language?: string): Observable<InlineResponse20058>
+    getTvTvIdVideos(tvId: number, language?: string): Promise<InlineResponse20058>
     //'/tv/{tv_id}/videos'
     /**
      Mark as Favorite
@@ -1182,7 +1178,7 @@ export interface TmdbApi {
      @param contentType 
      @param body 
     */
-    postAccountAccountIdFavorite(accountId: number, sessionId: string, body?: Body): Observable<DeleteMovieMovieIdRatingResponse>
+    postAccountAccountIdFavorite(accountId: number, sessionId: string, body?: Body): Promise<DeleteMovieMovieIdRatingResponse>
     //'/account/{account_id}/favorite'
     /**
      Add to Watchlist
@@ -1193,7 +1189,7 @@ export interface TmdbApi {
      @param contentType 
      @param body 
     */
-    postAccountAccountIdWatchlist(accountId: number, sessionId: string, body?: Body1): Observable<DeleteMovieMovieIdRatingResponse>
+    postAccountAccountIdWatchlist(accountId: number, sessionId: string, body?: Body1): Promise<DeleteMovieMovieIdRatingResponse>
     //'/account/{account_id}/watchlist'
     /**
      Create List
@@ -1203,7 +1199,7 @@ export interface TmdbApi {
      @param contentType 
      @param body 
     */
-    postList(sessionId: string, body?: Body2): Observable<InlineResponse201>
+    postList(sessionId: string, body?: Body2): Promise<InlineResponse201>
     //'/list';
 
     /**
@@ -1215,7 +1211,7 @@ export interface TmdbApi {
      @param contentType 
      @param body 
     */
-    postListListIdAddItem(listId: string, sessionId: string, body?: Body3): Observable<DeleteMovieMovieIdRatingResponse>
+    postListListIdAddItem(listId: string, sessionId: string, body?: Body3): Promise<DeleteMovieMovieIdRatingResponse>
     //'/list/{list_id}/add_item'
     /**
      Clear List
@@ -1225,7 +1221,7 @@ export interface TmdbApi {
      @param sessionId 
      @param confirm 
     */
-    postListListIdClear(listId: string, sessionId: string, confirm: boolean): Observable<DeleteMovieMovieIdRatingResponse>
+    postListListIdClear(listId: string, sessionId: string, confirm: boolean): Promise<DeleteMovieMovieIdRatingResponse>
     //'/list/{list_id}/clear'
     /**
      Remove Movie
@@ -1236,7 +1232,7 @@ export interface TmdbApi {
      @param contentType 
      @param body 
     */
-    postListListIdRemoveItem(listId: string, sessionId: string, body?: Body4): Observable<DeleteMovieMovieIdRatingResponse>
+    postListListIdRemoveItem(listId: string, sessionId: string, body?: Body4): Promise<DeleteMovieMovieIdRatingResponse>
     //'/list/{list_id}/remove_item'
     /**
      Rate Movie
@@ -1248,7 +1244,7 @@ export interface TmdbApi {
      @param sessionId 
      @param body 
     */
-    postMovieMovieIdRating(movieId: number, guestSessionId?: string, sessionId?: string, body?: Body5): Observable<DeleteMovieMovieIdRatingResponse>
+    postMovieMovieIdRating(movieId: number, guestSessionId?: string, sessionId?: string, body?: Body5): Promise<DeleteMovieMovieIdRatingResponse>
     //'/movie/{movie_id}/rating'
     /**
      Rate TV Show
@@ -1260,7 +1256,7 @@ export interface TmdbApi {
      @param sessionId 
      @param body 
     */
-    postTvTvIdRating(tvId: number, guestSessionId?: string, sessionId?: string, body?: Body6): Observable<DeleteMovieMovieIdRatingResponse>
+    postTvTvIdRating(tvId: number, guestSessionId?: string, sessionId?: string, body?: Body6): Promise<DeleteMovieMovieIdRatingResponse>
     //'/tv/{tv_id}/rating'
     /**
      Rate TV Episode
@@ -1274,6 +1270,6 @@ export interface TmdbApi {
      @param sessionId 
      @param body 
     */
-    postTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberRating(tvId: number, seasonNumber: number, episodeNumber: number, guestSessionId?: string, sessionId?: string, body?: Body7): Observable<DeleteMovieMovieIdRatingResponse>
+    postTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberRating(tvId: number, seasonNumber: number, episodeNumber: number, guestSessionId?: string, sessionId?: string, body?: Body7): Promise<DeleteMovieMovieIdRatingResponse>
     //'/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating'
 }

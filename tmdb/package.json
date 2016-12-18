@@ -9,11 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@angular/core": "^2.3.1",
-    "@angular/http": "^2.3.1",
-    "@angular/platform-browser": "^2.3.1",
     "@types/core-js": "^0.9.35",
-    "rxjs": "^5.0.1",
-    "zone.js": "^0.7.2"
+    "@types/node": "^6.0.52",
+    "xhr2": "^0.1.3"
   }
 }
