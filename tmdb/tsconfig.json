@@ -10,9 +10,11 @@
         "sourceMap": false,
         "outDir": "out",
         "newLine": "LF",
-        "rootDir": "src"
+        "rootDir": "src",
+        "declaration": false
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "out"
     ]
 }

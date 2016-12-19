@@ -12,6 +12,8 @@
             'parse-torrent-name': 'npm:parse-torrent-name/index.js',
             'events': 'npm:events/events.js',
             'xmltojson': "npm:xmltojson/lib/xmltojson.js",
+            'tmdb': "npm:tmdb/index.js",
+            'xhr2': "npm:xhr2/lib/browser.js",
 
             '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
             '@angular/common': 'npm:@angular/common/bundles/common.umd.js',

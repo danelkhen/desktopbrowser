@@ -46,6 +46,8 @@ export class Server {
         //let x = express.static(root);
         this.app.use("/_res_", express.static(this.root));
         this.app.use(express.static(this.root));
+        this.app.use("/node_modules/tmdb", express.static(path.join(this.root, "../tmdb/out")));
+        console.log(path.join(this.root, "../tmdb/out"));
 
         //if (path.basename(nodeModulesDir) == "node_modules") {
         //    console.log("setting up node_modules dir");

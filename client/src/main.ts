@@ -1,6 +1,10 @@
+/// <reference path="../../tmdb/src/index.ts" />
 import "./utils/global";
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
+//import {TmdbApiClient} from "../../tmdb/src/index";
+
+//console.log({TmdbApiClient});
 const platform = platformBrowserDynamic();
 
 platform.bootstrapModule(AppModule);

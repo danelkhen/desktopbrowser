@@ -1,24 +1,19 @@
+export interface Response {
+    statusCode?: number;
+    statusMessage?: string;
+}
+
+
+
 export interface Body {
-    mediaType?: Body.MediaTypeEnum;
+    mediaType?: "movie" | "tv";
     mediaId?: number;
     favorite?: boolean;
 }
-export namespace Body {
-    enum MediaTypeEnum {
-        movie,
-        tv,
-    }
-}
 export interface Body1 {
-    mediaType?: Body1.MediaTypeEnum;
+    mediaType?: "movie" | "tv";
     mediaId?: number;
     watchlist?: boolean;
-}
-export namespace Body1 {
-    enum MediaTypeEnum {
-        movie,
-        tv,
-    }
 }
 export interface Body2 {
     name?: string;
@@ -52,7 +47,7 @@ export interface GetAccountResponse {
     includeAdult?: boolean;
     username?: string;
 }
-export interface InlineResponse2001 {
+export interface GetAccountAccountIdListsResponse {
     page?: number;
     results?: Array<InlineResponse2001Results>;
     totalPages?: number;
@@ -162,12 +157,12 @@ export interface InlineResponse20017 {
     itemPresent?: boolean;
 }
 export interface InlineResponse20018 {
-    results?: Array<InlineResponse20018Results>;
+    results?: Array<GetTvTvIdSeasonSeasonNumberExternalIdsResponse>;
     page?: number;
     totalPages?: number;
     totalResults?: number;
 }
-export interface InlineResponse20018Results {
+export interface GetTvTvIdSeasonSeasonNumberExternalIdsResponse {
     id?: number;
 }
 export interface InlineResponse20019 {
@@ -203,7 +198,7 @@ export interface InlineResponse2001Results {
     listType?: string;
     name?: string;
 }
-export interface InlineResponse2002 {
+export interface GetAccountAccountIdRatedTvEpisodesResponse {
     page?: number;
     results?: Array<InlineResponse2002Results>;
     totalPages?: number;
@@ -345,7 +340,7 @@ export interface InlineResponse2002Results {
     voteCount?: number;
     rating?: number;
 }
-export interface InlineResponse2003 {
+export interface GetAuthenticationGuestSessionNewResponse {
     success?: boolean;
     guestSessionId?: string;
     expiresAt?: string;
@@ -385,15 +380,7 @@ export interface InlineResponse20032Results {
     name?: string;
     site?: string;
     size?: number;
-    type?: InlineResponse20032Results.TypeEnum;
-}
-export namespace InlineResponse20032Results {
-    enum TypeEnum {
-        Trailer,
-        Teaser,
-        Clip,
-        Featurette,
-    }
+    type?: "Trailer" | "Teaser" | "Clip" | "Featurette";
 }
 export interface InlineResponse20033 {
     adult?: boolean;
@@ -505,7 +492,7 @@ export interface InlineResponse20039Crew {
     originalTitle?: string;
     title?: string;
 }
-export interface InlineResponse2004 {
+export interface GetAuthenticationSessionNewResponse {
     success?: boolean;
     sessionId?: string;
 }
@@ -765,17 +752,17 @@ export interface InlineResponse20055GuestStars {
     character?: string;
     order?: number;
 }
-export interface InlineResponse20056 {
+export interface GetTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberCreditsResponse {
     cast?: Array<InlineResponse20050Cast>;
     crew?: Array<InlineResponse20053Crew>;
     guestStars?: Array<InlineResponse20055GuestStars>;
     id?: number;
 }
-export interface InlineResponse20057 {
+export interface GetTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberImagesResponse {
     id?: number;
     stills?: Array<InlineResponse20038Profiles>;
 }
-export interface InlineResponse20058 {
+export interface GetTvTvIdSeasonSeasonNumberVideosResponse {
     id?: number;
     results?: Array<InlineResponse20058Results>;
 }
@@ -787,18 +774,9 @@ export interface InlineResponse20058Results {
     name?: string;
     site?: string;
     size?: number;
-    type?: InlineResponse20058Results.TypeEnum;
+    type?: "Trailer" | "Teaser" | "Clip" | "Featurette";
 }
-export namespace InlineResponse20058Results {
-    enum TypeEnum {
-        Trailer,
-        Teaser,
-        Clip,
-        Featurette,
-        Opening_Credits,
-    }
-}
-export interface InlineResponse20059 {
+export interface GetTvTvIdSeasonSeasonNumberImagesResponse {
     id?: number;
     posters?: Array<InlineResponse20059Posters>;
 }
@@ -814,7 +792,7 @@ export interface InlineResponse2006 {
     success?: boolean;
     requestToken?: string;
 }
-export interface InlineResponse20060 {
+export interface GetTvTvIdTranslationsResponse {
     id?: number;
     translations?: Array<InlineResponse20060Translations>;
 }
@@ -891,10 +869,6 @@ export interface InlineResponse201 {
     statusCode?: number;
     listId?: number;
 }
-export interface DeleteMovieMovieIdRatingResponse {
-    statusCode?: number;
-    statusMessage?: string;
-}
 export interface InlineResponse404 {
     statusMessage?: string;
     statusCode?: number;
@@ -940,7 +914,7 @@ export interface MovieListResultsObjectWithMediaType {
     originalTitle?: string;
     genreIds?: Array<number>;
     id?: number;
-    mediaType?: MovieListResultsObjectWithMediaType.MediaTypeEnum;
+    mediaType?: "movie";
     originalLanguage?: string;
     title?: string;
     backdropPath?: ImagePath;
@@ -949,24 +923,14 @@ export interface MovieListResultsObjectWithMediaType {
     video?: boolean;
     voteAverage?: number;
 }
-export namespace MovieListResultsObjectWithMediaType {
-    enum MediaTypeEnum {
-        movie,
-    }
-}
 export interface PersonListResultObjectWithMediaType {
     profilePath?: ImagePath;
     adult?: boolean;
     id?: number;
-    mediaType?: PersonListResultObjectWithMediaType.MediaTypeEnum;
+    mediaType?: "person";
     knownFor?: Array<ERRORUNKNOWN>;
     name?: string;
     popularity?: number;
-}
-export namespace PersonListResultObjectWithMediaType {
-    enum MediaTypeEnum {
-        person,
-    }
 }
 export interface PersonListResultsObject {
     profilePath?: ImagePath;
@@ -1019,7 +983,7 @@ export interface TvListResultsObjectWithMediaType {
     overview?: string;
     backdropPath?: ImagePath;
     voteAverage?: number;
-    mediaType?: TvListResultsObjectWithMediaType.MediaTypeEnum;
+    mediaType?: "tv";
     firstAirDate?: string;
     originCountry?: Array<string>;
     genreIds?: Array<number>;
@@ -1027,9 +991,4 @@ export interface TvListResultsObjectWithMediaType {
     voteCount?: number;
     name?: string;
     originalName?: string;
-}
-export namespace TvListResultsObjectWithMediaType {
-    enum MediaTypeEnum {
-        tv,
-    }
 }
