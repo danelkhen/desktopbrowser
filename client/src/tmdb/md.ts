@@ -1,4 +1,7 @@
 export let TmdbApiPaths: { [key: string]: string } = {
+    searchMovie: "/search/movie",
+    searchTv: "/search/tv",
+
     deleteMovieMovieIdRating: "/movie/{movie_id}/rating",
     deleteTvTvIdRating: "/tv/{tv_id}/rating",
     deleteTvTvIdSeasonSeasonNumberEpisodeEpisodeNumberRating: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating",
@@ -73,10 +76,8 @@ export let TmdbApiPaths: { [key: string]: string } = {
     getSearchCollection: "/search/collection",
     getSearchCompany: "/search/company",
     getSearchKeyword: "/search/keyword",
-    getSearchMovie: "/search/movie",
     getSearchMulti: "/search/multi",
     getSearchPerson: "/search/person",
-    getSearchTv: "/search/tv",
     getTimezonesList: "/timezones/list",
     getTvAiringToday: "/tv/airing_today",
     getTvChanges: "/tv/changes",

@@ -11,6 +11,8 @@ import { Observable } from "rxjs"
 import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
+import { TmdbApiClient } from "./tmdb/client"
+import { MovieListResultObject } from "tmdb-api"
 
 
 @Component({
@@ -434,8 +436,8 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     onFilesChanged(): void {
-        this.Res.Files.forEach(t=>t.parsed = new FilenameParser().parse(t.Name));
-        console.log(this.Res.Files.map(t=>t.parsed));
+        this.Res.Files.forEach(t => t.parsed = new FilenameParser().parse(t.Name));
+        console.log(this.Res.Files.map(t => t.parsed));
         this.applySort();
         this.filesView.refresh();
         this.FileSelection.AllItems = this.filesView.target;
@@ -595,6 +597,15 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     getImdbInfo(file: File) {
+        let info = new FilenameParser().parse(file.Name);
+        let isTv = info.season != null;
+        let x = new TmdbApiClient();
+        x.api_key = '16a856dff4d1db46782e6132610ddb32';
+        x.invoke(t => t.searchMovie({ query: info.name, year: info.year })).then(e => this.tmdb = e.results[0]).then(()=>console.log(this.tmdb));
+    }
+    tmdb:MovieListResultObject;
+
+    getImdbInfo_old(file: File) {
         let info = parseTorrentName(file.Name);
         console.log(info);
         this.Service.invoke(t => t.omdbGet({ name: info.title, year: info.year })).then(res2 => {

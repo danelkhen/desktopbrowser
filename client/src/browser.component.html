@@ -122,6 +122,34 @@
     <p class="actors">{{imdb.actors}}</p>
     <p class="plot">{{imdb.plot}}</p>
 </div>
+<div class="tmdb" *ngIf="tmdb!=null">
+    <div class="imdburl poster"><a target="_blank" href="{{tmdb.imdburl}}"><img src="{{tmdb.poster}}" /></a></div>
+    <h1>
+        <label class="title">{{tmdb.title}}</label>
+    </h1>
+    <h4>
+        <label class="year">{{tmdb.year}}</label>
+        <label class="rating">{{tmdb.rating}}</label>
+        <span>Yours: </span><label class="yourRating">{{yourRating}}</label>
+        <label class="genres">{{tmdb.genres}}</label>
+        <label class="rated">{{tmdb.rated}}</label>
+    </h4>
+    <h5>
+        <label class="released">{{tmdb.released}}</label>
+        <label class="runtime">{{tmdb.runtime}}</label>
+        <label class="languages">{{tmdb.languages}}</label>
+        <label class="country">{{tmdb.country}}</label>
+        <label class="director">{{tmdb.director}}</label>
+        <label class="writer">{{tmdb.writer}}</label>
+        <label class="awards">{{tmdb.awards}}</label>
+        <label class="metascore">{{tmdb.metascore}}</label>
+        <label class="votes">{{tmdb.votes}}</label>
+        <label class="type">{{tmdb.type}}</label>
+    </h5>
+    <p class="actors">{{tmdb.actors}}</p>
+    <p class="plot">{{tmdb.plot}}</p>
+</div>
+
 <div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">
     <table>
         <tbody>

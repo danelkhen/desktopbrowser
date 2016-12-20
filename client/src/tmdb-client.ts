@@ -1,23 +1,29 @@
-import { TmdbApi, MovieListResultObject as TmdbMovie } from "tmdb-api"
-import { TmdbApiPaths } from "./md"
-import { Proxy } from "../utils/proxy"
+import { TmdbApi, MovieListResultObject as TmdbMovie, Configuration } from "tmdb-api"
+import { TmdbApiClient } from "./tmdb/client"
 
-export class TmdbApiClient extends Proxy<TmdbApi>{
-    constructor() {
-        super();
-        this.onInvoke = pc => {
-            console.log({ pc });
-            let path = TmdbApiPaths[pc.name];
-            let req = pc.args[0];
-            console.log({ path, req });
-            let url = this.base_url + path;
-            let prms = { api_key: this.api_key, ...req }
-            return xhr2({ url, params: prms });//.then(e => console.log(e));
-        };
+export class TmdbClient extends TmdbApiClient {
+    init() {
+        this.api_key = '16a856dff4d1db46782e6132610ddb32';
+        this.invoke(t => t.getConfiguration({})).then(t => this.configuration = t);
     }
-    api_key: string;
-    base_url = 'https://api.themoviedb.org/3';
+    configuration: Configuration;
 
+    getImageUrl(movie: TmdbMovie, prop: keyof TmdbMovie, size?: string): string {
+        let c = this.configuration.images;
+        if (size == null) {
+            if (prop == "backdrop_path") {
+                size = c.backdrop_sizes[0];
+            }
+            else if (prop == "poster_path") {
+                size = c.poster_sizes[0];
+            }
+            else {
+                console.warn("getImageUrl2 not implemented for prop", prop);
+                return null;
+            }
+        }
+        return `${c.base_url}${size}/${movie[prop]}`;
+    }
 
 }
 
