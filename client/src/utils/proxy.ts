@@ -1,13 +1,14 @@
 ﻿export class Proxy<T> {
+    constructor() {
+        this.onInvoke = pc => Promise.resolve(null);
+    }
 
     invoke<R>(action: (obj: T) => R | Promise<R>): Promise<R> {
         let pc = extractInstanceFunctionCall(action);
-        return this.onInvoke<R>(pc);
+        return this.onInvoke(pc);
     }
 
-    onInvoke<R>(pc: ProxyCall): Promise<R> {
-        return Promise.resolve(null);
-    }
+    onInvoke: (pc: ProxyCall) => Promise<any>;
 }
 
 export interface ProxyCall {

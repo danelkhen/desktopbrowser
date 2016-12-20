@@ -1,14 +1,8 @@
-/// <reference path="../../client/lib/corex-js/corex.d.ts" />
-//import "corex"
-import { TmdbApi, TmdbApiPaths } from "./api"
-import { Proxy } from "./proxy"
-import XMLHttpRequest = require('xhr2');
-//import * as process from "process"
+import { TmdbApi, } from "tmdb-api"
+import { TmdbApiPaths } from "./md"
+import { Proxy } from "../utils/proxy"
 
-//process.on("uncaughtException", e=>console.log(e));
-//process.on("unhandledRejection", e=>console.log(e));
-
-class TmdbApiClient extends Proxy<TmdbApi>{
+export class TmdbApiClient extends Proxy<TmdbApi>{
     constructor() {
         super();
         this.onInvoke = pc => {

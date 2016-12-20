@@ -3,8 +3,9 @@ import { OmdbGetResponse, Movie, MovieRequest, ListFilesRequest, ListFilesRespon
 
 export class ServiceBase<T> extends Proxy<T> {
     Url: string;
-    onInvoke<R>(pc: ProxyCall): Promise<R> {
-        return this.Invoke(pc.name, pc.args[0]);
+    constructor() {
+        super();
+        this.onInvoke  = pc => this.Invoke(pc.name, pc.args[0]);
     }
 
     isPrimitive(x: any): boolean {

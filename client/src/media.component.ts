@@ -1,4 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { TmdbApiClient } from "./tmdb/client"
+import { MovieListResultObject} from "tmdb-api"
 
 @Component({
     selector: 'my-media',
@@ -6,38 +8,19 @@ import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
     styleUrls: ['_res_/src/media.component.css'],
 })
 export class MediaComponent implements OnInit, OnChanges {
-    movies: TmdbMovie[];
+    movies: MovieListResultObject[];
     ngOnInit(): void {
-        this.movies = [
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-            { "title": "Underworld: Blood Wars", "backdrop_path": "/PIXSMakrO3s2dqA7mCvAAoVR0E.jpg", "poster_path": "/nHXiMnWUAUba2LZ0dFkNDVdvJ1o.jpg", },
-            { "title": "Suicide Squad", "backdrop_path": "/34dxtTxMHGKw1njHpTjDqR8UBHd.jpg", "poster_path": "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg", },
-        ];
+        this.test();
     }
     ngOnChanges(changes: SimpleChanges): void { }
 
     tmdbImageBaseUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2";
+
+    test() {
+        let x = new TmdbApiClient();
+        x.api_key = '16a856dff4d1db46782e6132610ddb32';
+        x.invoke(t => t.getMoviePopular({ language: "en" })).then(e => this.movies = e.results);
+    }
 
 
     getImageUrl(movie: TmdbMovie, prop: keyof TmdbMovie, size?: string): string {

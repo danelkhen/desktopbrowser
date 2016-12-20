@@ -1,4 +1,3 @@
-/// <reference path="../../tmdb/src/index.ts" />
 import "./utils/global";
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
