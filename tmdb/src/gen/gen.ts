@@ -16,7 +16,7 @@ function xhrGetJson(url: string): Promise<any> {
 }
 
 function main() {
-    xhrGetJson("../tmdb.swagger.json").then(e => _doc = e).then(main2);
+    xhrGetJson("../../tmdb.swagger.json").then(e => _doc = e).then(main2);
 }
 
 function main2() {
@@ -47,38 +47,67 @@ function postProcess(methodss: Method[][]) {
         _module.members.push(ce);
         method.parameters = [new Parameter({ name: "req", type: getTypeRef(ce) })];
     });
-    _module.members.push(new Variable({ name: "Metadata", value: JSON.stringify(_md, exceptParentReplacer, TAB) }));
+
     let types = _module.members.filter(t => t instanceof Type) as Type[];
 
     let skip = new Set<Type>();
-    let duplicates: { ce: Type, duplicates: Type[] }[] = [];
+    let duplicates: Array<Set<Type>> = [];//{ ce: Type, duplicates: Type[] }[] = [];
     types.forEach(ce1 => {
         if (skip.has(ce1))
             return;
-        let entry = { ce: ce1, duplicates: new Array<Type>() };
+        let entry = new Set<Type>();//{ ce: ce1, duplicates: new Array<Type>(), all:Type[] };
         duplicates.push(entry);
         types.forEach(ce2 => {
             if (skip.has(ce2))
                 return;
+            entry.add(ce1);
             if (ce1 != ce2 && isTypeEquals(ce1, ce2)) {
+                if ((ce1.name + ce2.name).indexOf("SearchSearchMoviesResponse") >= 0) {
+                    isTypeEquals(ce1, ce2);
+                }
                 skip.add(ce1);
                 skip.add(ce2);
-                entry.duplicates.push(ce2);
-                console.log("similar types", { ce1, ce2 });
+                entry.add(ce2);
+                //console.log("similar types", { x:ce1.name, y:ce2.name, entry, duplicates });
             }
         });
     });
-    duplicates = duplicates.filter(t => t.duplicates.length > 0);
+    //console.log(duplicates);
+    duplicates = duplicates.filter(t => t.size > 1);
+    console.log(duplicates);
+    let baseIndex = 1;
+    duplicates.forEach(set => {
+        let list = Array.from(set);
+        console.log("merging duplicates", list.map(t => t.name));
+        let ce = new Type();
+        let ce2 = list[0];
+        ce.name = ce2.name + "Base";// + (baseIndex++);
+        ce.members.push(...ce2.members);
+        set.forEach(t => t.extends.push(getTypeRef(ce)));
+        //set.forEach(t => t.members = []);
+        set.forEach(t => t.name = ce.name);
+        _module.members = _module.members.filter(t => !set.has(t as any));
+        _module.members.push(ce);
+        //console.log(ce);
+    });
+
 
     (_module.members.filter(t => t instanceof Type) as Type[]).forEach(ce => ce.members.sort((a, b) => a.name.localeCompare(b.name)));
+    _module.members.push(new Variable({ name: "Metadata", value: JSON.stringify(_md, exceptParentReplacer, TAB) }));
 }
 
 function isTypeRefEquals(x: TypeRef, y: TypeRef): boolean {
-    if (x.type != null && y.type != null && isTypeEquals(x.type, y.type))
-        return true;
-    if (x.name == y.name && x.args.length == y.args.length)
-        return true;
-    return false;
+    if (x.type != null && y.type != null) {
+        if (!isTypeEquals(x.type, y.type))
+            return false;
+    }
+    else if (x.name != y.name)
+        return false;
+    if (x.args.length != y.args.length)
+        return false;
+    if (x.args.find((t, i) => !isTypeRefEquals(t, y.args[i])) != null)
+        return false;
+    return true;
 }
 
 function isTypeEquals(x: Type, y: Type): boolean {
@@ -223,8 +252,6 @@ function normalizeDef(def2: SwaggerDef | string): SwaggerDef {
 
 
     if (def.properties != null) {
-        if (def.properties["production_companies"] != null)
-            console.log("production_companies");
         def.propertiesList = normalizeHash(def.properties);
         def.propertiesList.forEach(t => t.value = normalizeDef(t.value));
     }
@@ -252,30 +279,52 @@ function processPath(path2: KeyValue<SwaggerPath>): Method[] {
     //let methods = methodNames.map(t => <KeyValue<SwaggerMethod>>{ key: t, value: pi[t] }).filter(t => t.value != null);
     //console.log({ methods, methods2:pi.methods });
     //return methods.map(method => ["@", path.key, "() ", processMethod(method), ";\n"]);
+    //console.log("PATH", path);
     let methods2 = pi.methods.map(method => {
-        let me2 = processMethod(method.value);
+        let me2 = processMethod(method.value, path2);
         if (pi.parameters != null) {
             let pathParams = pi.parameters.map(processParameter);
             me2.parameters.splice(0, 0, ...pathParams);
             //console.log({ pathParams, prms: path.parameters });
         }
-        let md = { path: path, method: method.key, parameters: me2.parameters.map(t => t.attributes[0]) };
+        let md = { path: path, method: method.key };
         _md[me2.name] = md;
         //me2.attributes.push("@url(" + JSON.stringify(md) + ")");
         return me2;
     });
     return methods2;
 }
-function processMethod(me: SwaggerMethod): Method {
+
+let _usedNames = new Set<string>();
+function getUniqueName(baseName: string, set?: Set<string>): string {
+    if (set == null)
+        set = _usedNames;
+    let name = baseName;
+    let index = 1;
+    while (_usedNames.has(name)) {
+        index++;
+        name = baseName + index;
+    }
+    _usedNames.add(name);
+    return name;
+}
+
+function processMethod(me: SwaggerMethod, path2: KeyValue<SwaggerPath>): Method {
+    console.log("METHOD", path2.key, me.summary, me.operationId);
+
     let me2 = new Method();
     let name = me.summary.replace(/ /g, "");
+    name = path2.key.split("/")[1] + name;
+    name = getUniqueName(name);
     let methodName = name[0].toLowerCase() + name.substr(1);
+    let typeName = name[0].toUpperCase() + name.substr(1);
+
 
     me2.name = methodName;//me.operationId;
     me2.parameters = (me.parameters || []).map(processParameter);
     let retType = me.responses["200"] == null ? <SwaggerDef>{ type: "any" } : me.responses["200"].schemaObj;
     //let retCe = 
-    me2.type = processDef(retType, name + "Response"); //getTypeRef(retCe);// processDefTypeName(retType);
+    me2.type = processDef(retType, typeName + "Response"); //getTypeRef(retCe);// processDefTypeName(retType);
     return me2;
     //return [me.operationId, "(", (me.parameters || []).map(processParameter).withValueBetweenItems(", "), ")", ": ", processDefTypeName(retType)];
 }
@@ -331,23 +380,26 @@ function processDef(ce: SwaggerDef, name?: string): TypeRef {
         ce2.name = name || "Type" + (++_nameIndex);
         ce.type = ce2.name;
         if (ce.propertiesList != null) {
-            ce2.members = ce.propertiesList.map(processProperty);
+            ce2.members = ce.propertiesList.map(t => processProperty(t, ce2.name));
         }
+        let ce3 = _module.members.find(t => t.name == ce2.name)
+        if (ce3 != null)
+            console.warn("two classes with the same name found", ce2.name, ce2, ce3);
         _module.members.push(ce2);
         return getTypeRef(ce2);
     }
     if (ce.type == "array") {
-        let typeArgs = [processDef(ce.items)];
+        let typeArgs = [processDef(ce.items, name)];
         return getTypeRef(new Type({ name: "Array" }), typeArgs);
     }
     //console.log(ce);
     return processType(ce.type);
     //return ["export interface ", ce.type, "{\n", ce.propertiesList.map(processProperty).withValueBetweenItems(";\n"), "\n}\n"];
 }
-function processProperty(pe: KeyValue<SwaggerDef>): Tokens {
+function processProperty(pe: KeyValue<SwaggerDef>, className?: string): Tokens {
     let pe2 = new Property();
     pe2.name = pe.key;
-    pe2.type = processDef(pe.value);
+    pe2.type = processDef(pe.value, className + "_" + pe2.name);
     return pe2;
     //return [pe.key, ":", processDefTypeName(pe)];
 }

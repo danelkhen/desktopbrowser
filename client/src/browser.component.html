@@ -122,32 +122,32 @@
     <p class="actors">{{imdb.actors}}</p>
     <p class="plot">{{imdb.plot}}</p>
 </div>
-<div class="tmdb" *ngIf="tmdb!=null">
-    <div class="imdburl poster"><a target="_blank" href="{{tmdb.imdburl}}"><img src="{{tmdb.poster}}" /></a></div>
+<div class="tmdb" *ngIf="movie!=null">
+    <div class="imdburl poster"><a target="_blank" href="{{movie.imdburl}}"><img src="{{movie.poster_url}}" /></a></div>
     <h1>
-        <label class="title">{{tmdb.title}}</label>
+        <label class="title">{{movie.title}}</label>
     </h1>
     <h4>
-        <label class="year">{{tmdb.year}}</label>
-        <label class="rating">{{tmdb.rating}}</label>
+        <label class="year">{{movie.year}}</label>
+        <label class="rating">{{movie.rating}}</label>
         <span>Yours: </span><label class="yourRating">{{yourRating}}</label>
-        <label class="genres">{{tmdb.genres}}</label>
-        <label class="rated">{{tmdb.rated}}</label>
+        <label class="genres">{{movie.genres}}</label>
+        <label class="rated">{{movie.rated}}</label>
     </h4>
     <h5>
-        <label class="released">{{tmdb.released}}</label>
-        <label class="runtime">{{tmdb.runtime}}</label>
-        <label class="languages">{{tmdb.languages}}</label>
-        <label class="country">{{tmdb.country}}</label>
-        <label class="director">{{tmdb.director}}</label>
-        <label class="writer">{{tmdb.writer}}</label>
-        <label class="awards">{{tmdb.awards}}</label>
-        <label class="metascore">{{tmdb.metascore}}</label>
-        <label class="votes">{{tmdb.votes}}</label>
-        <label class="type">{{tmdb.type}}</label>
+        <label class="released">{{movie.released}}</label>
+        <label class="runtime">{{movie.runtime}}</label>
+        <label class="languages">{{movie.languages}}</label>
+        <label class="country">{{movie.country}}</label>
+        <label class="director">{{movie.director}}</label>
+        <label class="writer">{{movie.writer}}</label>
+        <label class="awards">{{movie.awards}}</label>
+        <label class="metascore">{{movie.metascore}}</label>
+        <label class="votes">{{movie.votes}}</label>
+        <label class="type">{{movie.type}}</label>
     </h5>
-    <p class="actors">{{tmdb.actors}}</p>
-    <p class="plot">{{tmdb.plot}}</p>
+    <p class="actors">{{movie.actors}}</p>
+    <p class="plot">{{movie.plot}}</p>
 </div>
 
 <div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">

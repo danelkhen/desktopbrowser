@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "desktopbrowser", ".", "{64AE8BC2-2FA7-41EE-B2D8-F21CBB79A520}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "desktopbrowser(1)", ".", "{150BEE06-16D2-4204-A519-455D986EA030}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_52760"
@@ -21,6 +21,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "desktopbrowser", ".", "{64A
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52760"
+		SlnRelativePath = "..\desktopbrowser\"
 	EndProjectSection
 EndProject
 Global
@@ -28,8 +29,8 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64AE8BC2-2FA7-41EE-B2D8-F21CBB79A520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64AE8BC2-2FA7-41EE-B2D8-F21CBB79A520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150BEE06-16D2-4204-A519-455D986EA030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150BEE06-16D2-4204-A519-455D986EA030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

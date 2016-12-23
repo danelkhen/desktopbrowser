@@ -11,8 +11,8 @@ import { Observable } from "rxjs"
 import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
-import { TmdbApiClient } from "./tmdb/client"
-import { MovieListResultObject } from "tmdb-api"
+import { TmdbClient } from "./tmdb-client"
+import { TmdbMovie } from "./tmdb/tmdb-api"
 
 
 @Component({
@@ -89,11 +89,15 @@ export class BrowserComponent implements OnInit, OnChanges {
         $(window).resize(e => this.recalcHeight());
         this.recalcHeight();
         console.log("baseDbGetAll");
-        this.Service.db.byFilename.invoke(t => t.find()).then(list => {
-            this.baseDbBuckets = list;
-            this.migrateDbIfNeeded();
-            this.onReady();
-        });
+        this.tmdb = new TmdbClient();
+        Promise.all([
+            this.Service.db.byFilename.invoke(t => t.find()).then(list => {
+                this.baseDbBuckets = list;
+                this.migrateDbIfNeeded();
+            }),
+            this.tmdb.init(),
+        ]).then(() => this.onReady());
+
     }
 
     onReady(): void {
@@ -596,14 +600,14 @@ export class BrowserComponent implements OnInit, OnChanges {
         return x;
     }
 
+    tmdb: TmdbClient;
     getImdbInfo(file: File) {
         let info = new FilenameParser().parse(file.Name);
         let isTv = info.season != null;
-        let x = new TmdbApiClient();
-        x.api_key = '16a856dff4d1db46782e6132610ddb32';
-        x.invoke(t => t.searchMovie({ query: info.name, year: info.year })).then(e => this.tmdb = e.results[0]).then(()=>console.log(this.tmdb));
+        this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => this.movie = e.results[0]).then(() => console.log(this.tmdb));
     }
-    tmdb:MovieListResultObject;
+
+    movie: TmdbMovie;
 
     getImdbInfo_old(file: File) {
         let info = parseTorrentName(file.Name);

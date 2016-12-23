@@ -99,6 +99,7 @@ class Type extends Entity {
     }
     members: Entity[] = [];
     kind: "interface" | "type";
+    extends: TypeRef[] = [];
 }
 class Property extends Entity {
     constructor(ent?: Partial<Property>) { super(ent); }
@@ -132,15 +133,36 @@ const TAB = "    ";
 class CodeWriter {
     constructor() {
         this.register(Module, t => ["export module ", t.name, " {\n", t.members.map(t => [t, "\n"]), "}\n"]);
-        this.register(Type, t => [TAB, "export ", t.kind, " ", t.name, t.kind == "type" ? [" = ", t.type] : [" {\n", t.members.map(t => [t, "\n"])], TAB, "}\n"]);
-        this.register(Property, t => [TAB, TAB, t.name, t.isOptional ? "?" : "", [": ", t.type], ";"]);
+        this.register(Type, t => [
+            TAB, "export ", t.kind, " ", t.name,
+            t.kind == "type" ? [" = ", t.type] : [],
+            t.extends.length > 0 ? [" extends ", t.extends.withValueBetweenItems(",")] : [],
+            [" {\n", t.members.map(t => [t, "\n"])], TAB, "}\n"
+        ]);
+        this.register(Property, t => [TAB, TAB, this.stringifyPropIfNeeded(t.name), t.isOptional ? "?" : "", [": ", t.type], ";"]);
         this.register(Variable, t => [TAB, "export let ", t.name, [": ", t.type], [" = ", t.value], ";"]);
         this.register(Method, t => [TAB, TAB, [t.attributes.length == 0 ? null : t.attributes, "\n", TAB, TAB], t.name, "(", t.parameters.withValueBetweenItems(", "), ")", [": ", t.type], ";"]);
-        this.register(Parameter, t => [t.name, ":", t.type]);
-        this.register(TypeRef, t => [t.name, ["<", t.args.length == 0 ? null : t.args.withValueBetweenItems(","), ">"]]);
+        this.register(Parameter, t => [t.name, ": ", t.type]);
+        this.register(TypeRef, t => this.typeRefToCode(t));
         //this.register(Array, t => t.some(x => x == null) ? "" : t.map(x => this.visit(x)));
         //this.register(String, t => JSON.stringify(t));
         //this.register(Number, t => JSON.stringify(t));
+    }
+    typeRefToCode(tr: TypeRef): Tokens {
+        let name = tr.type != null ? tr.type.name : tr.name || "any";
+        if (name == "object")
+            return "Object";
+        if (name == "integer")
+            return "number";
+        if (name == "Array" && tr.args.length == 1)
+            return [this.typeRefToCode(tr.args[0]), "[]"];
+        return [name, ["<", tr.args.length == 0 ? null : tr.args.withValueBetweenItems(","), ">"]];
+    }
+
+    stringifyPropIfNeeded(name: string): string {
+        if (/[\.\-]/.test(name))
+            return JSON.stringify(name);
+        return name;
     }
     visit(obj: any): Tokens {
         if (obj == null || typeof (obj) != "object")

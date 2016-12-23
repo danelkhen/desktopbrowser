@@ -1,6 +1,8 @@
 {
     "name": "client",
-    "dependencies": {},
+    "dependencies": {
+        "xhr2": "registry:npm/xhr2#0.1.3+20160122200214"
+    },
     "globalDependencies": {
         "jquery": "registry:dt/jquery#1.10.0+20160929162922",
         "less": "registry:dt/less#0.0.0+20160608105036"

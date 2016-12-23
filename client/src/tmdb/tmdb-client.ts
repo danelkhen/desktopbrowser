@@ -1,13 +1,14 @@
-import { TmdbApi, MovieListResultObject as TmdbMovie } from "tmdb-api"
-import { TmdbApiPaths } from "./md"
+import { TmdbApi, TmdbApiMetadata } from "./tmdb-api"
 import { Proxy } from "../utils/proxy"
+import * as XMLHttpRequest from "xhr2"
 
 export class TmdbApiClient extends Proxy<TmdbApi>{
     constructor() {
         super();
         this.onInvoke = pc => {
             console.log({ pc });
-            let path = TmdbApiPaths[pc.name];
+            let md = TmdbApiMetadata[pc.name];
+            let path = md.path;
             let req = pc.args[0];
             console.log({ path, req });
             let url = this.base_url + path;
@@ -23,14 +24,14 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
 
 
 export function xhr2<T>(opts: XhrConfig) {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
         let url = opts.url;
         let method = opts.method || "GET";
         let remaining = {};
         if (opts.params != null && method == "GET") {
             Object.keys(opts.params).forEach(key => {
                 let placeholder = "{" + key + "}";
-                if (url.contains(placeholder)) {
+                if (url.indexOf(placeholder) >= 0) {
                     url.replace(placeholder, encodeURIComponent(opts.params[key]));
                 }
                 else {
@@ -58,10 +59,3 @@ export interface XhrConfig {
     method?: string;
 }
 
-function test() {
-    let x = new TmdbApiClient();
-    x.api_key = '16a856dff4d1db46782e6132610ddb32';
-    x.invoke(t => t.searchMovie({ query: "deadpool" })).then(e => console.log(e));
-}
-
-test();

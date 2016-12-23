@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { TmdbApiClient } from "./tmdb/client"
-import { MovieListResultObject} from "tmdb-api"
+import { TmdbClient } from "./tmdb-client"
+import { TmdbMovie } from "./tmdb/tmdb-api"
 
 @Component({
     selector: 'my-media',
@@ -8,7 +8,7 @@ import { MovieListResultObject} from "tmdb-api"
     styleUrls: ['_res_/src/media.component.css'],
 })
 export class MediaComponent implements OnInit, OnChanges {
-    movies: MovieListResultObject[];
+    movies: TmdbMovie[];
     ngOnInit(): void {
         this.test();
     }
@@ -17,9 +17,11 @@ export class MediaComponent implements OnInit, OnChanges {
     tmdbImageBaseUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2";
 
     test() {
-        let x = new TmdbApiClient();
-        x.api_key = '16a856dff4d1db46782e6132610ddb32';
-        x.invoke(t => t.getMoviePopular({ language: "en" })).then(e => this.movies = e.results);
+        let x = new TmdbClient();
+        x.init().then(() => x.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
+            this.movies = e.results;
+            console.log(this.movies);
+        }));
     }
 
 
