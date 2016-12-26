@@ -12,7 +12,7 @@ export interface TmdbApi {
     accountGetMovieWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<Movie>;
     accountGetRatedMovies(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedMovie>;
     accountGetRatedTVEpisodes(req: AccountGetRatedTVEpisodesRequest): AccountGetRatedTVEpisodesResponse;
-    accountGetRatedTVShows(req: AccountGetTVShowWatchlistRequestBase): Guest_sessionGetRatedTVShowsResponseBase;
+    accountGetRatedTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedTvShow>;
     accountGetTVShowWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TvShow>;
     accountMarkasFavorite(req: AccountAddtoWatchlistRequestBase): any;
 
@@ -43,7 +43,7 @@ export interface TmdbApi {
 
     guest_sessionGetRatedMovies(req: Guest_sessionGetRatedMoviesRequestBase): PagedResponse<RatedMovie>;
     guest_sessionGetRatedTVEpisodes(req: Guest_sessionGetRatedMoviesRequestBase): Guest_sessionGetRatedTVEpisodesResponse;
-    guest_sessionGetRatedTVShows(req: Guest_sessionGetRatedMoviesRequestBase): Guest_sessionGetRatedTVShowsResponseBase;
+    guest_sessionGetRatedTVShows(req: Guest_sessionGetRatedMoviesRequestBase): PagedResponse<RatedTvShow>;
 
     jobGetJobs(req: GetApiConfigurationRequest): JobGetJobsResponse;
 
@@ -62,36 +62,36 @@ export interface TmdbApi {
     movieGetAlternativeTitles(req: MovieGetAlternativeTitlesRequest): MovieGetAlternativeTitlesResponse;
     movieGetChanges(req: MovieGetChangesRequest): MovieGetChangesResponse;
     movieGetCredits(req: MovieGetReleaseDatesRequestBase): MovieGetCreditsResponse;
-    movieGetDetails(req: MovieGetDetailsRequest): MovieGetDetailsResponse;
+    movieGetDetails(req: MovieGetDetailsRequest): MovieDetails;
     movieGetImages(req: MovieGetImagesRequest): MovieGetImagesResponse;
     movieGetKeywords(req: MovieGetReleaseDatesRequestBase): MovieGetKeywordsResponse;
     movieGetLatest(req: MovieGetLatestRequestBase): MovieGetLatestResponse;
-    movieGetLists(req: MovieGetRecommendationsRequestBase): MovieGetListsResponse;
-    movieGetMovieChangeList(req: MovieGetMovieChangeListRequestBase): MovieGetMovieChangeListResponseBase;
+    movieGetLists(req: MovieRequest): MovieGetListsResponse;
+    movieGetMovieChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
     movieGetNowPlaying(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
-    movieGetRecommendations(req: MovieGetRecommendationsRequestBase): PagedResponse<Movie>;
+    movieGetRecommendations(req: MovieRequest): PagedResponse<Movie>;
     movieGetReleaseDates(req: MovieGetReleaseDatesRequestBase): MovieGetReleaseDatesResponse;
-    movieGetReviews(req: MovieGetRecommendationsRequestBase): MovieGetReviewsResponse;
-    movieGetSimilarMovies(req: MovieGetRecommendationsRequestBase): PagedResponse<Movie>;
+    movieGetReviews(req: MovieRequest): MovieGetReviewsResponse;
+    movieGetSimilarMovies(req: MovieRequest): PagedResponse<Movie>;
     movieGetTopRated(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
     movieGetTranslations(req: MovieGetReleaseDatesRequestBase): MovieGetTranslationsResponse;
     movieGetUpcoming(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
-    movieGetVideos(req: MovieGetVideosRequest): MovieGetVideosResponseBase;
+    movieGetVideos(req: MovieGetVideosRequest): GetVideosResponse;
     movieRateMovie(req: MovieRateMovieRequest): any;
 
     networkGetDetails(req: NetworkGetDetailsRequest): MovieGetDetailsResponse_genresBase;
 
     personGetChanges(req: PersonGetChangesRequest): PersonGetChangesResponse;
-    personGetCombinedCredits(req: PersonGetExternalIDsRequestBase): PersonGetCombinedCreditsResponse;
+    personGetCombinedCredits(req: PersonRequest): PersonGetCombinedCreditsResponse;
     personGetDetails(req: PersonGetDetailsRequest): Person;
-    personGetExternalIDs(req: PersonGetExternalIDsRequestBase): PersonGetExternalIDsResponse;
+    personGetExternalIDs(req: PersonRequest): PersonGetExternalIDsResponse;
     personGetImages(req: PersonGetImagesRequest): PersonGetImagesResponse;
     personGetLatest(req: MovieGetLatestRequestBase): Person;
-    personGetMovieCredits(req: PersonGetExternalIDsRequestBase): PersonGetMovieCreditsResponse;
-    personGetPersonChangeList(req: MovieGetMovieChangeListRequestBase): MovieGetMovieChangeListResponseBase;
+    personGetMovieCredits(req: PersonRequest): PersonGetMovieCreditsResponse;
+    personGetPersonChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
     personGetPopular(req: PersonGetPopularRequestBase): PersonGetPopularResponseBase;
     personGetTaggedImages(req: PersonGetTaggedImagesRequest): PersonGetTaggedImagesResponse;
-    personGetTVCredits(req: PersonGetExternalIDsRequestBase): PersonGetTVCreditsResponse;
+    personGetTVCredits(req: PersonRequest): PersonGetTVCreditsResponse;
 
     reviewGetDetails(req: ReviewGetDetailsRequest): ReviewGetDetailsResponse;
 
@@ -115,8 +115,8 @@ export interface TmdbApi {
     tvGetChanges3(req: TvGetChanges3Request): TvGetChanges3Response;
     tvGetContentRatings(req: TvGetImagesRequestBase): TvGetContentRatingsResponse;
     tvGetCredits(req: TvGetTVEpisodeExternalIDsRequestBase): TvGetCreditsResponse;
-    tvGetCredits2(req: TvGetExternalIDsRequestBase): TvGetCredits2ResponseBase;
-    tvGetCredits3(req: TvGetImagesRequestBase): TvGetCredits2ResponseBase;
+    tvGetCredits2(req: TvGetExternalIDsRequestBase): TvShowCreditsResponse;
+    tvGetCredits3(req: TvGetImagesRequestBase): TvShowCreditsResponse;
     tvGetDetails(req: TvGetDetailsRequest): TvGetDetailsResponse;
     tvGetDetails2(req: TvGetDetails2Request): TvGetDetails2Response;
     tvGetDetails3(req: TvGetDetails3Request): TvGetDetails3Response;
@@ -133,12 +133,12 @@ export interface TmdbApi {
     tvGetTopRated(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
     tvGetTranslations(req: TvGetImagesRequestBase): TvGetTranslationsResponse;
     tvGetTVAiringToday(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
-    tvGetTVChangeList(req: MovieGetMovieChangeListRequestBase): MovieGetMovieChangeListResponseBase;
+    tvGetTVChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
     tvGetTVEpisodeExternalIDs(req: TvGetTVEpisodeExternalIDsRequestBase): TvGetTVEpisodeExternalIDsResponse;
     tvGetTVOnTheAir(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
-    tvGetVideos(req: TvGetVideosRequest): MovieGetVideosResponseBase;
-    tvGetVideos2(req: TvGetImagesRequestBase): MovieGetVideosResponseBase;
-    tvGetVideos3(req: TvGetExternalIDsRequestBase): MovieGetVideosResponseBase;
+    tvGetVideos(req: TvGetVideosRequest): GetVideosResponse;
+    tvGetVideos2(req: TvGetImagesRequestBase): GetVideosResponse;
+    tvGetVideos3(req: TvGetExternalIDsRequestBase): GetVideosResponse;
     tvRateTVEpisode(req: TvRateTVEpisodeRequest): any;
     tvRateTVShow(req: TvRateTVShowRequest): any;
 }
@@ -170,33 +170,6 @@ export interface MovieGetDetailsResponse_spoken_languages {
     name: string;
 }
 
-export interface MovieGetDetailsResponse {
-    adult: boolean;
-    backdrop_path: string;
-    belongs_to_collection: Object;
-    budget: number;
-    genres: MovieGetDetailsResponse_genresBase[];
-    homepage: string;
-    id: number;
-    imdb_id: string;
-    original_language: string;
-    original_title: string;
-    overview: string;
-    popularity: number;
-    poster_path: string;
-    production_companies: MovieGetDetailsResponse_genresBase[];
-    production_countries: MovieGetDetailsResponse_production_countries[];
-    release_date: string;
-    revenue: number;
-    runtime: number;
-    spoken_languages: MovieGetDetailsResponse_spoken_languages[];
-    status: string;
-    tagline: string;
-    title: string;
-    video: boolean;
-    vote_average: number;
-    vote_count: number;
-}
 
 export interface TvGetAccountStates2Response {
     id: number;
@@ -396,7 +369,7 @@ export interface TvGetDetailsResponse {
     popularity: number;
     poster_path: string;
     production_companies: MovieGetDetailsResponse_genresBase[];
-    seasons: TvGetDetailsResponse_seasonsBase[];
+    seasons: TvShowSeason[];
     status: string;
     type: string;
     vote_average: number;
@@ -443,9 +416,9 @@ export interface PersonGetCombinedCreditsResponse {
 }
 
 export interface TvGetCreditsResponse {
-    cast: TvGetCreditsResponse_castBase[];
-    crew: TvGetCreditsResponse_crewBase[];
-    guest_stars: TvGetCreditsResponse_castBase[];
+    cast: TvShowCredit[];
+    crew: TvShowCrewMember[];
+    guest_stars: TvShowCredit[];
     id: number;
 }
 
@@ -479,9 +452,9 @@ export interface PersonGetMovieCreditsResponse {
 }
 
 export interface MovieGetImagesResponse {
-    backdrops: MovieGetImagesResponse_backdropsBase[];
+    backdrops: Image[];
     id: number;
-    posters: MovieGetImagesResponse_backdropsBase[];
+    posters: Image[];
 }
 
 export interface TvGetAccountStates3Response_results {
@@ -642,7 +615,7 @@ export interface CreditGetDetailsResponse {
 
 export interface TvGetDetails2Response_episodes {
     air_date: string;
-    crew: TvGetCreditsResponse_crewBase[];
+    crew: TvShowCrewMember[];
     episode_number: number;
     guest_stars: Unknown[];
     id: number;
@@ -689,7 +662,7 @@ export interface ListCheckItemStatusResponse {
 
 export interface MovieGetAlternativeTitlesResponse {
     id: number;
-    titles: MovieGetAlternativeTitlesResponse_titlesBase[];
+    titles: MovieAlternativeTitle[];
 }
 
 export interface CompanyGetDetailsResponse {
@@ -704,7 +677,7 @@ export interface CompanyGetDetailsResponse {
 
 export interface TvGetImages2Response {
     id: number;
-    stills: TvGetImages2Response_stillsBase[];
+    stills: Image[];
 }
 
 export interface MovieGetKeywordsResponse {
@@ -714,9 +687,9 @@ export interface MovieGetKeywordsResponse {
 
 export interface TvGetDetails3Response {
     air_date: string;
-    crew: TvGetCreditsResponse_crewBase[];
+    crew: TvShowCrewMember[];
     episode_number: number;
-    guest_stars: TvGetCreditsResponse_castBase[];
+    guest_stars: TvShowCredit[];
     id: number;
     name: string;
     overview: string;
@@ -822,7 +795,7 @@ export interface AccountGetRatedTVEpisodesResponse {
 
 export interface TvGetImages3Response {
     id: number;
-    posters: TvGetImages2Response_stillsBase[];
+    posters: Image[];
 }
 
 export interface AuthenticationCreateRequestTokenResponse {
@@ -853,7 +826,7 @@ export interface TvGetLatestResponse {
     popularity: number;
     poster_path: string;
     production_companies: Unknown[];
-    seasons: TvGetDetailsResponse_seasonsBase[];
+    seasons: TvShowSeason[];
     status: string;
     type: string;
     vote_average: number;
@@ -872,7 +845,7 @@ export interface MovieGetCreditsResponse_cast {
 
 export interface MovieGetCreditsResponse {
     cast: MovieGetCreditsResponse_cast[];
-    crew: TvGetCreditsResponse_crewBase[];
+    crew: TvShowCrewMember[];
     id: number;
 }
 
@@ -941,7 +914,7 @@ export interface TvGetKeywordsResponse {
 
 export interface TvGetAlternativeTitlesResponse {
     id: number;
-    results: MovieGetAlternativeTitlesResponse_titlesBase[];
+    results: MovieAlternativeTitle[];
 }
 
 export interface TvGetExternalIDs2Response {
@@ -1481,16 +1454,38 @@ export interface Image {
     width: number;
 }
 
-export interface MovieGetMovieChangeListResponse_resultsBase {
+
+export interface ChangeList {
     adult: boolean;
     id: number;
 }
 
-export interface MovieGetMovieChangeListResponseBase {
-    page: number;
-    results: MovieGetMovieChangeListResponse_resultsBase[];
-    total_pages: number;
-    total_results: number;
+export interface MovieDetails extends Movie {
+    adult: boolean;
+    backdrop_path: string;
+    belongs_to_collection: Object;
+    budget: number;
+    genres: MovieGetDetailsResponse_genresBase[];
+    homepage: string;
+    id: number;
+    imdb_id: string;
+    original_language: string;
+    original_title: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    production_companies: MovieGetDetailsResponse_genresBase[];
+    production_countries: MovieGetDetailsResponse_production_countries[];
+    release_date: string;
+    revenue: number;
+    runtime: number;
+    spoken_languages: MovieGetDetailsResponse_spoken_languages[];
+    status: string;
+    tagline: string;
+    title: string;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
 }
 
 export interface MovieOrTvShow {
@@ -1540,7 +1535,7 @@ export interface Certification {
 export interface Unknown {
 }
 
-export interface MovieGetVideosResponse_resultsBase {
+export interface Video {
     id: string;
     iso_3166_1: string;
     iso_639_1: string;
@@ -1551,9 +1546,9 @@ export interface MovieGetVideosResponse_resultsBase {
     type: string;
 }
 
-export interface MovieGetVideosResponseBase {
+export interface GetVideosResponse {
     id: number;
-    results: MovieGetVideosResponse_resultsBase[];
+    results: Video[];
 }
 
 export interface KeywordGetMoviesResponseBase {
@@ -1562,7 +1557,7 @@ export interface KeywordGetMoviesResponseBase {
     results: Movie[];
 }
 
-export interface TvGetDetailsResponse_seasonsBase {
+export interface TvShowSeason {
     air_date: string;
     episode_count: number;
     id: number;
@@ -1570,7 +1565,7 @@ export interface TvGetDetailsResponse_seasonsBase {
     season_number: number;
 }
 
-export interface TvGetCreditsResponse_castBase {
+export interface TvShowCredit {
     character: string;
     credit_id: string;
     id: number;
@@ -1579,7 +1574,7 @@ export interface TvGetCreditsResponse_castBase {
     profile_path: string;
 }
 
-export interface TvGetCreditsResponse_crewBase {
+export interface TvShowCrewMember {
     credit_id: string;
     department: string;
     id: number;
@@ -1604,15 +1599,6 @@ export interface Person {
     profile_path: string;
 }
 
-export interface MovieGetImagesResponse_backdropsBase {
-    aspect_ratio: number;
-    file_path: string;
-    height: number;
-    iso_639_1: string;
-    vote_average: number;
-    vote_count: number;
-    width: number;
-}
 
 export interface GenreGetMovieListResponseBase {
     genres: MovieGetDetailsResponse_genresBase[];
@@ -1637,28 +1623,19 @@ export interface RatedMovie {
 }
 
 
-export interface MovieGetAlternativeTitlesResponse_titlesBase {
+export interface MovieAlternativeTitle {
     iso_3166_1: string;
     title: string;
 }
 
-export interface TvGetImages2Response_stillsBase {
-    aspect_ratio: number;
-    file_path: string;
-    height: number;
-    iso_639_1: string;
-    vote_average: number | number;
-    vote_count: number;
-    width: number;
-}
 
-export interface TvGetCredits2ResponseBase {
-    cast: TvGetCreditsResponse_castBase[];
-    crew: TvGetCreditsResponse_crewBase[];
+export interface TvShowCreditsResponse {
+    cast: TvShowCredit[];
+    crew: TvShowCrewMember[];
     id: number;
 }
 
-export interface Guest_sessionGetRatedTVShowsResponse_resultsBase {
+export interface RatedTvShow {
     backdrop_path: string;
     first_air_date: string;
     genre_ids: number[];
@@ -1675,10 +1652,6 @@ export interface Guest_sessionGetRatedTVShowsResponse_resultsBase {
     vote_count: number;
 }
 
-export interface Guest_sessionGetRatedTVShowsResponseBase {
-    page: number;
-    results: Guest_sessionGetRatedTVShowsResponse_resultsBase[];
-}
 
 export interface PersonGetPopularRequestBase {
     api_key?: string;
@@ -1717,13 +1690,13 @@ export interface TvGetTVEpisodeExternalIDsRequestBase {
     tv_id?: number;
 }
 
-export interface PersonGetExternalIDsRequestBase {
+export interface PersonRequest {
     api_key?: string;
     language?: string;
     person_id?: number;
 }
 
-export interface MovieGetRecommendationsRequestBase {
+export interface MovieRequest {
     api_key?: string;
     language?: string;
     movie_id?: number;
@@ -1810,493 +1783,132 @@ export interface PagedResponse<T> {
     totalPages?: number;
     totalResults?: number;
 }
+
 export interface ApiMetadata {
     path: string;
     method: string;
 }
+
 export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
-    "tvGetChanges": {
-        "path": "/tv/episode/{episode_id}/changes",
-        "method": "get"
-    },
-    "tvGetAccountStates": {
-        "path": "/tv/{tv_id}/account_states",
-        "method": "get"
-    },
-    "personGetPopular": {
-        "path": "/person/popular",
-        "method": "get"
-    },
-    "movieGetDetails": {
-        "path": "/movie/{movie_id}",
-        "method": "get"
-    },
-    "tvGetAccountStates2": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/account_states",
-        "method": "get"
-    },
-    "movieRateMovie": {
-        "path": "/movie/{movie_id}/rating",
-        "method": "post"
-    },
-    "movieDeleteRating": {
-        "path": "/movie/{movie_id}/rating",
-        "method": "delete"
-    },
-    "tvGetImages": {
-        "path": "/tv/{tv_id}/images",
-        "method": "get"
-    },
-    "movieGetMovieChangeList": {
-        "path": "/movie/changes",
-        "method": "get"
-    },
-    "personGetPersonChangeList": {
-        "path": "/person/changes",
-        "method": "get"
-    },
-    "discoverMovieDiscover": {
-        "path": "/discover/movie",
-        "method": "get"
-    },
-    "authenticationCreateSession": {
-        "path": "/authentication/session/new",
-        "method": "get"
-    },
-    "certificationGetTVCertifications": {
-        "path": "/certification/tv/list",
-        "method": "get"
-    },
-    "authenticationCreateGuestSession": {
-        "path": "/authentication/guest_session/new",
-        "method": "get"
-    },
-    "accountGetTVShowWatchlist": {
-        "path": "/account/{account_id}/watchlist/tv",
-        "method": "get"
-    },
-    "tvGetChanges2": {
-        "path": "/tv/{tv_id}/changes",
-        "method": "get"
-    },
-    "accountGetFavoriteMovies": {
-        "path": "/account/{account_id}/favorite/movies",
-        "method": "get"
-    },
-    "tvGetTVEpisodeExternalIDs": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/external_ids",
-        "method": "get"
-    },
-    "personGetExternalIDs": {
-        "path": "/person/{person_id}/external_ids",
-        "method": "get"
-    },
-    "movieGetRecommendations": {
-        "path": "/movie/{movie_id}/recommendations",
-        "method": "get"
-    },
-    "movieGetLatest": {
-        "path": "/movie/latest",
-        "method": "get"
-    },
-    "tvGetExternalIDs": {
-        "path": "/tv/{tv_id}/season/{season_number}/external_ids",
-        "method": "get"
-    },
-    "accountGetCreatedLists": {
-        "path": "/account/{account_id}/lists",
-        "method": "get"
-    },
-    "tvGetContentRatings": {
-        "path": "/tv/{tv_id}/content_ratings",
-        "method": "get"
-    },
-    "personGetTVCredits": {
-        "path": "/person/{person_id}/tv_credits",
-        "method": "get"
-    },
-    "tvGetSimilarTVShows": {
-        "path": "/tv/{tv_id}/similar",
-        "method": "get"
-    },
-    "findFindbyID": {
-        "path": "/find/{external_id}",
-        "method": "get"
-    },
-    "movieGetVideos": {
-        "path": "/movie/{movie_id}/videos",
-        "method": "get"
-    },
-    "keywordGetMovies": {
-        "path": "/keyword/{keyword_id}/movies",
-        "method": "get"
-    },
-    "tvGetDetails": {
-        "path": "/tv/{tv_id}",
-        "method": "get"
-    },
-    "personGetCombinedCredits": {
-        "path": "/person/{person_id}/combined_credits",
-        "method": "get"
-    },
-    "tvGetCredits": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/credits",
-        "method": "get"
-    },
-    "personGetDetails": {
-        "path": "/person/{person_id}",
-        "method": "get"
-    },
-    "personGetMovieCredits": {
-        "path": "/person/{person_id}/movie_credits",
-        "method": "get"
-    },
-    "tvRateTVEpisode": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating",
-        "method": "post"
-    },
-    "tvDeleteRating": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating",
-        "method": "delete"
-    },
-    "movieGetAccountStates": {
-        "path": "/movie/{movie_id}/account_states",
-        "method": "get"
-    },
-    "movieGetImages": {
-        "path": "/movie/{movie_id}/images",
-        "method": "get"
-    },
-    "tvGetAccountStates3": {
-        "path": "/tv/{tv_id}/season/{season_number}/account_states",
-        "method": "get"
-    },
-    "movieGetReviews": {
-        "path": "/movie/{movie_id}/reviews",
-        "method": "get"
-    },
-    "movieGetReleaseDates": {
-        "path": "/movie/{movie_id}/release_dates",
-        "method": "get"
-    },
-    "collectionGetDetails": {
-        "path": "/collection/{collection_id}",
-        "method": "get"
-    },
-    "tvGetTVAiringToday": {
-        "path": "/tv/airing_today",
-        "method": "get"
-    },
-    "companyGetMovies": {
-        "path": "/company/{company_id}/movies",
-        "method": "get"
-    },
-    "tvGetVideos": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/videos",
-        "method": "get"
-    },
-    "getApiConfiguration": {
-        "path": "/configuration",
-        "method": "get"
-    },
-    "movieGetChanges": {
-        "path": "/movie/{movie_id}/changes",
-        "method": "get"
-    },
-    "accountGetFavoriteTVShows": {
-        "path": "/account/{account_id}/favorite/tv",
-        "method": "get"
-    },
-    "reviewGetDetails": {
-        "path": "/review/{review_id}",
-        "method": "get"
-    },
-    "tvGetTVChangeList": {
-        "path": "/tv/changes",
-        "method": "get"
-    },
-    "jobGetJobs": {
-        "path": "/job/list",
-        "method": "get"
-    },
-    "listGetDetails": {
-        "path": "/list/{list_id}",
-        "method": "get"
-    },
-    "tvGetPopular": {
-        "path": "/tv/popular",
-        "method": "get"
-    },
-    "creditGetDetails": {
-        "path": "/credit/{credit_id}",
-        "method": "get"
-    },
-    "movieGetSimilarMovies": {
-        "path": "/movie/{movie_id}/similar",
-        "method": "get"
-    },
-    "movieGetNowPlaying": {
-        "path": "/movie/now_playing",
-        "method": "get"
-    },
-    "personGetLatest": {
-        "path": "/person/latest",
-        "method": "get"
-    },
-    "searchMovies": {
-        "path": "/search/movie",
-        "method": "get"
-    },
-    "genreGetMovieList": {
-        "path": "/genre/movie/list",
-        "method": "get"
-    },
-    "listAddMovie": {
-        "path": "/list/{list_id}/add_item",
-        "method": "post"
-    },
-    "tvGetDetails2": {
-        "path": "/tv/{tv_id}/season/{season_number}",
-        "method": "get"
-    },
-    "collectionGetImages": {
-        "path": "/collection/{collection_id}/images",
-        "method": "get"
-    },
-    "accountAddtoWatchlist": {
-        "path": "/account/{account_id}/watchlist",
-        "method": "post"
-    },
-    "searchSearchTVShows": {
-        "path": "/search/tv",
-        "method": "get"
-    },
-    "accountGetRatedMovies": {
-        "path": "/account/{account_id}/rated/movies",
-        "method": "get"
-    },
-    "tvGetVideos2": {
-        "path": "/tv/{tv_id}/videos",
-        "method": "get"
-    },
-    "networkGetDetails": {
-        "path": "/network/{network_id}",
-        "method": "get"
-    },
-    "genreGetTVList": {
-        "path": "/genre/tv/list",
-        "method": "get"
-    },
-    "listCheckItemStatus": {
-        "path": "/list/{list_id}/item_status",
-        "method": "get"
-    },
-    "movieGetAlternativeTitles": {
-        "path": "/movie/{movie_id}/alternative_titles",
-        "method": "get"
-    },
-    "companyGetDetails": {
-        "path": "/company/{company_id}",
-        "method": "get"
-    },
-    "tvGetImages2": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/images",
-        "method": "get"
-    },
-    "movieGetKeywords": {
-        "path": "/movie/{movie_id}/keywords",
-        "method": "get"
-    },
-    "tvGetDetails3": {
-        "path": "/tv/{tv_id}/season/{season_number}/episode/{episode_number}",
-        "method": "get"
-    },
-    "movieGetUpcoming": {
-        "path": "/movie/upcoming",
-        "method": "get"
-    },
-    "tvGetCredits2": {
-        "path": "/tv/{tv_id}/season/{season_number}/credits",
-        "method": "get"
-    },
-    "certificationGetMovieCertifications": {
-        "path": "/certification/movie/list",
-        "method": "get"
-    },
-    "tvRateTVShow": {
-        "path": "/tv/{tv_id}/rating",
-        "method": "post"
-    },
-    "tvDeleteRating2": {
-        "path": "/tv/{tv_id}/rating",
-        "method": "delete"
-    },
-    "accountGetMovieWatchlist": {
-        "path": "/account/{account_id}/watchlist/movies",
-        "method": "get"
-    },
-    "searchSearchCollections": {
-        "path": "/search/collection",
-        "method": "get"
-    },
-    "listClearList": {
-        "path": "/list/{list_id}/clear",
-        "method": "post"
-    },
-    "genreGetMovies": {
-        "path": "/genre/{genre_id}/movies",
-        "method": "get"
-    },
-    "listCreateList": {
-        "path": "/list",
-        "method": "post"
-    },
-    "timezonesGetList": {
-        "path": "/timezones/list",
-        "method": "get"
-    },
-    "discoverTVDiscover": {
-        "path": "/discover/tv",
-        "method": "get"
-    },
-    "searchSearchCompanies": {
-        "path": "/search/company",
-        "method": "get"
-    },
-    "authenticationValidateRequestToken": {
-        "path": "/authentication/token/validate_with_login",
-        "method": "get"
-    },
-    "personGetChanges": {
-        "path": "/person/{person_id}/changes",
-        "method": "get"
-    },
-    "accountGetRatedTVEpisodes": {
-        "path": "/account/{account_id}/rated/tv/episodes",
-        "method": "get"
-    },
-    "tvGetVideos3": {
-        "path": "/tv/{tv_id}/season/{season_number}/videos",
-        "method": "get"
-    },
-    "movieGetPopular": {
-        "path": "/movie/popular",
-        "method": "get"
-    },
-    "tvGetTopRated": {
-        "path": "/tv/top_rated",
-        "method": "get"
-    },
-    "searchSearchPeople": {
-        "path": "/search/person",
-        "method": "get"
-    },
-    "tvGetImages3": {
-        "path": "/tv/{tv_id}/season/{season_number}/images",
-        "method": "get"
-    },
-    "guest_sessionGetRatedMovies": {
-        "path": "/guest_session/{guest_session_id}/rated/movies",
-        "method": "get"
-    },
-    "authenticationCreateRequestToken": {
-        "path": "/authentication/token/new",
-        "method": "get"
-    },
-    "tvGetLatest": {
-        "path": "/tv/latest",
-        "method": "get"
-    },
-    "movieGetCredits": {
-        "path": "/movie/{movie_id}/credits",
-        "method": "get"
-    },
-    "tvGetRecommendations": {
-        "path": "/tv/{tv_id}/recommendations",
-        "method": "get"
-    },
-    "searchSearchKeywords": {
-        "path": "/search/keyword",
-        "method": "get"
-    },
-    "guest_sessionGetRatedTVEpisodes": {
-        "path": "/guest_session/{guest_session_id}/rated/tv/episodes",
-        "method": "get"
-    },
-    "searchMultiSearch": {
-        "path": "/search/multi",
-        "method": "get"
-    },
-    "guest_sessionGetRatedTVShows": {
-        "path": "/guest_session/{guest_session_id}/rated/tv",
-        "method": "get"
-    },
-    "personGetImages": {
-        "path": "/person/{person_id}/images",
-        "method": "get"
-    },
-    "accountGetRatedTVShows": {
-        "path": "/account/{account_id}/rated/tv",
-        "method": "get"
-    },
-    "tvGetTranslations": {
-        "path": "/tv/{tv_id}/translations",
-        "method": "get"
-    },
-    "tvGetKeywords": {
-        "path": "/tv/{tv_id}/keywords",
-        "method": "get"
-    },
-    "tvGetCredits3": {
-        "path": "/tv/{tv_id}/credits",
-        "method": "get"
-    },
-    "tvGetAlternativeTitles": {
-        "path": "/tv/{tv_id}/alternative_titles",
-        "method": "get"
-    },
-    "tvGetExternalIDs2": {
-        "path": "/tv/{tv_id}/external_ids",
-        "method": "get"
-    },
-    "listRemoveMovie": {
-        "path": "/list/{list_id}/remove_item",
-        "method": "post"
-    },
-    "accountMarkasFavorite": {
-        "path": "/account/{account_id}/favorite",
-        "method": "post"
-    },
-    "personGetTaggedImages": {
-        "path": "/person/{person_id}/tagged_images",
-        "method": "get"
-    },
-    "movieGetLists": {
-        "path": "/movie/{movie_id}/lists",
-        "method": "get"
-    },
-    "tvGetChanges3": {
-        "path": "/tv/season/{season_id}/changes",
-        "method": "get"
-    },
-    "movieGetTopRated": {
-        "path": "/movie/top_rated",
-        "method": "get"
-    },
-    "keywordGetDetails": {
-        "path": "/keyword/{keyword_id}",
-        "method": "get"
-    },
-    "tvGetTVOnTheAir": {
-        "path": "/tv/on_the_air",
-        "method": "get"
-    },
-    "movieGetTranslations": {
-        "path": "/movie/{movie_id}/translations",
-        "method": "get"
-    },
-    "accountGetDetails": {
-        "path": "/account",
-        "method": "get"
-    }
+    tvGetChanges: { path: "/tv/episode/{episode_id}/changes", method: "get" },
+    tvGetAccountStates: { path: "/tv/{tv_id}/account_states", method: "get" },
+    personGetPopular: { path: "/person/popular", method: "get" },
+    movieGetDetails: { path: "/movie/{movie_id}", method: "get" },
+    tvGetAccountStates2: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/account_states", method: "get" },
+    movieRateMovie: { path: "/movie/{movie_id}/rating", method: "post" },
+    movieDeleteRating: { path: "/movie/{movie_id}/rating", method: "delete" },
+    tvGetImages: { path: "/tv/{tv_id}/images", method: "get" },
+    movieGetMovieChangeList: { path: "/movie/changes", method: "get" },
+    personGetPersonChangeList: { path: "/person/changes", method: "get" },
+    discoverMovieDiscover: { path: "/discover/movie", method: "get" },
+    authenticationCreateSession: { path: "/authentication/session/new", method: "get" },
+    certificationGetTVCertifications: { path: "/certification/tv/list", method: "get" },
+    authenticationCreateGuestSession: { path: "/authentication/guest_session/new", method: "get" },
+    accountGetTVShowWatchlist: { path: "/account/{account_id}/watchlist/tv", method: "get" },
+    tvGetChanges2: { path: "/tv/{tv_id}/changes", method: "get" },
+    accountGetFavoriteMovies: { path: "/account/{account_id}/favorite/movies", method: "get" },
+    tvGetTVEpisodeExternalIDs: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/external_ids", method: "get" },
+    personGetExternalIDs: { path: "/person/{person_id}/external_ids", method: "get" },
+    movieGetRecommendations: { path: "/movie/{movie_id}/recommendations", method: "get" },
+    movieGetLatest: { path: "/movie/latest", method: "get" },
+    tvGetExternalIDs: { path: "/tv/{tv_id}/season/{season_number}/external_ids", method: "get" },
+    accountGetCreatedLists: { path: "/account/{account_id}/lists", method: "get" },
+    tvGetContentRatings: { path: "/tv/{tv_id}/content_ratings", method: "get" },
+    personGetTVCredits: { path: "/person/{person_id}/tv_credits", method: "get" },
+    tvGetSimilarTVShows: { path: "/tv/{tv_id}/similar", method: "get" },
+    findFindbyID: { path: "/find/{external_id}", method: "get" },
+    movieGetVideos: { path: "/movie/{movie_id}/videos", method: "get" },
+    keywordGetMovies: { path: "/keyword/{keyword_id}/movies", method: "get" },
+    tvGetDetails: { path: "/tv/{tv_id}", method: "get" },
+    personGetCombinedCredits: { path: "/person/{person_id}/combined_credits", method: "get" },
+    tvGetCredits: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/credits", method: "get" },
+    personGetDetails: { path: "/person/{person_id}", method: "get" },
+    personGetMovieCredits: { path: "/person/{person_id}/movie_credits", method: "get" },
+    tvRateTVEpisode: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating", method: "post" },
+    tvDeleteRating: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/rating", method: "delete" },
+    movieGetAccountStates: { path: "/movie/{movie_id}/account_states", method: "get" },
+    movieGetImages: { path: "/movie/{movie_id}/images", method: "get" },
+    tvGetAccountStates3: { path: "/tv/{tv_id}/season/{season_number}/account_states", method: "get" },
+    movieGetReviews: { path: "/movie/{movie_id}/reviews", method: "get" },
+    movieGetReleaseDates: { path: "/movie/{movie_id}/release_dates", method: "get" },
+    collectionGetDetails: { path: "/collection/{collection_id}", method: "get" },
+    tvGetTVAiringToday: { path: "/tv/airing_today", method: "get" },
+    companyGetMovies: { path: "/company/{company_id}/movies", method: "get" },
+    tvGetVideos: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/videos", method: "get" },
+    getApiConfiguration: { path: "/configuration", method: "get" },
+    movieGetChanges: { path: "/movie/{movie_id}/changes", method: "get" },
+    accountGetFavoriteTVShows: { path: "/account/{account_id}/favorite/tv", method: "get" },
+    reviewGetDetails: { path: "/review/{review_id}", method: "get" },
+    tvGetTVChangeList: { path: "/tv/changes", method: "get" },
+    jobGetJobs: { path: "/job/list", method: "get" },
+    listGetDetails: { path: "/list/{list_id}", method: "get" },
+    tvGetPopular: { path: "/tv/popular", method: "get" },
+    creditGetDetails: { path: "/credit/{credit_id}", method: "get" },
+    movieGetSimilarMovies: { path: "/movie/{movie_id}/similar", method: "get" },
+    movieGetNowPlaying: { path: "/movie/now_playing", method: "get" },
+    personGetLatest: { path: "/person/latest", method: "get" },
+    searchMovies: { path: "/search/movie", method: "get" },
+    genreGetMovieList: { path: "/genre/movie/list", method: "get" },
+    listAddMovie: { path: "/list/{list_id}/add_item", method: "post" },
+    tvGetDetails2: { path: "/tv/{tv_id}/season/{season_number}", method: "get" },
+    collectionGetImages: { path: "/collection/{collection_id}/images", method: "get" },
+    accountAddtoWatchlist: { path: "/account/{account_id}/watchlist", method: "post" },
+    searchSearchTVShows: { path: "/search/tv", method: "get" },
+    accountGetRatedMovies: { path: "/account/{account_id}/rated/movies", method: "get" },
+    tvGetVideos2: { path: "/tv/{tv_id}/videos", method: "get" },
+    networkGetDetails: { path: "/network/{network_id}", method: "get" },
+    genreGetTVList: { path: "/genre/tv/list", method: "get" },
+    listCheckItemStatus: { path: "/list/{list_id}/item_status", method: "get" },
+    movieGetAlternativeTitles: { path: "/movie/{movie_id}/alternative_titles", method: "get" },
+    companyGetDetails: { path: "/company/{company_id}", method: "get" },
+    tvGetImages2: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}/images", method: "get" },
+    movieGetKeywords: { path: "/movie/{movie_id}/keywords", method: "get" },
+    tvGetDetails3: { path: "/tv/{tv_id}/season/{season_number}/episode/{episode_number}", method: "get" },
+    movieGetUpcoming: { path: "/movie/upcoming", method: "get" },
+    tvGetCredits2: { path: "/tv/{tv_id}/season/{season_number}/credits", method: "get" },
+    certificationGetMovieCertifications: { path: "/certification/movie/list", method: "get" },
+    tvRateTVShow: { path: "/tv/{tv_id}/rating", method: "post" },
+    tvDeleteRating2: { path: "/tv/{tv_id}/rating", method: "delete" },
+    accountGetMovieWatchlist: { path: "/account/{account_id}/watchlist/movies", method: "get" },
+    searchSearchCollections: { path: "/search/collection", method: "get" },
+    listClearList: { path: "/list/{list_id}/clear", method: "post" },
+    genreGetMovies: { path: "/genre/{genre_id}/movies", method: "get" },
+    listCreateList: { path: "/list", method: "post" },
+    timezonesGetList: { path: "/timezones/list", method: "get" },
+    discoverTVDiscover: { path: "/discover/tv", method: "get" },
+    searchSearchCompanies: { path: "/search/company", method: "get" },
+    authenticationValidateRequestToken: { path: "/authentication/token/validate_with_login", method: "get" },
+    personGetChanges: { path: "/person/{person_id}/changes", method: "get" },
+    accountGetRatedTVEpisodes: { path: "/account/{account_id}/rated/tv/episodes", method: "get" },
+    tvGetVideos3: { path: "/tv/{tv_id}/season/{season_number}/videos", method: "get" },
+    movieGetPopular: { path: "/movie/popular", method: "get" },
+    tvGetTopRated: { path: "/tv/top_rated", method: "get" },
+    searchSearchPeople: { path: "/search/person", method: "get" },
+    tvGetImages3: { path: "/tv/{tv_id}/season/{season_number}/images", method: "get" },
+    guest_sessionGetRatedMovies: { path: "/guest_session/{guest_session_id}/rated/movies", method: "get" },
+    authenticationCreateRequestToken: { path: "/authentication/token/new", method: "get" },
+    tvGetLatest: { path: "/tv/latest", method: "get" },
+    movieGetCredits: { path: "/movie/{movie_id}/credits", method: "get" },
+    tvGetRecommendations: { path: "/tv/{tv_id}/recommendations", method: "get" },
+    searchSearchKeywords: { path: "/search/keyword", method: "get" },
+    guest_sessionGetRatedTVEpisodes: { path: "/guest_session/{guest_session_id}/rated/tv/episodes", method: "get" },
+    searchMultiSearch: { path: "/search/multi", method: "get" },
+    guest_sessionGetRatedTVShows: { path: "/guest_session/{guest_session_id}/rated/tv", method: "get" },
+    personGetImages: { path: "/person/{person_id}/images", method: "get" },
+    accountGetRatedTVShows: { path: "/account/{account_id}/rated/tv", method: "get" },
+    tvGetTranslations: { path: "/tv/{tv_id}/translations", method: "get" },
+    tvGetKeywords: { path: "/tv/{tv_id}/keywords", method: "get" },
+    tvGetCredits3: { path: "/tv/{tv_id}/credits", method: "get" },
+    tvGetAlternativeTitles: { path: "/tv/{tv_id}/alternative_titles", method: "get" },
+    tvGetExternalIDs2: { path: "/tv/{tv_id}/external_ids", method: "get" },
+    listRemoveMovie: { path: "/list/{list_id}/remove_item", method: "post" },
+    accountMarkasFavorite: { path: "/account/{account_id}/favorite", method: "post" },
+    personGetTaggedImages: { path: "/person/{person_id}/tagged_images", method: "get" },
+    movieGetLists: { path: "/movie/{movie_id}/lists", method: "get" },
+    tvGetChanges3: { path: "/tv/season/{season_id}/changes", method: "get" },
+    movieGetTopRated: { path: "/movie/top_rated", method: "get" },
+    keywordGetDetails: { path: "/keyword/{keyword_id}", method: "get" },
+    tvGetTVOnTheAir: { path: "/tv/on_the_air", method: "get" },
+    movieGetTranslations: { path: "/movie/{movie_id}/translations", method: "get" },
+    accountGetDetails: { path: "/account", method: "get" }
 };

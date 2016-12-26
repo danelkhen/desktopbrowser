@@ -604,7 +604,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     getImdbInfo(file: File) {
         let info = new FilenameParser().parse(file.Name);
         let isTv = info.season != null;
-        this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => this.movie = e.results[0]).then(() => console.log(this.tmdb));
+        this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => this.movie = e.results[0]).then(() => console.log(this.movie));
     }
 
     movie: Movie;

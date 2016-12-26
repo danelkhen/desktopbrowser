@@ -122,32 +122,24 @@
     <p class="actors">{{imdb.actors}}</p>
     <p class="plot">{{imdb.plot}}</p>
 </div>
+
 <div class="tmdb" *ngIf="movie!=null">
-    <div class="imdburl poster"><a target="_blank" href="{{movie.imdburl}}"><img src="{{movie.poster_url}}" /></a></div>
-    <h1>
-        <label class="title">{{movie.title}}</label>
-    </h1>
-    <h4>
-        <label class="year">{{movie.year}}</label>
-        <label class="rating">{{movie.rating}}</label>
-        <span>Yours: </span><label class="yourRating">{{yourRating}}</label>
-        <label class="genres">{{movie.genres}}</label>
-        <label class="rated">{{movie.rated}}</label>
-    </h4>
-    <h5>
-        <label class="released">{{movie.released}}</label>
-        <label class="runtime">{{movie.runtime}}</label>
-        <label class="languages">{{movie.languages}}</label>
-        <label class="country">{{movie.country}}</label>
-        <label class="director">{{movie.director}}</label>
-        <label class="writer">{{movie.writer}}</label>
-        <label class="awards">{{movie.awards}}</label>
-        <label class="metascore">{{movie.metascore}}</label>
-        <label class="votes">{{movie.votes}}</label>
-        <label class="type">{{movie.type}}</label>
-    </h5>
-    <p class="actors">{{movie.actors}}</p>
-    <p class="plot">{{movie.plot}}</p>
+    <div class="title">{{movie.title}}</div>
+    <img class="poster_url" src="{{movie.poster_url}}" />
+    <img class="backdrop_url" src="{{movie.backdrop_url}}" />
+    
+    <div class="overview">{{movie.overview}}</div>
+    
+    <div class="adult">{{movie.adult}}</div>
+    <div class="release_date">{{movie.release_date}}</div>
+    <div class="genre_ids">{{movie.genre_ids}}</div>
+    <div class="id">{{movie.id}}</div>
+    <div class="original_title">{{movie.original_title}}</div>
+    <div class="original_language">{{movie.original_language}}</div>
+    <div class="popularity">{{movie.popularity}}</div>
+    <div class="vote_count">{{movie.vote_count}}</div>
+    <div class="video">{{movie.video}}</div>
+    <div class="vote_average">{{movie.vote_average}}</div>
 </div>
 
 <div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">
