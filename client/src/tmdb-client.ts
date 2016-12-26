@@ -1,4 +1,4 @@
-import { TmdbApi, GetApiConfigurationResponse, TmdbMovie } from "./tmdb/tmdb-api"
+import { TmdbApi, GetApiConfigurationResponse, Movie } from "./tmdb/tmdb-api"
 import { TmdbApiClient, } from "./tmdb/tmdb-client"
 
 export class TmdbClient extends TmdbApiClient {
@@ -16,7 +16,7 @@ export class TmdbClient extends TmdbApiClient {
     fixResponse(res: any): any {
         if (typeof (res) != "object")
             return res;
-        let movie = res as TmdbMovie;
+        let movie = res as Movie;
         if (movie.poster_path != null)
             movie.poster_url = this.getImageUrl(movie, "poster_path");
         if (movie.backdrop_path != null)
@@ -27,7 +27,7 @@ export class TmdbClient extends TmdbApiClient {
     }
 
 
-    getImageUrl(movie: TmdbMovie, prop: keyof TmdbMovie, size?: string): string {
+    getImageUrl(movie: Movie, prop: keyof Movie, size?: string): string {
         if (this.configuration == null || this.configuration.images == null)
             return null;
         let c = this.configuration.images;

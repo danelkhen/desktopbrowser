@@ -37,7 +37,7 @@
     }
 
     export interface OmdbGetResponse {
-        data: Movie;
+        data: OmdbMovie;
         err: { meesage: string, name: string };
     }
 
@@ -94,7 +94,7 @@
         Path: string;
     }
 
-    export interface Movie {
+    export interface OmdbMovie {
         imdbid: string;
         imdburl: string;
         genres: string;

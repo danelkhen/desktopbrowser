@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
-import { TmdbMovie } from "./tmdb/tmdb-api"
+import { Movie } from "./tmdb/tmdb-api"
 
 @Component({
     selector: 'my-media',
@@ -8,7 +8,7 @@ import { TmdbMovie } from "./tmdb/tmdb-api"
     styleUrls: ['_res_/src/media.component.css'],
 })
 export class MediaComponent implements OnInit, OnChanges {
-    movies: TmdbMovie[];
+    movies: Movie[];
     ngOnInit(): void {
         this.test();
     }
@@ -25,7 +25,7 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
 
-    getImageUrl(movie: TmdbMovie, prop: keyof TmdbMovie, size?: string): string {
+    getImageUrl(movie: Movie, prop: keyof Movie, size?: string): string {
         let c = tmdbConfig.images;
         if (size == null) {
             if (prop == "backdrop_path") {

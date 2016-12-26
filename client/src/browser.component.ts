@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input, OnDestroy, AfterContentChecked, AfterViewChecked, DoCheck } from '@angular/core';
 import { Location } from '@angular/common';
 import { SiteServiceClient, } from "./service"
-import { Movie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
+import { OmdbMovie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
 import { Selection, SelectionChangedEventArgs } from "./utils/selection"
 import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
@@ -12,7 +12,7 @@ import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
-import { TmdbMovie } from "./tmdb/tmdb-api"
+import { Movie } from "./tmdb/tmdb-api"
 
 
 @Component({
@@ -36,7 +36,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     Req: ListFilesRequest;
     Win: Window;
     imdbRatings: ImdbRssItem[];
-    imdb: Movie;
+    imdb: OmdbMovie;
     tbPathText: string = "";
     lastHeight: number;
     //url: Observable<string[]>;
@@ -607,7 +607,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => this.movie = e.results[0]).then(() => console.log(this.tmdb));
     }
 
-    movie: TmdbMovie;
+    movie: Movie;
 
     getImdbInfo_old(file: File) {
         let info = parseTorrentName(file.Name);
