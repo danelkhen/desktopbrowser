@@ -600,6 +600,11 @@ export class BrowserComponent implements OnInit, OnChanges {
         return x;
     }
 
+    tmdbLogin() {
+        this.tmdb.loginToTmdb().then(() => {
+            this.tmdb.invoke(t => t.accountGetMovieWatchlist({})).then(e => console.log("accountGetMovieWatchlist", e));
+        });
+    }
     tmdb: TmdbClient;
     getImdbInfo(file: File) {
         let info = new FilenameParser().parse(file.Name);
@@ -618,8 +623,9 @@ export class BrowserComponent implements OnInit, OnChanges {
                 this.tmdb.invoke(t => t.tvGetDetails({ tv_id: show.id })).then(e => console.log({ show: show, details: e }));
             }
         });
-        this.tmdb.invoke(t => t.searchMulti({ query: info.name, })).then(e => console.log("multisearch",e));
+        this.tmdb.invoke(t => t.searchMulti({ query: info.name, })).then(e => console.log("multisearch", e));
     }
+
 
     movie: Movie;
 
