@@ -1,6 +1,6 @@
 import { TmdbApi, TmdbApiMetadata } from "./tmdb-api"
 import { Proxy } from "../utils/proxy"
-import * as XMLHttpRequest from "xhr2"
+import {xhr} from "./xhr"
 
 export class TmdbApiClient extends Proxy<TmdbApi>{
     constructor() {
@@ -13,49 +13,11 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
             console.log({ path, req });
             let url = this.base_url + path;
             let prms = { api_key: this.api_key, ...req }
-            return xhr2({ url, params: prms });//.then(e => console.log(e));
+            return xhr({ url, params: prms });//.then(e => console.log(e));
         };
     }
     api_key: string;
     base_url = 'https://api.themoviedb.org/3';
-
-
 }
 
-
-export function xhr2<T>(opts: XhrConfig) {
-    return new Promise<any>((resolve, reject) => {
-        let url = opts.url;
-        let method = opts.method || "GET";
-        let remaining = {};
-        if (opts.params != null && method == "GET") {
-            Object.keys(opts.params).forEach(key => {
-                let placeholder = "{" + key + "}";
-                if (url.indexOf(placeholder) >= 0) {
-                    url.replace(placeholder, encodeURIComponent(opts.params[key]));
-                }
-                else {
-                    remaining[key] = opts.params[key];
-                }
-            });
-            let query = Object.keys(remaining).map(key => `${key}=${encodeURIComponent(remaining[key])}`).join("&");
-            url += "?" + query;
-        }
-        console.log({ url });
-        let xhr = new XMLHttpRequest();
-        xhr.addEventListener("readystatechange", e => {
-            if (xhr.readyState == 4)
-                resolve(JSON.parse(xhr.responseText));
-        });
-        xhr.open("GET", url);
-        xhr.send();
-    });
-}
-
-export interface XhrConfig {
-    url?: string;
-    queryParams?: any;
-    params?: any;
-    method?: string;
-}
 

@@ -14,7 +14,7 @@ export class TmdbClient extends TmdbApiClient {
 
     configuration: GetApiConfigurationResponse;
     fixResponse(res: any): any {
-        if (typeof (res) != "object")
+        if (res == null || typeof (res) != "object")
             return res;
         let movie = res as Movie;
         if (movie.poster_path != null)

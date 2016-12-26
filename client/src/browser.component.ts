@@ -604,7 +604,21 @@ export class BrowserComponent implements OnInit, OnChanges {
     getImdbInfo(file: File) {
         let info = new FilenameParser().parse(file.Name);
         let isTv = info.season != null;
-        this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => this.movie = e.results[0]).then(() => console.log(this.movie));
+        this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => {
+            this.movie = e.results[0];
+            console.log(this.movie);
+            if (this.movie != null) {
+                this.tmdb.invoke(t => t.movieGetDetails({ movie_id: this.movie.id })).then(e => console.log({ movie: this.movie, details: e }));
+            }
+        });
+        this.tmdb.invoke(t => t.searchTVShows({ query: info.name, })).then(e => {
+            console.log(e);
+            let show = e.results[0];
+            if (show != null) {
+                this.tmdb.invoke(t => t.tvGetDetails({ tv_id: show.id })).then(e => console.log({ show: show, details: e }));
+            }
+        });
+        this.tmdb.invoke(t => t.searchMulti({ query: info.name, })).then(e => console.log("multisearch",e));
     }
 
     movie: Movie;

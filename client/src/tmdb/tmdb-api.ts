@@ -1,7 +1,12 @@
 export interface TmdbApi {
+
     getApiConfiguration(req: GetApiConfigurationRequest): GetApiConfigurationResponse;
+
     searchMovies(req: SearchMoviesRequest): PagedResponse<Movie>;
+    searchTVShows(req: SearchSearchTVShowsRequest): PagedResponse<TvShow>;
     movieGetPopular(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
+    tvGetDetails(req: TvGetDetailsRequest): TvGetDetailsResponse;
+    searchMulti(req: SearchSearchPeopleRequestBase): PagedResponse<Movie | TvShow | Person>;
 
 
     accountAddtoWatchlist(req: AccountAddtoWatchlistRequestBase): any;
@@ -47,7 +52,7 @@ export interface TmdbApi {
 
     jobGetJobs(req: GetApiConfigurationRequest): JobGetJobsResponse;
 
-    keywordGetDetails(req: KeywordGetDetailsRequest): MovieGetDetailsResponse_genresBase;
+    keywordGetDetails(req: KeywordGetDetailsRequest): Genre;
     keywordGetMovies(req: KeywordGetMoviesRequest): KeywordGetMoviesResponseBase;
 
     listAddMovie(req: ListAddMovieRequestBase): any;
@@ -79,7 +84,7 @@ export interface TmdbApi {
     movieGetVideos(req: MovieGetVideosRequest): GetVideosResponse;
     movieRateMovie(req: MovieRateMovieRequest): any;
 
-    networkGetDetails(req: NetworkGetDetailsRequest): MovieGetDetailsResponse_genresBase;
+    networkGetDetails(req: NetworkGetDetailsRequest): Genre;
 
     personGetChanges(req: PersonGetChangesRequest): PersonGetChangesResponse;
     personGetCombinedCredits(req: PersonRequest): PersonGetCombinedCreditsResponse;
@@ -89,18 +94,16 @@ export interface TmdbApi {
     personGetLatest(req: MovieGetLatestRequestBase): Person;
     personGetMovieCredits(req: PersonRequest): PersonGetMovieCreditsResponse;
     personGetPersonChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
-    personGetPopular(req: PersonGetPopularRequestBase): PersonGetPopularResponseBase;
+    personGetPopular(req: PersonGetPopularRequestBase): PagedResponse<PopularPerson>;
     personGetTaggedImages(req: PersonGetTaggedImagesRequest): PersonGetTaggedImagesResponse;
     personGetTVCredits(req: PersonRequest): PersonGetTVCreditsResponse;
 
     reviewGetDetails(req: ReviewGetDetailsRequest): ReviewGetDetailsResponse;
 
-    searchMultiSearch(req: SearchSearchPeopleRequestBase): SearchMultiSearchResponse;
     searchSearchCollections(req: SearchSearchCollectionsRequest): SearchSearchCollectionsResponse;
     searchSearchCompanies(req: SearchSearchCompaniesRequestBase): SearchSearchCompaniesResponse;
     searchSearchKeywords(req: SearchSearchCompaniesRequestBase): SearchSearchKeywordsResponse;
-    searchSearchPeople(req: SearchSearchPeopleRequestBase): PersonGetPopularResponseBase;
-    searchSearchTVShows(req: SearchSearchTVShowsRequest): PagedResponse<TvShow>;
+    searchSearchPeople(req: SearchSearchPeopleRequestBase): PagedResponse<PopularPerson>;
 
     timezonesGetList(req: GetApiConfigurationRequest): Unknown[];
 
@@ -117,7 +120,6 @@ export interface TmdbApi {
     tvGetCredits(req: TvGetTVEpisodeExternalIDsRequestBase): TvGetCreditsResponse;
     tvGetCredits2(req: TvGetExternalIDsRequestBase): TvShowCreditsResponse;
     tvGetCredits3(req: TvGetImagesRequestBase): TvShowCreditsResponse;
-    tvGetDetails(req: TvGetDetailsRequest): TvGetDetailsResponse;
     tvGetDetails2(req: TvGetDetails2Request): TvGetDetails2Response;
     tvGetDetails3(req: TvGetDetails3Request): TvGetDetails3Response;
     tvGetExternalIDs(req: TvGetExternalIDsRequestBase): TvGetExternalIDsResponse;
@@ -160,12 +162,12 @@ export interface TvGetChangesResponse {
     changes: TvGetChangesResponse_changes[];
 }
 
-export interface MovieGetDetailsResponse_production_countries {
+export interface ProductionCountry {
     iso_3166_1: string;
     name: string;
 }
 
-export interface MovieGetDetailsResponse_spoken_languages {
+export interface SpokenLanguage {
     iso_639_1: string;
     name: string;
 }
@@ -249,7 +251,7 @@ export interface MovieGetLatestResponse {
     backdrop_path: string;
     belongs_to_collection: null;
     budget: number;
-    genres: MovieGetDetailsResponse_genresBase[];
+    genres: Genre[];
     homepage: string;
     id: number;
     imdb_id: string;
@@ -352,14 +354,14 @@ export interface TvGetDetailsResponse {
     created_by: TvGetDetailsResponse_created_by[];
     episode_run_time: number[];
     first_air_date: string;
-    genres: MovieGetDetailsResponse_genresBase[];
+    genres: Genre[];
     homepage: string;
     id: number;
     in_production: boolean;
     languages: string[];
     last_air_date: string;
     name: string;
-    networks: MovieGetDetailsResponse_genresBase[];
+    networks: Genre[];
     number_of_episodes: number;
     number_of_seasons: number;
     origin_country: string[];
@@ -368,7 +370,7 @@ export interface TvGetDetailsResponse {
     overview: string;
     popularity: number;
     poster_path: string;
-    production_companies: MovieGetDetailsResponse_genresBase[];
+    production_companies: Genre[];
     seasons: TvShowSeason[];
     status: string;
     type: string;
@@ -610,7 +612,7 @@ export interface CreditGetDetailsResponse {
     job: string;
     media: CreditGetDetailsResponse_media;
     media_type: string;
-    person: MovieGetDetailsResponse_genresBase;
+    person: Genre;
 }
 
 export interface TvGetDetails2Response_episodes {
@@ -682,7 +684,7 @@ export interface TvGetImages2Response {
 
 export interface MovieGetKeywordsResponse {
     id: number;
-    keywords: MovieGetDetailsResponse_genresBase[];
+    keywords: Genre[];
 }
 
 export interface TvGetDetails3Response {
@@ -809,14 +811,14 @@ export interface TvGetLatestResponse {
     created_by: Unknown[];
     episode_run_time: number[];
     first_air_date: string;
-    genres: MovieGetDetailsResponse_genresBase[];
+    genres: Genre[];
     homepage: string;
     id: number;
     in_production: boolean;
     languages: string[];
     last_air_date: string;
     name: string;
-    networks: MovieGetDetailsResponse_genresBase[];
+    networks: Genre[];
     number_of_episodes: number;
     number_of_seasons: number;
     origin_country: string[];
@@ -851,7 +853,7 @@ export interface MovieGetCreditsResponse {
 
 export interface SearchSearchKeywordsResponse {
     page: number;
-    results: MovieGetDetailsResponse_genresBase[];
+    results: Genre[];
     total_pages: number;
     total_results: number;
 }
@@ -876,10 +878,6 @@ export interface Guest_sessionGetRatedTVEpisodesResponse {
     total_results: number;
 }
 
-export interface SearchMultiSearchResponse {
-    page: number;
-    results: any[];
-}
 
 export interface PersonGetImagesResponse_profiles {
     aspect_ratio: number;
@@ -909,7 +907,7 @@ export interface TvGetTranslationsResponse {
 
 export interface TvGetKeywordsResponse {
     id: number;
-    results: MovieGetDetailsResponse_genresBase[];
+    results: Genre[];
 }
 
 export interface TvGetAlternativeTitlesResponse {
@@ -1422,19 +1420,15 @@ export interface TvGetAccountStatesResponseBase {
     watchlist: boolean;
 }
 
-export interface PersonGetPopularResponse_resultsBase {
+export interface PopularPerson {
     adult: boolean;
     id: number;
     known_for: any[];
     profile_path: string;
 }
 
-export interface PersonGetPopularResponseBase {
-    page: number;
-    results: PersonGetPopularResponse_resultsBase[];
-}
 
-export interface MovieGetDetailsResponse_genresBase {
+export interface Genre {
     id: number;
     name: string;
 }
@@ -1460,35 +1454,8 @@ export interface ChangeList {
     id: number;
 }
 
-export interface MovieDetails extends Movie {
-    adult: boolean;
-    backdrop_path: string;
-    belongs_to_collection: Object;
-    budget: number;
-    genres: MovieGetDetailsResponse_genresBase[];
-    homepage: string;
-    id: number;
-    imdb_id: string;
-    original_language: string;
-    original_title: string;
-    overview: string;
-    popularity: number;
-    poster_path: string;
-    production_companies: MovieGetDetailsResponse_genresBase[];
-    production_countries: MovieGetDetailsResponse_production_countries[];
-    release_date: string;
-    revenue: number;
-    runtime: number;
-    spoken_languages: MovieGetDetailsResponse_spoken_languages[];
-    status: string;
-    tagline: string;
-    title: string;
-    video: boolean;
-    vote_average: number;
-    vote_count: number;
-}
 
-export interface MovieOrTvShow {
+export interface Media {
     id: number;
     backdrop_path: string;
     genre_ids: number[];
@@ -1499,14 +1466,18 @@ export interface MovieOrTvShow {
     vote_count: number;
     original_language: string;
 
-    //added
+    /** added after response */
     poster_url?: string;
+    /** added after response */
     backdrop_url?: string;
-    //TODO:
+    /** Available in multisearch */
+    media_type?: MediaType;
+    /** TODO */
     name_or_title?: string;
 }
+export type MediaType = "movie" | "tv" | "person";
 
-export interface Movie extends MovieOrTvShow {
+export interface Movie extends Media {
     title: string;
 
     adult: boolean;
@@ -1516,7 +1487,42 @@ export interface Movie extends MovieOrTvShow {
 
 }
 
-export interface TvShow extends MovieOrTvShow {
+export interface MovieDetails extends Movie {
+    belongs_to_collection: Object;
+    budget: number;
+
+    genres: Genre[];
+    homepage: string;
+    imdb_id: string;
+    popularity: number;
+    production_companies: Genre[];
+    production_countries: ProductionCountry[];
+    revenue: number;
+    runtime: number;
+    spoken_languages: SpokenLanguage[];
+    status: string;
+    tagline: string;
+
+    /** genre_ids is not available in details */
+    genre_ids: number[];
+
+    /** from base class: */
+    //adult: boolean;
+    //backdrop_path: string;
+    //id: number;
+    //original_language: string;
+    //original_title: string;
+    //overview: string;
+    //poster_path: string;
+    //release_date: string;
+    //title: string;
+    //video: boolean;
+    //vote_average: number;
+    //vote_count: number;
+}
+
+
+export interface TvShow extends Media {
     name: string;
 
     first_air_date: string;
@@ -1601,7 +1607,7 @@ export interface Person {
 
 
 export interface GenreGetMovieListResponseBase {
-    genres: MovieGetDetailsResponse_genresBase[];
+    genres: Genre[];
 }
 
 export interface RatedMovie {
@@ -1853,7 +1859,7 @@ export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
     tvGetDetails2: { path: "/tv/{tv_id}/season/{season_number}", method: "get" },
     collectionGetImages: { path: "/collection/{collection_id}/images", method: "get" },
     accountAddtoWatchlist: { path: "/account/{account_id}/watchlist", method: "post" },
-    searchSearchTVShows: { path: "/search/tv", method: "get" },
+    searchTVShows: { path: "/search/tv", method: "get" },
     accountGetRatedMovies: { path: "/account/{account_id}/rated/movies", method: "get" },
     tvGetVideos2: { path: "/tv/{tv_id}/videos", method: "get" },
     networkGetDetails: { path: "/network/{network_id}", method: "get" },
@@ -1892,7 +1898,7 @@ export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
     tvGetRecommendations: { path: "/tv/{tv_id}/recommendations", method: "get" },
     searchSearchKeywords: { path: "/search/keyword", method: "get" },
     guest_sessionGetRatedTVEpisodes: { path: "/guest_session/{guest_session_id}/rated/tv/episodes", method: "get" },
-    searchMultiSearch: { path: "/search/multi", method: "get" },
+    searchMulti: { path: "/search/multi", method: "get" },
     guest_sessionGetRatedTVShows: { path: "/guest_session/{guest_session_id}/rated/tv", method: "get" },
     personGetImages: { path: "/person/{person_id}/images", method: "get" },
     accountGetRatedTVShows: { path: "/account/{account_id}/rated/tv", method: "get" },

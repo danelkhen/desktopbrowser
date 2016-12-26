@@ -8,19 +8,19 @@
         return this.onInvoke(pc);
     }
 
-    onInvoke: (pc: ProxyCall) => Promise<any>;
+    onInvoke: (pc: ProxyCall<T>) => Promise<any>;
 }
 
-export interface ProxyCall {
-    name: string;
+export interface ProxyCall<T> {
+    name: keyof T;
     args: any[];
 }
 
-export function extractInstanceFunctionCall(func: Function): ProxyCall {
+export function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
     let code = func.toString();
     let index = code.indexOf(".");
     let index2 = code.indexOf("(", index);
-    let res: ProxyCall = {
+    let res: ProxyCall<any> = {
         name: code.substring(index + 1, index2),
         args: null,
     };
