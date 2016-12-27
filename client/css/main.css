@@ -7,21 +7,21 @@ html {
   box-sizing: inherit; }
 
 @font-face {
-  font-family: 'Post Grotesk Light';
-  src: url("../font/PostGrotesk-Light.eot");
+  font-family: 'FreightSansProBook-Regular';
+  src: url("../fonts/FreightSansProBook-Regular.eot");
   /* IE9 Compat Modes */
-  src: url("../font/PostGrotesk-Light.eot?#iefix") format("embedded-opentype"), url("../font/PostGrotesk-Light.woff") format("woff"), url("../font/PostGrotesk-Light.ttf") format("truetype"), url("../font/PostGrotesk-Light.svg#ec78e0ded1b914c296d930227e24b648") format("svg");
-  /* Legacy iOS */
-  font-style: normal;
-  font-weight: 200; }
-@font-face {
-  font-family: 'Post Grotesk Medium';
-  src: url("PostGrotesk-Medium.eot");
-  /* IE9 Compat Modes */
-  src: url("PostGrotesk-Medium.eot?#iefix") format("embedded-opentype"), url("PostGrotesk-Medium.woff") format("woff"), url("PostGrotesk-Medium.ttf") format("truetype"), url("PostGrotesk-Medium.svg#fc2ec193a4dc6f599ea22ef186bc31e2") format("svg");
+  src: url("../fonts/FreightSansProBook-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/FreightSansProBook-Regular.woff") format("woff"), url("../fonts/FreightSansProBook-Regular.ttf") format("truetype"), url("../fonts/FreightSansProBook-Regular.svg#b30972ed497fd4719b55c16821a18b60") format("svg");
   /* Legacy iOS */
   font-style: normal;
   font-weight: 400; }
+@font-face {
+  font-family: 'FreightTextBold';
+  src: url("../fonts/FreightTextBold.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/FreightTextBold.eot?#iefix") format("embedded-opentype"), url("../fonts/FreightTextBold.woff") format("woff"), url("../fonts/FreightTextBold.ttf") format("truetype"), url("../fonts/FreightTextBold.svg#22166cf851d0c0952bd58935fa7e3ba9") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: 700; }
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
@@ -72,11 +72,12 @@ table {
 /* Colours */
 /* utilities */
 /* Typography */
-/* Font Sizes */
 /* Font-Sizes */
 /* Mixins */
 /* transition Mixins */
+/* px to rem change */
 /* Media Variables */
+/* Typography */
 body {
   background-color: #060606;
   font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;

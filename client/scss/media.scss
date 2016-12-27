@@ -1,8 +1,9 @@
 @import "font";
-@import "reset";
 @import "var";
 
-
+html {
+    font-size: 16px;
+}
 
 body {
     background-color: $media-background;
