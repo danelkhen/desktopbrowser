@@ -20,8 +20,6 @@ $regular-font: 'PT Sans', 'helvetica-neue', helvetica, sans-serif;
 $mono-font: 'PT Mono', monospace, 'helvetica-neue', helvetica, sans-serif;
 
 
-/* Font Sizes */
-
 /* Font-Sizes */
 
 $ms10:7.43em;
@@ -55,7 +53,31 @@ $ms-3: 0.694em;
 
 
 
+/* px to rem change */
 
+$browser-context: 16; // Default
+
+@function em($pixels, $context: $browser-context) {
+  @return #{$pixels/$context}em;
+}
+
+
+/* Media Variables */
+
+
+
+$media-background: #00000E;
+$media-border: #191A2B;
+$media-pri-color: #EA5111;
+$media-sec-color: #07E2D4;
+$media-grey-color: #4C4F64;
+
+
+
+/* Typography */
+
+$media-font-regular: 'FreightSansProBook-Regular', 'helvetica-neue', helvetica, sans-serif;
+$media-font-bold: 'FreightTextBold', monospace, 'helvetica-neue', helvetica, sans-serif;
 
 
 

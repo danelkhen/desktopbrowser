@@ -1,5 +1,50 @@
-<div *ngFor="let movie of movies">
+<!-- <div *ngFor="let movie of movies">
     <span>{{movie.title}}</span>
     <img src="{{movie.poster_url}}" />
     <img src="{{movie.backdrop_url}}" />
+</div>
+ -->
+<div class="media">
+	
+	<header class="media__header">
+		<div class="media__container">
+			<a class="media__logo" href="#">
+				<img src="../img/media/logo.svg">
+			</a>
+			<span class="media__tag">your personal media library</span>
+		</div>
+	</header>
+
+	<!-- Main Header ends here -->
+
+	<div class="media__grid">
+		<div class="media__container">
+			<h3 class="media__title">your watchlist</h3>
+			<div class="media__filter">
+				<a href="#" class="media--active">all content</a>
+				<a href="#">tv shows</a>
+				<a href="#">movies</a>
+			</div>
+			<div class="media__search">
+				<input type="text" name="" placeholder="quicksearch">
+			</div>
+		</div>
+		<!-- End of Grid Header -->
+
+		<ul class="media__container media__pool">
+			<li *ngFor="let movie of movies">
+				<div class="media__poster">
+					<img src="{{movie.poster_url}}" alt="">
+				</div>
+				<div class="media__details">
+					<h5 class="media__title">{{movie.title}}</h5>
+					<span class="media__playtime">1hr:45min</span>
+					<div class="media__rating">{{movie.vote_average}}</div>
+					<a class="media__icon media--playicon">play</a>
+					<a href="#" class="media__status">mark as watched</a>
+				</div>
+			</li>
+		</ul>
+
+	</div>
 </div>
