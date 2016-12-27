@@ -1470,6 +1470,10 @@ export interface Media {
     poster_url?: string;
     /** added after response */
     backdrop_url?: string;
+    /** added after response */
+    poster?: {[key:string]:string};
+    /** added after response */
+    backdrop?: {[key:string]:string};
     /** Available in multisearch */
     media_type?: MediaType;
     /** TODO */

@@ -1,4 +1,4 @@
-import { TmdbApi, GetApiConfigurationResponse, Movie } from "./tmdb/tmdb-api"
+import { TmdbApi, GetApiConfigurationResponse, Movie, Media } from "./tmdb/tmdb-api"
 import { TmdbApiClient, } from "./tmdb/tmdb-client"
 
 export class TmdbClient extends TmdbApiClient {
@@ -27,33 +27,43 @@ export class TmdbClient extends TmdbApiClient {
     fixResponse(res: any): any {
         if (res == null || typeof (res) != "object")
             return res;
-        let movie = res as Movie;
-        if (movie.poster_path != null)
-            movie.poster_url = this.getImageUrl(movie, "poster_path");
-        if (movie.backdrop_path != null)
-            movie.backdrop_url = this.getImageUrl(movie, "backdrop_path");
+        let movie = res as Media;
+        let props: Array<keyof Media> = ["poster_path", "backdrop_path"];
+        props.forEach(prop => {
+            if (movie[prop] == null)
+                return;
+            let urlProp = prop.replace("_path", "_url");
+            let imagesProp = prop.replace("_path", "");
+            movie[urlProp] = this.getImageUrl(movie, prop);
+            let images = movie[imagesProp];
+            if (images == null) {
+                images = {};
+                movie[imagesProp] = images;
+            }
+            this.getImageSizes(prop).forEach(size => images[size] = this.getImageUrl(movie, prop, size));
+        });
         Object.values(res).forEach(t => this.fixResponse(t));
         return res;
 
     }
 
 
-    getImageUrl(movie: Movie, prop: keyof Movie, size?: string): string {
+    getImageSizes(prop: keyof Media): string[] {
         if (this.configuration == null || this.configuration.images == null)
             return null;
         let c = this.configuration.images;
-        if (size == null) {
-            if (prop == "backdrop_path") {
-                size = c.backdrop_sizes[0];
-            }
-            else if (prop == "poster_path") {
-                size = c.poster_sizes[0];
-            }
-            else {
-                console.warn("getImageUrl2 not implemented for prop", prop);
-                return null;
-            }
-        }
+        if (prop == "backdrop_path")
+            return c.backdrop_sizes;
+        else if (prop == "poster_path")
+            return c.poster_sizes;
+        return null;
+    }
+    getImageUrl(movie: Media, prop: keyof Media, size?: string): string {
+        if (this.configuration == null || this.configuration.images == null)
+            return null;
+        let c = this.configuration.images;
+        if (size == null)
+            size = this.getImageSizes(prop)[0];
         return `${c.base_url}${size}/${movie[prop]}`;
     }
 
