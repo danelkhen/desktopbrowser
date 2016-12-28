@@ -66,8 +66,9 @@ $browser-context: 16; // Default
 
 
 
-$media-background: #00000E;
-$media-border: #191A2B;
+$media-bg: #151828;
+$media-bg-variant: lighten($media-bg, 2%);
+$media-border: lighten($media-bg, 7%);
 $media-pri-color: #EA5111;
 $media-sec-color: #07E2D4;
 $media-grey-color: #4C4F64;
