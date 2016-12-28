@@ -616,7 +616,7 @@ export class BrowserComponent implements OnInit, OnChanges {
                 this.tmdb.invoke(t => t.movieGetDetails({ movie_id: this.movie.id })).then(e => console.log({ movie: this.movie, details: e }));
             }
         });
-        this.tmdb.invoke(t => t.searchTVShows({ query: info.name, })).then(e => {
+        this.tmdb.invoke(t => t.searchTvShows({ query: info.name, })).then(e => {
             console.log(e);
             let show = e.results[0];
             if (show != null) {

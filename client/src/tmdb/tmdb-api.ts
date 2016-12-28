@@ -3,7 +3,7 @@ export interface TmdbApi {
     getApiConfiguration(req: GetApiConfigurationRequest): GetApiConfigurationResponse;
 
     searchMovies(req: SearchMoviesRequest): PagedResponse<Movie>;
-    searchTVShows(req: SearchSearchTVShowsRequest): PagedResponse<TvShow>;
+    searchTvShows(req: SearchSearchTVShowsRequest): PagedResponse<TvShow>;
     movieGetPopular(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
     tvGetDetails(req: TvGetDetailsRequest): TvGetDetailsResponse;
     searchMulti(req: SearchSearchPeopleRequestBase): PagedResponse<Movie | TvShow | Person>;
@@ -16,7 +16,7 @@ export interface TmdbApi {
     accountGetFavoriteTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TvShow>;
     accountGetMovieWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<Movie>;
     accountGetRatedMovies(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedMovie>;
-    accountGetRatedTVEpisodes(req: AccountGetRatedTVEpisodesRequest): AccountGetRatedTVEpisodesResponse;
+    accountGetRatedTVEpisodes(req: AccountGetRatedTVEpisodesRequest): PagedResponse<AccountRatedTVEpisode>;
     accountGetRatedTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedTvShow>;
     accountGetTVShowWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TvShow>;
     accountMarkasFavorite(req: AccountAddtoWatchlistRequestBase): any;
@@ -47,7 +47,7 @@ export interface TmdbApi {
     genreGetTVList(req: MovieGetLatestRequestBase): GenreGetMovieListResponseBase;
 
     guest_sessionGetRatedMovies(req: Guest_sessionGetRatedMoviesRequestBase): PagedResponse<RatedMovie>;
-    guest_sessionGetRatedTVEpisodes(req: Guest_sessionGetRatedMoviesRequestBase): Guest_sessionGetRatedTVEpisodesResponse;
+    guest_sessionGetRatedTVEpisodes(req: Guest_sessionGetRatedMoviesRequestBase): PagedResponse<SessionRatedTVEpisode>;
     guest_sessionGetRatedTVShows(req: Guest_sessionGetRatedMoviesRequestBase): PagedResponse<RatedTvShow>;
 
     jobGetJobs(req: GetApiConfigurationRequest): JobGetJobsResponse;
@@ -774,26 +774,6 @@ export interface PersonGetChangesResponse {
     changes: PersonGetChangesResponse_changes[];
 }
 
-export interface AccountGetRatedTVEpisodesResponse_results {
-    _id: string;
-    air_date: string;
-    episode_number: number;
-    id: number;
-    name: string;
-    rating: number;
-    season_number: number;
-    show_id: number;
-    still_path: null;
-    vote_average: number;
-    vote_count: number;
-}
-
-export interface AccountGetRatedTVEpisodesResponse {
-    page: number;
-    results: AccountGetRatedTVEpisodesResponse_results[];
-    total_pages: number;
-    total_results: number;
-}
 
 export interface TvGetImages3Response {
     id: number;
@@ -858,7 +838,7 @@ export interface SearchSearchKeywordsResponse {
     total_results: number;
 }
 
-export interface Guest_sessionGetRatedTVEpisodesResponse_results {
+export interface SessionRatedTVEpisode {
     air_date: string;
     episode_number: number;
     id: number;
@@ -870,12 +850,18 @@ export interface Guest_sessionGetRatedTVEpisodesResponse_results {
     vote_average: number;
     vote_count: number;
 }
-
-export interface Guest_sessionGetRatedTVEpisodesResponse {
-    page: number;
-    results: Guest_sessionGetRatedTVEpisodesResponse_results[];
-    total_pages: number;
-    total_results: number;
+export interface AccountRatedTVEpisode {
+    _id: string;
+    air_date: string;
+    episode_number: number;
+    id: number;
+    name: string;
+    rating: number;
+    season_number: number;
+    show_id: number;
+    still_path: null;
+    vote_average: number;
+    vote_count: number;
 }
 
 
@@ -1863,7 +1849,7 @@ export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
     tvGetDetails2: { path: "/tv/{tv_id}/season/{season_number}", method: "get" },
     collectionGetImages: { path: "/collection/{collection_id}/images", method: "get" },
     accountAddtoWatchlist: { path: "/account/{account_id}/watchlist", method: "post" },
-    searchTVShows: { path: "/search/tv", method: "get" },
+    searchTvShows: { path: "/search/tv", method: "get" },
     accountGetRatedMovies: { path: "/account/{account_id}/rated/movies", method: "get" },
     tvGetVideos2: { path: "/tv/{tv_id}/videos", method: "get" },
     networkGetDetails: { path: "/network/{network_id}", method: "get" },
