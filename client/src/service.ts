@@ -5,25 +5,27 @@ export class ServiceBase<T> extends Proxy<T> {
     Url: string;
     constructor() {
         super();
-        this.onInvoke  = pc => this.Invoke(pc.name, pc.args[0]);
+        this.onInvoke = pc => this.Invoke(pc.name, pc.args[0]);
     }
 
-    isPrimitive(x: any): boolean {
-        if (x == null)
-            return true;
-        if (typeof (x) != "object")
-            return true;
-        return false;
+    isQueryStringable(x: any): boolean {
+        return x == null || typeof (x) == "string";
     }
 
     Invoke<R>(action: string, prms?: any): Promise<R> {
         let method = "GET";
         let contentType: string = null;
-        let data = prms;
-        if (prms != null && typeof (prms) == "object" && Object.keys(prms).first(key => !this.isPrimitive(prms[key])) != null) {
-            method = "POST";
-            contentType = "application/json";
-            data = JSON.stringify(prms);
+        let data = null;
+        if (prms != null) {
+            let json = JSON.stringify(prms);
+            if (json.length > 1000) { //prms != null && typeof (prms) == "object" && Object.keys(prms).some(key => !this.isQueryStringable(prms[key])) != null) {
+                method = "POST";
+                contentType = "application/json";
+                data = json;
+            }
+            else {
+                data = { p: json };
+            }
         }
         return new Promise((resolve, reject) => {
             var xhr = jQuery.ajax({

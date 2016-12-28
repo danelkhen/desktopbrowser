@@ -81,8 +81,16 @@ export class FileSystemInfo {
         return this.EnumerateFileSystemInfos().filter(t => t.isDir);
     }
     EnumerateFileSystemElementsRecursive(): IEnumerable<FileSystemInfo> {
-        console.log("not implemented - EnumerateFileSystemElementsRecursive");
-        throw new Error();
+        let list = this.EnumerateFileSystemInfos();
+        let i = 0;
+        while (i < list.length) {
+            let file = list[i];
+            if (file.isDir) {
+                list.push(...file.EnumerateFileSystemElementsRecursive());
+            }
+            i++;
+        }
+        return list;
     }
     EnumerateFileSystemInfos(): IEnumerable<FileSystemInfo> {
         return fs.readdirSync(this.path).map(t => new FileSystemInfo(path.join(this.path, t)));

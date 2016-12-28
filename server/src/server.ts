@@ -82,7 +82,13 @@ export class Server {
             console.error("No such service by that name:", serviceName);
         //console.log("service[action]", service, action, service[action]);
 
-        let arg = req.method == "POST" ? (req as any).body : req.query;
+        let arg;
+        if (req.method == "POST")
+            arg = (req as any).body;
+        else if (req.query.p != null)
+            arg = JSON.parse(req.query.p);
+        else
+            arg = req.query;
         console.log(action, req.params, req.query);
         try {
             let result = service[action](arg);
