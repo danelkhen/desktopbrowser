@@ -23,10 +23,13 @@ export class MediaComponent implements OnInit, OnChanges {
     }
     ngOnChanges(changes: SimpleChanges): void { }
     tmdb: TmdbClient;
-    
-    
+
+
     movie_click(movie: Media) {
         this.selectedMovie = movie;
+    }
+    goBack() {
+        this.selectedMovie = null;
     }
 
     test() {
