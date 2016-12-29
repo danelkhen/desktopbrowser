@@ -10,37 +10,26 @@ import { Movie } from "./tmdb/tmdb-api"
 export class MediaComponent implements OnInit, OnChanges {
     movies: Movie[];
     ngOnInit(): void {
-        this.test();
+        this.tmdb = new TmdbClient();
+        this.tmdb.init().then(() => this.test());
     }
     ngOnChanges(changes: SimpleChanges): void { }
-
-    tmdbImageBaseUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2";
+    tmdb: TmdbClient;
 
     test() {
-        let x = new TmdbClient();
-        x.init().then(() => x.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
+        return this.tmdb.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
             this.movies = e.results;
             console.log(this.movies);
-        }));
+        });
+    }
+    test2() {
+        //this.tmdb.getMovieOrTvById(
+        return this.tmdb.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
+            this.movies = e.results;
+            console.log(this.movies);
+        });
     }
 
-
-    getImageUrl(movie: Movie, prop: keyof Movie, size?: string): string {
-        let c = tmdbConfig.images;
-        if (size == null) {
-            if (prop == "backdrop_path") {
-                size = c.backdrop_sizes[0];
-            }
-            else if (prop == "poster_path") {
-                size = c.poster_sizes[0];
-            }
-            else {
-                console.warn("getImageUrl2 not implemented for prop", prop);
-                return null;
-            }
-        }
-        return `${c.base_url}${size}/${movie[prop]}`;
-    }
 
 }
 

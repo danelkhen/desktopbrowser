@@ -5,7 +5,7 @@ export interface TmdbApi {
     searchMovies(req: SearchMoviesRequest): PagedResponse<Movie>;
     searchTvShows(req: SearchSearchTVShowsRequest): PagedResponse<TvShow>;
     movieGetPopular(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
-    tvGetDetails(req: TvGetDetailsRequest): TvGetDetailsResponse;
+    tvGetDetails(req: TvGetDetailsRequest): TvShowDetails;
     searchMulti(req: SearchSearchPeopleRequestBase): PagedResponse<Movie | TvShow | Person>;
 
 
@@ -349,34 +349,6 @@ export interface TvGetDetailsResponse_created_by {
     profile_path: string;
 }
 
-export interface TvGetDetailsResponse {
-    backdrop_path: string;
-    created_by: TvGetDetailsResponse_created_by[];
-    episode_run_time: number[];
-    first_air_date: string;
-    genres: Genre[];
-    homepage: string;
-    id: number;
-    in_production: boolean;
-    languages: string[];
-    last_air_date: string;
-    name: string;
-    networks: Genre[];
-    number_of_episodes: number;
-    number_of_seasons: number;
-    origin_country: string[];
-    original_language: string;
-    original_name: string;
-    overview: string;
-    popularity: number;
-    poster_path: string;
-    production_companies: Genre[];
-    seasons: TvShowSeason[];
-    status: string;
-    type: string;
-    vote_average: number;
-    vote_count: number;
-}
 
 export interface PersonGetCombinedCreditsResponse_cast {
     adult: boolean;
@@ -1457,14 +1429,16 @@ export interface Media {
     /** added after response */
     backdrop_url?: string;
     /** added after response */
-    poster?: {[key:string]:string};
+    poster?: { [key: string]: string };
     /** added after response */
-    backdrop?: {[key:string]:string};
+    backdrop?: { [key: string]: string };
     /** Available in multisearch */
     media_type?: MediaType;
     /** TODO */
     name_or_title?: string;
 }
+
+
 export type MediaType = "movie" | "tv" | "person";
 
 export interface Movie extends Media {
@@ -1475,6 +1449,47 @@ export interface Movie extends Media {
     release_date: string;
     video: boolean;
 
+}
+
+
+
+
+export interface TvShow extends Media {
+    name: string;
+
+    first_air_date: string;
+    origin_country: string[];
+    original_name: string;
+}
+export interface TvShowDetails extends TvShow {
+    created_by: TvGetDetailsResponse_created_by[];
+    episode_run_time: number[];
+    genres: Genre[];
+    homepage: string;
+    in_production: boolean;
+    languages: string[];
+    last_air_date: string;
+    networks: Genre[];
+    number_of_episodes: number;
+    number_of_seasons: number;
+    origin_country: string[];
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    production_companies: Genre[];
+    seasons: TvShowSeason[];
+    status: string;
+    type: string;
+
+    /** from base class **/
+    //backdrop_path: string;
+    //first_air_date: string;
+    //id: number;
+    //name: string;
+    //original_language: string;
+    //original_name: string;
+    //vote_average: number;
+    //vote_count: number;
 }
 
 export interface MovieDetails extends Movie {
@@ -1511,14 +1526,6 @@ export interface MovieDetails extends Movie {
     //vote_count: number;
 }
 
-
-export interface TvShow extends Media {
-    name: string;
-
-    first_air_date: string;
-    origin_country: string[];
-    original_name: string;
-}
 
 
 export interface Certification {
@@ -1593,6 +1600,8 @@ export interface Person {
     place_of_birth: string;
     popularity: number;
     profile_path: string;
+    /** Available in multisearch */
+    media_type?: MediaType;
 }
 
 

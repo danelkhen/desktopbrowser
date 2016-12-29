@@ -3,7 +3,6 @@ import { Location } from '@angular/common';
 import { SiteServiceClient, } from "./service"
 import { OmdbMovie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
 import { Selection, SelectionChangedEventArgs } from "./utils/selection"
-import parseTorrentName = require('parse-torrent-name');
 import * as imdb from "../typings2/imdb-rss"
 import { ArrayView } from "./utils/array-view";
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,7 +12,7 @@ import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
 import { Movie } from "./tmdb/tmdb-api"
-
+import {Scanner} from "./scanner"
 
 @Component({
     selector: 'my-browser',
@@ -629,18 +628,18 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     movie: Movie;
 
-    getImdbInfo_old(file: File) {
-        let info = parseTorrentName(file.Name);
-        console.log(info);
-        this.Service.invoke(t => t.omdbGet({ name: info.title, year: info.year })).then(res2 => {
-            console.log(res2);
-            if (res2.err != null)
-                return;
-            this.imdb = res2.data;
-            let res = res2.data;
-            this.getImdbRatings().then(list => this.yourRating = list.first(t => t.id == res.imdbid));
-        });
-    }
+    //getImdbInfo_old(file: File) {
+    //    let info = parseTorrentName(file.Name);
+    //    console.log(info);
+    //    this.Service.invoke(t => t.omdbGet({ name: info.title, year: info.year })).then(res2 => {
+    //        console.log(res2);
+    //        if (res2.err != null)
+    //            return;
+    //        this.imdb = res2.data;
+    //        let res = res2.data;
+    //        this.getImdbRatings().then(list => this.yourRating = list.first(t => t.id == res.imdbid));
+    //    });
+    //}
 
     getImdbUserId() {
         let id = this.GetStorageItem("imdbUserId");
@@ -741,7 +740,15 @@ export class BrowserComponent implements OnInit, OnChanges {
         order.reverse();
         return order.indexOf(type);
     }
+    scan() {
+        let scanner = new Scanner();
+        scanner.folders = ["c:\\tv"];
+        scanner.service = this.Service;
+        scanner.tmdb = this.tmdb;
+        console.log("scan start");
+        scanner.scan().then(e=>console.log("scan end", scanner));
 
+    }
 }
 
 export interface ImdbRssItem {

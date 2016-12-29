@@ -1,21 +1,22 @@
 import "reflect-metadata";
 import { Table, Column, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
-import { ColumnTypes } from "typeorm/metadata/types/ColumnTypes";
+import { ColumnTypes as CT } from "typeorm/metadata/types/ColumnTypes";
 import * as path from "path";
-import { Movie as MovieContract } from "contracts"
+import { Movie as MovieContract, ByFilename as ByFilenameContract } from "contracts"
 
 
 @Table()
-export class ByFilename {
+export class ByFilename implements ByFilenameContract {
     @PrimaryColumn() key: string;
-    @Column(ColumnTypes.SIMPLE_ARRAY) selectedFiles?: string[];
+    @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
+    @Column(CT.STRING, { nullable: true }) tmdbId: string;
 }
 
 @Table()
 export class Movie implements MovieContract {
-    
+
     @PrimaryGeneratedColumn() id: string;
-    
+
     @Column() imdbid: string;
     @Column() imdburl: string;
     @Column() genres: string;

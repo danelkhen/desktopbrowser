@@ -19,7 +19,6 @@
     "events": "^1.1.1",
     "jquery": "^3.1.1",
     "less": "^2.7.1",
-    "parse-torrent-name": "^0.5.4",
     "reflect-metadata": "^0.1.9",
     "rxjs": "^5.0.2",
     "systemjs": "0.19.40",

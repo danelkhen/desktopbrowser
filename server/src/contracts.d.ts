@@ -2,7 +2,8 @@
 
     export interface ByFilename {
         key: string;
-        selectedFiles?: string[];
+        selectedFiles: string[];
+        tmdbId: string;
     }
 
     export interface DbService<T> {
@@ -292,9 +293,5 @@
         [columnName: string]: "ASC" | "DESC";
     };
 
-    export interface ByFilename {
-        key: string;
-        selectedFiles?: string[];
-    }
 
 }

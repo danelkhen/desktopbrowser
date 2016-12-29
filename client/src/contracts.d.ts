@@ -3,6 +3,7 @@
     export interface ByFilename {
         key: string;
         selectedFiles?: string[];
+        tmdbId?: string;
     }
 
     export interface DbService<T> {
@@ -288,11 +289,6 @@
     export type OrderByCondition = {
         [columnName: string]: "ASC" | "DESC";
     };
-
-    export interface ByFilename {
-        key: string;
-        selectedFiles?: string[];
-    }
 
     export interface FilenameParsedInfo {
         name: string;

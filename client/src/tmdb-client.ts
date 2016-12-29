@@ -109,6 +109,21 @@ export class TmdbClient extends TmdbApiClient {
         });
     }
 
+    getMovieOrTvById(typeAndId: string): Promise<Media> {
+        if (typeAndId == null)
+            return Promise.resolve(null);
+        let tokens = typeAndId.split("|");
+        if (tokens.length < 2)
+            return Promise.resolve(null);
+        let media_type = tokens[0];
+        let id = tokens[1];
+        if (media_type == "movie")
+            return this.invoke(t => t.movieGetDetails({ movie_id: id as any }));
+        if (media_type == "tv")
+            return this.invoke(t => t.tvGetDetails({ tv_id: id as any }));
+        return Promise.resolve(null);
+    }
+
 }
 
 export interface GeneralStorage {
