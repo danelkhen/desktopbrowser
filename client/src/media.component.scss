@@ -1,2 +1,159 @@
 @import "../scss/var";
 
+
+body {
+    background-color: $media-bg;
+    font-family: $media-font-regular;
+    line-height: 1.5;
+    font-size: $ms-1;
+}
+
+
+/* Container Settings */
+
+.media {
+    // max-width: em(1280);
+    width: 100%;
+    display: flex;
+}
+
+
+/*** Everything on the left pane ***/
+
+.media__leftpane {
+    width: 15%;
+    background-color: $media-bg-variant;
+    min-height: 100vh;
+
+}
+
+
+/* Header Settings */
+
+.media__header {
+    padding: em(20);
+    border-bottom: 1px solid $media-border;
+}
+
+
+
+/***** Everything on the right pane ****/
+
+.media__rightpane {
+    width: 85%;
+    padding: 0 em(40) em(40);
+}
+
+.media__title {
+    margin-right: em(20);
+    font-size: em(24);
+    font-family: $media-font-bold;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+.media__filter {
+    
+    a {
+        display: inline-block;
+        text-decoration: none;
+        margin-right: em(12);
+        color: $media-grey-color;
+        -webkit-font-smoothing: antiaaliased; 
+
+        &:hover, &.media--active {
+            color: $media-pri-color;
+        }
+    }
+}
+
+.media__gridtop {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $media-border;
+    padding: em(16) 0;
+    align-items: center;
+}
+
+.media__search {
+    background-color: $media-bg-variant;
+    border-radius: 50px;
+
+    input {
+        border: none;
+        padding: em(12) em(16);
+        background: none;
+    }
+}
+    
+
+.media__pool {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    margin-top: em(32);
+}
+
+.media__pool li {
+    justify-content: space-between;
+    width: em(180);
+    height: auto;
+    position: relative;
+    // border: 1px solid $media-border;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: em(16);
+}
+
+.media__poster {
+    width: 100%;
+    position: relative;
+    img {
+        width: 100%;
+    }
+}
+
+.media__content-title {
+    font-size: em(15);
+    line-height: 1.25;
+    margin-top: em(10);
+    text-align: center;
+    font-family: $media-font-bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 em(5);
+    -webkit-font-smoothing: antialiased;   
+}
+
+.media__rating {
+    font-size: em(16);
+    color: $media-grey-color;
+    background-color: $media-pri-color;
+    display: inline-block;
+    position: absolute;
+    margin: em(10);
+    top: 0;
+    right: 0;
+}
+
+.media__details {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-color: rgba(16, 17, 29, .94);
+    text-align: center;
+    padding: em(20);
+}
+
+.media__pool li {
+    
+    &:hover {
+        .media__details {
+            opacity: 1;
+        }    
+    }
+}
