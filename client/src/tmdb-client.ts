@@ -15,7 +15,7 @@ export class TmdbClient extends TmdbApiClient {
                 if (prm.session_id == null)
                     prm.session_id = this.session_id;
             }
-            return base(pc).then(t => this.fixResponse(t));
+            return base(pc).then(t => this.fixResponse(t, pc.name));
         };
     }
     init(): Promise<any> {
@@ -24,7 +24,7 @@ export class TmdbClient extends TmdbApiClient {
     }
 
     configuration: GetApiConfigurationResponse;
-    fixResponse(res: any): any {
+    fixResponse(res: any, methodName: string): any {
         if (res == null || typeof (res) != "object")
             return res;
         let movie = res as Media;
@@ -32,6 +32,14 @@ export class TmdbClient extends TmdbApiClient {
         props.forEach(prop => {
             if (movie[prop] == null)
                 return;
+            if (movie.media_type == null) {
+                if (methodName.startsWith("tv"))
+                    movie.media_type = "tv";
+                else if (methodName.startsWith("movie"))
+                    movie.media_type = "movie";
+                else
+                    console.log("unknown media type", { movie, methodName });
+            }
             let urlProp = prop.replace("_path", "_url");
             let imagesProp = prop.replace("_path", "");
             movie[urlProp] = this.getImageUrl(movie, prop);
@@ -42,7 +50,7 @@ export class TmdbClient extends TmdbApiClient {
             }
             this.getImageSizes(prop).forEach(size => images[size] = this.getImageUrl(movie, prop, size));
         });
-        Object.values(res).forEach(t => this.fixResponse(t));
+        Object.values(res).forEach(t => this.fixResponse(t, methodName));
         return res;
 
     }

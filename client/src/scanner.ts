@@ -3,6 +3,7 @@ import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
 import { Media, Movie, TvShow } from "./tmdb/tmdb-api"
 import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
+import { promiseEach } from "./utils/utils"
 
 export class Scanner {
     folders: string[];
@@ -45,15 +46,4 @@ export class Scanner {
         });
     }
 
-}
-
-export function promiseEach<T>(list: T[], handler: (obj: T, index: number) => Promise<any> | any): Promise<any> {
-    return promiseMap<T, any>(list, handler);
-}
-
-export function promiseMap<T, R>(list: T[], handler: (obj: T, index: number) => Promise<R> | R): Promise<R[]> {
-    let res: R[] = [];
-    let promise = Promise.resolve();
-    list.forEach((obj, i) => promise = promise.then(() => handler(obj, i)).then(e => { res.push(e); }));
-    return promise.then(() => res);
 }

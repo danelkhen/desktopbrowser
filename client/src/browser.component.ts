@@ -12,7 +12,8 @@ import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
 import { Movie } from "./tmdb/tmdb-api"
-import {Scanner} from "./scanner"
+import { Scanner } from "./scanner"
+import { AppModule } from "./app.module"
 
 @Component({
     selector: 'my-browser',
@@ -23,7 +24,7 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     FOLDERS_FIRST = "foldersFirst";
     baseDbBuckets: ByFilename[];
-    Service: SiteServiceClient;
+    //Service: SiteServiceClient;
     Res: ListFilesResponse;
     quickFindText: string = "";
     theme: string = "dark";
@@ -53,10 +54,10 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     columns: string[] = [this.TYPE, this.NAME, this.MODIFIED, this.SIZE, this.EXTENSION];
 
-    constructor(private route: ActivatedRoute, private router: Router, private location: Location) {
-        console.log("location", this.location);
+    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: SiteServiceClient) {
+        console.log({ route, router, location, server });
 
-        this.Service = new SiteServiceClient();
+        //this.Service = new SiteServiceClient();
         this.Req = {};
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
         this.FileSelection = new Selection<File>();
@@ -90,7 +91,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         console.log("baseDbGetAll");
         this.tmdb = new TmdbClient();
         Promise.all([
-            this.Service.db.byFilename.invoke(t => t.find()).then(list => {
+            this.server.db.byFilename.invoke(t => t.find()).then(list => {
                 this.baseDbBuckets = list;
                 this.migrateDbIfNeeded();
             }),
@@ -307,7 +308,7 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     ListFiles(): Promise<any> {
         console.log("ListFiles");
-        return this.Service.invoke(t => t.ListFiles(this.Req)).then(res => {
+        return this.server.invoke(t => t.ListFiles(this.Req)).then(res => {
             if (res == null)
                 return; //TODO: handle errors
             this.Res = res;
@@ -467,14 +468,14 @@ export class BrowserComponent implements OnInit, OnChanges {
         var fileOrFolder = file.IsFolder ? "folder" : "file";
         if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
             return;
-        return this.Service.invoke(t => t.Delete({ Path: file.Path })).then(res => this.ListFiles());
+        return this.server.invoke(t => t.Delete({ Path: file.Path })).then(res => this.ListFiles());
     }
 
     TrashAndRefresh(file: File): Promise<any> {
         if (file == null)
             return;
         var fileOrFolder = file.IsFolder ? "folder" : "file";
-        return this.Service.invoke(t => t.trash({ Path: file.Path })).then(res => this.ListFiles());
+        return this.server.invoke(t => t.trash({ Path: file.Path })).then(res => this.ListFiles());
     }
 
     DeleteOrTrash(file: File): Promise<any> {
@@ -507,11 +508,11 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     Execute(file: File): Promise<any> {
-        return this.Service.invoke(t => t.Execute({ Path: file.Path }));
+        return this.server.invoke(t => t.Execute({ Path: file.Path }));
     }
 
     Explore(file: File): Promise<any> {
-        return this.Service.invoke(t => t.Explore({ Path: file.Path }));
+        return this.server.invoke(t => t.Explore({ Path: file.Path }));
     }
 
     FormatFriendlyDate(value: string): string {
@@ -662,7 +663,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         let userId = this.getImdbUserId();
         if (userId == null || userId == "")
             return Promise.resolve([]);
-        return this.Service.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
+        return this.server.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
             let doc = $.parseXML(e);
             let items = $(doc).find("item").toArray();
             let items2 = items.map(item => {
@@ -717,12 +718,12 @@ export class BrowserComponent implements OnInit, OnChanges {
     SetBaseDbItem(value: ByFilename): void {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
             this.baseDbBuckets.removeAll(t => t.key == value.key);
-            this.Service.db.byFilename.invoke(t => t.removeById({ id: value.key }));
+            this.server.db.byFilename.invoke(t => t.removeById({ id: value.key }));
             return;
         }
         this.baseDbBuckets.removeAll(t => t.key == value.key);
         this.baseDbBuckets.push(value);
-        this.Service.db.byFilename.invoke(t => t.persist(value));
+        this.server.db.byFilename.invoke(t => t.persist(value));
     }
 
     getHeaderClass(prop: string) {
@@ -743,10 +744,10 @@ export class BrowserComponent implements OnInit, OnChanges {
     scan() {
         let scanner = new Scanner();
         scanner.folders = ["c:\\tv"];
-        scanner.service = this.Service;
+        scanner.service = this.server;
         scanner.tmdb = this.tmdb;
         console.log("scan start");
-        scanner.scan().then(e=>console.log("scan end", scanner));
+        scanner.scan().then(e => console.log("scan end", scanner));
 
     }
 }

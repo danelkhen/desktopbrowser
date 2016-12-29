@@ -1,4 +1,5 @@
-﻿import { Proxy, ProxyCall } from "./utils/proxy"
+﻿import { Injectable } from '@angular/core';
+import { Proxy, ProxyCall } from "./utils/proxy"
 import { OmdbGetResponse, OmdbMovie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilenameService as ByFilenameServiceContract, SiteService as SiteServiceContract } from "contracts"
 
 export class ServiceBase<T> extends Proxy<T> {
@@ -49,6 +50,7 @@ export class ByFilenameService extends ServiceBase<ByFilenameServiceContract> {
 export class SiteServiceClient extends ServiceBase<SiteServiceContract> {
     constructor() {
         super();
+        console.log("SiteServiceClient ctor");
         this.Url = "/api/fs";
         this.db = { byFilename: new ByFilenameService() };
     }

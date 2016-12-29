@@ -1,6 +1,8 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
-import { Movie } from "./tmdb/tmdb-api"
+import { Movie, Media } from "./tmdb/tmdb-api"
+import { SiteServiceClient, } from "./service"
+import { promiseEach, promiseMap } from "./utils/utils"
 
 @Component({
     selector: 'my-media',
@@ -8,10 +10,14 @@ import { Movie } from "./tmdb/tmdb-api"
     styleUrls: ['_res_/src/media.component.css'],
 })
 export class MediaComponent implements OnInit, OnChanges {
-    movies: Movie[];
+    constructor(private server: SiteServiceClient) {
+
+    }
+
+    movies: Media[];
     ngOnInit(): void {
         this.tmdb = new TmdbClient();
-        this.tmdb.init().then(() => this.test());
+        this.tmdb.init().then(() => this.test()).then(() => this.test2());
     }
     ngOnChanges(changes: SimpleChanges): void { }
     tmdb: TmdbClient;
@@ -23,16 +29,26 @@ export class MediaComponent implements OnInit, OnChanges {
         });
     }
     test2() {
-        //this.tmdb.getMovieOrTvById(
-        return this.tmdb.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
-            this.movies = e.results;
-            console.log(this.movies);
+        return this.server.db.byFilename.invoke(t => t.find()).then(mds => {
+            let mds2 = mds.filter(t => t.tmdbId != null);
+            promiseMap(mds2, t => this.tmdb.getMovieOrTvById(t.tmdbId)).then(list => {
+                console.log({ list });
+                list = arrayDistinctBy(list, t => t.id);
+                if (list.length > 0)
+                    this.movies = list;
+            });
         });
     }
 
 
 }
 
+export function arrayDistinctBy<T, V>(list: T[], selector: (obj: T) => V): T[] {
+    let pairs = list.map(t => [selector(t), t] as [V, T]);
+    let map = new Map<V, T>(pairs);
+    let list2 = Array.from(map.values());
+    return list2;
+}
 export interface TmdbMovie {
     title: string;
     backdrop_path: string;

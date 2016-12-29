@@ -1794,6 +1794,13 @@ export interface ApiMetadata {
     method: string;
 }
 
+export interface RateLimit {
+    limit:number;
+    remaining:number;
+    reset:number;
+}
+
+
 export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
     tvGetChanges: { path: "/tv/episode/{episode_id}/changes", method: "get" },
     tvGetAccountStates: { path: "/tv/{tv_id}/account_states", method: "get" },

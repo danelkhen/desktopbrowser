@@ -1,6 +1,5 @@
 import * as XMLHttpRequest from "xhr2"
 
-
 export function xhr<T>(opts: XhrRequest): Promise<any> {
     return new Promise<any>((resolve, reject) => {
         let url = opts.url;
@@ -14,11 +13,18 @@ export function xhr<T>(opts: XhrRequest): Promise<any> {
         }
         console.log({ url });
         let xhr = new XMLHttpRequest();
+        opts.xhr = xhr;
         xhr.addEventListener("readystatechange", e => {
-            if (xhr.readyState == 4)
+            if (xhr.readyState == 4) {
                 resolve(JSON.parse(xhr.responseText));
+            }
         });
         xhr.open("GET", url);
+        if (opts.headers != null) {
+            Object.keys(opts.headers).forEach(key => xhr.setRequestHeader(key, opts.headers[key]));
+        }
+
+
         xhr.send();
     });
 }
@@ -29,6 +35,8 @@ export interface XhrRequest {
     queryParams?: any;
     params?: any;
     method?: string;
+    xhr?: XMLHttpRequest;
+    headers?: { [key: string]: string };
 }
 
 
