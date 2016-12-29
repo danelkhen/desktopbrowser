@@ -19,59 +19,64 @@ body {
   display: flex; }
 
 /*** Everything on the left pane ***/
-.media__leftpane {
+.leftpane {
   width: 15%;
   background-color: #191c2f;
   min-height: 100vh; }
 
 /* Header Settings */
-.media__header {
+.header {
   padding: 1.25em;
   border-bottom: 1px solid #21263f; }
 
 /***** Everything on the right pane ****/
-.media__rightpane {
+.rightpane {
   width: 85%;
   padding: 0 2.5em 2.5em; }
 
-.media__title {
+.title {
   margin-right: 1.25em;
   font-size: 1.5em;
   font-family: "FreightTextBold", monospace, "helvetica-neue", helvetica, sans-serif;
   -webkit-font-smoothing: antialiased; }
 
-.media__filter a {
+.filter button {
   display: inline-block;
   text-decoration: none;
   margin-right: 0.75em;
   color: #4C4F64;
-  -webkit-font-smoothing: antiaaliased; }
-  .media__filter a:hover, .media__filter a.media--active {
+  -webkit-font-smoothing: antiaaliased;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: inherit;
+  cursor: pointer; }
+  .filter button:hover, .filter button.active {
     color: #EA5111; }
 
-.media__gridtop {
+.gridtop {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #21263f;
   padding: 1em 0;
   align-items: center; }
 
-.media__search {
+.search {
   background-color: #191c2f;
   border-radius: 50px; }
-  .media__search input {
+  .search input {
     border: none;
     padding: 0.75em 1em;
     background: none; }
 
-.media__pool {
+.pool {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-content: flex-start;
   margin-top: 2em; }
 
-.media__pool li {
+.pool li {
   justify-content: space-between;
   width: 11.25em;
   height: auto;
@@ -80,13 +85,13 @@ body {
   overflow: hidden;
   margin-bottom: 1em; }
 
-.media__poster {
+.poster {
   width: 100%;
   position: relative; }
-  .media__poster img {
+  .poster img {
     width: 100%; }
 
-.media__content-title {
+.content-title {
   font-size: 0.9375em;
   line-height: 1.25;
   margin-top: 0.625em;
@@ -98,7 +103,7 @@ body {
   padding: 0 0.3125em;
   -webkit-font-smoothing: antialiased; }
 
-.media__rating {
+.rating {
   font-size: 1em;
   color: #4C4F64;
   background-color: #EA5111;
@@ -108,7 +113,7 @@ body {
   top: 0;
   right: 0; }
 
-.media__details {
+.details {
   position: absolute;
   top: 0;
   width: 100%;
@@ -118,5 +123,5 @@ body {
   text-align: center;
   padding: 1.25em; }
 
-.media__pool li:hover .media__details {
+.pool li:hover .details {
   opacity: 1; }

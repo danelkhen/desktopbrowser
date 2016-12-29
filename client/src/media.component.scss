@@ -20,17 +20,16 @@ body {
 
 /*** Everything on the left pane ***/
 
-.media__leftpane {
+.leftpane {
     width: 15%;
     background-color: $media-bg-variant;
     min-height: 100vh;
-
 }
 
 
 /* Header Settings */
 
-.media__header {
+.header {
     padding: em(20);
     border-bottom: 1px solid $media-border;
 }
@@ -39,12 +38,12 @@ body {
 
 /***** Everything on the right pane ****/
 
-.media__rightpane {
+.rightpane {
     width: 85%;
     padding: 0 em(40) em(40);
 }
 
-.media__title {
+.title {
     margin-right: em(20);
     font-size: em(24);
     font-family: $media-font-bold;
@@ -52,22 +51,27 @@ body {
 }
 
 
-.media__filter {
-    
-    a {
+.filter {
+
+    button {
         display: inline-block;
         text-decoration: none;
         margin-right: em(12);
         color: $media-grey-color;
-        -webkit-font-smoothing: antiaaliased; 
+        -webkit-font-smoothing: antiaaliased;
+        border: none;
+        font-family: inherit;
+        font-size: inherit;
+        background-color: inherit;
+        cursor:pointer;
 
-        &:hover, &.media--active {
+        &:hover, &.active {
             color: $media-pri-color;
         }
     }
 }
 
-.media__gridtop {
+.gridtop {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid $media-border;
@@ -75,7 +79,7 @@ body {
     align-items: center;
 }
 
-.media__search {
+.search {
     background-color: $media-bg-variant;
     border-radius: 50px;
 
@@ -85,9 +89,9 @@ body {
         background: none;
     }
 }
-    
 
-.media__pool {
+
+.pool {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
@@ -95,7 +99,7 @@ body {
     margin-top: em(32);
 }
 
-.media__pool li {
+.pool li {
     justify-content: space-between;
     width: em(180);
     height: auto;
@@ -106,15 +110,16 @@ body {
     margin-bottom: em(16);
 }
 
-.media__poster {
+.poster {
     width: 100%;
     position: relative;
+
     img {
         width: 100%;
     }
 }
 
-.media__content-title {
+.content-title {
     font-size: em(15);
     line-height: 1.25;
     margin-top: em(10);
@@ -124,10 +129,10 @@ body {
     white-space: nowrap;
     overflow: hidden;
     padding: 0 em(5);
-    -webkit-font-smoothing: antialiased;   
+    -webkit-font-smoothing: antialiased;
 }
 
-.media__rating {
+.rating {
     font-size: em(16);
     color: $media-grey-color;
     background-color: $media-pri-color;
@@ -138,7 +143,7 @@ body {
     right: 0;
 }
 
-.media__details {
+.details {
     position: absolute;
     top: 0;
     width: 100%;
@@ -149,11 +154,11 @@ body {
     padding: em(20);
 }
 
-.media__pool li {
-    
+.pool li {
+
     &:hover {
-        .media__details {
+        .details {
             opacity: 1;
-        }    
+        }
     }
 }

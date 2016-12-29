@@ -1,54 +1,47 @@
-<!-- <div *ngFor="let movie of movies">
-    <span>{{movie.title}}</span>
-    <img src="{{movie.poster_url}}" />
-    <img src="{{movie.backdrop_url}}" />
-</div> -->
+<div *ngIf="selectedMovie != null">
+    This will show when there's a selected movie
+</div>
 
-<div class="media">
-
-	<div class="media__leftpane">
-		<header class="media__header">
-			<a class="media__logo" href="#">
-				<img src="../img/media/logo.svg">
-			</a>
-		</header>
-		<div class="media__filter">
-			<a href="#" class="media--active">all content</a>
-			<a href="#">tv shows</a>
-			<a href="#">movies</a>
-		</div>
-	</div>
-
-	<!-- Leftpane ends here -->
-
-	<div class="media__rightpane">
-		<div class="media__gridtop">
-			<div class="media__title">your watchlist</div>
-			<div class="media__search">
-				<input type="text" name="" placeholder="quicksearch">
-			</div>
-		</div>
-			<!-- <h3 class="media__title">your watchlist</h3> -->
-
-		<ul class="media__pool">
-			<li *ngFor="let movie of movies">
-				<div class="media__poster">
-					<img src="{{movie.poster.w185}}" alt="">
-				</div>
-				<div class="media__details">
-					<h5 class="media__title">{{movie.title}}</h5>
-					<span class="media__playtime">1hr:45min</span>
-					<img src="{{movie.poster.w342}}" alt="">
-					<div class="media__details">
-					<div class="media__rating">{{movie.vote_average}}</div>
-					<span class="media__playtime">1hr:45min</span>
-					<a class="media__icon media--playicon">play</a>
-					<a href="#" class="media__status">mark as watched</a>
-				</div>
-				</div>
-				<h5 class="media__content-title">{{movie.title}}</h5>
-			</li>
-		</ul>
-	</div><!-- End of Right pane -->
-
+<div class="media" *ngIf="selectedMovie == null">
+    <div class="leftpane">
+        <header class="header">
+            <a class="logo">
+                <img src="../img/media/logo.svg" />
+            </a>
+        </header>
+        <div class="filter">
+            <button class="active">all content</button>
+            <button>tv shows</button>
+            <button>movies</button>
+        </div>
+    </div>
+    <!-- Leftpane ends here -->
+    <div class="rightpane">
+        <div class="gridtop">
+            <div class="title">your watchlist</div>
+            <div class="search">
+                <input type="text" placeholder="quicksearch">
+            </div>
+        </div>
+        <!-- <h3 class="title">your watchlist</h3> -->
+        <ul class="pool">
+            <li *ngFor="let movie of movies" (click)="movie_click(movie)">
+                <div class="poster">
+                    <img src="{{movie.poster.w185}}" alt="">
+                </div>
+                <div class="details">
+                    <h5 class="title">{{movie.title}}</h5>
+                    <span class="playtime">1hr:45min</span>
+                    <img src="{{movie.poster.w342}}" alt="">
+                    <div class="details">
+                        <div class="rating">{{movie.vote_average}}</div>
+                        <span class="playtime">1hr:45min</span>
+                        <a class="icon playicon">play</a>
+                        <a class="status">mark as watched</a>
+                    </div>
+                </div>
+                <h5 class="content-title">{{movie.title}}</h5>
+            </li>
+        </ul>
+    </div><!-- End of Right pane -->
 </div>

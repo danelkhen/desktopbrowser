@@ -15,12 +15,19 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
     movies: Media[];
+    selectedMovie: Media;
+
     ngOnInit(): void {
         this.tmdb = new TmdbClient();
         this.tmdb.init().then(() => this.test()).then(() => this.test2());
     }
     ngOnChanges(changes: SimpleChanges): void { }
     tmdb: TmdbClient;
+    
+    
+    movie_click(movie: Media) {
+        this.selectedMovie = movie;
+    }
 
     test() {
         return this.tmdb.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
