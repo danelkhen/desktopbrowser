@@ -48,6 +48,9 @@ export class Db {
         },
         entities: [ByFilename, Movie],
         autoSchemaSync: true,
+        logging: {
+            logQueries: false
+        }
     };
     init(): Promise<any> {
         return createConnection(this.connectionOptions).then(connection => this.connection = connection);
