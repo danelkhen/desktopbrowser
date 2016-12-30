@@ -1,5 +1,5 @@
 export class Name {
-   static of<T>(): NameFunc<T> {
+    static of<T>(): NameFunc<T> {
         return nameof;
     }
 }
@@ -26,4 +26,18 @@ export function promiseMap<T, R>(list: T[], handler: (obj: T, index: number) => 
     let promise = Promise.resolve();
     list.forEach((obj, i) => promise = promise.then(() => handler(obj, i)).then(e => { res.push(e); }));
     return promise.then(() => res);
+}
+
+export function arrayDistinctBy<T, V>(list: T[], selector: (obj: T) => V): T[] {
+    let pairs = list.map(t => [selector(t), t] as [V, T]);
+    let map = new Map<V, T>(pairs);
+    let list2 = Array.from(map.values());
+    return list2;
+}
+
+export function tryParseInt(s: string): number {
+    let x = parseInt(s);
+    if(isNaN(x))
+        return null;
+    return x;
 }

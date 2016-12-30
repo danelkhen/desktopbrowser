@@ -8,16 +8,24 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         this.onInvoke = pc => {
             let md = TmdbApiMetadata[pc.name];
             let path = md.path;
-            let req = pc.args[0];
+            let prms: any = { api_key: this.api_key };
+            Object.assign(prms, pc.args[0]);
+            let body: any = null;
+            if (prms.body != null) {
+                body = JSON.stringify(prms.body);
+                delete prms.body;
+            }
             let url = this.base_url + path;
-            let prms = { api_key: this.api_key, ...req }
+            //let prms = { api_key: this.api_key, ...prms }
             let xhrReq: XhrRequest = {
                 url,
                 params: prms,
-                //headers: {
-                //    "Access-Control-Expose-Headers": "X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset",
-                //}
+                method: md.method || "GET",
+                body: body,
+                headers: {},
             };
+            if (body != null)
+                xhrReq.headers["Content-Type"] = "application/json;charset=utf-8";
             return xhr(xhrReq).then(res => {
                 //let x = xhrReq.xhr;
                 //this.rateLimit = {
@@ -25,7 +33,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
                 //    remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
                 //    reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
                 //};
-                console.log({ pc, path, req, res });
+                console.log({ name:pc.name, res, path, pc, prms,  });
                 return res;
             });
         };

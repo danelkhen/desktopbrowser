@@ -90,13 +90,11 @@ export class BrowserComponent implements OnInit, OnChanges {
         $(window).resize(e => this.recalcHeight());
         this.recalcHeight();
         console.log("baseDbGetAll");
-        this.tmdb = new TmdbClient();
         Promise.all([
             this.server.db.byFilename.invoke(t => t.find()).then(list => {
                 this.baseDbBuckets = list;
                 this.migrateDbIfNeeded();
             }),
-            this.tmdb.init(),
         ]).then(() => this.onReady());
 
     }
@@ -602,29 +600,28 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     tmdbLogin() {
-        this.tmdb.loginToTmdb().then(() => {
-            this.tmdb.invoke(t => t.accountGetMovieWatchlist({})).then(e => console.log("accountGetMovieWatchlist", e));
-        });
+        return this.app.tmdb.loginToTmdb();
+        //.then(() => {            this.app.tmdb.invoke(t => t.accountGetMovieWatchlist({})).then(e => console.log("accountGetMovieWatchlist", e));        })
     }
-    tmdb: TmdbClient;
+    //tmdb: TmdbClient;
     getImdbInfo(file: File) {
         let info = new FilenameParser().parse(file.Name);
         let isTv = info.season != null;
-        this.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => {
+        this.app.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => {
             this.movie = e.results[0];
             console.log(this.movie);
             if (this.movie != null) {
-                this.tmdb.invoke(t => t.movieGetDetails({ movie_id: this.movie.id })).then(e => console.log({ movie: this.movie, details: e }));
+                this.app.tmdb.invoke(t => t.movieGetDetails({ movie_id: this.movie.id })).then(e => console.log({ movie: this.movie, details: e }));
             }
         });
-        this.tmdb.invoke(t => t.searchTvShows({ query: info.name, })).then(e => {
+        this.app.tmdb.invoke(t => t.searchTvShows({ query: info.name, })).then(e => {
             console.log(e);
             let show = e.results[0];
             if (show != null) {
-                this.tmdb.invoke(t => t.tvGetDetails({ tv_id: show.id })).then(e => console.log({ show: show, details: e }));
+                this.app.tmdb.invoke(t => t.tvGetDetails({ tv_id: show.id })).then(e => console.log({ show: show, details: e }));
             }
         });
-        this.tmdb.invoke(t => t.searchMulti({ query: info.name, })).then(e => console.log("multisearch", e));
+        this.app.tmdb.invoke(t => t.searchMulti({ query: info.name, })).then(e => console.log("multisearch", e));
     }
 
 
@@ -746,7 +743,7 @@ export class BrowserComponent implements OnInit, OnChanges {
         let scanner = new Scanner();
         scanner.folders = ["c:\\tv"];
         scanner.service = this.server;
-        scanner.tmdb = this.tmdb;
+        scanner.tmdb = this.app.tmdb;
         console.log("scan start");
         scanner.scan().then(e => console.log("scan end", scanner));
 

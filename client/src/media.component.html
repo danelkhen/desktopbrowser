@@ -59,5 +59,16 @@
         <input [(ngModel)]="folder.path" />
     </div>
     <button (click)="addConfigFolder()">+</button>
-    <button (click)="saveConfig()">save</button>
+    <button (click)="app.saveConfig()">save</button>
+    <button (click)="app.scan()">scan</button>
+    <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
+    <button (click)="test3()">test3</button>
+</div>
+<div *ngIf="movies!=null" style="color:white">
+    <div *ngFor="let media of movies">
+        <div>{{media.title}}</div>
+        <div>{{media.name}}</div>
+        <div>{{app.tmdb.isWatched(media.id)}}</div>
+        <button (click)="app.tmdb.markAsWatched(media.id)">mark as watched</button>
+    </div>
 </div>

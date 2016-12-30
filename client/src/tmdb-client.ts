@@ -1,9 +1,11 @@
-import { TmdbApi, GetApiConfigurationResponse, Movie, Media } from "./tmdb/tmdb-api"
+import { ListDetails, TmdbApi, GetApiConfigurationResponse, Movie, Media, AccountDetails, AccountGetDetailsRequest } from "./tmdb/tmdb-api"
 import { TmdbApiClient, } from "./tmdb/tmdb-client"
+import { promiseEach, tryParseInt } from "./utils/utils"
 
 export class TmdbClient extends TmdbApiClient {
     constructor() {
         super();
+        console.log("TmdbClient ctor");
         let base = this.onInvoke;
         this.onInvoke = pc => {
             if (this.hasSessionId()) {
@@ -12,15 +14,31 @@ export class TmdbClient extends TmdbApiClient {
                     prm = {};
                     pc.args[0] = prm;
                 }
-                if (prm.session_id == null)
+                if (prm.session_id == null && this.session_id != null)
                     prm.session_id = this.session_id;
+                if (prm.account_id == null && this.account_id != null)
+                    prm.account_id = this.account_id;
             }
             return base(pc).then(t => this.fixResponse(t, pc.name));
         };
     }
+    account: AccountDetails;
     init(): Promise<any> {
         this.api_key = '16a856dff4d1db46782e6132610ddb32';
-        return this.invoke(t => t.getApiConfiguration({})).then(t => this.configuration = t);
+        return this.invoke(t => t.getApiConfiguration({})).then(t => this.configuration = t)
+            .then(() => this.accountGetDetails())
+            .then(() => this.getCreateTmdbWatchedList());
+    }
+
+    accountGetDetails(req?: AccountGetDetailsRequest): Promise<AccountDetails> {
+        if (req == null)
+            req = {};
+        return this.invoke(t => t.accountGetDetails(req)).then(t => {
+            this.account = t;
+            if (this.account != null)
+                this.account_id = this.account.id;
+            return this.account;
+        }, () => console.log("accountGetDetails failed"));
     }
 
     configuration: GetApiConfigurationResponse;
@@ -83,12 +101,18 @@ export class TmdbClient extends TmdbApiClient {
     get session_id(): string { return this.storage.tmdb_session_id; }
     set session_id(value: string) { this.storage.tmdb_session_id = value; }
 
+    get account_id(): number { return tryParseInt(this.storage.tmdb_account_id); }
+    set account_id(value: number) { this.storage.tmdb_account_id = String(value); }
+
     hasSessionId() {
         return this.session_id != null && this.session_id != "";
     }
     loginToTmdb(): Promise<any> {
-        if (this.hasSessionId())
-            return Promise.resolve();
+        return this._loginToTmdb().then(t => this.accountGetDetails()).then(t => this.getCreateTmdbWatchedList());
+    }
+    _loginToTmdb(): Promise<any> {
+        //if (this.hasSessionId())
+        //    return Promise.resolve();
         return new Promise<any>((resolve, reject) => {
             window.addEventListener("message", e => {
                 console.log("messsage", e.data, e);
@@ -112,7 +136,6 @@ export class TmdbClient extends TmdbApiClient {
                 this.request_token = e.request_token;
                 console.log(e);
                 let win = window.open("/tmdb-login.html?request_token=" + this.request_token);
-                //let win = window.open("https://www.themoviedb.org/authenticate/" + e.request_token + "?redirect_to=" + encodeURIComponent(location.toString()));
             });
         });
     }
@@ -132,9 +155,58 @@ export class TmdbClient extends TmdbApiClient {
         return Promise.resolve(null);
     }
 
+    watchedList: ListDetails;
+    isWatched(media_id: number) {
+        return this.watchedList != null && this.watchedList.items.find(t => t.id == media_id) != null;
+    }
+    markAsWatched(media_id: number, watched: boolean = true): Promise<any> {
+        if (this.watchedList == null)
+            throw new Error();
+        if (this.isWatched(media_id))
+            return Promise.resolve();
+        return this.invoke(t => t.listAddMovie({ list_id: this.watchedList.id, body: { media_id: media_id } }))
+            .then(e => console.log(e), e => console.log(e))
+            .then(() => this.refreshTmdbWatchedList());
+    }
+    getCreateTmdbWatchedList(): Promise<ListDetails> {
+        if (this.watchedList != null)
+            return Promise.resolve(this.watchedList);
+        return this.refreshTmdbWatchedList();
+    }
+    refreshTmdbWatchedList(): Promise<ListDetails> {
+        return this.getCreateTmdbWatchedListId().then(listId => {
+            return this.invoke(t => t.listGetDetails({ list_id: listId })).then(e => {
+                this.watchedList = e;
+                console.log(e);
+                return this.watchedList;
+            });
+        });
+    }
+    getCreateTmdbWatchedListId(): Promise<string> {
+        if (this.watchedList != null)
+            return Promise.resolve(this.watchedList.id);
+        return this.invoke(t => t.accountGetCreatedLists({})).then(e => {
+            let res1 = e.results.find(t => t.name.toLowerCase() == "watched");
+            let listId: number = null;
+            if (res1 != null)
+                listId = res1.id;
+            else {
+                this.invoke(t => t.listCreateList({ body: { name: "watched", description: "ggg", language: "en" } })).then(e => {
+                    console.log(e);
+                    listId = e.list_id;
+                });
+            }
+            console.log(e);
+            return String(listId);
+        });
+    }
+
+
+
 }
 
 export interface GeneralStorage {
     tmdb_request_token?: string;
     tmdb_session_id?: string;
+    tmdb_account_id?: string;
 }
