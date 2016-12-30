@@ -22,16 +22,61 @@ body {
 
 .leftpane {
     width: 15%;
-    background-color: $media-bg-variant;
+    // background-color: $media-bg-variant;
     min-height: 100vh;
 }
 
 
+.filter {
+    padding: em(25) 0 0 em(40);
+    margin-bottom: em(16);
+    position: relative;
+
+	.title {
+		font-size: em(12);
+		font-family: $media-font-regular;
+		color: $media-grey-color;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-bottom: em(16);
+		display: block;
+	}
+
+	button {
+		font-family: $media-font-regular;
+		-webkit-font-smoothing: antialiased;
+		@include transition(color .3s ease);
+		padding: 0;
+		font-size: em(20);
+		color: #fff;
+		display: block;
+		border: none;
+		background: none;
+		width: 100%;
+		margin-bottom: em(5);
+		text-align: left;
+		cursor: pointer;
+
+		&:focus, &:active {
+			outline: 0;
+		}
+
+		&.selected, &:hover {
+			color: $media-pri-color;
+			outline: 0;
+		}
+
+		&.allmedia {
+			
+		}
+	}
+}
+
 /* Header Settings */
 
 .header {
-    padding: em(20);
-    border-bottom: 1px solid $media-border;
+    padding: em(26);
+    // border-bottom: 1px solid $media-border;
 }
 
 
@@ -50,31 +95,10 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-
-.filter {
-
-    button {
-        display: inline-block;
-        text-decoration: none;
-        margin-right: em(12);
-        color: $media-grey-color;
-        -webkit-font-smoothing: antiaaliased;
-        border: none;
-        font-family: inherit;
-        font-size: inherit;
-        background-color: inherit;
-        cursor:pointer;
-
-        &:hover, &.active {
-            color: $media-pri-color;
-        }
-    }
-}
-
 .gridtop {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid $media-border;
+    // border-bottom: 1px solid $media-border;
     padding: em(16) 0;
     align-items: center;
 }
@@ -130,6 +154,7 @@ body {
     overflow: hidden;
     padding: 0 em(5);
     -webkit-font-smoothing: antialiased;
+    color: #fff;
 }
 
 .rating {

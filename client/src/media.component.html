@@ -11,16 +11,24 @@
                 <img src="../img/media/logo.svg" />
             </a>
         </header>
-        <div class="filter">
-            <button class="active">all content</button>
-            <button>tv shows</button>
-            <button>movies</button>
+        <div class="filter local">
+        	<span class="title">Watchlist</span>
+            <button class="allmedia selected">All Media</button>
+            <button class="tv">TV Shows</button>
+            <button class="movie">Movies</button>
+        </div>
+
+        <div class="filter explore">
+        	<span class="title">Explore</span>
+            <button class="allmedia">Most Popular</button>
+            <button class="tv">Your Feed</button>
+            <button class="movie">Recommended</button>
         </div>
     </div>
     <!-- Leftpane ends here -->
     <div class="rightpane">
         <div class="gridtop">
-            <div class="title">your watchlist</div>
+            <!-- <div class="title">your watchlist</div> -->
             <div class="search">
                 <input type="text" placeholder="quicksearch">
             </div>
@@ -29,18 +37,14 @@
         <ul class="pool">
             <li *ngFor="let movie of movies" (click)="movie_click(movie)">
                 <div class="poster">
-                    <img src="{{movie.poster.w185}}">
+                    <img src="{{movie.poster.w342}}">
                 </div>
                 <div class="details">
                     <h5 class="title">{{movie.title}}</h5>
                     <span class="playtime">1hr:45min</span>
-                    <img src="{{movie.poster.w342}}">
-                    <div class="details">
-                        <div class="rating">{{movie.vote_average}}</div>
-                        <span class="playtime">1hr:45min</span>
-                        <a class="icon playicon">play</a>
-                        <a class="status">mark as watched</a>
-                    </div>
+                    <div class="rating">{{movie.vote_average}}</div>
+                    <a class="icon playicon">play</a>
+                    <a class="status">mark as watched</a>
                 </div>
                 <h5 class="content-title">{{movie.title}}</h5>
             </li>
