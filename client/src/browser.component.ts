@@ -13,7 +13,7 @@ import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
 import { Movie } from "./tmdb/tmdb-api"
 import { Scanner } from "./scanner"
-import { AppModule } from "./app.module"
+import { App } from "./app"
 
 @Component({
     selector: 'my-browser',
@@ -54,7 +54,7 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     columns: string[] = [this.TYPE, this.NAME, this.MODIFIED, this.SIZE, this.EXTENSION];
 
-    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: SiteServiceClient) {
+    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: SiteServiceClient, private app:App) {
         console.log({ route, router, location, server });
 
         //this.Service = new SiteServiceClient();
@@ -70,6 +70,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        document.body.classList.add("db");
         console.log("ngOnOnit");
         this.location.subscribe(t => console.log("location changed", { location: t }));
 

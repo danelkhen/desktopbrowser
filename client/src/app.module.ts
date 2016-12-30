@@ -5,7 +5,9 @@ import { AppComponent } from './app.component';
 import { BrowserComponent } from './browser.component';
 import { MediaComponent } from './media.component';
 import { RouterModule, Routes } from '@angular/router';
-import { SiteServiceClient, } from "./service"
+import { TmdbClient } from "./tmdb-client"
+import { SiteServiceClient, ByFilenameService, KeyValueService } from "./service"
+import { App } from "./app"
 
 const appRoutes: Routes = [
     { path: '', component: BrowserComponent, },
@@ -15,11 +17,11 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [BrowserModule, FormsModule, RouterModule.forRoot(appRoutes)],
     declarations: [AppComponent, BrowserComponent, MediaComponent],
-    providers: [SiteServiceClient],
+    providers: [App, SiteServiceClient, ByFilenameService, KeyValueService, TmdbClient],
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor() {
+    constructor(private app: App) {
         console.log("AppModule ctor");
     }
 }

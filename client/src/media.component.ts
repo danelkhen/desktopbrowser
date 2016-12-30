@@ -3,6 +3,7 @@ import { TmdbClient } from "./tmdb-client"
 import { Movie, Media } from "./tmdb/tmdb-api"
 import { SiteServiceClient, } from "./service"
 import { promiseEach, promiseMap } from "./utils/utils"
+import { App, Config } from "./app"
 
 @Component({
     selector: 'my-media',
@@ -10,7 +11,7 @@ import { promiseEach, promiseMap } from "./utils/utils"
     styleUrls: ['_res_/src/media.component.css'],
 })
 export class MediaComponent implements OnInit, OnChanges {
-    constructor(private server: SiteServiceClient) {
+    constructor(private app:App) {
 
     }
 
@@ -39,9 +40,9 @@ export class MediaComponent implements OnInit, OnChanges {
         });
     }
     test2() {
-        return this.server.db.byFilename.invoke(t => t.find()).then(mds => {
-            let mds2 = mds.filter(t => t.tmdbId != null);
-            promiseMap(mds2, t => this.tmdb.getMovieOrTvById(t.tmdbId)).then(list => {
+        return this.app.server.db.byFilename.invoke(t => t.find()).then(mds => {
+            let mds2 = mds.filter(t => t.tmdbTypeAndId != null);
+            promiseMap(mds2, t => this.tmdb.getMovieOrTvById(t.tmdbTypeAndId)).then(list => {
                 console.log({ list });
                 list = arrayDistinctBy(list, t => t.id);
                 if (list.length > 0)
@@ -50,7 +51,13 @@ export class MediaComponent implements OnInit, OnChanges {
         });
     }
 
-
+    addConfigFolder() {
+        this.app.config.folders.push({ path: null });
+    }
+    saveConfig() {
+        let storage = this.app.server.db.KeyValue;
+        storage.persist(this.app.config);
+    }
 }
 
 export function arrayDistinctBy<T, V>(list: T[], selector: (obj: T) => V): T[] {

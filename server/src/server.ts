@@ -9,7 +9,7 @@ import * as child_process from "child_process"
 import * as https from "https"
 import * as bodyParser from "body-parser";
 import * as os from "os";
-import { ByFilenameService } from "./service"
+import { ByFilenameService, KeyValueService } from "./service"
 import { RequestHandler } from "express"
 
 export class Server {
@@ -20,6 +20,7 @@ export class Server {
     services: {
         fs: SiteService,
         byFilename: ByFilenameService,
+        keyValue: KeyValueService,
     };
 
 
@@ -39,6 +40,7 @@ export class Server {
         this.services = {
             fs: this._service,
             byFilename: this._service.byFilename,
+            keyValue: this._service.keyValue,
         };
         this.app = express();
         this.app.use(bodyParser.json());
@@ -73,11 +75,6 @@ export class Server {
         let serviceName = req.params["service"];
         let action = req.params["action"];
         let service = this.services[serviceName];
-        //console.log("service[action]", serviceName, action);
-        //if (serviceName == "service")
-        //    service = this._service;
-        //else if (serviceName == "service.byFilename")
-        //    service = this._service.byFilename;
         if (service == null)
             console.error("No such service by that name:", serviceName);
         //console.log("service[action]", service, action, service[action]);

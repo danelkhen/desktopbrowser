@@ -47,3 +47,13 @@
         </ul>
     </div><!-- End of Right pane -->
 </div>
+
+
+<div *ngIf="app.config!=null">
+    <h3>Folders</h3>
+    <div *ngFor="let folder of app.config.folders">
+        <input [(ngModel)]="folder.path" />
+    </div>
+    <button (click)="addConfigFolder()">+</button>
+    <button (click)="saveConfig()">save</button>
+</div>

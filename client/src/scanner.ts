@@ -18,7 +18,7 @@ export class Scanner {
             let videoFiles = res.Files.filter(t => videoExt.has(t.Extension));
             return promiseEach(videoFiles, file => {
                 return this.service.db.byFilename.invoke(t => t.findOneById({ id: file.Name })).then(md => {
-                    if (md != null && md.tmdbId != null) {
+                    if (md != null && md.tmdbTypeAndId != null) {
                         console.log("tmdbId already exists, skipping", { file, md });
                         return Promise.resolve(null);
                     }
@@ -26,7 +26,7 @@ export class Scanner {
                         this.results.push({ file, res });
                         if (res != null) {
                             console.log("persist", "start", file.Name, res.id);
-                            return this.service.db.byFilename.invoke(t => t.persist({ key: file.Name, tmdbId: [res.media_type,res.id].join("|"), })).then(() => console.log("persist", "end", file.Name, res.id));
+                            return this.service.db.byFilename.invoke(t => t.persist({ key: file.Name, tmdbTypeAndId: [res.media_type,res.id].join("|"), })).then(() => console.log("persist", "end", file.Name, res.id));
                         }
                         return Promise.resolve(null);
                     });

@@ -1,9 +1,22 @@
 ﻿declare module "contracts" {
+    export interface KeyValueService {
+        findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
+        persist<T extends HasKey>(obj: T): Promise<T>;
+    }
+
+    export interface HasKey {
+        key: string;
+    }
+
+    export interface KeyValue {
+        key: string;
+        value: any;
+    }
 
     export interface ByFilename {
         key: string;
         selectedFiles?: string[];
-        tmdbId?: string;
+        tmdbTypeAndId?: string;
     }
 
     export interface DbService<T> {
@@ -12,8 +25,6 @@
         persist(x: T): Promise<T>;
         removeById(req: { id: any }): Promise<T>;
     }
-
-    export interface ByFilenameService extends DbService<ByFilename> { }
 
     export interface SiteService {
         init();

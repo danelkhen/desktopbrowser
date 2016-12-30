@@ -1,4 +1,4 @@
-﻿import { ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilenameService as ByFilenameServiceContract, SiteService as SiteServiceContract, OmdbGetResponse, Movie } from "contracts"
+﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, SiteService as SiteServiceContract, OmdbGetResponse, Movie } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
@@ -11,7 +11,7 @@ import * as trash from 'trash';
 import * as path from "path";
 import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
-import { Db, ByFilename } from "./db2";
+import { Db, ByFilename, KeyValue } from "./db2";
 import { FindOptions, Repository } from "typeorm"
 
 
@@ -24,9 +24,13 @@ export class DbService<T> implements DbServiceContract<T> {
     find(): Promise<T[]> {
         return this.repo.find();
     }
+    _idPropName: string;
     getIdPropName() {
-        let md = this.db.connection.getMetadata(this.repo.target);
-        return md.primaryColumn.propertyName;
+        if (this._idPropName == null) {
+            let md = this.db.connection.getMetadata(this.repo.target);
+            this._idPropName = md.primaryColumn.propertyName;
+        }
+        return this._idPropName;
     }
     persist(obj: T): Promise<T> {
         let id = obj[this.getIdPropName()];
@@ -60,12 +64,58 @@ export class ByFilenameService extends DbService<ByFilename> {
 }
 
 
+export class KeyValueService implements KeyValueServiceContract {
+    dbService: DbService<KeyValue>;
+
+    init(): Promise<any> {
+        this.dbService = new DbService<KeyValue>();
+        this.dbService.db = new Db();
+        return this.dbService.db.init().then(() => this.dbService.repo = this.dbService.db.keyValue);
+    }
+    toKeyValue<T extends HasKey>(obj: T): KeyValue {
+        let key = obj.key;
+        let value: any = {};
+        Object.assign(value, obj);
+        delete value.key;
+        let x = new KeyValue();
+        x.key = key;
+        x.value = value;
+        return x;
+    }
+    fromKeyValue<T extends HasKey>(kv: KeyValue): T {
+        if (kv == null)
+            return null;
+        let obj: T = kv.value;
+        obj.key = kv.key;
+        return obj;
+    }
+    findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined> {
+        return this.dbService.findOneById(req).then(t => this.fromKeyValue<T>(t));
+    }
+    copyOverwrite<T>(src: T, target: T): T {
+        return Q.copy(src, target, { overwrite: true });
+    }
+    persist<T extends HasKey>(obj: T): Promise<any> {
+        return this.findOneById({ id: obj.key }).then(obj2 => {
+            if (obj2 != null)
+                this.copyOverwrite(obj, obj2);
+            else
+                obj2 = obj;
+            let kv = this.toKeyValue(obj2);
+            return this.dbService.repo.persist(kv).then(t => this.fromKeyValue<T>(t));
+        });
+    }
+}
+
+
 export class SiteService implements SiteServiceContract {
     init(): Promise<any> {
         console.log("SiteService init");
         this.byFilename = new ByFilenameService();
-        return this.byFilename.init();
+        this.keyValue = new KeyValueService();
+        return Promise.all([this.byFilename.init(), this.keyValue.init()]);
     }
+    keyValue: KeyValueService;
     byFilename: ByFilenameService;
     baseDbFilename: string;
     migrateToSqlite() {

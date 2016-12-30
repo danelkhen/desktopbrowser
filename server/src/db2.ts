@@ -9,7 +9,13 @@ import { Movie as MovieContract, ByFilename as ByFilenameContract } from "contra
 export class ByFilename implements ByFilenameContract {
     @PrimaryColumn() key: string;
     @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
-    @Column(CT.STRING, { nullable: true }) tmdbId: string;
+    @Column(CT.STRING, { nullable: true }) tmdbTypeAndId: string;
+}
+
+@Table()
+export class KeyValue {
+    @PrimaryColumn() key: string;
+    @Column(CT.JSON, { nullable: true }) value: any;
 }
 
 @Table()
@@ -46,7 +52,7 @@ export class Db {
             type: "sqlite",
             storage: path.join(__dirname, "../../db.sqlite"),
         },
-        entities: [ByFilename, Movie],
+        entities: [ByFilename, Movie, KeyValue],
         autoSchemaSync: true,
         logging: {
             logQueries: false
@@ -57,19 +63,18 @@ export class Db {
     }
     get byFilename(): Repository<ByFilename> { return this.connection == null ? null : this.connection.getRepository(ByFilename); }
     get movie(): Repository<Movie> { return this.connection == null ? null : this.connection.getRepository(Movie); }
+    get keyValue(): Repository<KeyValue> { return this.connection == null ? null : this.connection.getRepository(KeyValue); }
 }
 
 
 //function test() {
-//    //console.log(ColumnTypes);
-//    //console.log(ColumnTypes.SIMPLE_ARRAY);
-//    //return;
 //    let db = new Db();
 //    db.init().then(() => {
-//        let x = new ByFilename();
-//        x.key = "ggg";
-//        x.selectedFiles = ["aaa", "bbb", "ccc"];
-//        db.byFilename.persist(x).then(() => console.log("Done"));
+//        db.keyValue.findOneById("ggg").then(t=>console.log(t));
+//        //let x = new KeyValue();
+//        //x.key = "ggg";
+//        //x.value = {a:"b",c:"d"};
+//        //db.keyValue.persist(x).then(() => console.log("Done"));
 //    });
 //}
 //test();
