@@ -1,8 +1,8 @@
 import { ListDetails, TmdbApi, GetApiConfigurationResponse, Movie, Media, AccountDetails, AccountGetDetailsRequest } from "./tmdb/tmdb-api"
-import { TmdbApiClient, } from "./tmdb/tmdb-client"
+import { TmdbApiClient2, } from "./tmdb/tmdb-client2"
 import { promiseEach, tryParseInt } from "./utils/utils"
 
-export class TmdbClient extends TmdbApiClient {
+export class TmdbClient extends TmdbApiClient2 {
     constructor() {
         super();
         console.log("TmdbClient ctor");
@@ -31,9 +31,7 @@ export class TmdbClient extends TmdbApiClient {
     }
 
     accountGetDetails(req?: AccountGetDetailsRequest): Promise<AccountDetails> {
-        if (req == null)
-            req = {};
-        return this.invoke(t => t.accountGetDetails(req)).then(t => {
+        return super.accountGetDetails(req).then(t => {
             this.account = t;
             if (this.account != null)
                 this.account_id = this.account.id;

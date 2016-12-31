@@ -1,7 +1,7 @@
 <div *ngIf="selectedMovie != null">
     <button (click)="goBack()">Back</button>
     <p>This will show when there's a selected movie</p>
-    <p><img src="{{selectedMovie.poster.w185}}" /></p>
+    <p><img src="{{selectedMovie.poster?.w185}}" /></p>
 </div>
 
 <div class="media" *ngIf="selectedMovie == null">
@@ -37,7 +37,7 @@
         <ul class="pool">
             <li *ngFor="let movie of movies" (click)="movie_click(movie)">
                 <div class="poster">
-                    <img src="{{movie.poster.w342}}">
+                    <img src="{{movie.poster?.w342}}">
                 </div>
                 <div class="details">
                     <h5 class="title">{{movie.title}}</h5>

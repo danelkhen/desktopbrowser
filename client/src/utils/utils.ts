@@ -37,7 +37,11 @@ export function arrayDistinctBy<T, V>(list: T[], selector: (obj: T) => V): T[] {
 
 export function tryParseInt(s: string): number {
     let x = parseInt(s);
-    if(isNaN(x))
+    if (isNaN(x))
         return null;
     return x;
+}
+
+export function promiseSetTimeout(ms: number): Promise<any> {
+    return new Promise((resolve, reject) => window.setTimeout(resolve, ms));
 }

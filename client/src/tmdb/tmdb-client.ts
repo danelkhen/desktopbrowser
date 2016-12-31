@@ -1,5 +1,5 @@
 import { TmdbApi, TmdbApiMetadata, RateLimit } from "./tmdb-api"
-import { Proxy } from "../utils/proxy"
+import { Proxy, } from "../utils/proxy"
 import { xhr, XhrRequest } from "./xhr"
 
 export class TmdbApiClient extends Proxy<TmdbApi>{
@@ -33,7 +33,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
                 //    remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
                 //    reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
                 //};
-                console.log({ name:pc.name, res, path, pc, prms,  });
+                console.log({ name: pc.name, res, path, pc, prms, });
                 return res;
             });
         };
