@@ -86,7 +86,7 @@ export class FileSystemInfo {
         while (i < list.length) {
             let file = list[i];
             if (file.isDir) {
-                list.push(...file.EnumerateFileSystemElementsRecursive());
+                list.push(...file.EnumerateFileSystemInfos());
             }
             i++;
         }

@@ -57,10 +57,11 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
     }
     waitForSlot(req: XhrRequest): Promise<any> {
-        let item: QueueItem = { req };
-        this.queue.push(item);
-        return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
-            .then(() => this.queue.removeAt(0));
+        return Promise.resolve();
+        //let item: QueueItem = { req };
+        //this.queue.push(item);
+        //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
+        //    .then(() => this.queue.removeAt(0));
 
     }
     api_key: string;
