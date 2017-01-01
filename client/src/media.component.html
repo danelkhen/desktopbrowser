@@ -62,10 +62,11 @@
     <button (click)="app.saveConfig()">save</button>
     <button (click)="app.scan()">scan</button>
     <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
+    <button (click)="test4()">tmdb v4 login</button>
     <button (click)="test3()">test3</button>
+    <div><button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button></div>
 </div>
 <div *ngIf="movies!=null" style="color:white">
-    <div><button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button></div>
     <div *ngFor="let media of movies">
         <div>{{media.title}}</div>
         <div>{{media.name}}</div>

@@ -19,11 +19,12 @@ export class MediaComponent implements OnInit, OnChanges {
     selectedMovie: Media;
 
     ngOnInit(): void {
-        this.tmdb = new TmdbClient();
-        this.tmdb.init().then(() => this.test()).then(() => this.test2());
+        this.app.init()
+            .then(() => this.test())
+            .then(() => this.test2());
+        //this.test4();
     }
     ngOnChanges(changes: SimpleChanges): void { }
-    tmdb: TmdbClient;
 
 
     movie_click(movie: Media) {
@@ -34,7 +35,7 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
     test() {
-        return this.tmdb.invoke(t => t.movieGetPopular({ language: "en" })).then(e => {
+        return this.app.tmdb.movieGetPopular({ language: "en" }).then(e => {
             this.movies = e.results;
             console.log(this.movies);
         });
@@ -45,13 +46,16 @@ export class MediaComponent implements OnInit, OnChanges {
                 let id = t.tmdbTypeAndId.split("|")[1];
                 return !this.app.tmdb.isWatched(id);
             }).take(20);
-            return promiseMap(mds2, t => this.tmdb.getMovieOrTvByTypeAndId(t.tmdbTypeAndId)).then(list => {
+            return promiseMap(mds2, t => this.app.tmdb.getMovieOrTvByTypeAndId(t.tmdbTypeAndId)).then(list => {
                 console.log({ list });
                 list = arrayDistinctBy(list, t => t.id);
                 if (list.length > 0)
                     this.movies = list;
             });
         });
+    }
+    test4() {
+        this.app.tmdbV4.loginToTmdb().then(e => console.log("LOGIN COMPLETE"));
     }
 
     isWatched(media: TvShowDetails | MovieDetails): boolean {

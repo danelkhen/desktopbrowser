@@ -10,7 +10,8 @@ export function xhr<T>(opts: XhrRequest): Promise<any> {
             let interpolated = interpolateUrl(url, opts.params);
             let query = toQueryString(interpolated.remaining);
             url = interpolated.url;
-            url += "?" + query;
+            if (query.length > 0)
+                url += "?" + query;
         }
         let xhr = new XMLHttpRequest();
         opts.xhr = xhr;

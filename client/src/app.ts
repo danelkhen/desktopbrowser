@@ -1,5 +1,6 @@
 import "./utils/global";
 import { TmdbClient } from "./tmdb-client"
+import { TmdbClientV4 } from "./tmdb-client-v4"
 import { SiteServiceClient, ByFilenameService, KeyValueService } from "./service"
 import { Movie, Media, ListDetails } from "./tmdb/tmdb-api"
 import { promiseEach } from "./utils/utils"
@@ -10,6 +11,7 @@ export class App {
     byFilename: ByFilenameService;
     keyValue: KeyValueService;
     tmdb: TmdbClient;
+    tmdbV4: TmdbClientV4;
 
     constructor() {
         console.log("App ctor", this);
@@ -17,17 +19,18 @@ export class App {
         this.byFilename = new ByFilenameService();
         this.keyValue = new KeyValueService();
         this.tmdb = new TmdbClient();
+        this.tmdbV4 = new TmdbClientV4();
     }
 
-    isInited: boolean;
+    _initing: Promise<any>;
     init(): Promise<any> {
-        if (this.isInited)
-            return Promise.resolve();
-        this.isInited = true;
-        return promiseEach([
+        if (this._initing != null)
+            return this._initing;
+        this._initing = promiseEach([
             () => this.initConfig(),
             () => this.tmdb.init(),
         ], t => t());
+        return this._initing;
     }
     initConfig(): Promise<any> {
         return this.keyValue.findOneById<Config>({ id: "config" }).then(t => {
