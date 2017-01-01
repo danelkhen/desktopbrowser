@@ -21,8 +21,10 @@ export function xhr<T>(opts: XhrRequest): Promise<any> {
                     res = JSON.parse(xhr.responseText);
                 if (xhr.status >= 200 && xhr.status < 300)
                     resolve(res);
-                else
+                else {
+                    //console.log(xhr.status);
                     reject(res);
+                }
             }
         });
         xhr.open(opts.method || "GET", url);

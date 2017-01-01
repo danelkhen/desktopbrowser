@@ -41,7 +41,7 @@ export class MediaComponent implements OnInit, OnChanges {
     }
     test2() {
         return this.app.server.db.byFilename.invoke(t => t.find()).then(mds => {
-            let mds2 = mds.filter(t => t.tmdbTypeAndId != null);
+            let mds2 = mds.filter(t => t.tmdbTypeAndId != null).take(20);
             promiseMap(mds2, t => this.tmdb.getMovieOrTvById(t.tmdbTypeAndId)).then(list => {
                 console.log({ list });
                 list = arrayDistinctBy(list, t => t.id);

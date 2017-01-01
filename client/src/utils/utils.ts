@@ -45,3 +45,13 @@ export function tryParseInt(s: string): number {
 export function promiseSetTimeout(ms: number): Promise<any> {
     return new Promise((resolve, reject) => window.setTimeout(resolve, ms));
 }
+export function promiseWhile(condition: () => boolean, action: () => Promise<any>): Promise<any> {
+    return new Promise((resolve, reject) => {
+        function loop() {
+            if (!condition())
+                resolve();
+            action().then(loop);
+        }
+        loop();
+    });
+}
