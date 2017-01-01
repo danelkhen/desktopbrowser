@@ -65,10 +65,11 @@
     <button (click)="test3()">test3</button>
 </div>
 <div *ngIf="movies!=null" style="color:white">
+    <div><button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button></div>
     <div *ngFor="let media of movies">
         <div>{{media.title}}</div>
         <div>{{media.name}}</div>
-        <div>{{app.tmdb.isWatched(media.id)}}</div>
-        <button (click)="app.tmdb.markAsWatched(media.id)">mark as watched</button>
+        <div>{{isWatched(media)}}</div>
+        <button (click)="app.markAsWatched(media)">mark as watched</button>
     </div>
 </div>

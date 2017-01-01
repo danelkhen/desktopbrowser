@@ -10,7 +10,7 @@ export interface TmdbApi {
 
 
     accountAddtoWatchlist(req: AccountAddtoWatchlistRequestBase): any;
-    accountGetCreatedLists(req: AccountGetCreatedListsRequest): AccountGetCreatedListsResponse;
+    accountGetCreatedLists(req: AccountGetCreatedListsRequest): PagedResponse<AccountGetCreatedListsResponseItem>;
     accountGetDetails(req: AccountGetDetailsRequest): AccountDetails;
     accountGetFavoriteMovies(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<Movie>;
     accountGetFavoriteTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TvShow>;
@@ -63,7 +63,7 @@ export interface TmdbApi {
     listRemoveMovie(req: ListAddMovieRequestBase): Response;
 
     movieDeleteRating(req: MovieDeleteRatingRequest): Response;
-    movieGetAccountStates(req: MovieGetAccountStatesRequest): TvGetAccountStatesResponseBase;
+    movieGetAccountStates(req: MovieGetAccountStatesRequest): AccountStates;
     movieGetAlternativeTitles(req: MovieGetAlternativeTitlesRequest): MovieGetAlternativeTitlesResponse;
     movieGetChanges(req: MovieGetChangesRequest): MovieGetChangesResponse;
     movieGetCredits(req: MovieGetReleaseDatesRequestBase): MovieGetCreditsResponse;
@@ -109,7 +109,7 @@ export interface TmdbApi {
 
     tvDeleteRating(req: TvDeleteRatingRequest): Response;
     tvDeleteRating2(req: TvDeleteRating2Request): Response;
-    tvGetAccountStates(req: TvGetAccountStatesRequest): TvGetAccountStatesResponseBase;
+    tvGetAccountStates(req: TvGetAccountStatesRequest): AccountStates;
     tvGetAccountStates2(req: TvGetAccountStates2Request): TvGetAccountStates2Response;
     tvGetAccountStates3(req: TvGetAccountStates3Request): TvGetAccountStates3Response;
     tvGetAlternativeTitles(req: TvGetImagesRequestBase): TvGetAlternativeTitlesResponse;
@@ -282,7 +282,7 @@ export interface TvGetExternalIDsResponse {
     tvrage_id: number;
 }
 
-export interface AccountGetCreatedListsResponse_results {
+export interface AccountGetCreatedListsResponseItem {
     description: string;
     favorite_count: number;
     id: number;
@@ -293,12 +293,6 @@ export interface AccountGetCreatedListsResponse_results {
     poster_path: null;
 }
 
-export interface AccountGetCreatedListsResponse {
-    page: number;
-    results: AccountGetCreatedListsResponse_results[];
-    total_pages: number;
-    total_results: number;
-}
 
 export interface TvGetContentRatingsResponse_results {
     iso_3166_1: string;
@@ -1186,6 +1180,9 @@ export interface CreditGetDetailsRequest {
     credit_id?: string;
 }
 
+export interface PagedRequest {
+    page?: number;
+}
 export interface SearchMoviesRequest {
     api_key?: string;
     include_adult?: boolean;
@@ -1382,7 +1379,7 @@ export interface AccountGetDetailsRequest {
     session_id?: string;
 }
 
-export interface TvGetAccountStatesResponseBase {
+export interface AccountStates {
     favorite: boolean;
     id: number;
     rated: Object | boolean;
@@ -1473,6 +1470,8 @@ export interface TvShow extends Media {
     original_name: string;
 }
 export interface TvShowDetails extends TvShow {
+    /** only returned if req.append_to_response includes "account_states" */
+    account_states?:AccountStates;
     created_by: TvGetDetailsResponse_created_by[];
     episode_run_time: number[];
     genres: Genre[];
@@ -1504,6 +1503,8 @@ export interface TvShowDetails extends TvShow {
 }
 
 export interface MovieDetails extends Movie {
+    /** only returned if req.append_to_response includes "account_states" */
+    account_states?:AccountStates;
     belongs_to_collection: Object;
     budget: number;
 
@@ -1798,8 +1799,8 @@ export interface Guest_sessionGetRatedMoviesRequestBase {
 export interface PagedResponse<T> {
     page?: number;
     results?: T[];
-    totalPages?: number;
-    totalResults?: number;
+    total_pages?: number;
+    total_results?: number;
 }
 
 export interface ApiMetadata {

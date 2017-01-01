@@ -11,7 +11,7 @@ export class TmdbApiClient2 extends TmdbApiClient {
     tvGetDetails(req: tmdb.TvGetDetailsRequest): Promise<tmdb.TvShowDetails> { return this.invoke(t => t.tvGetDetails(req)); }
     searchMulti(req: tmdb.SearchSearchPeopleRequestBase): Promise<tmdb.PagedResponse<Movie | TvShow | Person>> { return this.invoke(t => t.searchMulti(req)); }
     accountAddtoWatchlist(req: tmdb.AccountAddtoWatchlistRequestBase): Promise<any> { return this.invoke(t => t.accountAddtoWatchlist(req)); }
-    accountGetCreatedLists(req: tmdb.AccountGetCreatedListsRequest): Promise<tmdb.AccountGetCreatedListsResponse> { return this.invoke(t => t.accountGetCreatedLists(req)); }
+    accountGetCreatedLists(req: tmdb.AccountGetCreatedListsRequest): Promise<tmdb.PagedResponse<tmdb.AccountGetCreatedListsResponseItem>> { return this.invoke(t => t.accountGetCreatedLists(req)); }
     accountGetDetails(req: tmdb.AccountGetDetailsRequest): Promise<tmdb.AccountDetails> { return this.invoke(t => t.accountGetDetails(req)); }
     accountGetFavoriteMovies(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.accountGetFavoriteMovies(req)); }
     accountGetFavoriteTVShows(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<TvShow>> { return this.invoke(t => t.accountGetFavoriteTVShows(req)); }
@@ -51,7 +51,7 @@ export class TmdbApiClient2 extends TmdbApiClient {
     listGetDetails(req: tmdb.ListGetDetailsRequest): Promise<tmdb.ListDetails> { return this.invoke(t => t.listGetDetails(req)); }
     listRemoveMovie(req: tmdb.ListAddMovieRequestBase): Promise<tmdb.Response> { return this.invoke(t => t.listRemoveMovie(req)); }
     movieDeleteRating(req: tmdb.MovieDeleteRatingRequest): Promise<tmdb.Response> { return this.invoke(t => t.movieDeleteRating(req)); }
-    movieGetAccountStates(req: tmdb.MovieGetAccountStatesRequest): Promise<tmdb.TvGetAccountStatesResponseBase> { return this.invoke(t => t.movieGetAccountStates(req)); }
+    movieGetAccountStates(req: tmdb.MovieGetAccountStatesRequest): Promise<tmdb.AccountStates> { return this.invoke(t => t.movieGetAccountStates(req)); }
     movieGetAlternativeTitles(req: tmdb.MovieGetAlternativeTitlesRequest): Promise<tmdb.MovieGetAlternativeTitlesResponse> { return this.invoke(t => t.movieGetAlternativeTitles(req)); }
     movieGetChanges(req: tmdb.MovieGetChangesRequest): Promise<tmdb.MovieGetChangesResponse> { return this.invoke(t => t.movieGetChanges(req)); }
     movieGetCredits(req: tmdb.MovieGetReleaseDatesRequestBase): Promise<tmdb.MovieGetCreditsResponse> { return this.invoke(t => t.movieGetCredits(req)); }
@@ -91,7 +91,7 @@ export class TmdbApiClient2 extends TmdbApiClient {
     timezonesGetList(req: tmdb.GetApiConfigurationRequest): Promise<tmdb.Unknown[]> { return this.invoke(t => t.timezonesGetList(req)); }
     tvDeleteRating(req: tmdb.TvDeleteRatingRequest): Promise<tmdb.Response> { return this.invoke(t => t.tvDeleteRating(req)); }
     tvDeleteRating2(req: tmdb.TvDeleteRating2Request): Promise<tmdb.Response> { return this.invoke(t => t.tvDeleteRating2(req)); }
-    tvGetAccountStates(req: tmdb.TvGetAccountStatesRequest): Promise<tmdb.TvGetAccountStatesResponseBase> { return this.invoke(t => t.tvGetAccountStates(req)); }
+    tvGetAccountStates(req: tmdb.TvGetAccountStatesRequest): Promise<tmdb.AccountStates> { return this.invoke(t => t.tvGetAccountStates(req)); }
     tvGetAccountStates2(req: tmdb.TvGetAccountStates2Request): Promise<tmdb.TvGetAccountStates2Response> { return this.invoke(t => t.tvGetAccountStates2(req)); }
     tvGetAccountStates3(req: tmdb.TvGetAccountStates3Request): Promise<tmdb.TvGetAccountStates3Response> { return this.invoke(t => t.tvGetAccountStates3(req)); }
     tvGetAlternativeTitles(req: tmdb.TvGetImagesRequestBase): Promise<tmdb.TvGetAlternativeTitlesResponse> { return this.invoke(t => t.tvGetAlternativeTitles(req)); }

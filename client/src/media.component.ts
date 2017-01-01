@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
-import { Movie, Media } from "./tmdb/tmdb-api"
+import { Movie, Media, MovieDetails, TvShowDetails } from "./tmdb/tmdb-api"
 import { SiteServiceClient, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy } from "./utils/utils"
 import { App, Config } from "./app"
@@ -41,14 +41,26 @@ export class MediaComponent implements OnInit, OnChanges {
     }
     test2() {
         return this.app.server.db.byFilename.invoke(t => t.find()).then(mds => {
-            let mds2 = mds.filter(t => t.tmdbTypeAndId != null).take(20);
-            promiseMap(mds2, t => this.tmdb.getMovieOrTvById(t.tmdbTypeAndId)).then(list => {
+            let mds2 = mds.filter(t => t.tmdbTypeAndId != null).filter(t => {
+                let id = t.tmdbTypeAndId.split("|")[1];
+                return !this.app.tmdb.isWatched(id);
+            }).take(20);
+            return promiseMap(mds2, t => this.tmdb.getMovieOrTvByTypeAndId(t.tmdbTypeAndId)).then(list => {
                 console.log({ list });
                 list = arrayDistinctBy(list, t => t.id);
                 if (list.length > 0)
                     this.movies = list;
             });
         });
+    }
+
+    isWatched(media: TvShowDetails | MovieDetails): boolean {
+        if (media.account_states != null && media.account_states.rated)
+            return true;
+        return this.app.tmdb.isWatched(media.id);
+    }
+    markAsWatched(media: Media) {
+        return this.app.tmdb.markAsWatched(media.id);
     }
 
     addConfigFolder() {

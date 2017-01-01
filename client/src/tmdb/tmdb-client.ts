@@ -1,7 +1,7 @@
-import { TmdbApi, TmdbApiMetadata, RateLimit } from "./tmdb-api"
-import { Proxy, } from "../utils/proxy"
+import { TmdbApi, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRequest } from "./tmdb-api"
+import { Proxy, extractInstanceFunctionCall } from "../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../utils/utils"
-import { xhr, XhrRequest } from "./xhr"
+import { xhr, XhrRequest, } from "./xhr"
 
 export class TmdbApiClient extends Proxy<TmdbApi>{
     constructor() {
@@ -49,10 +49,17 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
     xhr(req: XhrRequest): Promise<any> {
         this.lastRequestAt = new Date();
         return xhr(req);
+        //.catch((e: Response) => {
+        //    if (e != null && e.status_code == 25) {
+        //        this.lastRequestAt = new Date();
+        //        return this.waitForSlot(req).then(() => this.xhr(req));
+        //    }
+        //    return Promise.reject(e);
+        //});
     }
 
     queue: QueueItem[] = [];
-    lastRequestAt: Date = new Date();
+    lastRequestAt: Date;
     isSlotReady(item: QueueItem): boolean {
         return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
     }
@@ -64,6 +71,27 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         //    .then(() => this.queue.removeAt(0));
 
     }
+
+    getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>): Promise<T[]> {
+        let pc = extractInstanceFunctionCall(action);
+        let reqTemplate: PagedRequest = pc.args[0];
+        let responses: PagedResponse<T>[] = [];
+
+        let next = (): Promise<any> => {
+            return this.onInvoke(pc).then((res: PagedResponse<T>) => {
+                responses.push(res);
+                let req = Q.copy(reqTemplate);
+                req.page = res.page + 1;
+                if (res.total_pages >= req.page) {
+                    pc.args[0] = req;
+                    return next();
+                }
+                return Promise.resolve();
+            });
+        }
+        return next().then(() => responses.selectMany(t => t.results));
+    }
+
     api_key: string;
     base_url = 'https://api.themoviedb.org/3';
     rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
