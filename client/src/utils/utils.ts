@@ -46,12 +46,25 @@ export function promiseSetTimeout(ms: number): Promise<any> {
     return new Promise((resolve, reject) => window.setTimeout(resolve, ms));
 }
 export function promiseWhile(condition: () => boolean, action: () => Promise<any>): Promise<any> {
-    return new Promise((resolve, reject) => {
-        function loop() {
-            if (!condition())
-                resolve();
-            action().then(loop);
-        }
-        loop();
-    });
+    function loop() {
+        if (!condition())
+            return Promise.resolve();
+        return action().then(loop);
+    }
+    return loop();
+}
+
+
+export function setMinus<T>(x: Set<T>, y: Set<T>): Set<T> {
+    let list: T[] = [];
+    x.forEach(t => !y.has(t) && list.push(t));
+    return new Set(list);
+}
+export function setPlus<T>(x: Set<T>, y: Set<T>): Set<T> {
+    return new Set<T>([...Array.from(x), ...Array.from(y)]);
+}
+export function setIntersect<T>(x: Set<T>, y: Set<T>): Set<T> {
+    let list: T[] = [];
+    x.forEach(t => x.has(t) && y.has(t) && list.push(t));
+    return new Set(list);
 }

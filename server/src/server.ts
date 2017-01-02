@@ -11,6 +11,8 @@ import * as bodyParser from "body-parser";
 import * as os from "os";
 import { ByFilenameService, KeyValueService } from "./service"
 import { RequestHandler } from "express"
+import * as proxy from 'express-http-proxy';
+
 
 export class Server {
     _service: SiteService;
@@ -49,6 +51,7 @@ export class Server {
         this.app.use("/_res_", express.static(this.root));
         this.app.use(express.static(this.root));
         this.app.use("/node_modules/tmdb", express.static(path.join(this.root, "../tmdb")));
+        this.app.use('/tmdb_proxy', proxy('api.themoviedb.org', {}));
         console.log(path.join(this.root, "../tmdb"));
 
         //if (path.basename(nodeModulesDir) == "node_modules") {

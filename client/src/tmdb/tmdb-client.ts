@@ -30,16 +30,16 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
             };
             if (body != null)
                 xhrReq.headers["Content-Type"] = "application/json;charset=utf-8";
-            return this.waitForSlot(xhrReq)
+            return this.waitUntilNextResetIfNeeded() //(xhrReq)
                 .then(() => this.xhr(xhrReq))
                 .then(res => {
-                    //let x = xhrReq.xhr;
+                    let x = xhrReq.xhr;
                     //console.log("Date header:", x.getResponseHeader("Date"));
-                    //this.rateLimit = {
-                    //    limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
-                    //    remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
-                    //    reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
-                    //};
+                    this.rateLimit = {
+                        limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
+                        remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
+                        reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
+                    };
                     console.log({ name: pc.name, res, path, pc, prms, rateLimit: this.rateLimit });
                     return res;
                 });
@@ -47,7 +47,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
     }
 
     xhr(req: XhrRequest): Promise<any> {
-        this.lastRequestAt = new Date();
+        //this.lastRequestAt = new Date();
         return xhr(req);
         //.catch((e: Response) => {
         //    if (e != null && e.status_code == 25) {
@@ -58,44 +58,58 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         //});
     }
 
-    queue: QueueItem[] = [];
-    lastRequestAt: Date;
-    isSlotReady(item: QueueItem): boolean {
-        return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
+    //queue: QueueItem[] = [];
+    //lastRequestAt: Date;
+    //isSlotReady(item: QueueItem): boolean {
+    //    return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
+    //}
+    waitUntilNextResetIfNeeded(): Promise<any> {
+        if (this.rateLimit == null || this.rateLimit.remaining > 0)
+            return Promise.resolve();
+        let endTime = this.rateLimit.reset;
+        let now: number = new Date().toUnix();
+        let diff = endTime-now;
+        if(diff<=0)
+            return Promise.resolve();
+        return promiseSetTimeout(diff);
     }
-    waitForSlot(req: XhrRequest): Promise<any> {
-        return Promise.resolve();
-        //let item: QueueItem = { req };
-        //this.queue.push(item);
-        //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
-        //    .then(() => this.queue.removeAt(0));
+    //waitForSlot(req: XhrRequest): Promise<any> {
+    //    return Promise.resolve();
+    //    //let item: QueueItem = { req };
+    //    //this.queue.push(item);
+    //    //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
+    //    //    .then(() => this.queue.removeAt(0));
 
-    }
+    //}
 
-    getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>): Promise<T[]> {
+    getNextPage<T>(action: (req: TmdbApi) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<T[]> {
+        if (lastRes.total_pages <= lastRes.page)
+            return Promise.resolve(null);
         let pc = extractInstanceFunctionCall(action);
-        let reqTemplate: PagedRequest = pc.args[0];
-        let responses: PagedResponse<T>[] = [];
+        let pc2 = Q.copy(pc);
+        let req = pc2.args[0] as PagedRequest;
+        req.page = lastRes.page + 1;
+        return this.onInvoke(pc2);
+    }
+    getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
+        let list: PagedResponse<T>[] = [];
+        let onRes = (res: PagedResponse<T>) => {
+            list.push(res);
+            if (pageAction != null && res != null)
+                pageAction(res);
+        };
+        let next = () => this.getNextPage(action, list.last()).then(onRes);
 
-        let next = (): Promise<any> => {
-            return this.onInvoke(pc).then((res: PagedResponse<T>) => {
-                responses.push(res);
-                let req = Q.copy(reqTemplate);
-                req.page = res.page + 1;
-                if (res.total_pages >= req.page) {
-                    pc.args[0] = req;
-                    return next();
-                }
-                return Promise.resolve();
-            });
-        }
-        return next().then(() => responses.selectMany(t => t.results));
+        return this.invoke(action)
+            .then(res => onRes(res))
+            .then(() => promiseWhile(() => list.last() != null, next))
+            .then(() => list.exceptNulls().selectMany(t => t.results));
     }
 
     api_key: string;
     base_url = 'https://api.themoviedb.org/3';
     rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
 }
-export interface QueueItem {
-    req: XhrRequest;
-}
+//export interface QueueItem {
+//    req: XhrRequest;
+//}

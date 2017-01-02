@@ -1,4 +1,4 @@
-import { ListDetails, TmdbApi, GetApiConfigurationResponse, Movie, Media, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
+import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, Movie, Media, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
 import { TmdbApiClient2, } from "./tmdb/tmdb-client2"
 import { promiseEach, tryParseInt } from "./utils/utils"
 
@@ -23,6 +23,9 @@ export class TmdbClient extends TmdbApiClient2 {
         };
     }
     account: AccountDetails;
+    tvShowWatchlistIds = new Set<number>();
+    movieWatchlistIds = new Set<number>();
+
     init(): Promise<any> {
         this.api_key = '16a856dff4d1db46782e6132610ddb32';
         return this.invoke(t => t.getApiConfiguration({})).then(t => this.configuration = t)
@@ -37,11 +40,11 @@ export class TmdbClient extends TmdbApiClient2 {
             //.then(t => this.ratedMovies = t.results)
             //.then(() => this.accountGetRatedTVShows({}))
             //.then(t => this.ratedTvShows = t.results)
-            .then(() => console.log("onLogin finished", { ratedMovies: this.ratedMovies, ratedTvShows: this.ratedTvShows, watchedList: this.watchedList }))
+            .then(() => console.log("onLogin finished", { ratedMovies: this.ratedMovies, ratedTvShows: this.ratedTvShows, watchedList: this.watchedTvList }))
             ;
     }
-    ratedMovies: RatedMovie[];
-    ratedTvShows: RatedTvShow[];
+    //ratedMovies: RatedMovie[];
+    //ratedTvShows: RatedTvShow[];
 
     accountGetDetails(req?: AccountGetDetailsRequest): Promise<AccountDetails> {
         return super.accountGetDetails(req).then(t => {
@@ -110,7 +113,7 @@ export class TmdbClient extends TmdbApiClient2 {
         let c = this.configuration.images;
         if (size == null)
             size = this.getImageSizes(prop)[0];
-        return `${c.base_url}${size}/${movie[prop]}`;
+        return `${c.base_url}${size}${movie[prop]}`;
     }
 
     storage: GeneralStorage = localStorage;
@@ -160,7 +163,7 @@ export class TmdbClient extends TmdbApiClient2 {
         });
     }
 
-    getMovieOrTvByTypeAndId(typeAndId: string): Promise<Media> {
+    getMovieOrTvByTypeAndId(typeAndId: string): Promise<MediaDetails> {
         if (typeAndId == null)
             return Promise.resolve(null);
         let tokens = typeAndId.split("|");
@@ -175,51 +178,73 @@ export class TmdbClient extends TmdbApiClient2 {
         return Promise.resolve(null);
     }
 
-    watchedList: ListDetails;
-    isWatched(media_id: number | string): boolean {
+    watchedTvList: ListDetails;
+    watchedMoviesList: ListDetails;
+    isWatchedOrRated(media_id: number | string): boolean {
         if (media_id == null)
             return null;
         if (typeof (media_id) == "string") {
             if (media_id.contains("|"))
-                return this.isWatched(media_id.split("|")[1]);
+                return this.isWatchedOrRated(media_id.split("|")[1]);
             media_id = parseInt(media_id);
         }
-        return this.watchedList != null && this.watchedList.items.find(t => t.id == media_id) != null;
+        if (this.ratedTvShows.has(media_id))
+            return true;
+        if (this.ratedMovies.has(media_id))
+            return true;
+        if (this.watched.has(media_id))
+            return true;
+        return false; //this.watchedList != null && this.watchedList.items.find(t => t.id == media_id) != null;
     }
     failed = [];
+    ratedTvShows = new Set<number>();
+    ratedMovies = new Set<number>();
+    watched = new Set<number>();
+
     markAsWatched(media_id: number, watched: boolean = true, refreshList?: boolean): Promise<any> {
-        if (this.watchedList == null)
+        if (this.watchedTvList == null)
             throw new Error();
-        if (this.isWatched(media_id))
+        if (this.watched.has(media_id))
             return Promise.resolve();
-        return this.invoke(t => t.listAddMovie({ list_id: this.watchedList.id, body: { media_id: media_id } }))
+        return this.invoke(t => t.listAddMovie({ list_id: this.watchedTvList.id, body: { media_id: media_id } }))
             .then(e => console.log(e), e => this.failed.push({ id: media_id, e }))
-            .then(() => refreshList && this.refreshTmdbWatchedList());
+            .then(() => refreshList && this.refreshTmdbWatchedLists());
     }
     getCreateTmdbWatchedList(): Promise<ListDetails> {
-        if (this.watchedList != null)
-            return Promise.resolve(this.watchedList);
-        return this.refreshTmdbWatchedList();
+        if (this.watchedTvList != null)
+            return Promise.resolve(this.watchedTvList);
+        return this.refreshTmdbWatchedLists();
     }
-    refreshTmdbWatchedList(): Promise<ListDetails> {
-        return this.getCreateTmdbWatchedListId().then(listId => {
+    refreshTmdbWatchedLists(): Promise<ListDetails> {
+        return promiseEach(["watched-tv", "watched-movie"], t => this.refreshTmdbWatchedList(t));
+    }
+    refreshTmdbWatchedList(name: string): Promise<ListDetails> {
+        return this.getCreateTmdbWatchedListId(name).then(listId => {
             return this.invoke(t => t.listGetDetails({ list_id: listId })).then(e => {
-                this.watchedList = e;
+                if (name == "watched-tv") {
+                    this.watchedTvList = e;
+                }
+                else if (name == "watched-movie") {
+                    this.watchedMoviesList;
+                }
+                e.items.forEach(t => this.watched.add(t.id));
                 console.log(e);
-                return this.watchedList;
+                return this.watchedTvList;
             });
         });
     }
-    getCreateTmdbWatchedListId(): Promise<string> {
-        if (this.watchedList != null)
-            return Promise.resolve(this.watchedList.id);
+    getCreateTmdbWatchedListId(name: string): Promise<string> {
+        if (name=="watched-tv" && this.watchedTvList != null)
+            return Promise.resolve(this.watchedTvList.id);
+        if (name=="watched-movie" && this.watchedMoviesList != null)
+            return Promise.resolve(this.watchedMoviesList.id);
         return this.invoke(t => t.accountGetCreatedLists({})).then(e => {
-            let res1 = e.results.find(t => t.name.toLowerCase() == "watched");
+            let res1 = e.results.find(t => t.name.toLowerCase() == name.toLowerCase());
             let listId: number = null;
             if (res1 != null)
                 listId = res1.id;
             else {
-                this.invoke(t => t.listCreateList({ body: { name: "watched", description: "ggg", language: "en" } })).then(e => {
+                this.invoke(t => t.listCreateList({ body: { name: name, description: "Created by Desktop Browser", language: "en" } })).then(e => {
                     console.log(e);
                     listId = e.list_id;
                 });
@@ -230,15 +255,9 @@ export class TmdbClient extends TmdbApiClient2 {
     }
 
     markAllRatedAsWatched(): Promise<any> {
-        return Promise.resolve()
-            //.then(() => this.getAllPages(t => t.accountGetRatedMovies({})))
-            //.then(list => { console.log("Rated Movies", list.map(t => t.id)); return list; })
-            //.then(list => promiseEach(list, t => this.markAsWatched(t.id, true, false)))
-            .then(() => this.getAllPages(t => t.accountGetRatedTVShows({})))
-            .then(list => { console.log("Rated Tv Shows", list.map(t => t.id)); return list; })
-            .then(list => promiseEach(list, t => this.markAsWatched(t.id, true, false)))
-            .then(() => this.failed.length > 0 && console.log("FAILED", this.failed))
-            .then(() => this.refreshTmdbWatchedList());
+        let ratedButNotWatched = new Set(this.ratedTvShows);
+        this.watched.forEach(t => ratedButNotWatched.delete(t));
+        return promiseEach(Array.from(ratedButNotWatched), id => this.markAsWatched(id, true, false));
     }
 
 
@@ -249,3 +268,4 @@ export interface GeneralStorage {
     tmdb_session_id?: string;
     tmdb_account_id?: string;
 }
+

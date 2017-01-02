@@ -16,6 +16,7 @@ export class KeyValueService extends ServiceBase<KeyValueServiceContract> {
     }
     findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
     persist<T extends HasKey>(obj: T): Promise<T> { return this.invoke(t => t.persist(obj)); }
+    findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]> { return this.invoke(t => t.findAllWithKeyLike(req)); }
 }
 
 export class SiteServiceClient extends ServiceBase<SiteServiceContract> {

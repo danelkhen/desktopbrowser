@@ -1,6 +1,7 @@
 ﻿declare module "contracts" {
     export interface KeyValueService {
         findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
+        findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]>;
         persist<T extends HasKey>(obj: T): Promise<T>;
     }
 

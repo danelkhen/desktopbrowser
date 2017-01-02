@@ -21,7 +21,7 @@ export class MediaComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.app.init()
             .then(() => this.test())
-            .then(() => this.test2());
+            .then(() => this.getMedia());
         //this.test4();
     }
     ngOnChanges(changes: SimpleChanges): void { }
@@ -40,20 +40,27 @@ export class MediaComponent implements OnInit, OnChanges {
             console.log(this.movies);
         });
     }
-    test2() {
-        return this.app.server.db.byFilename.invoke(t => t.find()).then(mds => {
-            let mds2 = mds.filter(t => t.tmdbTypeAndId != null).filter(t => {
-                let id = t.tmdbTypeAndId.split("|")[1];
-                return !this.app.tmdb.isWatched(id);
-            }).take(20);
-            return promiseMap(mds2, t => this.app.tmdb.getMovieOrTvByTypeAndId(t.tmdbTypeAndId)).then(list => {
-                console.log({ list });
-                list = arrayDistinctBy(list, t => t.id);
-                if (list.length > 0)
-                    this.movies = list;
-            });
+    getMedia() {
+        return this.app.getAvailableMedia().then(list => {
+            let list2 = list.filter(t => !t.isWatchedOrRated).orderBy(t => t.type + " " + t.name).take(20);
+            if (list2.length == 0)
+                return Promise.resolve(null);
+            return promiseEach(list2, t => t.getTmdbDetails()).then(() => this.movies = list2.map(t => t.tmdbDetails)).then(()=>console.log(this.movies));
         });
+        //return this.app.server.db.byFilename.invoke(t => t.find()).then(mds => {
+        //    let mds2 = mds.filter(t => t.tmdbTypeAndId != null).filter(t => {
+        //        let id = t.tmdbTypeAndId.split("|")[1];
+        //        return !this.app.tmdb.isWatchedOrRated(id);
+        //    });
+        //    return promiseMap(mds2.take(20), t => this.app.tmdb.getMovieOrTvByTypeAndId(t.tmdbTypeAndId)).then(list => {
+        //        console.log({ list });
+        //        list = arrayDistinctBy(list, t => t.id);
+        //        if (list.length > 0)
+        //            this.movies = list;
+        //    });
+        //});
     }
+
     test4() {
         this.app.tmdbV4.loginToTmdb().then(e => console.log("LOGIN COMPLETE"));
     }
@@ -61,7 +68,7 @@ export class MediaComponent implements OnInit, OnChanges {
     isWatched(media: TvShowDetails | MovieDetails): boolean {
         if (media.account_states != null && media.account_states.rated)
             return true;
-        return this.app.tmdb.isWatched(media.id);
+        return this.app.tmdb.isWatchedOrRated(media.id);
     }
     markAsWatched(media: Media) {
         return this.app.tmdb.markAsWatched(media.id);
@@ -70,8 +77,8 @@ export class MediaComponent implements OnInit, OnChanges {
     addConfigFolder() {
         this.app.config.folders.push({ path: null });
     }
-    test3() {
-        console.log(this.app.tmdb.watchedList.items);
+    getAvailableMedia() {
+        this.app.getAvailableMedia().then(e => console.log(e));
     }
 }
 

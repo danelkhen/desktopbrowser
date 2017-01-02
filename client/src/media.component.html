@@ -63,8 +63,11 @@
     <button (click)="app.scan()">scan</button>
     <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
     <button (click)="test4()">tmdb v4 login</button>
-    <button (click)="test3()">test3</button>
-    <div><button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button></div>
+    <button (click)="getAvailableMedia()">getAvailableMedia</button>
+    <button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button>
+    <button (click)="app.downloadRatings()">Download Ratings</button>
+    <button (click)="app.downloadWatchlists()">downloadWatchlists</button>
+    <button (click)="app.getSavedRatings()">getSavedRatings</button>
 </div>
 <div *ngIf="movies!=null" style="color:white">
     <div *ngFor="let media of movies">

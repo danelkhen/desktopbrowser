@@ -1471,7 +1471,7 @@ export interface TvShow extends Media {
 }
 export interface TvShowDetails extends TvShow {
     /** only returned if req.append_to_response includes "account_states" */
-    account_states?:AccountStates;
+    account_states?: AccountStates;
     created_by: TvGetDetailsResponse_created_by[];
     episode_run_time: number[];
     genres: Genre[];
@@ -1504,7 +1504,7 @@ export interface TvShowDetails extends TvShow {
 
 export interface MovieDetails extends Movie {
     /** only returned if req.append_to_response includes "account_states" */
-    account_states?:AccountStates;
+    account_states?: AccountStates;
     belongs_to_collection: Object;
     budget: number;
 
@@ -1538,7 +1538,7 @@ export interface MovieDetails extends Movie {
     //vote_count: number;
 }
 
-
+export type MediaDetails = MovieDetails | TvShowDetails;
 
 export interface Certification {
     certification: string;
