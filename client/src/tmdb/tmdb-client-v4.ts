@@ -24,7 +24,7 @@ export class TmdbApiClient extends Proxy<TmdbApiV4> {
                 method: md.method || "GET",
                 body: body,
                 headers: {
-                    "Authorization": "Bearer " + this.access_token || this.read_access_token,
+                    "Authorization": "Bearer " + (this.access_token || this.read_access_token),
                     //"Access-Control-Expose-Headers": "X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset",
                     //"If-Modified-Since": "Fri, 15 Feb 2013 13:43:19 GMT",
                 },
@@ -86,6 +86,6 @@ export interface QueueItem {
 function test() {
     var x = new TmdbApiClient();
     x.read_access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmE4NTZkZmY0ZDFkYjQ2NzgyZTYxMzI2MTBkZGIzMiIsInN1YiI6IjU4NGZlYzU1OTI1MTQxNmU0YjAwODUwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Jg-T4s-kFV_FlXwG1tovDvCQhXGaw9cjMA9e669xFaE";
-    x.invoke(t => t.auth_request_token({}));
+    x.invoke(t => t.createRequestToken({}));
 
 }

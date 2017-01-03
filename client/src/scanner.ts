@@ -16,7 +16,7 @@ export class Scanner {
     }
     scanDir(dir: string): Promise<any> {
         let videoExt = new Set([".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"]);
-        return this.service.invoke(t=>t.ListFiles({ Path: dir, IsRecursive: true })).then(res => {
+        return this.service.invoke(t => t.ListFiles({ Path: dir, IsRecursive: true })).then(res => {
             let videoFiles = res.Files.filter(t => videoExt.has(t.Extension));
             return promiseEach(videoFiles, file => {
                 return this.service.db.byFilename.invoke(t => t.findOneById({ id: file.Name })).then(md => {
@@ -50,7 +50,7 @@ export class Scanner {
             console.warn(e);
             this.errors.push(e);
             if (e != null && e.status_code == 25) {
-                return promiseSetTimeout(10*1000);
+                return promiseSetTimeout(10 * 1000);
             }
             if (this.errors.length > 3)
                 return Promise.reject(e);

@@ -37,16 +37,16 @@
         <ul class="pool">
             <li *ngFor="let movie of movies" (click)="movie_click(movie)">
                 <div class="poster">
-                    <img src="{{movie.poster?.w342}}">
+                    <img src="{{movie.tmdb?.poster?.w342}}">
                 </div>
                 <div class="details">
-                    <h5 class="title">{{movie.title}}</h5>
+                    <h5 class="title">{{movie.name}}</h5>
                     <span class="playtime">1hr:45min</span>
-                    <div class="rating">{{movie.vote_average}}</div>
+                    <div class="rating">{{movie.tmdb?.vote_average}}</div>
                     <a class="icon playicon">play</a>
                     <a class="status">mark as watched</a>
                 </div>
-                <h5 class="content-title">{{movie.title}}</h5>
+                <h5 class="content-title">{{movie.name}}</h5>
             </li>
         </ul>
     </div><!-- End of Right pane -->
@@ -62,18 +62,31 @@
     <button (click)="app.saveConfig()">save</button>
     <button (click)="app.scan()">scan</button>
     <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
-    <button (click)="test4()">tmdb v4 login</button>
+    <button (click)="tmdbV4Login()">tmdb v4 login</button>
     <button (click)="getAvailableMedia()">getAvailableMedia</button>
     <button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button>
     <button (click)="app.downloadRatings()">Download Ratings</button>
     <button (click)="app.downloadWatchlists()">downloadWatchlists</button>
     <button (click)="app.getSavedRatings()">getSavedRatings</button>
 </div>
-<div *ngIf="movies!=null" style="color:white">
+<div style="color:white">
     <div *ngFor="let media of movies">
-        <div>{{media.title}}</div>
-        <div>{{media.name}}</div>
-        <div>{{isWatched(media)}}</div>
+        <span>{{media.name}}</span>
+        <span>{{media.info?.watched}}</span>
+        <span>{{media.filenames | json}}</span>
         <button (click)="app.markAsWatched(media)">mark as watched</button>
     </div>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>

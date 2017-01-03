@@ -3,7 +3,8 @@ import { TmdbClient } from "./tmdb-client"
 import { Movie, Media, MovieDetails, TvShowDetails } from "./tmdb/tmdb-api"
 import { SiteServiceClient, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy } from "./utils/utils"
-import { App, Config } from "./app"
+import { App, Config, } from "./app"
+import { Media as DsMedia, } from "./media"
 
 @Component({
     selector: 'my-media',
@@ -15,28 +16,32 @@ export class MediaComponent implements OnInit, OnChanges {
 
     }
 
-    movies: Media[];
-    selectedMovie: Media;
+    movies: DsMedia[];
+    selectedMovie: DsMedia;
 
     ngOnInit(): void {
         this.app.init()
-            .then(() => this.test())
-            .then(() => this.getMedia());
+            .then(() => this.getMedia())
+            .then(() => this.getPopularMovies())
+            ;
         //this.test4();
+        //this.app.tmdbV4.invoke(t=>t.accountGetCreatedLists({}));
     }
     ngOnChanges(changes: SimpleChanges): void { }
 
 
-    movie_click(movie: Media) {
+    movie_click(movie: DsMedia) {
         this.selectedMovie = movie;
     }
     goBack() {
         this.selectedMovie = null;
     }
 
-    test() {
+    getPopularMovies() {
+        if (this.movies != null && this.movies.length > 0)
+            return Promise.resolve();
         return this.app.tmdb.movieGetPopular({ language: "en" }).then(e => {
-            this.movies = e.results;
+            this.movies = e.results.map(t => DsMedia.fromTmdbMovie(t));
             console.log(this.movies);
         });
     }
@@ -45,7 +50,7 @@ export class MediaComponent implements OnInit, OnChanges {
             let list2 = list.filter(t => !t.isWatchedOrRated).orderBy(t => t.type + " " + t.name).take(20);
             if (list2.length == 0)
                 return Promise.resolve(null);
-            return promiseEach(list2, t => t.getTmdbDetails()).then(() => this.movies = list2.map(t => t.tmdbDetails)).then(()=>console.log(this.movies));
+            return promiseEach(list2, t => t.getTmdbDetails()).then(() => this.movies = list2).then(() => console.log(this.movies));
         });
         //return this.app.server.db.byFilename.invoke(t => t.find()).then(mds => {
         //    let mds2 = mds.filter(t => t.tmdbTypeAndId != null).filter(t => {
@@ -61,18 +66,18 @@ export class MediaComponent implements OnInit, OnChanges {
         //});
     }
 
-    test4() {
+    tmdbV4Login() {
         this.app.tmdbV4.loginToTmdb().then(e => console.log("LOGIN COMPLETE"));
     }
 
-    isWatched(media: TvShowDetails | MovieDetails): boolean {
-        if (media.account_states != null && media.account_states.rated)
-            return true;
-        return this.app.tmdb.isWatchedOrRated(media.id);
-    }
-    markAsWatched(media: Media) {
-        return this.app.tmdb.markAsWatched(media.id);
-    }
+    //isWatched(media: TvShowDetails | MovieDetails): boolean {
+    //    if (media.account_states != null && media.account_states.rated)
+    //        return true;
+    //    return this.app.tmdb.isWatchedOrRated(media.id);
+    //}
+    //markAsWatched(media: Media) {
+    //    return this.app.tmdb.markAsWatched(media.id);
+    //}
 
     addConfigFolder() {
         this.app.config.folders.push({ path: null });

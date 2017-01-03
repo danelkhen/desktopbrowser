@@ -20,9 +20,12 @@ export class App {
         this.byFilename = new ByFilenameService();
         this.keyValue = new KeyValueService();
         this.tmdb = new TmdbClient();
+        this.tmdb.app = this;
         this.tmdb.base_url = '/tmdb_proxy/3';
 
         this.tmdbV4 = new TmdbClientV4();
+        this.tmdbV4.base_url = '/tmdb_proxy/4';
+        this.tmdbV4.read_access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmE4NTZkZmY0ZDFkYjQ2NzgyZTYxMzI2MTBkZGIzMiIsInN1YiI6IjU4NGZlYzU1OTI1MTQxNmU0YjAwODUwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Jg-T4s-kFV_FlXwG1tovDvCQhXGaw9cjMA9e669xFaE";
     }
 
     _initing: Promise<any>;
@@ -34,25 +37,29 @@ export class App {
             () => this.tmdb.init(),
             () => this.getSavedRatings(),
             () => this.getSavedWatchlists(),
+            () => this.getMediaInfos(),
             () => this.onInit(),
         ], t => t());
         return this._initing;
     }
     onInit() {
         let t = this.tmdb;
-        let rated = setPlus(t.ratedMovies, t.ratedTvShows);
-        let ratedOrWatched = setPlus(rated, t.watched);
+        //let rated = setPlus(t.ratedMovies, t.ratedTvShows);
+        //let ratedOrWatched = setPlus(rated, t.watched);
         let inWatchlist = setPlus(t.movieWatchlistIds, t.tvShowWatchlistIds);
         let x = {
-            rated, ratedOrWatched, inWatchlist,
+            rated: t.rated,
             watched: t.watched,
-            ratedMovies: t.ratedMovies,
-            ratedTvShows: t.ratedTvShows,
+            //ratedOrWatched, 
+            inWatchlist,
+            //watched: t.watched,
+            //ratedMovies: t.ratedMovies,
+            //ratedTvShows: t.ratedTvShows,
             movieWatchlistIds: t.movieWatchlistIds,
             tvShowWatchlistIds: t.tvShowWatchlistIds,
-            watchedButNotRated: setMinus(t.watched, rated),
-            ratedButNotWatched: setMinus(rated, t.watched),
-            ratedOrWatchedButStillInWatchlist: setIntersect(ratedOrWatched, inWatchlist),
+            //watchedButNotRated: setMinus(t.watched, rated),
+            //ratedButNotWatched: setMinus(rated, t.watched),
+            //ratedOrWatchedButStillInWatchlist: setIntersect(ratedOrWatched, inWatchlist),
         };
         Object.keys(x).forEach(key => x[key] = Array.from(x[key]));
         console.log("onInit", x);
@@ -102,9 +109,9 @@ export class App {
         return this.keyValue.findAllWithKeyLike<TmdbRatingsPage>({ like: "tmdb_ratings_%" })
             .then(pages => pages.forEach(page => {
                 if (page.key.contains("_tv_"))
-                    page.ids.forEach(id => this.tmdb.ratedTvShows.add(id));
+                    page.ids.forEach(id => this.tmdb.rated.add("tv|" + id));
                 else if (page.key.contains("_movie_"))
-                    page.ids.forEach(id => this.tmdb.ratedMovies.add(id));
+                    page.ids.forEach(id => this.tmdb.rated.add("movie|" + id));
             }));
         //.then(pages => pages.selectMany(t => t.ids).forEach(t => this.tmdb.rated.add(t)));
     }
@@ -121,18 +128,53 @@ export class App {
 
     getAvailableMedia(): Promise<DsMedia[]> {
         return this.server.db.byFilename.invoke(t => t.find()).then(mds => {
-            let mds2 = mds.map(t => t.tmdbTypeAndId).exceptNulls().distinct();
-            let medias = mds2.select(id => DsMedia.fromTmdbTypeAndId(id, this));
+            let groups = mds.where(t => t.tmdbTypeAndId != null).groupBy(t => t.tmdbTypeAndId);
+            let medias = groups.map(group => {
+                let typeAndId = group[0].tmdbTypeAndId;
+                if (typeAndId == null)
+                    return null;
+                let media = DsMedia.fromTmdbTypeAndId(typeAndId, this);
+                media.filenames = group.map(t => t.key);
+                return media;
+            });
             console.log({ medias });
             return medias;
         });
     }
 
+    updateMediaInfo(typeAndId: string, info: TmdbMediaInfo): Promise<TmdbMediaInfo> {
+        info.key = "mediainfo_" + typeAndId;
+        return this.keyValue.persist(info);
+    }
+    getMediaInfo(typeAndId: string): Promise<TmdbMediaInfo> {
+        let key = "mediainfo_" + typeAndId;
+        return this.keyValue.findOneById({ id: key }).then(t => t || { key });
+    }
+    mediaInfos: DsMedia[] = [];
+    getMediaInfos(): Promise<DsMedia[]> {
+        return this.keyValue.findAllWithKeyLike({ like: "mediainfo_%" })
+            .then(list => list.map(info => {
+                let typeAndId = info.key.substr("mediainfo_".length);
+                let media = this.getMedia(typeAndId);
+                media.info = info;
+                return media;
+            })).then(t => {
+                this.mediaInfos = t;
+                this.mediaInfos.forEach(t => this.tmdb.watched.add(t.typeAndId));
+                return this.mediaInfos;
+            });
+    }
+    getMedia(typeAndId: string): DsMedia {
+        return DsMedia.fromTmdbTypeAndId(typeAndId, this);
+    }
 
 }
 
 
-
+export interface TmdbMediaInfo {
+    key: string;
+    watched?: boolean;
+}
 export interface TmdbRatingsPage {
     key: string;
     ids: number[];

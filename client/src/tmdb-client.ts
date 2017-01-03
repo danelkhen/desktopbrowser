@@ -1,6 +1,8 @@
 import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, Movie, Media, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
 import { TmdbApiClient2, } from "./tmdb/tmdb-client2"
-import { promiseEach, tryParseInt } from "./utils/utils"
+import { promiseEach, tryParseInt, setMinus } from "./utils/utils"
+import { App } from "./app";
+import { Media as DsMedia } from "./media";
 
 export class TmdbClient extends TmdbApiClient2 {
     constructor() {
@@ -22,6 +24,7 @@ export class TmdbClient extends TmdbApiClient2 {
             return base(pc).then(t => this.fixResponse(t, pc.name));
         };
     }
+    app: App;
     account: AccountDetails;
     tvShowWatchlistIds = new Set<number>();
     movieWatchlistIds = new Set<number>();
@@ -35,12 +38,12 @@ export class TmdbClient extends TmdbApiClient2 {
     onLogin(): Promise<any> {
         return Promise.resolve()
             .then(() => this.accountGetDetails())
-            .then(() => this.getCreateTmdbWatchedList())
+            //.then(() => this.getCreateTmdbWatchedList())
             //.then(() => this.accountGetRatedMovies({}))
             //.then(t => this.ratedMovies = t.results)
             //.then(() => this.accountGetRatedTVShows({}))
             //.then(t => this.ratedTvShows = t.results)
-            .then(() => console.log("onLogin finished", { ratedMovies: this.ratedMovies, ratedTvShows: this.ratedTvShows, watchedList: this.watchedTvList }))
+            .then(() => console.log("onLogin finished", { rated: this.rated, /*watchedList: this.watchedList*/ }))
             ;
     }
     //ratedMovies: RatedMovie[];
@@ -178,85 +181,72 @@ export class TmdbClient extends TmdbApiClient2 {
         return Promise.resolve(null);
     }
 
-    watchedTvList: ListDetails;
-    watchedMoviesList: ListDetails;
-    isWatchedOrRated(media_id: number | string): boolean {
-        if (media_id == null)
+    //watchedList: ListDetails;
+    isWatchedOrRated(typeAndId: string): boolean {
+        if (typeAndId == null)
             return null;
-        if (typeof (media_id) == "string") {
-            if (media_id.contains("|"))
-                return this.isWatchedOrRated(media_id.split("|")[1]);
-            media_id = parseInt(media_id);
-        }
-        if (this.ratedTvShows.has(media_id))
+        if (this.rated.has(typeAndId))
             return true;
-        if (this.ratedMovies.has(media_id))
-            return true;
-        if (this.watched.has(media_id))
+        if (this.watched.has(typeAndId))
             return true;
         return false; //this.watchedList != null && this.watchedList.items.find(t => t.id == media_id) != null;
     }
     failed = [];
-    ratedTvShows = new Set<number>();
-    ratedMovies = new Set<number>();
-    watched = new Set<number>();
+    rated = new Set<string>();
+    watched = new Set<string>();
 
-    markAsWatched(media_id: number, watched: boolean = true, refreshList?: boolean): Promise<any> {
-        if (this.watchedTvList == null)
-            throw new Error();
-        if (this.watched.has(media_id))
-            return Promise.resolve();
-        return this.invoke(t => t.listAddMovie({ list_id: this.watchedTvList.id, body: { media_id: media_id } }))
-            .then(e => console.log(e), e => this.failed.push({ id: media_id, e }))
-            .then(() => refreshList && this.refreshTmdbWatchedLists());
-    }
-    getCreateTmdbWatchedList(): Promise<ListDetails> {
-        if (this.watchedTvList != null)
-            return Promise.resolve(this.watchedTvList);
-        return this.refreshTmdbWatchedLists();
-    }
-    refreshTmdbWatchedLists(): Promise<ListDetails> {
-        return promiseEach(["watched-tv", "watched-movie"], t => this.refreshTmdbWatchedList(t));
-    }
-    refreshTmdbWatchedList(name: string): Promise<ListDetails> {
-        return this.getCreateTmdbWatchedListId(name).then(listId => {
-            return this.invoke(t => t.listGetDetails({ list_id: listId })).then(e => {
-                if (name == "watched-tv") {
-                    this.watchedTvList = e;
-                }
-                else if (name == "watched-movie") {
-                    this.watchedMoviesList;
-                }
-                e.items.forEach(t => this.watched.add(t.id));
-                console.log(e);
-                return this.watchedTvList;
-            });
-        });
-    }
-    getCreateTmdbWatchedListId(name: string): Promise<string> {
-        if (name=="watched-tv" && this.watchedTvList != null)
-            return Promise.resolve(this.watchedTvList.id);
-        if (name=="watched-movie" && this.watchedMoviesList != null)
-            return Promise.resolve(this.watchedMoviesList.id);
-        return this.invoke(t => t.accountGetCreatedLists({})).then(e => {
-            let res1 = e.results.find(t => t.name.toLowerCase() == name.toLowerCase());
-            let listId: number = null;
-            if (res1 != null)
-                listId = res1.id;
-            else {
-                this.invoke(t => t.listCreateList({ body: { name: name, description: "Created by Desktop Browser", language: "en" } })).then(e => {
-                    console.log(e);
-                    listId = e.list_id;
-                });
+    markAsWatched(typeAndId: string, watched: boolean = true, refreshList?: boolean): Promise<any> {
+        let media = this.app.getMedia(typeAndId);
+        return media.getInfo().then(() => {
+            if (media.info.watched != watched) {
+                media.info.watched = true;
+                media.saveInfo();
             }
-            console.log(e);
-            return String(listId);
         });
+        //if (this.watchedList == null)
+        //    throw new Error();
+        //if (this.watched.has(media_id))
+        //    return Promise.resolve();
+        //return this.invoke(t => t.listAddMovie({ list_id: this.watchedList.id, body: { media_id: media_id } }))
+        //    .then(e => console.log(e), e => this.failed.push({ id: media_id, e }))
+        //    .then(() => refreshList && this.refreshTmdbWatchedList());
     }
+    //getCreateTmdbWatchedList(): Promise<ListDetails> {
+    //    if (this.watchedList != null)
+    //        return Promise.resolve(this.watchedList);
+    //    return this.refreshTmdbWatchedList();
+    //}
+    //refreshTmdbWatchedList(): Promise<ListDetails> {
+    //    return this.getCreateTmdbWatchedListId().then(listId => {
+    //        return this.invoke(t => t.listGetDetails({ list_id: listId })).then(e => {
+    //            this.watchedList = e;
+    //            e.items.forEach(t => this.watched.add(t.id));
+    //            console.log(e);
+    //            return this.watchedList;
+    //        });
+    //    });
+    //}
+    //getCreateTmdbWatchedListId(): Promise<string> {
+    //    if (this.watchedList != null)
+    //        return Promise.resolve(this.watchedList.id);
+    //    return this.invoke(t => t.accountGetCreatedLists({})).then(e => {
+    //        let res1 = e.results.find(t => t.name.toLowerCase() == "watched");
+    //        let listId: number = null;
+    //        if (res1 != null)
+    //            listId = res1.id;
+    //        else {
+    //            this.invoke(t => t.listCreateList({ body: { name: "watched", description: "ggg", language: "en" } })).then(e => {
+    //                console.log(e);
+    //                listId = e.list_id;
+    //            });
+    //        }
+    //        console.log(e);
+    //        return String(listId);
+    //    });
+    //}
 
     markAllRatedAsWatched(): Promise<any> {
-        let ratedButNotWatched = new Set(this.ratedTvShows);
-        this.watched.forEach(t => ratedButNotWatched.delete(t));
+        let ratedButNotWatched = setMinus(this.rated, this.watched);
         return promiseEach(Array.from(ratedButNotWatched), id => this.markAsWatched(id, true, false));
     }
 

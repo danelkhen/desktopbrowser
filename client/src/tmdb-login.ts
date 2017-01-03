@@ -11,12 +11,13 @@ function tmdb_login_main() {
         window.close();
     }
     else {
+        let redirect_to = location.toString().substr(0, location.toString().indexOf("?"));
         if (x.v == "4") {
-            let url = "https://www.themoviedb.org/auth/access?request_token=" + x.request_token + "&redirect_to=" + encodeURIComponent(location.toString());
+            let url = "https://www.themoviedb.org/auth/access?request_token=" + x.request_token + "&redirect_to=" + encodeURIComponent(redirect_to);
             location.assign(url);
         }
         else {
-            let url = "https://www.themoviedb.org/authenticate/" + x.request_token + "?redirect_to=" + encodeURIComponent(location.toString());
+            let url = "https://www.themoviedb.org/authenticate/" + x.request_token + "?redirect_to=" + encodeURIComponent(redirect_to);
             location.assign(url);
         }
     }
