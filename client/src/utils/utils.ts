@@ -16,6 +16,13 @@ export function nameof<T>(prop: SelectorFunc<T, any>): string {
         code = prop.toString();
     return code.substringBetween(".", ";");
 }
+//export async function promiseEach<T>(list: T[], handler: (obj: T, index: number) => Promise<any> | any): Promise<any> {
+//    let index = -1;
+//    for (let x of list) {
+//        index++;
+//        await handler(x, index);
+//    }
+//}
 
 export function promiseEach<T>(list: T[], handler: (obj: T, index: number) => Promise<any> | any): Promise<any> {
     return promiseMap<T, any>(list, handler);

@@ -1,5 +1,5 @@
 import { Proxy, ProxyCall } from "./proxy"
-import { OmdbGetResponse, OmdbMovie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService, ByFilename as ByFilenameContract, SiteService as SiteServiceContract } from "contracts"
+import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService, ByFilename as ByFilenameContract, } from "contracts"
 
 export class ServiceBase<T> extends Proxy<T> {
     Url: string;

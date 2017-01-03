@@ -6,7 +6,7 @@ import { BrowserComponent } from './browser.component';
 import { MediaComponent } from './media.component';
 import { RouterModule, Routes } from '@angular/router';
 import { TmdbClient } from "./tmdb-client"
-import { SiteServiceClient, ByFilenameService, KeyValueService } from "./service"
+import { FileService, ByFilenameService, KeyValueService } from "./service"
 import { App } from "./app"
 
 const appRoutes: Routes = [
@@ -17,7 +17,7 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [BrowserModule, FormsModule, RouterModule.forRoot(appRoutes)],
     declarations: [AppComponent, BrowserComponent, MediaComponent],
-    providers: [App, SiteServiceClient, ByFilenameService, KeyValueService, TmdbClient],
+    providers: [App, FileService, ByFilenameService, KeyValueService, TmdbClient],
     bootstrap: [AppComponent]
 })
 export class AppModule {

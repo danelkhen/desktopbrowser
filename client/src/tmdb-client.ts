@@ -30,7 +30,6 @@ export class TmdbClient extends TmdbApiClient2 {
     movieWatchlistIds = new Set<number>();
 
     init(): Promise<any> {
-        this.api_key = '16a856dff4d1db46782e6132610ddb32';
         return this.invoke(t => t.getApiConfiguration({})).then(t => this.configuration = t)
             .then(() => this.onLogin());
     }

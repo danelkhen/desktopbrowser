@@ -16,8 +16,8 @@
 
     export interface ByFilename {
         key: string;
-        selectedFiles: string[];
-        tmdbTypeAndId: string;
+        selectedFiles?: string[];
+        tmdbTypeAndId?: string;
     }
 
     export interface DbService<T> {
@@ -27,9 +27,9 @@
         removeById(req: { id: any }): Promise<T>;
     }
 
-    export interface SiteService {
+    export interface FileService {
         init();
-        migrateToSqlite();
+        //migrateToSqlite();
         ListFiles(req: ListFilesRequest): ListFilesResponse;
         GetFiles(req: ListFilesRequest): File[];
         GetFileRelatives(path: string): FileRelativesInfo;
@@ -45,14 +45,14 @@
         CalculateFolderSize(path: string): number;
         CalculateFolderSizeNoCache(path: string): number;
         clearCache();
-        omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
-        imdbRss(req: { path: string }): Promise<string>;
+        //omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
+        //imdbRss(req: { path: string }): Promise<string>;
     }
 
-    export interface OmdbGetResponse {
-        data: Movie;
-        err: { meesage: string, name: string };
-    }
+    //export interface OmdbGetResponse {
+    //    data: OmdbMovie;
+    //    err: { meesage: string, name: string };
+    //}
 
     export interface ListFilesRequest {
         sortBy?: string;
@@ -77,9 +77,6 @@
         skip?: number;
         /** How many items to take after skipping, null means all of them */
         take?: number;
-    }
-    export interface ListFilesRequest2 extends ListFilesRequest {
-        KeepView?: boolean;
     }
 
 
@@ -110,34 +107,6 @@
         Path: string;
     }
 
-    export interface Movie {
-        imdbid: string;
-        imdburl: string;
-        genres: string;
-        languages: string;
-        country: string;
-        votes: string;
-        series: boolean;
-        rating: number;
-        runtime: string;
-        title: string;
-        year: number;
-        type: string;
-        poster: string;
-        metascore: string;
-        plot: string;
-        rated: string;
-        director: string;
-        writer: string;
-        actors: string;
-        released: Date;
-    }
-
-    export interface MovieRequest {
-        name?: string;
-        id?: string;
-        year?: number;
-    }
 
     interface IEnumerable<T> extends Array<T> {
         OrderByDescending?(sel): IOrderedEnumerable<T>;
@@ -304,6 +273,15 @@
     export type OrderByCondition = {
         [columnName: string]: "ASC" | "DESC";
     };
+
+    export interface FilenameParsedInfo {
+        name: string;
+        season: number;
+        episode: number;
+        year: number;
+        tags: string[];
+        filename: string;
+    }
 
 
 }

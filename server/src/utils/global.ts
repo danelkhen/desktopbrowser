@@ -24,24 +24,6 @@ String.prototype.removeLast = function (x?: number): string {
 }
 
 
-
-class XmlSerializer {
-    DeserializeFromFile<T>(filename: string): T {
-        throw new Error();
-    }
-    SerializeToFile(obj: any, filename: string): void {
-        throw new Error();
-    }
-}
-
-
-class Process {
-    static Start(opts: any): Process {
-        throw new Error();
-    }
-    MainWindowHandle: string;
-}
-
 interface Date {
     ToDefaultString(): string;
 }

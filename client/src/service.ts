@@ -1,6 +1,6 @@
 ﻿import { Proxy, ProxyCall } from "./utils/proxy"
 import { ServiceBase } from "./utils/service-base"
-import { FindOptions, HasKey, KeyValueService as KeyValueServiceContract, OmdbGetResponse, OmdbMovie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService, ByFilename as ByFilenameContract, SiteService as SiteServiceContract, KeyValue } from "contracts"
+import { FindOptions, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService, ByFilename as ByFilenameContract, FileService as FileServiceContract, KeyValue } from "contracts"
 
 export class ByFilenameService extends ServiceBase<DbService<ByFilenameContract>> {
     constructor() {
@@ -19,7 +19,7 @@ export class KeyValueService extends ServiceBase<KeyValueServiceContract> {
     findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]> { return this.invoke(t => t.findAllWithKeyLike(req)); }
 }
 
-export class SiteServiceClient extends ServiceBase<SiteServiceContract> {
+export class FileService extends ServiceBase<FileServiceContract> {
     constructor() {
         super();
         console.log("SiteServiceClient ctor");

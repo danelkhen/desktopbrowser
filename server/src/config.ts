@@ -5,18 +5,21 @@ import * as path from "path"
 export class SiteConfiguration {
     Filename: string;
     Save(): void {
-        new XmlSerializer().SerializeToFile(this, this.Filename);
+        console.warn("not implemented");
+        //new XmlSerializer().SerializeToFile(this, this.Filename);
     }
     SaveAs(filename: string): void {
-        new XmlSerializer().SerializeToFile(this, filename);
+        console.warn("not implemented");
     }
     static Load(): SiteConfiguration {
-        var file = path.join(__dirname, "../../config.json");
-        if (!IoFile.Exists(file))
-            return new SiteConfiguration();
-        var config = new XmlSerializer().DeserializeFromFile<SiteConfiguration>(file);
-        config.Filename = file;
-        return config;
+        console.warn("not implemented");
+        return new SiteConfiguration();
+        //var file = path.join(__dirname, "../../config.json");
+        //if (!IoFile.Exists(file))
+        //    return new SiteConfiguration();
+        //var config = new XmlSerializer().DeserializeFromFile<SiteConfiguration>(file);
+        //config.Filename = file;
+        //return config;
     }
     HomePage: Page;
 }

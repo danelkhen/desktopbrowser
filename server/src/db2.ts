@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { Table, Column, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
 import { ColumnTypes as CT } from "typeorm/metadata/types/ColumnTypes";
 import * as path from "path";
-import { Movie as MovieContract, ByFilename as ByFilenameContract } from "contracts"
+import { ByFilename as ByFilenameContract } from "contracts"
 
 
 @Table()
@@ -18,33 +18,6 @@ export class KeyValue {
     @Column(CT.JSON, { nullable: true }) value: any;
 }
 
-@Table()
-export class Movie implements MovieContract {
-
-    @PrimaryGeneratedColumn() id: string;
-
-    @Column() imdbid: string;
-    @Column() imdburl: string;
-    @Column() genres: string;
-    @Column() languages: string;
-    @Column() country: string;
-    @Column() votes: string;
-    @Column() series: boolean;
-    @Column() rating: number;
-    @Column() runtime: string;
-    @Column() title: string;
-    @Column() year: number;
-    @Column() type: string;
-    @Column() poster: string;
-    @Column() metascore: string;
-    @Column() plot: string;
-    @Column() rated: string;
-    @Column() director: string;
-    @Column() writer: string;
-    @Column() actors: string;
-    @Column() released: Date;
-}
-
 export class Db {
     connection: Connection;
     connectionOptions: ConnectionOptions = {
@@ -52,7 +25,7 @@ export class Db {
             type: "sqlite",
             storage: path.join(__dirname, "../../db.sqlite"),
         },
-        entities: [ByFilename, Movie, KeyValue],
+        entities: [ByFilename, KeyValue],
         autoSchemaSync: true,
         logging: {
             logQueries: false
@@ -61,9 +34,8 @@ export class Db {
     init(): Promise<any> {
         return createConnection(this.connectionOptions).then(connection => this.connection = connection);
     }
-    get byFilename(): Repository<ByFilename> { return this.connection == null ? null : this.connection.getRepository(ByFilename); }
-    get movie(): Repository<Movie> { return this.connection == null ? null : this.connection.getRepository(Movie); }
-    get keyValue(): Repository<KeyValue> { return this.connection == null ? null : this.connection.getRepository(KeyValue); }
+    get byFilename(): Repository<ByFilename> { return this.connection && this.connection.getRepository(ByFilename); }
+    get keyValue(): Repository<KeyValue> { return this.connection && this.connection.getRepository(KeyValue); }
 }
 
 

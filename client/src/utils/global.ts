@@ -129,22 +129,6 @@ Number.prototype.toFriendlyNumber = function (): string {
     return s;
 }
 
-
-
-//Function.prototype.nameof = function <T>(this: { new (): T }, selector: SelectorFunc<T, any>) {
-//}
-
-//interface Function {
-//    nameof<T>(this: { new (): T }, selector: SelectorFunc<T, any>);
-//}
-
-
-//interface Contact {
-//    xxx:string;
-//    new():Contact;
-//}
-
-
 interface LessStatic {
     modifyVars(obj:any);
 }

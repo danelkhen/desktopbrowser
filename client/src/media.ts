@@ -76,13 +76,15 @@ export abstract class Media {
     get tvShow(): TmdbTvShow { return this.tmdbBasic as TmdbTvShow; }
     get isRated(): boolean { return this.app.tmdb.rated.has(this.typeAndId); }
     filenames: string[];
-    
-    play(): Promise<any> {
-        if(this.filenames==null || this.filenames.length==0)
+    get canPlay(): boolean { return this.filenames == null || this.filenames.length == 0; }
+    async play(): Promise<any> {
+        if (!this.canPlay)
             return;
         let filename = this.filenames[0];
-        console.log("TODO");
-        
+        let file = await this.app.findFile(filename);
+        if (file == null)
+            return;
+        await this.app.fileService.invoke(t => t.Execute({ Path: file.Path }));
     }
 
 }

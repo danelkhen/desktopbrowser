@@ -3,7 +3,6 @@
     <p>This will show when there's a selected movie</p>
     <p><img src="{{selectedMovie.poster?.w185}}" /></p>
 </div>
-
 <div class="media" *ngIf="selectedMovie == null">
     <div class="leftpane">
         <header class="header">
@@ -12,14 +11,13 @@
             </a>
         </header>
         <div class="filter local">
-        	<span class="title">Watchlist</span>
+            <span class="title">Watchlist</span>
             <button class="allmedia selected">All Media</button>
             <button class="tv">TV Shows</button>
             <button class="movie">Movies</button>
         </div>
-
         <div class="filter explore">
-        	<span class="title">Explore</span>
+            <span class="title">Explore</span>
             <button class="allmedia">Most Popular</button>
             <button class="tv">Your Feed</button>
             <button class="movie">Recommended</button>
@@ -52,7 +50,6 @@
     </div><!-- End of Right pane -->
 </div>
 
-
 <div *ngIf="app.config!=null">
     <h3>Folders</h3>
     <div *ngFor="let folder of app.config.folders">
@@ -72,21 +69,22 @@
 <div style="color:white">
     <div *ngFor="let media of movies">
         <span>{{media.name}}</span>
-        <span>{{media.info?.watched}}</span>
+        <span>{{media.info | json}}</span>
         <span>{{media.filenames | json}}</span>
-        <button (click)="app.markAsWatched(media)">mark as watched</button>
+        <button (click)="markAsWatched(media)">mark as watched</button>
+        <button [class.disabled]="media.filenames!=null && media.filenames.length>0" (click)="media.play()">Play</button>
     </div>
 </div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

@@ -1,6 +1,6 @@
 import "./global"
 import "../lib/corex/corex"
-import { SiteService } from "./service"
+import { FileService } from "./file-service"
 import * as fs from "fs";
 import * as path from "path";
 import * as express from "express"
@@ -9,18 +9,19 @@ import * as child_process from "child_process"
 import * as https from "https"
 import * as bodyParser from "body-parser";
 import * as os from "os";
-import { ByFilenameService, KeyValueService } from "./service"
+import { ByFilenameService } from "./service"
+import { KeyValueService } from "./key-value-service"
 import { RequestHandler } from "express"
 import * as proxy from 'express-http-proxy';
 
 
 export class Server {
-    _service: SiteService;
+    _service: FileService;
     app: express.Application;
     root: string;
     nodeModulesDir: string;
     services: {
-        fs: SiteService,
+        fs: FileService,
         byFilename: ByFilenameService,
         keyValue: KeyValueService,
     };
@@ -32,9 +33,9 @@ export class Server {
 
         this.root = path.join(__dirname, '../../client/');
         this.nodeModulesDir = path.join(this.root, "../");
-        this._service = new SiteService();
+        this._service = new FileService();
         return this._service.init()
-            .then(() => this._service.migrateToSqlite())
+            //.then(() => this._service.migrateToSqlite())
             .then(() => this.initServer())
             .then(() => DriveInfo.GetDrives3());
     }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, Input, OnDestroy, AfterContentChecked, AfterViewChecked, DoCheck } from '@angular/core';
 import { Location } from '@angular/common';
-import { SiteServiceClient, } from "./service"
-import { OmdbMovie, MovieRequest, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, OmdbGetResponse, ByFilename } from "contracts"
+import { FileService, } from "./service"
+import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilename } from "contracts"
 import { Selection, SelectionChangedEventArgs } from "./utils/selection"
 import * as imdb from "../typings2/imdb-rss"
 import { ArrayView } from "./utils/array-view";
@@ -35,15 +35,15 @@ export class BrowserComponent implements OnInit, OnChanges {
     @Input()
     Req: ListFilesRequest;
     Win: Window;
-    imdbRatings: ImdbRssItem[];
-    imdb: OmdbMovie;
+    //imdbRatings: ImdbRssItem[];
+    //imdb: OmdbMovie;
     tbPathText: string = "";
     lastHeight: number;
     //url: Observable<string[]>;
     //urlSnapshot: string[];
     isShiftDown: boolean;
     quickFindTimer = new Timer(() => this.quickFindTimer_tick());
-    yourRating: ImdbRssItem;
+    //yourRating: ImdbRssItem;
 
     TYPE = nameof<File>(t => t.type);
     NAME = nameof<File>(t => t.Name);
@@ -54,7 +54,7 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     columns: string[] = [this.TYPE, this.NAME, this.MODIFIED, this.SIZE, this.EXTENSION];
 
-    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: SiteServiceClient, private app:App) {
+    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: FileService, private app:App) {
         console.log({ route, router, location, server });
 
         //this.Service = new SiteServiceClient();
@@ -651,36 +651,36 @@ export class BrowserComponent implements OnInit, OnChanges {
         return this.SetStorageItem("imdbUserId", value);
     }
 
-    getImdbRatings(): Promise<ImdbRssItem[]> {
-        let json = this.GetStorageItem("imdbRatings");
-        if (json != null && json != "") {
-            return Promise.resolve(JSON.parse(json));
-        }
-        if (this.imdbRatings != null)
-            return Promise.resolve(this.imdbRatings)
-        let userId = this.getImdbUserId();
-        if (userId == null || userId == "")
-            return Promise.resolve([]);
-        return this.server.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
-            let doc = $.parseXML(e);
-            let items = $(doc).find("item").toArray();
-            let items2 = items.map(item => {
-                let item3 = $(item);
-                let item2: ImdbRssItem = {
-                    id: item3.children("guid").text().split("/")[4],
-                    rating: parseInt(item3.children("description").text().split(/[ \.]+/)[4]),
-                    title: item3.children("title").text(),
-                };
-                return item2;
-            });
-            this.SetStorageItem("imdbRatings", JSON.stringify(items2));
-            return items2;
-        });
+    //getImdbRatings(): Promise<ImdbRssItem[]> {
+    //    let json = this.GetStorageItem("imdbRatings");
+    //    if (json != null && json != "") {
+    //        return Promise.resolve(JSON.parse(json));
+    //    }
+    //    if (this.imdbRatings != null)
+    //        return Promise.resolve(this.imdbRatings)
+    //    let userId = this.getImdbUserId();
+    //    if (userId == null || userId == "")
+    //        return Promise.resolve([]);
+    //    return this.server.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
+    //        let doc = $.parseXML(e);
+    //        let items = $(doc).find("item").toArray();
+    //        let items2 = items.map(item => {
+    //            let item3 = $(item);
+    //            let item2: ImdbRssItem = {
+    //                id: item3.children("guid").text().split("/")[4],
+    //                rating: parseInt(item3.children("description").text().split(/[ \.]+/)[4]),
+    //                title: item3.children("title").text(),
+    //            };
+    //            return item2;
+    //        });
+    //        this.SetStorageItem("imdbRatings", JSON.stringify(items2));
+    //        return items2;
+    //    });
 
-    }
+    //}
 
     onPathChanged() {
-        this.imdb = null;
+        //this.imdb = null;
         this.tbPathText = this.Req.Path;
     }
 
@@ -750,11 +750,11 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 }
 
-export interface ImdbRssItem {
-    id: string;
-    rating: number;
-    title: string;
-}
+//export interface ImdbRssItem {
+//    id: string;
+//    rating: number;
+//    title: string;
+//}
 
     //LoadReq2(): void {
     //    this.Req = {};

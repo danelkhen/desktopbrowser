@@ -8,3 +8,4 @@ npm-debug.log
 base.db
 base.db.bak
 db.sqlite
+db.sqlite-journal
