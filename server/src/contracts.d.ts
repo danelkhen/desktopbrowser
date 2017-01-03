@@ -28,7 +28,7 @@
     }
 
     export interface FileService {
-        init();
+        //init();
         //migrateToSqlite();
         ListFiles(req: ListFilesRequest): ListFilesResponse;
         GetFiles(req: ListFilesRequest): File[];

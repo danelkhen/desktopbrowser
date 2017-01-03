@@ -1,21 +1,21 @@
 import * as tmdb from "./tmdb-api"
-import { TvShow, Movie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode} from "./tmdb-api"
+import { TvShow, TmdbMovie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode} from "./tmdb-api"
 import { Proxy, } from "../utils/proxy"
 import {TmdbApiClient} from "./tmdb-client"
 
 export class TmdbApiClient2 extends TmdbApiClient {
     getApiConfiguration(req: tmdb.GetApiConfigurationRequest): Promise<tmdb.GetApiConfigurationResponse> { return this.invoke(t => t.getApiConfiguration(req)); }
-    searchMovies(req: tmdb.SearchMoviesRequest): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.searchMovies(req)); }
+    searchMovies(req: tmdb.SearchMoviesRequest): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.searchMovies(req)); }
     searchTvShows(req: tmdb.SearchSearchTVShowsRequest): Promise<tmdb.PagedResponse<TvShow>> { return this.invoke(t => t.searchTvShows(req)); }
-    movieGetPopular(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.movieGetPopular(req)); }
-    tvGetDetails(req: tmdb.TvGetDetailsRequest): Promise<tmdb.TvShowDetails> { return this.invoke(t => t.tvGetDetails(req)); }
-    searchMulti(req: tmdb.SearchSearchPeopleRequestBase): Promise<tmdb.PagedResponse<Movie | TvShow | Person>> { return this.invoke(t => t.searchMulti(req)); }
+    movieGetPopular(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.movieGetPopular(req)); }
+    tvGetDetails(req: tmdb.TvGetDetailsRequest): Promise<tmdb.TmdbTvShowDetails> { return this.invoke(t => t.tvGetDetails(req)); }
+    searchMulti(req: tmdb.SearchSearchPeopleRequestBase): Promise<tmdb.PagedResponse<TmdbMovie | TvShow | Person>> { return this.invoke(t => t.searchMulti(req)); }
     accountAddtoWatchlist(req: tmdb.AccountAddtoWatchlistRequestBase): Promise<any> { return this.invoke(t => t.accountAddtoWatchlist(req)); }
     accountGetCreatedLists(req: tmdb.AccountGetCreatedListsRequest): Promise<tmdb.PagedResponse<tmdb.AccountGetCreatedListsResponseItem>> { return this.invoke(t => t.accountGetCreatedLists(req)); }
     accountGetDetails(req: tmdb.AccountGetDetailsRequest): Promise<tmdb.AccountDetails> { return this.invoke(t => t.accountGetDetails(req)); }
-    accountGetFavoriteMovies(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.accountGetFavoriteMovies(req)); }
+    accountGetFavoriteMovies(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.accountGetFavoriteMovies(req)); }
     accountGetFavoriteTVShows(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<TvShow>> { return this.invoke(t => t.accountGetFavoriteTVShows(req)); }
-    accountGetMovieWatchlist(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.accountGetMovieWatchlist(req)); }
+    accountGetMovieWatchlist(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.accountGetMovieWatchlist(req)); }
     accountGetRatedMovies(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<RatedMovie>> { return this.invoke(t => t.accountGetRatedMovies(req)); }
     accountGetRatedTVEpisodes(req: tmdb.AccountGetRatedTVEpisodesRequest): Promise<tmdb.PagedResponse<AccountRatedTVEpisode>> { return this.invoke(t => t.accountGetRatedTVEpisodes(req)); }
     accountGetRatedTVShows(req: tmdb.AccountGetTVShowWatchlistRequestBase): Promise<tmdb.PagedResponse<RatedTvShow>> { return this.invoke(t => t.accountGetRatedTVShows(req)); }
@@ -32,7 +32,7 @@ export class TmdbApiClient2 extends TmdbApiClient {
     companyGetDetails(req: tmdb.CompanyGetDetailsRequest): Promise<tmdb.CompanyGetDetailsResponse> { return this.invoke(t => t.companyGetDetails(req)); }
     companyGetMovies(req: tmdb.CompanyGetMoviesRequest): Promise<tmdb.KeywordGetMoviesResponseBase> { return this.invoke(t => t.companyGetMovies(req)); }
     creditGetDetails(req: tmdb.CreditGetDetailsRequest): Promise<tmdb.CreditGetDetailsResponse> { return this.invoke(t => t.creditGetDetails(req)); }
-    discoverMovieDiscover(req: tmdb.DiscoverMovieDiscoverRequest): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.discoverMovieDiscover(req)); }
+    discoverMovieDiscover(req: tmdb.DiscoverMovieDiscoverRequest): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.discoverMovieDiscover(req)); }
     discoverTVDiscover(req: tmdb.DiscoverTVDiscoverRequest): Promise<tmdb.PagedResponse<TvShow>> { return this.invoke(t => t.discoverTVDiscover(req)); }
     findFindbyID(req: tmdb.FindFindbyIDRequest): Promise<tmdb.FindFindbyIDResponse> { return this.invoke(t => t.findFindbyID(req)); }
     genreGetMovieList(req: tmdb.MovieGetLatestRequestBase): Promise<tmdb.GenreGetMovieListResponseBase> { return this.invoke(t => t.genreGetMovieList(req)); }
@@ -55,20 +55,20 @@ export class TmdbApiClient2 extends TmdbApiClient {
     movieGetAlternativeTitles(req: tmdb.MovieGetAlternativeTitlesRequest): Promise<tmdb.MovieGetAlternativeTitlesResponse> { return this.invoke(t => t.movieGetAlternativeTitles(req)); }
     movieGetChanges(req: tmdb.MovieGetChangesRequest): Promise<tmdb.MovieGetChangesResponse> { return this.invoke(t => t.movieGetChanges(req)); }
     movieGetCredits(req: tmdb.MovieGetReleaseDatesRequestBase): Promise<tmdb.MovieGetCreditsResponse> { return this.invoke(t => t.movieGetCredits(req)); }
-    movieGetDetails(req: tmdb.MovieGetDetailsRequest): Promise<tmdb.MovieDetails> { return this.invoke(t => t.movieGetDetails(req)); }
+    movieGetDetails(req: tmdb.MovieGetDetailsRequest): Promise<tmdb.TmdbMovieDetails> { return this.invoke(t => t.movieGetDetails(req)); }
     movieGetImages(req: tmdb.MovieGetImagesRequest): Promise<tmdb.MovieGetImagesResponse> { return this.invoke(t => t.movieGetImages(req)); }
     movieGetKeywords(req: tmdb.MovieGetReleaseDatesRequestBase): Promise<tmdb.MovieGetKeywordsResponse> { return this.invoke(t => t.movieGetKeywords(req)); }
     movieGetLatest(req: tmdb.MovieGetLatestRequestBase): Promise<tmdb.MovieGetLatestResponse> { return this.invoke(t => t.movieGetLatest(req)); }
     movieGetLists(req: tmdb.MovieRequest): Promise<tmdb.MovieGetListsResponse> { return this.invoke(t => t.movieGetLists(req)); }
     movieGetMovieChangeList(req: tmdb.MovieGetMovieChangeListRequestBase): Promise<tmdb.PagedResponse<ChangeList>> { return this.invoke(t => t.movieGetMovieChangeList(req)); }
-    movieGetNowPlaying(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.movieGetNowPlaying(req)); }
-    movieGetRecommendations(req: tmdb.MovieRequest): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.movieGetRecommendations(req)); }
+    movieGetNowPlaying(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.movieGetNowPlaying(req)); }
+    movieGetRecommendations(req: tmdb.MovieRequest): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.movieGetRecommendations(req)); }
     movieGetReleaseDates(req: tmdb.MovieGetReleaseDatesRequestBase): Promise<tmdb.MovieGetReleaseDatesResponse> { return this.invoke(t => t.movieGetReleaseDates(req)); }
     movieGetReviews(req: tmdb.MovieRequest): Promise<tmdb.MovieGetReviewsResponse> { return this.invoke(t => t.movieGetReviews(req)); }
-    movieGetSimilarMovies(req: tmdb.MovieRequest): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.movieGetSimilarMovies(req)); }
-    movieGetTopRated(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.movieGetTopRated(req)); }
+    movieGetSimilarMovies(req: tmdb.MovieRequest): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.movieGetSimilarMovies(req)); }
+    movieGetTopRated(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.movieGetTopRated(req)); }
     movieGetTranslations(req: tmdb.MovieGetReleaseDatesRequestBase): Promise<tmdb.MovieGetTranslationsResponse> { return this.invoke(t => t.movieGetTranslations(req)); }
-    movieGetUpcoming(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<Movie>> { return this.invoke(t => t.movieGetUpcoming(req)); }
+    movieGetUpcoming(req: tmdb.MovieGetNowPlayingRequestBase): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.invoke(t => t.movieGetUpcoming(req)); }
     movieGetVideos(req: tmdb.MovieGetVideosRequest): Promise<tmdb.GetVideosResponse> { return this.invoke(t => t.movieGetVideos(req)); }
     movieRateMovie(req: tmdb.MovieRateMovieRequest): Promise<any> { return this.invoke(t => t.movieRateMovie(req)); }
     networkGetDetails(req: tmdb.NetworkGetDetailsRequest): Promise<tmdb.Genre> { return this.invoke(t => t.networkGetDetails(req)); }

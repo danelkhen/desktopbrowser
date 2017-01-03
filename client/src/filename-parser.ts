@@ -59,9 +59,9 @@ export class FilenameParser {
         if (token.length > 6)
             return null;
         let tests: RegExp[] = [
-            /([0-9])x([0-9])+/,
             /[sS]([0-9][0-9])[eE]([0-9][0-9])+/,
             /[sS]([0-9][0-9])/,
+            /([0-9])x([0-9])+/,
         ];
         for (let test of tests) {
             if (test.test(token)) {

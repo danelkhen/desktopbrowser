@@ -1,4 +1,4 @@
-﻿import { Media as TmdbMedia, Movie as TmdbMovie, TvShow as TmdbTvShow, MediaDetails, TvShowDetails, MovieDetails } from "./tmdb/tmdb-api"
+﻿import { TmdbMedia as TmdbMedia, TmdbMovie as TmdbMovie, TvShow as TmdbTvShow, MediaDetails, TmdbTvShowDetails, TmdbMovieDetails } from "./tmdb/tmdb-api"
 import { App, TmdbMediaInfo } from "./app"
 
 export abstract class Media {
@@ -21,7 +21,7 @@ export abstract class Media {
         x.init();
         return x;
     }
-    static fromTmdbMovie(movie: TmdbMovie): Media {
+    static fromTmdbMovie(movie: TmdbMovie, app: App): Media {
         let x = new Movie();
         x.id = movie.id;
         //x.type = movie.media_type;
@@ -38,7 +38,7 @@ export abstract class Media {
     abstract get isInWatchlist(): boolean;
     tmdbBasic: TmdbMedia;
     tmdbDetails: MediaDetails;
-    get tmdb(): MovieDetails | TvShowDetails { return (this.tmdbDetails || this.tmdbBasic) as any; }
+    get tmdb(): TmdbMovieDetails | TmdbTvShowDetails { return (this.tmdbDetails || this.tmdbBasic) as any; }
 
     abstract get name(): string;
 
@@ -56,22 +56,22 @@ export abstract class Media {
         return this._getTmdbDetailsPromise;
     }
 
-    info: TmdbMediaInfo;
+    get info(): TmdbMediaInfo { return this.app.getMediaInfo(this.typeAndId); }
 
-    _getInfoPromise: Promise<TmdbMediaInfo>;
-    getInfo(): Promise<TmdbMediaInfo> {
-        if (this.info != null)
-            return Promise.resolve(this.info);
-        if (this._getInfoPromise != null)
-            return this._getInfoPromise;
-        this._getInfoPromise = this.app.getMediaInfo(this.typeAndId).then(t => this.info = t);
-        return this._getInfoPromise;
-    }
+    //_getInfoPromise: Promise<TmdbMediaInfo>;
+    //getInfo(): Promise<TmdbMediaInfo> {
+    //    if (this.info != null)
+    //        return Promise.resolve(this.info);
+    //    if (this._getInfoPromise != null)
+    //        return this._getInfoPromise;
+    //    this._getInfoPromise = this.app.getMediaInfo(this.typeAndId).then(t => this.info = t);
+    //    return this._getInfoPromise;
+    //}
     saveInfo(): Promise<any> {
         return this.app.updateMediaInfo(this.typeAndId, this.info);
     }
-    get movieDetails(): MovieDetails { return this.tmdbDetails as MovieDetails; }
-    get tvShowDetails(): TvShowDetails { return this.tmdbDetails as TvShowDetails; }
+    get movieDetails(): TmdbMovieDetails { return this.tmdbDetails as TmdbMovieDetails; }
+    get tvShowDetails(): TmdbTvShowDetails { return this.tmdbDetails as TmdbTvShowDetails; }
     get movie(): TmdbMovie { return this.tmdbBasic as TmdbMovie; }
     get tvShow(): TmdbTvShow { return this.tmdbBasic as TmdbTvShow; }
     get isRated(): boolean { return this.app.tmdb.rated.has(this.typeAndId); }
@@ -84,7 +84,7 @@ export abstract class Media {
         let file = await this.app.findFile(filename);
         if (file == null)
             return;
-        await this.app.fileService.invoke(t => t.Execute({ Path: file.Path }));
+        await this.app.fileService.Execute({ Path: file.Path });
     }
 
 }

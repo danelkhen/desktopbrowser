@@ -1,4 +1,4 @@
-import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, Movie, Media, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
+import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
 import { TmdbApiClient2, } from "./tmdb/tmdb-client2"
 import { promiseEach, tryParseInt, setMinus } from "./utils/utils"
 import { App } from "./app";
@@ -58,7 +58,7 @@ export class TmdbClient extends TmdbApiClient2 {
     }
 
     configuration: GetApiConfigurationResponse;
-    detectMediaType(media: Media, methodName: string): boolean {
+    detectMediaType(media: TmdbMedia, methodName: string): boolean {
         if (media.media_type != null)
             return true;
         methodName = methodName.toLowerCase();
@@ -77,8 +77,8 @@ export class TmdbClient extends TmdbApiClient2 {
     fixResponse(res: any, methodName: string): any {
         if (res == null || typeof (res) != "object")
             return res;
-        let movie = res as Media;
-        let props: Array<keyof Media> = ["poster_path", "backdrop_path"];
+        let movie = res as TmdbMedia;
+        let props: Array<keyof TmdbMedia> = ["poster_path", "backdrop_path"];
         props.forEach(prop => {
             if (movie[prop] == null)
                 return;
@@ -99,7 +99,7 @@ export class TmdbClient extends TmdbApiClient2 {
     }
 
 
-    getImageSizes(prop: keyof Media): string[] {
+    getImageSizes(prop: keyof TmdbMedia): string[] {
         if (this.configuration == null || this.configuration.images == null)
             return null;
         let c = this.configuration.images;
@@ -109,7 +109,7 @@ export class TmdbClient extends TmdbApiClient2 {
             return c.poster_sizes;
         return null;
     }
-    getImageUrl(movie: Media, prop: keyof Media, size?: string): string {
+    getImageUrl(movie: TmdbMedia, prop: keyof TmdbMedia, size?: string): string {
         if (this.configuration == null || this.configuration.images == null)
             return null;
         let c = this.configuration.images;
@@ -196,12 +196,13 @@ export class TmdbClient extends TmdbApiClient2 {
 
     markAsWatched(typeAndId: string, watched: boolean = true, refreshList?: boolean): Promise<any> {
         let media = this.app.getMedia(typeAndId);
-        return media.getInfo().then(() => {
-            if (media.info.watched != watched) {
-                media.info.watched = true;
-                media.saveInfo();
-            }
-        });
+        //return media.getInfo().then(() => {
+        if (media.info.watched != watched) {
+            media.info.watched = true;
+            return media.saveInfo();
+        }
+        return Promise.resolve();
+        //});
         //if (this.watchedList == null)
         //    throw new Error();
         //if (this.watched.has(media_id))

@@ -2,7 +2,7 @@ import "./utils/global";
 import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
 import { FileService, ByFilenameService, KeyValueService } from "./service"
-import { Movie, Media, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
+import { TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
 import { promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { Media as DsMedia } from "./media"
@@ -41,7 +41,7 @@ export class App {
         await this.tmdb.init();
         await this.getSavedRatings();
         await this.getSavedWatchlists();
-        await this.getMediaInfos();
+        await this.refreshMediaInfos();
         await this.onInit();
     }
     onInit() {
@@ -114,16 +114,23 @@ export class App {
         });
     }
 
-    async getAvailableMedia(): Promise<DsMedia[]> {
-        let mds = await this.fileService.db.byFilename.invoke(t => t.find());
+    async getAllFilesMetadata() {
+        return this.fileService.db.byFilename.find();
+    }
 
-        let groups = mds.where(t => t.tmdbTypeAndId != null).groupBy(t => t.tmdbTypeAndId);
+    async getAvailableMedia(): Promise<DsMedia[]> {
+        let mds = await this.getAllFilesMetadata();
+        let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
+        let groups = mds.where(t => t.tmdbTypeAndId != null && t.tmdbTypeAndId != "").groupBy(t => t.tmdbTypeAndId);
         let medias = groups.map(group => {
             let typeAndId = group[0].tmdbTypeAndId;
             if (typeAndId == null)
                 return null;
             let media = this.getMedia(typeAndId);
             media.filenames = group.map(t => t.key);
+            if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
+                media.info.watched = true;
+            }
             return media;
         });
         console.log({ medias });
@@ -135,29 +142,33 @@ export class App {
         info.key = "mediainfo_" + typeAndId;
         return this.keyValue.persist(info);
     }
-    getMediaInfo(typeAndId: string): Promise<TmdbMediaInfo> {
-        let key = "mediainfo_" + typeAndId;
-        return this.keyValue.findOneById({ id: key }).then(t => t || { key });
+    getMediaInfo(typeAndId: string): TmdbMediaInfo {
+        let x = this.mediaInfos.get(typeAndId);
+        if (x == null) {
+            x = { key: "mediainfo_" + typeAndId };
+            this.mediaInfos.set(typeAndId, x);
+        }
+        return x;
     }
-    mediaInfos: DsMedia[] = [];
-    async getMediaInfos(): Promise<DsMedia[]> {
+
+    mediaInfos: Map<string, TmdbMediaInfo> = new Map<string, TmdbMediaInfo>();
+    async refreshMediaInfos(): Promise<Map<string, TmdbMediaInfo>> {
         let list = await this.keyValue.findAllWithKeyLike({ like: "mediainfo_%" });
-        this.mediaInfos = list.map(info => {
+        list.forEach(info => {
             let typeAndId = info.key.substr("mediainfo_".length);
-            let media = this.getMedia(typeAndId);
-            media.info = info;
-            return media;
+            this.mediaInfos.set(typeAndId, info);
         });
-        this.mediaInfos.forEach(t => this.tmdb.watched.add(t.typeAndId));
+        Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
         return this.mediaInfos;
     }
     getMedia(typeAndId: string): DsMedia {
-        return DsMedia.fromTmdbTypeAndId(typeAndId, this);
+        let media = DsMedia.fromTmdbTypeAndId(typeAndId, this);
+        return media;
     }
 
     async findFile(name: string): Promise<File> {
         for (let folder of this.config.folders) {
-            let res = await this.fileService.invoke(t => t.ListFiles({ Path: folder.path, IsRecursive: true }));
+            let res = await this.fileService.ListFiles({ Path: folder.path, IsRecursive: true });
             let file = res.Files.first(t => t.Name == name);
             if (file != null)
                 return file;

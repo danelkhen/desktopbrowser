@@ -1,8 +1,8 @@
 ﻿import { FileService } from "./service";
-import { FilenameParser } from "./filename-parser"
+import { FilenameParser, } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
-import { Media, Movie, TvShow, Response } from "./tmdb/tmdb-api"
-import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilename } from "contracts"
+import { TmdbMedia, TmdbMovie, TvShow, Response } from "./tmdb/tmdb-api"
+import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilename, FilenameParsedInfo } from "contracts"
 import { promiseEach, promiseSetTimeout } from "./utils/utils"
 
 export class Scanner {
@@ -19,34 +19,47 @@ export class Scanner {
     }
     async scanDir(dir: string): Promise<any> {
         let videoExt = new Set([".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"]);
-        let res = await this.service.invoke(t => t.ListFiles({ Path: dir, IsRecursive: true }))
+        let res = await this.service.ListFiles({ Path: dir, IsRecursive: true });
         let videoFiles = res.Files.filter(t => videoExt.has(t.Extension));
         for (let file of videoFiles) {
-            let md = await this.service.db.byFilename.invoke(t => t.findOneById({ id: file.Name }));
+            let md = await this.service.db.byFilename.findOneById({ id: file.Name });
             if (md != null && md.tmdbTypeAndId != null) {
                 console.log("tmdbId already exists, skipping", { file, md });
                 continue;
             }
             console.log(file.Name);
-            let res = await this.getImdbInfo(file)
-            this.results.push({ file, res });
-            if (res != null) {
-                console.log("persist", "start", file.Name, res.id);
-                await this.service.db.byFilename.invoke(t => t.persist({ key: file.Name, tmdbTypeAndId: [res.media_type, res.id].join("|") }));
-                console.log("persist", "end", file.Name, res.id);
+            let res2 = await this.getImdbInfo(file)
+            this.results.push({ file, res2 });
+            if (res2 != null) {
+                let res = res2.movie || res2.tv;
+                if (res != null) {
+                    let tmdbTypeAndId = [res.media_type, res.id].join("|");
+                    if (res2.tv != null && res2.fileInfo.episode != null && res2.fileInfo.season != null) {
+                        tmdbTypeAndId += "|" + "s" + res2.fileInfo.season.format("00") + "e" + res2.fileInfo.episode.format("00");
+                    }
+                    console.log("persist", "start", file.Name, res.id);
+                    await this.service.db.byFilename.persist({ key: file.Name, tmdbTypeAndId });
+                    console.log("persist", "end", file.Name, res.id);
+                }
             }
         }
     }
 
-    async getImdbInfo(file: File): Promise<Movie | TvShow> {
-        console.log("getImdbInfo", "start", file.Name);
-        let info = new FilenameParser().parse(file.Name);
-        let isTv = info.season != null;
+    async getImdbInfo(file: File): Promise<{ tv?: TvShow, movie?: TmdbMovie, fileInfo: FilenameParsedInfo, file: File }> {
         try {
-            let e = await this.tmdb.searchMulti({ query: info.name, include_adult: false })
-            console.log("getImdbInfo", "end", file.Name, e);
-            let media_type = isTv ? "tv" : "movie";
-            return e.results.filter(t => t.media_type == media_type)[0] as Movie | TvShow;
+            console.log("getImdbInfo", "start", file.Name);
+            let info = new FilenameParser().parse(file.Name);
+            let isTv = info.season != null;
+            if (isTv) {
+                let e = await this.tmdb.searchTvShows({ query: info.name })
+                console.log("getImdbInfo", "end", file.Name, e);
+                return { tv: e.results[0], file, fileInfo: info, };
+            }
+            else {
+                let e = await this.tmdb.searchMovies({ query: info.name })
+                console.log("getImdbInfo", "end", file.Name, e);
+                return { movie: e.results[0], file, fileInfo: info, };
+            }
         }
         catch (e2) {
             let e: Response = e2;

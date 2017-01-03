@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
-import { Movie } from "./tmdb/tmdb-api"
+import { TmdbMovie } from "./tmdb/tmdb-api"
 import { Scanner } from "./scanner"
 import { App } from "./app"
 
@@ -22,9 +22,9 @@ import { App } from "./app"
 })
 export class BrowserComponent implements OnInit, OnChanges {
 
+    movie: TmdbMovie;
     FOLDERS_FIRST = "foldersFirst";
-    baseDbBuckets: ByFilename[];
-    //Service: SiteServiceClient;
+    filesMd: ByFilename[];
     Res: ListFilesResponse;
     quickFindText: string = "";
     theme: string = "dark";
@@ -35,15 +35,10 @@ export class BrowserComponent implements OnInit, OnChanges {
     @Input()
     Req: ListFilesRequest;
     Win: Window;
-    //imdbRatings: ImdbRssItem[];
-    //imdb: OmdbMovie;
     tbPathText: string = "";
     lastHeight: number;
-    //url: Observable<string[]>;
-    //urlSnapshot: string[];
     isShiftDown: boolean;
     quickFindTimer = new Timer(() => this.quickFindTimer_tick());
-    //yourRating: ImdbRssItem;
 
     TYPE = nameof<File>(t => t.type);
     NAME = nameof<File>(t => t.Name);
@@ -54,10 +49,9 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     columns: string[] = [this.TYPE, this.NAME, this.MODIFIED, this.SIZE, this.EXTENSION];
 
-    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: FileService, private app:App) {
+    constructor(private route: ActivatedRoute, private router: Router, private location: Location, private server: FileService, private app: App) {
         console.log({ route, router, location, server });
 
-        //this.Service = new SiteServiceClient();
         this.Req = {};
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
         this.FileSelection = new Selection<File>();
@@ -90,16 +84,12 @@ export class BrowserComponent implements OnInit, OnChanges {
         $(window).resize(e => this.recalcHeight());
         this.recalcHeight();
         console.log("baseDbGetAll");
-        Promise.all([
-            this.server.db.byFilename.invoke(t => t.find()).then(list => {
-                this.baseDbBuckets = list;
-                this.migrateDbIfNeeded();
-            }),
-        ]).then(() => this.onReady());
-
+        this.init();
     }
 
-    onReady(): void {
+    async init() {
+        this.filesMd = await this.app.getAllFilesMetadata();
+        //this.migrateDbIfNeeded();
         this.enableThemes();
         this.Win = window;
         this.UpdateClock();
@@ -110,7 +100,6 @@ export class BrowserComponent implements OnInit, OnChanges {
 
         this.Win.addEventListener("mousedown", e => this.toggleDropDown(e));
         this.route.queryParams.subscribe(t => this.onUrlChanged(t));
-
     }
 
 
@@ -146,21 +135,6 @@ export class BrowserComponent implements OnInit, OnChanges {
         $(".fixed-placeholder").css({ height: this.lastHeight + "px" });
     }
 
-    migrateDbIfNeeded() {
-        if (this.baseDbBuckets == null || this.baseDbBuckets.length > 0)
-            return;
-        if (localStorage.length == 0)
-            return;
-        console.log("migrating db");
-        let i = 0;
-        while (i < localStorage.length) {
-            let key = localStorage.key(i);
-            let value = localStorage.getItem(key);
-            this.SetStorageItem(key, value);
-            localStorage.removeItem(key);
-        }
-        console.log("done");
-    }
 
     enableThemes() {
         let theme = localStorage.getItem("theme");
@@ -288,7 +262,6 @@ export class BrowserComponent implements OnInit, OnChanges {
             e.preventDefault();
             this.Open(this.FileSelection.SelectedItems.last());
         }
-
     }
 
     OpenInNewWindow(p: string): void {
@@ -305,14 +278,13 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
 
-    ListFiles(): Promise<any> {
+    async ListFiles(): Promise<any> {
         console.log("ListFiles");
-        return this.server.invoke(t => t.ListFiles(this.Req)).then(res => {
-            if (res == null)
-                return; //TODO: handle errors
-            this.Res = res;
-            this.onFilesChanged();
-        });
+        let res = await this.server.ListFiles(this.Req);
+        if (res == null)
+            return; //TODO: handle errors
+        this.Res = res;
+        this.onFilesChanged();
     }
 
     GotoPrevSibling(): void {
@@ -461,20 +433,22 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.SaveSelection(this.Res.File.Name, filename);
     }
 
-    DeleteAndRefresh(file: File): Promise<any> {
+    async DeleteAndRefresh(file: File): Promise<any> {
         if (file == null)
             return;
         var fileOrFolder = file.IsFolder ? "folder" : "file";
         if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
             return;
-        return this.server.invoke(t => t.Delete({ Path: file.Path })).then(res => this.ListFiles());
+        let res = await this.server.Delete({ Path: file.Path });
+        return this.ListFiles();
     }
 
-    TrashAndRefresh(file: File): Promise<any> {
+    async TrashAndRefresh(file: File): Promise<any> {
         if (file == null)
             return;
         var fileOrFolder = file.IsFolder ? "folder" : "file";
-        return this.server.invoke(t => t.trash({ Path: file.Path })).then(res => this.ListFiles());
+        let res = await this.server.trash({ Path: file.Path });
+        return this.ListFiles();
     }
 
     DeleteOrTrash(file: File): Promise<any> {
@@ -507,11 +481,11 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     Execute(file: File): Promise<any> {
-        return this.server.invoke(t => t.Execute({ Path: file.Path }));
+        return this.server.Execute({ Path: file.Path });
     }
 
     Explore(file: File): Promise<any> {
-        return this.server.invoke(t => t.Explore({ Path: file.Path }));
+        return this.server.Explore({ Path: file.Path });
     }
 
     FormatFriendlyDate(value: string): string {
@@ -601,44 +575,33 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     tmdbLogin() {
         return this.app.tmdb.loginToTmdb();
-        //.then(() => {            this.app.tmdb.invoke(t => t.accountGetMovieWatchlist({})).then(e => console.log("accountGetMovieWatchlist", e));        })
     }
-    //tmdb: TmdbClient;
-    getImdbInfo(file: File) {
+
+    async getImdbInfo(file: File) {
         let info = new FilenameParser().parse(file.Name);
         let isTv = info.season != null;
-        this.app.tmdb.invoke(t => t.searchMovies({ query: info.name, year: info.year })).then(e => {
-            this.movie = e.results[0];
-            console.log(this.movie);
-            if (this.movie != null) {
-                this.app.tmdb.invoke(t => t.movieGetDetails({ movie_id: this.movie.id })).then(e => console.log({ movie: this.movie, details: e }));
-            }
-        });
-        this.app.tmdb.invoke(t => t.searchTvShows({ query: info.name, })).then(e => {
-            console.log(e);
-            let show = e.results[0];
-            if (show != null) {
-                this.app.tmdb.invoke(t => t.tvGetDetails({ tv_id: show.id })).then(e => console.log({ show: show, details: e }));
-            }
-        });
-        this.app.tmdb.invoke(t => t.searchMulti({ query: info.name, })).then(e => console.log("multisearch", e));
+        let e = await this.app.tmdb.searchMovies({ query: info.name, year: info.year });
+        this.movie = e.results[0];
+        console.log(this.movie);
+        if (this.movie != null) {
+            let e3 = await this.app.tmdb.movieGetDetails({ movie_id: this.movie.id });
+            console.log({ movie: this.movie, details: e3 });
+        }
+
+        let e2 = await this.app.tmdb.searchTvShows({ query: info.name, });
+        console.log(e2);
+        let show = e2.results[0];
+        if (show != null) {
+            let e3 = await this.app.tmdb.tvGetDetails({ tv_id: show.id });
+            console.log({ show: show, details: e3 });
+        }
+
+        let e3 = await this.app.tmdb.searchMulti({ query: info.name, });
+        console.log("multisearch", e3);
     }
 
 
-    movie: Movie;
 
-    //getImdbInfo_old(file: File) {
-    //    let info = parseTorrentName(file.Name);
-    //    console.log(info);
-    //    this.Service.invoke(t => t.omdbGet({ name: info.title, year: info.year })).then(res2 => {
-    //        console.log(res2);
-    //        if (res2.err != null)
-    //            return;
-    //        this.imdb = res2.data;
-    //        let res = res2.data;
-    //        this.getImdbRatings().then(list => this.yourRating = list.first(t => t.id == res.imdbid));
-    //    });
-    //}
 
     getImdbUserId() {
         let id = this.GetStorageItem("imdbUserId");
@@ -651,40 +614,11 @@ export class BrowserComponent implements OnInit, OnChanges {
         return this.SetStorageItem("imdbUserId", value);
     }
 
-    //getImdbRatings(): Promise<ImdbRssItem[]> {
-    //    let json = this.GetStorageItem("imdbRatings");
-    //    if (json != null && json != "") {
-    //        return Promise.resolve(JSON.parse(json));
-    //    }
-    //    if (this.imdbRatings != null)
-    //        return Promise.resolve(this.imdbRatings)
-    //    let userId = this.getImdbUserId();
-    //    if (userId == null || userId == "")
-    //        return Promise.resolve([]);
-    //    return this.server.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
-    //        let doc = $.parseXML(e);
-    //        let items = $(doc).find("item").toArray();
-    //        let items2 = items.map(item => {
-    //            let item3 = $(item);
-    //            let item2: ImdbRssItem = {
-    //                id: item3.children("guid").text().split("/")[4],
-    //                rating: parseInt(item3.children("description").text().split(/[ \.]+/)[4]),
-    //                title: item3.children("title").text(),
-    //            };
-    //            return item2;
-    //        });
-    //        this.SetStorageItem("imdbRatings", JSON.stringify(items2));
-    //        return items2;
-    //    });
-
-    //}
 
     onPathChanged() {
         //this.imdb = null;
         this.tbPathText = this.Req.Path;
     }
-
-    //DefaultReq: ListFilesRequest;
 
     GetSelection(folder: string): string {
         var filename = this.GetStorageItem(folder);
@@ -707,7 +641,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     GetBaseDbItem(key: string): ByFilename {
-        let x = this.baseDbBuckets.first(t => t.key == key);
+        let x = this.filesMd.first(t => t.key == key);
         if (x == null)
             return null;
         return x;
@@ -715,13 +649,13 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     SetBaseDbItem(value: ByFilename): void {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
-            this.baseDbBuckets.removeAll(t => t.key == value.key);
-            this.server.db.byFilename.invoke(t => t.removeById({ id: value.key }));
+            this.filesMd.removeAll(t => t.key == value.key);
+            this.server.db.byFilename.removeById({ id: value.key });
             return;
         }
-        this.baseDbBuckets.removeAll(t => t.key == value.key);
-        this.baseDbBuckets.push(value);
-        this.server.db.byFilename.invoke(t => t.persist(value));
+        this.filesMd.removeAll(t => t.key == value.key);
+        this.filesMd.push(value);
+        this.server.db.byFilename.persist(value);
     }
 
     getHeaderClass(prop: string) {
@@ -802,4 +736,64 @@ export class BrowserComponent implements OnInit, OnChanges {
     //    if (String.isNotNullOrEmpty(q))
     //        q = "?" + q;
     //    return q;
+    //}
+    //getImdbInfo_old(file: File) {
+    //    let info = parseTorrentName(file.Name);
+    //    console.log(info);
+    //    this.Service.invoke(t => t.omdbGet({ name: info.title, year: info.year })).then(res2 => {
+    //        console.log(res2);
+    //        if (res2.err != null)
+    //            return;
+    //        this.imdb = res2.data;
+    //        let res = res2.data;
+    //        this.getImdbRatings().then(list => this.yourRating = list.first(t => t.id == res.imdbid));
+    //    });
+    //}
+    //getImdbRatings(): Promise<ImdbRssItem[]> {
+    //    let json = this.GetStorageItem("imdbRatings");
+    //    if (json != null && json != "") {
+    //        return Promise.resolve(JSON.parse(json));
+    //    }
+    //    if (this.imdbRatings != null)
+    //        return Promise.resolve(this.imdbRatings)
+    //    let userId = this.getImdbUserId();
+    //    if (userId == null || userId == "")
+    //        return Promise.resolve([]);
+    //    return this.server.invoke(t => t.imdbRss({ path: `/user/${userId}/ratings` })).then(e => {
+    //        let doc = $.parseXML(e);
+    //        let items = $(doc).find("item").toArray();
+    //        let items2 = items.map(item => {
+    //            let item3 = $(item);
+    //            let item2: ImdbRssItem = {
+    //                id: item3.children("guid").text().split("/")[4],
+    //                rating: parseInt(item3.children("description").text().split(/[ \.]+/)[4]),
+    //                title: item3.children("title").text(),
+    //            };
+    //            return item2;
+    //        });
+    //        this.SetStorageItem("imdbRatings", JSON.stringify(items2));
+    //        return items2;
+    //    });
+
+    //}
+    //Service: SiteServiceClient;
+    //imdbRatings: ImdbRssItem[];
+    //imdb: OmdbMovie;
+    //url: Observable<string[]>;
+    //urlSnapshot: string[];
+    //yourRating: ImdbRssItem;
+    //migrateDbIfNeeded() {
+    //    if (this.filesMd == null || this.filesMd.length > 0)
+    //        return;
+    //    if (localStorage.length == 0)
+    //        return;
+    //    console.log("migrating db");
+    //    let i = 0;
+    //    while (i < localStorage.length) {
+    //        let key = localStorage.key(i);
+    //        let value = localStorage.getItem(key);
+    //        this.SetStorageItem(key, value);
+    //        localStorage.removeItem(key);
+    //    }
+    //    console.log("done");
     //}

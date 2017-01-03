@@ -2,19 +2,19 @@ export interface TmdbApi {
 
     getApiConfiguration(req: GetApiConfigurationRequest): GetApiConfigurationResponse;
 
-    searchMovies(req: SearchMoviesRequest): PagedResponse<Movie>;
+    searchMovies(req: SearchMoviesRequest): PagedResponse<TmdbMovie>;
     searchTvShows(req: SearchSearchTVShowsRequest): PagedResponse<TvShow>;
-    movieGetPopular(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
-    tvGetDetails(req: TvGetDetailsRequest): TvShowDetails;
-    searchMulti(req: SearchSearchPeopleRequestBase): PagedResponse<Movie | TvShow | Person>;
+    movieGetPopular(req: MovieGetNowPlayingRequestBase): PagedResponse<TmdbMovie>;
+    tvGetDetails(req: TvGetDetailsRequest): TmdbTvShowDetails;
+    searchMulti(req: SearchSearchPeopleRequestBase): PagedResponse<TmdbMovie | TvShow | Person>;
 
 
     accountAddtoWatchlist(req: AccountAddtoWatchlistRequestBase): any;
     accountGetCreatedLists(req: AccountGetCreatedListsRequest): PagedResponse<AccountGetCreatedListsResponseItem>;
     accountGetDetails(req: AccountGetDetailsRequest): AccountDetails;
-    accountGetFavoriteMovies(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<Movie>;
+    accountGetFavoriteMovies(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TmdbMovie>;
     accountGetFavoriteTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TvShow>;
-    accountGetMovieWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<Movie>;
+    accountGetMovieWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TmdbMovie>;
     accountGetRatedMovies(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedMovie>;
     accountGetRatedTVEpisodes(req: AccountGetRatedTVEpisodesRequest): PagedResponse<AccountRatedTVEpisode>;
     accountGetRatedTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedTvShow>;
@@ -37,7 +37,7 @@ export interface TmdbApi {
 
     creditGetDetails(req: CreditGetDetailsRequest): CreditGetDetailsResponse;
 
-    discoverMovieDiscover(req: DiscoverMovieDiscoverRequest): PagedResponse<Movie>;
+    discoverMovieDiscover(req: DiscoverMovieDiscoverRequest): PagedResponse<TmdbMovie>;
     discoverTVDiscover(req: DiscoverTVDiscoverRequest): PagedResponse<TvShow>;
 
     findFindbyID(req: FindFindbyIDRequest): FindFindbyIDResponse;
@@ -67,20 +67,20 @@ export interface TmdbApi {
     movieGetAlternativeTitles(req: MovieGetAlternativeTitlesRequest): MovieGetAlternativeTitlesResponse;
     movieGetChanges(req: MovieGetChangesRequest): MovieGetChangesResponse;
     movieGetCredits(req: MovieGetReleaseDatesRequestBase): MovieGetCreditsResponse;
-    movieGetDetails(req: MovieGetDetailsRequest): MovieDetails;
+    movieGetDetails(req: MovieGetDetailsRequest): TmdbMovieDetails;
     movieGetImages(req: MovieGetImagesRequest): MovieGetImagesResponse;
     movieGetKeywords(req: MovieGetReleaseDatesRequestBase): MovieGetKeywordsResponse;
     movieGetLatest(req: MovieGetLatestRequestBase): MovieGetLatestResponse;
     movieGetLists(req: MovieRequest): MovieGetListsResponse;
     movieGetMovieChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
-    movieGetNowPlaying(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
-    movieGetRecommendations(req: MovieRequest): PagedResponse<Movie>;
+    movieGetNowPlaying(req: MovieGetNowPlayingRequestBase): PagedResponse<TmdbMovie>;
+    movieGetRecommendations(req: MovieRequest): PagedResponse<TmdbMovie>;
     movieGetReleaseDates(req: MovieGetReleaseDatesRequestBase): MovieGetReleaseDatesResponse;
     movieGetReviews(req: MovieRequest): MovieGetReviewsResponse;
-    movieGetSimilarMovies(req: MovieRequest): PagedResponse<Movie>;
-    movieGetTopRated(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
+    movieGetSimilarMovies(req: MovieRequest): PagedResponse<TmdbMovie>;
+    movieGetTopRated(req: MovieGetNowPlayingRequestBase): PagedResponse<TmdbMovie>;
     movieGetTranslations(req: MovieGetReleaseDatesRequestBase): MovieGetTranslationsResponse;
-    movieGetUpcoming(req: MovieGetNowPlayingRequestBase): PagedResponse<Movie>;
+    movieGetUpcoming(req: MovieGetNowPlayingRequestBase): PagedResponse<TmdbMovie>;
     movieGetVideos(req: MovieGetVideosRequest): GetVideosResponse;
     movieRateMovie(req: MovieRateMovieRequest): any;
 
@@ -334,7 +334,7 @@ export interface PersonGetTVCreditsResponse {
 }
 
 export interface FindFindbyIDResponse {
-    movie_results: Movie[];
+    movie_results: TmdbMovie[];
 }
 
 export interface TvGetDetailsResponse_created_by {
@@ -553,7 +553,7 @@ export interface ListDetails {
     description: string;
     favorite_count: number;
     id: string;
-    items: Media[];
+    items: TmdbMedia[];
 }
 
 export interface CreditGetDetailsResponse_media_seasons {
@@ -1421,7 +1421,7 @@ export interface ChangeList {
 }
 
 
-export interface Media {
+export interface TmdbMedia {
     id: number;
     backdrop_path: string;
     genre_ids: number[];
@@ -1449,7 +1449,7 @@ export interface Media {
 
 export type MediaType = "movie" | "tv" | "person";
 
-export interface Movie extends Media {
+export interface TmdbMovie extends TmdbMedia {
     title: string;
 
     adult: boolean;
@@ -1462,14 +1462,14 @@ export interface Movie extends Media {
 
 
 
-export interface TvShow extends Media {
+export interface TvShow extends TmdbMedia {
     name: string;
 
     first_air_date: string;
     origin_country: string[];
     original_name: string;
 }
-export interface TvShowDetails extends TvShow {
+export interface TmdbTvShowDetails extends TvShow {
     /** only returned if req.append_to_response includes "account_states" */
     account_states?: AccountStates;
     created_by: TvGetDetailsResponse_created_by[];
@@ -1502,7 +1502,7 @@ export interface TvShowDetails extends TvShow {
     //vote_count: number;
 }
 
-export interface MovieDetails extends Movie {
+export interface TmdbMovieDetails extends TmdbMovie {
     /** only returned if req.append_to_response includes "account_states" */
     account_states?: AccountStates;
     belongs_to_collection: Object;
@@ -1538,7 +1538,7 @@ export interface MovieDetails extends Movie {
     //vote_count: number;
 }
 
-export type MediaDetails = MovieDetails | TvShowDetails;
+export type MediaDetails = TmdbMovieDetails | TmdbTvShowDetails;
 
 export interface Certification {
     certification: string;
@@ -1569,7 +1569,7 @@ export interface GetVideosResponse {
 export interface KeywordGetMoviesResponseBase {
     id: number;
     page: number;
-    results: Movie[];
+    results: TmdbMovie[];
 }
 
 export interface TvShowSeason {
