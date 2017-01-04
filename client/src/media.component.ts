@@ -64,8 +64,8 @@ export class MediaComponent implements OnInit, OnChanges {
         let list = await this.app.getAvailableMedia();
         let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
         console.log(list2);
-        this.movies = list2;
-        await this.app.loadTmdbMediaDetails(list.take(20));
+        this.movies = list2.take(20);
+        await this.app.loadTmdbMediaDetails(this.movies);
     }
 
     getName(mf: MediaFile): string {
@@ -106,14 +106,17 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
     async tvAiringToday() {
-        let favs = await this.app.tmdb.proxy.getAllPages2(t => t.accountGetFavoriteTVShows({}));
+        let favs = await this.app.tmdb.proxy.getAllPages(t => t.accountGetFavoriteTVShows({}));
         console.log("favs", favs.map(t => t.name));
-        let airingToday = await this.app.tmdb.proxy.getAllPages2(t => t.tvGetTVAiringToday({}));
+        let airingToday = await this.app.tmdb.proxy.getAllPages(t => t.tvGetTVAiringToday({})); //timezone: "Europe/Amsterdam"
         console.log("airingToday", airingToday.map(t => t.name));
         console.log(airingToday.map(t => t.name), airingToday);
         let favIds = new Set(favs.map(t => t.id));
         let favAiringToday = airingToday.filter(t => favIds.has(t.id));
         console.log("favAiringToday", favAiringToday.map(t => t.name));
+        let x = await this.app.tmdb.tvGetDetails({ tv_id: favAiringToday[0].id });
+        let x2 = await this.app.tmdb.tvGetSeason({ tv_id: favAiringToday[0].id, season_number:x.seasons.last().season_number });
+        console.log("TV DETAILS", x, x2);
 
     }
     async tvOnTheAir() {

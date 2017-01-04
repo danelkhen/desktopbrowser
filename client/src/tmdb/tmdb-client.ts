@@ -89,24 +89,31 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         console.log("processQueue", "ended", this.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
     }
     _processQueue() {
-        if (this.queue.length == 0)
-            return;
-        this.queue.removeAll(t => t.started != null && t.ended != null);
-        if (this.queue.length == 0)
-            return;
-        let tto = this.getTimeToWait();
-        if (tto > 0) {
-            console.log("time to wait", tto);
-            this.scheduleProcessQueue(tto);
-            return;
-        }
-        //if (this.rateLimit != null && this.rateLimit.remaining == 0)
-        //    return this.waitUntilNextResetIfNeeded().then(() => this.scheduleProcessQueue());
-        if (this.queue.filter(t => t.started != null && t.ended == null).length > 10)
-            return;
+        for (let i = 0; i < 10; i++) {
+            if (this.queue.length == 0)
+                return;
+            this.queue.removeAll(t => t.started != null && t.ended != null);
+            if (this.queue.length == 0)
+                return;
+            if (this.queue.filter(t => !t.started).length == 0)
+                return;
+            let tto = this.getTimeToWait();
+            if (tto > 0) {
+                console.log("time to wait", tto);
+                this.scheduleProcessQueue(tto);
+                return;
+            }
+            //if (this.rateLimit != null && this.rateLimit.remaining == 0)
+            //    return this.waitUntilNextResetIfNeeded().then(() => this.scheduleProcessQueue());
+            if (this.queue.filter(t => t.started != null && t.ended == null).length > 10)
+                return;
 
-        let task = this.queue[0];
-        task.execute().then(() => this.scheduleProcessQueue());
+            let task = this.queue.first(t => !t.started);
+            if (task == null)
+                return;
+            task.execute();
+        }
+        this.scheduleProcessQueue(100);
     }
 
     queue: SingleTask<any>[] = [];
@@ -146,21 +153,21 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         req.page = lastRes.page + 1;
         return this.onInvoke(pc2);
     }
-    getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
-        let list: PagedResponse<T>[] = [];
-        let onRes = (res: PagedResponse<T>) => {
-            list.push(res);
-            if (pageAction != null && res != null)
-                pageAction(res);
-        };
-        let next = () => this.getNextPage(action, list.last()).then(onRes);
+    //getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
+    //    let list: PagedResponse<T>[] = [];
+    //    let onRes = (res: PagedResponse<T>) => {
+    //        list.push(res);
+    //        if (pageAction != null && res != null)
+    //            pageAction(res);
+    //    };
+    //    let next = () => this.getNextPage(action, list.last()).then(onRes);
 
-        return this.invoke(action)
-            .then(res => onRes(res))
-            .then(() => promiseWhile(() => list.last() != null, next))
-            .then(() => list.exceptNulls().selectMany(t => t.results));
-    }
-    async getAllPages2<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
+    //    return this.invoke(action)
+    //        .then(res => onRes(res))
+    //        .then(() => promiseWhile(() => list.last() != null, next))
+    //        .then(() => list.exceptNulls().selectMany(t => t.results));
+    //}
+    async getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
         let page1 = await this.invoke(action);
         let rest: Promise<PagedResponse<T>>[] = [];
         let rest2: PagedResponse<T>[] = new Array(page1.total_pages);

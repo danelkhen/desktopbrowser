@@ -111,7 +111,7 @@ export class TmdbApiClient2 {
     tvGetCredits(req: tmdb.TvGetTVEpisodeExternalIDsRequestBase): Promise<tmdb.TvGetCreditsResponse> { return this.proxy.invoke(t => t.tvGetCredits(req)); }
     tvGetCredits2(req: tmdb.TvGetExternalIDsRequestBase): Promise<tmdb.TvShowCreditsResponse> { return this.proxy.invoke(t => t.tvGetCredits2(req)); }
     tvGetCredits3(req: tmdb.TvGetImagesRequestBase): Promise<tmdb.TvShowCreditsResponse> { return this.proxy.invoke(t => t.tvGetCredits3(req)); }
-    tvGetDetails2(req: tmdb.TvGetDetails2Request): Promise<tmdb.TvGetDetails2Response> { return this.proxy.invoke(t => t.tvGetDetails2(req)); }
+    tvGetSeason(req: tmdb.TvGetSeasonRequest): Promise<tmdb.TvGetSeasonResponse> { return this.proxy.invoke(t => t.tvGetSeason(req)); }
     tvGetDetails3(req: tmdb.TvGetDetails3Request): Promise<tmdb.TvGetDetails3Response> { return this.proxy.invoke(t => t.tvGetDetails3(req)); }
     tvGetExternalIDs(req: tmdb.TvGetExternalIDsRequestBase): Promise<tmdb.TvGetExternalIDsResponse> { return this.proxy.invoke(t => t.tvGetExternalIDs(req)); }
     tvGetExternalIDs2(req: tmdb.TvGetImagesRequestBase): Promise<tmdb.TvGetExternalIDs2Response> { return this.proxy.invoke(t => t.tvGetExternalIDs2(req)); }

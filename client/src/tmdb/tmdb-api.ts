@@ -120,7 +120,7 @@ export interface TmdbApi {
     tvGetCredits(req: TvGetTVEpisodeExternalIDsRequestBase): TvGetCreditsResponse;
     tvGetCredits2(req: TvGetExternalIDsRequestBase): TvShowCreditsResponse;
     tvGetCredits3(req: TvGetImagesRequestBase): TvShowCreditsResponse;
-    tvGetDetails2(req: TvGetDetails2Request): TvGetDetails2Response;
+    tvGetSeason(req: TvGetSeasonRequest): TvGetSeasonResponse;
     tvGetDetails3(req: TvGetDetails3Request): TvGetDetails3Response;
     tvGetExternalIDs(req: TvGetExternalIDsRequestBase): TvGetExternalIDsResponse;
     tvGetExternalIDs2(req: TvGetImagesRequestBase): TvGetExternalIDs2Response;
@@ -134,7 +134,7 @@ export interface TmdbApi {
     tvGetSimilarTVShows(req: TvGetSimilarTVShowsRequestBase): PagedResponse<TvShow>;
     tvGetTopRated(req: PagedLanguageRequest): PagedResponse<TvShow>;
     tvGetTranslations(req: TvGetImagesRequestBase): TvGetTranslationsResponse;
-    tvGetTVAiringToday(req: PagedLanguageRequest): PagedResponse<TvShow>;
+    tvGetTVAiringToday(req: PagedLanguageTimezonedRequest): PagedResponse<TvShow>;
     tvGetTVChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
     tvGetTVEpisodeExternalIDs(req: TvGetTVEpisodeExternalIDsRequestBase): TvGetTVEpisodeExternalIDsResponse;
     tvGetTVOnTheAir(req: PagedLanguageRequest): PagedResponse<TvShow>;
@@ -596,7 +596,7 @@ export interface TvGetDetails2Response_episodes {
     vote_count: number;
 }
 
-export interface TvGetDetails2Response {
+export interface TvGetSeasonResponse {
     _id: string;
     air_date: string;
     episodes: TvGetDetails2Response_episodes[];
@@ -1186,7 +1186,11 @@ export interface PagedRequest extends Request {
 export interface LanguageRequest extends Request {
     language?: string;
 }
+export interface TimezoneRequest extends Request {
+    timezone?: string;
+}
 export interface PagedLanguageRequest extends PagedRequest, LanguageRequest, Request { }
+export interface PagedLanguageTimezonedRequest extends PagedRequest, LanguageRequest, TimezoneRequest, Request { }
 export interface Request {
     api_key?: string;
 }
@@ -1201,7 +1205,7 @@ export interface SearchMoviesRequest {
     year?: number;
 }
 
-export interface TvGetDetails2Request {
+export interface TvGetSeasonRequest {
     api_key?: string;
     append_to_response?: string;
     language?: string;
@@ -1892,7 +1896,7 @@ export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
     searchMovies: { path: "/search/movie", method: "GET" },
     genreGetMovieList: { path: "/genre/movie/list", method: "GET" },
     listAddMovie: { path: "/list/{list_id}/add_item", method: "POST" },
-    tvGetDetails2: { path: "/tv/{tv_id}/season/{season_number}", method: "GET" },
+    tvGetSeason: { path: "/tv/{tv_id}/season/{season_number}", method: "GET" },
     collectionGetImages: { path: "/collection/{collection_id}/images", method: "GET" },
     accountAddtoWatchlist: { path: "/account/{account_id}/watchlist", method: "POST" },
     searchTvShows: { path: "/search/tv", method: "GET" },
