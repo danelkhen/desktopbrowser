@@ -110,17 +110,39 @@ body {
   .poster img {
     width: 100%; }
 
-.content-title {
-  font-size: 0.9375em;
-  line-height: 1.25;
-  margin-top: 0.625em;
+.details {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(16, 17, 29, 0.97);
   text-align: center;
-  font-family: "FreightTextBold", monospace, "helvetica-neue", helvetica, sans-serif;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  padding: 0 0.3125em;
-  -webkit-font-smoothing: antialiased; }
+  padding: 1.25em; }
+  .details .title {
+    margin: 0.625em 0 0.3125em;
+    font-size: 1.125em;
+    line-height: 1.25;
+    display: block;
+    text-align: center;
+    font-family: "FreightTextBold", monospace, "helvetica-neue", helvetica, sans-serif;
+    padding: 0 0.3125em;
+    -webkit-font-smoothing: antialiased;
+    color: #fff; }
+
+.playtime {
+  color: #626681;
+  font-size: 0.9375em;
+  display: block; }
+
+.status {
+  border: 1px solid #3c4472;
+  padding: 0.25em 0.5em;
+  display: block;
+  color: #3c4472;
+  position: absolute;
+  bottom: 10%;
+  margin: auto; }
 
 .rating {
   font-size: 1em;
@@ -131,16 +153,6 @@ body {
   margin: 0.625em;
   top: 0;
   right: 0; }
-
-.details {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  background-color: rgba(16, 17, 29, 0.94);
-  text-align: center;
-  padding: 1.25em; }
 
 .pool li:hover .details {
   opacity: 1; }
