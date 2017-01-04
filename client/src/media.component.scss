@@ -62,7 +62,7 @@ body {
 		}
 
 		&.selected, &:hover {
-			color: $media-pri-color;
+			color: $media-sec-color;
 			outline: 0;
 		}
 
@@ -121,22 +121,23 @@ body {
     justify-content: space-between;
     align-content: flex-start;
     margin-top: em(32);
-}
 
-.pool li {
-    justify-content: space-between;
-    width: em(180);
-    height: auto;
-    position: relative;
-    // border: 1px solid $media-border;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: em(16);
+    li {
+	    justify-content: space-between;
+	    width: em(180);
+	    height: auto;
+	    position: relative;
+	    // border: 1px solid $media-border;
+	    border-radius: 4px;
+	    margin-bottom: em(16);
+	}
 }
 
 .poster {
     width: 100%;
     position: relative;
+    border-radius: 4px;
+    overflow: hidden;
 
     img {
         width: 100%;
@@ -154,6 +155,7 @@ body {
     background-color: rgba(16, 17, 29, .97);
     text-align: center;
     padding: em(20);
+    @include transition(opacity .3s ease);
 
     .title {
 		margin: em(10) 0 em(5);
@@ -162,9 +164,6 @@ body {
 	    display: block;
 	    text-align: center;
 	    font-family: $media-font-bold;
-	    // text-overflow: ellipsis;
-	    // white-space: nowrap;
-	    // overflow: hidden;
 	    padding: 0 em(5);
 	    -webkit-font-smoothing: antialiased;
 	    color: #fff;
@@ -172,10 +171,24 @@ body {
 }
 
 .playtime {
-	color: lighten($media-grey-color, 10%);
+	color:  lighten($media-border, 15%);
 	font-size: em(15);
 	display:block;
+}
 
+.playicon {
+	top: 50%;
+  	left: 50%;
+  	transform: translate(-50%, -50%);
+  	position:absolute;
+  	cursor: pointer;
+  	opacity: .5;
+  	@include transition(opacity .3s ease);
+
+
+  	&:hover {
+  		opacity: 1;
+  	}
 }
 
 .status {
@@ -184,21 +197,34 @@ body {
 	display: block;
 	color:  lighten($media-border, 15%);
 	position: absolute;
-	bottom: 10%;
 	margin: auto;
-
+	top: 85%;
+  	left: 50%;
+  	min-width: 75%;
+  	transform: translate(-50%, -50%);
+  	vertical-align: baseline;
+  	border-radius: 4px;
 }
 
 
 .rating {
     font-size: em(16);
+    font-family: $media-font-bold;
     color: $media-grey-color;
     background-color: $media-pri-color;
     display: inline-block;
     position: absolute;
-    margin: em(10);
-    top: 0;
-    right: 0;
+    top: -10px;
+    right: -8px;
+    z-index:20;
+    padding: 7px;
+    color: #fff;
+    padding: 0px;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	border-radius:50px;
+	vertical-align: baseline;
 }
 
 .pool li {

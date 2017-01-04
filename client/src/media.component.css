@@ -56,7 +56,7 @@ body {
     .filter button:focus, .filter button:active {
       outline: 0; }
     .filter button.selected, .filter button:hover {
-      color: #EA5111;
+      color: #07E2D4;
       outline: 0; }
 
 /* Header Settings */
@@ -94,19 +94,19 @@ body {
   justify-content: space-between;
   align-content: flex-start;
   margin-top: 2em; }
-
-.pool li {
-  justify-content: space-between;
-  width: 11.25em;
-  height: auto;
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 1em; }
+  .pool li {
+    justify-content: space-between;
+    width: 11.25em;
+    height: auto;
+    position: relative;
+    border-radius: 4px;
+    margin-bottom: 1em; }
 
 .poster {
   width: 100%;
-  position: relative; }
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden; }
   .poster img {
     width: 100%; }
 
@@ -118,7 +118,12 @@ body {
   opacity: 0;
   background-color: rgba(16, 17, 29, 0.97);
   text-align: center;
-  padding: 1.25em; }
+  padding: 1.25em;
+  -webkit-transition: opacity 0.3s ease;
+  -moz-transition: opacity 0.3s ease;
+  -ms-transition: opacity 0.3s ease;
+  -o-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease; }
   .details .title {
     margin: 0.625em 0 0.3125em;
     font-size: 1.125em;
@@ -131,9 +136,24 @@ body {
     color: #fff; }
 
 .playtime {
-  color: #626681;
+  color: #3c4472;
   font-size: 0.9375em;
   display: block; }
+
+.playicon {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  cursor: pointer;
+  opacity: .5;
+  -webkit-transition: opacity 0.3s ease;
+  -moz-transition: opacity 0.3s ease;
+  -ms-transition: opacity 0.3s ease;
+  -o-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease; }
+  .playicon:hover {
+    opacity: 1; }
 
 .status {
   border: 1px solid #3c4472;
@@ -141,18 +161,32 @@ body {
   display: block;
   color: #3c4472;
   position: absolute;
-  bottom: 10%;
-  margin: auto; }
+  margin: auto;
+  top: 85%;
+  left: 50%;
+  min-width: 75%;
+  transform: translate(-50%, -50%);
+  vertical-align: baseline;
+  border-radius: 4px; }
 
 .rating {
   font-size: 1em;
+  font-family: "FreightTextBold", monospace, "helvetica-neue", helvetica, sans-serif;
   color: #4C4F64;
   background-color: #EA5111;
   display: inline-block;
   position: absolute;
-  margin: 0.625em;
-  top: 0;
-  right: 0; }
+  top: -10px;
+  right: -8px;
+  z-index: 20;
+  padding: 7px;
+  color: #fff;
+  padding: 0px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50px;
+  vertical-align: baseline; }
 
 .pool li:hover .details {
   opacity: 1; }
