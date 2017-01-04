@@ -7,9 +7,9 @@ import { Media as DsMedia } from "./media";
 export class TmdbClient extends TmdbApiClient2 {
     constructor() {
         super();
-        console.log("TmdbClient ctor");
-        let base = this.onInvoke;
-        this.onInvoke = pc => {
+        console.log("TmdbClient ctor", this);
+        let base = this.proxy.onInvoke;
+        this.proxy.onInvoke = pc => {
             if (this.hasSessionId()) {
                 let prm = pc.args[0];
                 if (prm == null) {
@@ -29,32 +29,38 @@ export class TmdbClient extends TmdbApiClient2 {
     tvShowWatchlistIds = new Set<number>();
     movieWatchlistIds = new Set<number>();
 
-    init(): Promise<any> {
-        return this.invoke(t => t.getApiConfiguration({})).then(t => this.configuration = t)
-            .then(() => this.onLogin());
+    async init(): Promise<any> {
+        this.configuration = await this.getApiConfiguration({});
+        await this.onLogin();
     }
 
-    onLogin(): Promise<any> {
-        return Promise.resolve()
-            .then(() => this.accountGetDetails())
-            //.then(() => this.getCreateTmdbWatchedList())
-            //.then(() => this.accountGetRatedMovies({}))
-            //.then(t => this.ratedMovies = t.results)
-            //.then(() => this.accountGetRatedTVShows({}))
-            //.then(t => this.ratedTvShows = t.results)
-            .then(() => console.log("onLogin finished", { rated: this.rated, /*watchedList: this.watchedList*/ }))
-            ;
+    async onLogin(): Promise<any> {
+        await this.accountGetDetails();
+        console.log("onLogin finished", { rated: this.rated });
+
+        //return Promise.resolve()
+        //    .then(() => this.accountGetDetails())
+        //    //.then(() => this.getCreateTmdbWatchedList())
+        //    //.then(() => this.accountGetRatedMovies({}))
+        //    //.then(t => this.ratedMovies = t.results)
+        //    //.then(() => this.accountGetRatedTVShows({}))
+        //    //.then(t => this.ratedTvShows = t.results)
+        //    .then(() => console.log("onLogin finished", { rated: this.rated, /*watchedList: this.watchedList*/ }))
+        //    ;
     }
     //ratedMovies: RatedMovie[];
     //ratedTvShows: RatedTvShow[];
 
-    accountGetDetails(req?: AccountGetDetailsRequest): Promise<AccountDetails> {
-        return super.accountGetDetails(req).then(t => {
-            this.account = t;
+    async accountGetDetails(req?: AccountGetDetailsRequest): Promise<AccountDetails> {
+        try {
+            this.account = await super.accountGetDetails(req);
             if (this.account != null)
                 this.account_id = this.account.id;
             return this.account;
-        }, () => console.log("accountGetDetails failed"));
+        }
+        catch (e) {
+            console.warn("accountGetDetails failed", e);
+        }
     }
 
     configuration: GetApiConfigurationResponse;
@@ -132,8 +138,9 @@ export class TmdbClient extends TmdbApiClient2 {
     hasSessionId() {
         return this.session_id != null && this.session_id != "";
     }
-    loginToTmdb(): Promise<any> {
-        return this._loginToTmdb().then(t => this.onLogin());//.accountGetDetails()).then(t => this.getCreateTmdbWatchedList());
+    async loginToTmdb(): Promise<any> {
+        await this._loginToTmdb();
+        await this.onLogin(); //.then(t => this.onLogin());//.accountGetDetails()).then(t => this.getCreateTmdbWatchedList());
     }
     _loginToTmdb(): Promise<any> {
         //if (this.hasSessionId())
@@ -146,7 +153,7 @@ export class TmdbClient extends TmdbApiClient2 {
                     reject();
                     return;
                 }
-                this.invoke(t => t.authenticationCreateSession({ request_token: x.request_token }))
+                this.authenticationCreateSession({ request_token: x.request_token })
                     .then(e => {
                         console.log("session", e);
                         if (!e.success) {
@@ -157,7 +164,7 @@ export class TmdbClient extends TmdbApiClient2 {
                         resolve();
                     });
             });
-            this.invoke(t => t.authenticationCreateRequestToken({})).then(e => {
+            this.authenticationCreateRequestToken({}).then(e => {
                 this.request_token = e.request_token;
                 console.log(e);
                 let win = window.open("/tmdb-login.html?request_token=" + this.request_token);
@@ -248,6 +255,19 @@ export class TmdbClient extends TmdbApiClient2 {
     markAllRatedAsWatched(): Promise<any> {
         let ratedButNotWatched = setMinus(this.rated, this.watched);
         return promiseEach(Array.from(ratedButNotWatched), id => this.markAsWatched(id, true, false));
+    }
+
+    async importTvFavs(names: string[]): Promise<any> {
+        for (let name of names) {
+            let res = await this.searchTvShows({ query: name });
+            let show = res.results[0];
+            if (show == null) {
+                console.log("can't find", name);
+                continue;
+            }
+            console.log(name, show.id);
+            await this.accountMarkasFavorite({ body: { media_type: "tv", media_id: show.id, favorite: true } });
+        }
     }
 
 

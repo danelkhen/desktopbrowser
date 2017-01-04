@@ -19,7 +19,7 @@ export interface TmdbApi {
     accountGetRatedTVEpisodes(req: AccountGetRatedTVEpisodesRequest): PagedResponse<AccountRatedTVEpisode>;
     accountGetRatedTVShows(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<RatedTvShow>;
     accountGetTVShowWatchlist(req: AccountGetTVShowWatchlistRequestBase): PagedResponse<TvShow>;
-    accountMarkasFavorite(req: AccountAddtoWatchlistRequestBase): any;
+    accountMarkasFavorite(req: AccountMarkAsFavoriteRequest): Response;
 
     authenticationCreateGuestSession(req: GetApiConfigurationRequest): AuthenticationCreateGuestSessionResponse;
     authenticationCreateRequestToken(req: GetApiConfigurationRequest): AuthenticationCreateRequestTokenResponse;
@@ -94,7 +94,7 @@ export interface TmdbApi {
     personGetLatest(req: MovieGetLatestRequestBase): Person;
     personGetMovieCredits(req: PersonRequest): PersonGetMovieCreditsResponse;
     personGetPersonChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
-    personGetPopular(req: PersonGetPopularRequestBase): PagedResponse<PopularPerson>;
+    personGetPopular(req: PagedLanguageRequest): PagedResponse<PopularPerson>;
     personGetTaggedImages(req: PersonGetTaggedImagesRequest): PersonGetTaggedImagesResponse;
     personGetTVCredits(req: PersonRequest): PersonGetTVCreditsResponse;
 
@@ -129,15 +129,15 @@ export interface TmdbApi {
     tvGetImages3(req: TvGetExternalIDsRequestBase): TvGetImages3Response;
     tvGetKeywords(req: TvGetKeywordsRequest): TvGetKeywordsResponse;
     tvGetLatest(req: MovieGetLatestRequestBase): TvGetLatestResponse;
-    tvGetPopular(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
+    tvGetPopular(req: PagedLanguageRequest): PagedResponse<TvShow>;
     tvGetRecommendations(req: TvGetSimilarTVShowsRequestBase): PagedResponse<TvShow>;
     tvGetSimilarTVShows(req: TvGetSimilarTVShowsRequestBase): PagedResponse<TvShow>;
-    tvGetTopRated(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
+    tvGetTopRated(req: PagedLanguageRequest): PagedResponse<TvShow>;
     tvGetTranslations(req: TvGetImagesRequestBase): TvGetTranslationsResponse;
-    tvGetTVAiringToday(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
+    tvGetTVAiringToday(req: PagedLanguageRequest): PagedResponse<TvShow>;
     tvGetTVChangeList(req: MovieGetMovieChangeListRequestBase): PagedResponse<ChangeList>;
     tvGetTVEpisodeExternalIDs(req: TvGetTVEpisodeExternalIDsRequestBase): TvGetTVEpisodeExternalIDsResponse;
-    tvGetTVOnTheAir(req: PersonGetPopularRequestBase): PagedResponse<TvShow>;
+    tvGetTVOnTheAir(req: PagedLanguageRequest): PagedResponse<TvShow>;
     tvGetVideos(req: TvGetVideosRequest): GetVideosResponse;
     tvGetVideos2(req: TvGetImagesRequestBase): GetVideosResponse;
     tvGetVideos3(req: TvGetExternalIDsRequestBase): GetVideosResponse;
@@ -1180,8 +1180,15 @@ export interface CreditGetDetailsRequest {
     credit_id?: string;
 }
 
-export interface PagedRequest {
+export interface PagedRequest extends Request {
     page?: number;
+}
+export interface LanguageRequest extends Request {
+    language?: string;
+}
+export interface PagedLanguageRequest extends PagedRequest, LanguageRequest, Request { }
+export interface Request {
+    api_key?: string;
 }
 export interface SearchMoviesRequest {
     api_key?: string;
@@ -1670,12 +1677,6 @@ export interface RatedTvShow {
 }
 
 
-export interface PersonGetPopularRequestBase {
-    api_key?: string;
-    language?: string;
-    page?: number;
-}
-
 export interface TvGetImagesRequestBase {
     api_key?: string;
     language?: string;
@@ -1773,6 +1774,21 @@ export interface AccountAddtoWatchlistRequestBase {
     body?: any;
     "Content-Type"?: string;
     session_id?: string;
+}
+
+export interface AccountMarkAsFavoriteRequest {
+    account_id?: number;
+    api_key?: string;
+    body?: AccountMarkAsFavoriteRequestBody;
+    "Content-Type"?: string;
+    session_id?: string;
+}
+
+
+export interface AccountMarkAsFavoriteRequestBody {
+    media_type: "movie"|"tv",
+    media_id: number|string,
+    favorite: boolean,
 }
 
 export interface SearchSearchCompaniesRequestBase {

@@ -35,21 +35,15 @@ export class MediaComponent implements OnInit, OnChanges {
 
     applyFilter() {
         let list = this.movies;
-
         list = this.applyFilterType(list);
-
         this.filteredMovies = list;
     }
+
     applyFilterType(list: MediaFile[]): MediaFile[] {
         if (this.filterType == null)
             return list;
-        if (this.filterType == "movie")
-            return list.filter(t => t instanceof Movie);
-        if (this.filterType == "tv")
-            return list.filter(t => t instanceof TvShow);
-        return list;
+        return list.filter(t => t.type == this.filterType);
     }
-
 
     movie_click(movie: MediaFile) {
         this.selectedMovie = movie;
@@ -59,13 +53,12 @@ export class MediaComponent implements OnInit, OnChanges {
         this.selectedMovie = null;
     }
 
-    getPopularMovies() {
+    async getPopularMovies() {
         if (this.movies != null && this.movies.length > 0)
-            return Promise.resolve();
-        return this.app.tmdb.movieGetPopular({ language: "en" }).then(e => {
-            this.movies = e.results.map(t => <MediaFile>{ md: {}, tmdb: t });//Media.fromTmdbMovie(t, this.app));
-            console.log(this.movies);
-        });
+            return;
+        let e = await this.app.tmdb.movieGetPopular({ language: "en" });
+        this.movies = e.results.map(t => <MediaFile>{ md: {}, tmdb: t });
+        console.log(this.movies);
     }
     async getAvailableMedia() {
         let list = await this.app.getAvailableMedia();
@@ -73,12 +66,8 @@ export class MediaComponent implements OnInit, OnChanges {
         console.log(list2);
         this.movies = list2;
         await this.app.loadTmdbMediaDetails(list.take(20));
-        //if (list2.length == 0)
-        //    return;
-        //for (let t of list2) {
-        //    await t.getTmdbDetails();
-        //}
     }
+
     getName(mf: MediaFile): string {
         let name = mf.md.key;
         if (mf.tmdb != null)
@@ -115,5 +104,23 @@ export class MediaComponent implements OnInit, OnChanges {
     addConfigFolder() {
         this.app.config.folders.push({ path: null });
     }
+
+    async tvAiringToday() {
+        let favs = await this.app.tmdb.proxy.getAllPages2(t => t.accountGetFavoriteTVShows({}));
+        console.log("favs", favs.map(t => t.name));
+        let airingToday = await this.app.tmdb.proxy.getAllPages2(t => t.tvGetTVAiringToday({}));
+        console.log("airingToday", airingToday.map(t => t.name));
+        console.log(airingToday.map(t => t.name), airingToday);
+        let favIds = new Set(favs.map(t => t.id));
+        let favAiringToday = airingToday.filter(t => favIds.has(t.id));
+        console.log("favAiringToday", favAiringToday.map(t => t.name));
+
+    }
+    async tvOnTheAir() {
+        let onTheAir = await this.app.tmdb.proxy.getAllPages(t => t.tvGetTVOnTheAir({}));
+        console.log(onTheAir.map(t => t.name), onTheAir);
+    }
+
+
 }
 

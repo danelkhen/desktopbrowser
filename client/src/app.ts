@@ -19,6 +19,7 @@ export class App {
 
     constructor() {
         console.log("App ctor", this);
+        window["app"] = this;
         this.fileService = new FileService();
         this.byFilename = new ByFilenameService();
         this.keyValue = new KeyValueService();
@@ -84,12 +85,12 @@ export class App {
     }
 
     async downloadRatings() {
-        await this.tmdb.getAllPages(t => t.accountGetRatedMovies({}), res => this.savePage("ratings", "movie", res.page, res.results.map(t => t.id)));
-        await this.tmdb.getAllPages(t => t.accountGetRatedTVShows({}), res => this.savePage("ratings", "tv", res.page, res.results.map(t => t.id)));
+        await this.tmdb.proxy.getAllPages(t => t.accountGetRatedMovies({}), res => this.savePage("ratings", "movie", res.page, res.results.map(t => t.id)));
+        await this.tmdb.proxy.getAllPages(t => t.accountGetRatedTVShows({}), res => this.savePage("ratings", "tv", res.page, res.results.map(t => t.id)));
     }
     async downloadWatchlists() {
-        await this.tmdb.getAllPages(t => t.accountGetMovieWatchlist({}), res => this.savePage("watchlist", "movie", res.page, res.results.map(t => t.id)));
-        await this.tmdb.getAllPages(t => t.accountGetTVShowWatchlist({}), res => this.savePage("watchlist", "tv", res.page, res.results.map(t => t.id)));
+        await this.tmdb.proxy.getAllPages(t => t.accountGetMovieWatchlist({}), res => this.savePage("watchlist", "movie", res.page, res.results.map(t => t.id)));
+        await this.tmdb.proxy.getAllPages(t => t.accountGetTVShowWatchlist({}), res => this.savePage("watchlist", "tv", res.page, res.results.map(t => t.id)));
     }
 
     async savePage(name: string, media_type: "movie" | "tv", page: number, ids: number[]) {
@@ -192,9 +193,11 @@ export class App {
         }
     }
 
-    markAsWatched(mf: MediaFile): Promise<any> {
+    async markAsWatched(mf: MediaFile): Promise<any> {
         mf.md.watched = true;
-        return this.byFilename.persist(mf.md);
+        if (mf.md.tmdbKey != null)
+            await this.tmdb.markAsWatched(mf.md.tmdbKey);
+        await this.byFilename.persist(mf.md);
     }
 
 }
