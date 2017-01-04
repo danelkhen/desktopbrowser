@@ -38,12 +38,13 @@
                     <img src="{{movie.tmdb?.poster?.w342}}">
                 </div>
                 <div class="details">
-                    <h5 class="title">{{movie.name}}</h5>
+                    <h5 class="title">{{getName(movie)}}</h5>
                     <span class="playtime">1hr:45min</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
                     <a class="icon playicon">play</a>
                     <a class="status">mark as watched</a>
                 </div>
+                <h5 class="content-title">{{getName(movie)}}</h5>
             </li>
         </ul>
     </div><!-- End of Right pane -->
@@ -66,12 +67,10 @@
     <button (click)="app.getSavedRatings()">getSavedRatings</button>
 </div>
 <div style="color:white">
-    <div *ngFor="let media of movies">
-        <span>{{media.name}}</span>
-        <span>{{media.info | json}}</span>
-        <span>{{media.filenames | json}}</span>
-        <button (click)="markAsWatched(media)">mark as watched</button>
-        <button [class.disabled]="media.filenames!=null && media.filenames.length>0" (click)="media.play()">Play</button>
+    <div *ngFor="let mf of movies">
+        <button (click)="markAsWatched(mf)">mark as watched</button>
+        <button (click)="play(mf)">Play</button>
+        <span>{{getName(mf)}}</span>
     </div>
 </div>
 <br />

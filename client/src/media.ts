@@ -2,19 +2,28 @@
 import { App, TmdbMediaInfo } from "./app"
 
 export abstract class Media {
-    static fromTmdbTypeAndId(typeAndId: string, app: App): Media {
-        let tokens = typeAndId.split("|");
+    static fromTmdbKey(tmdbKey: string, app: App): Media {
+        let tokens = tmdbKey.split("|");
         let type = tokens[0] as any;
         let id = parseInt(tokens[1]);
+        let episodeId = tokens[2];
         let x: Media;
         if (type == "tv") {
-            x = new TvShow();
+            //if (episodeId != null) {
+            //    let x2 = new TvShowEpisode();
+            //    x2.episodeId = episodeId;
+            //    x2.tvShow = Media.fromTmdbKey(tokens.take(2).join("|"), app);
+            //    x = x2;
+            //}
+            //else {
+                x = new TvShow();
+            //}
         }
         else if (type == "movie") {
             x = new Movie();
         }
         else
-            console.warn("unknown media type", typeAndId, x.id);
+            console.warn("unknown media type", tmdbKey, x.id);
         x.type = type;
         x.id = id;
         x.app = app;
@@ -70,10 +79,10 @@ export abstract class Media {
     saveInfo(): Promise<any> {
         return this.app.updateMediaInfo(this.typeAndId, this.info);
     }
-    get movieDetails(): TmdbMovieDetails { return this.tmdbDetails as TmdbMovieDetails; }
-    get tvShowDetails(): TmdbTvShowDetails { return this.tmdbDetails as TmdbTvShowDetails; }
-    get movie(): TmdbMovie { return this.tmdbBasic as TmdbMovie; }
-    get tvShow(): TmdbTvShow { return this.tmdbBasic as TmdbTvShow; }
+    get tmdbMovieDetails(): TmdbMovieDetails { return this.tmdbDetails as TmdbMovieDetails; }
+    get tmdbTvShowDetails(): TmdbTvShowDetails { return this.tmdbDetails as TmdbTvShowDetails; }
+    get tmdbMovie(): TmdbMovie { return this.tmdbBasic as TmdbMovie; }
+    get tmdbTvShow(): TmdbTvShow { return this.tmdbBasic as TmdbTvShow; }
     get isRated(): boolean { return this.app.tmdb.rated.has(this.typeAndId); }
     filenames: string[];
     get canPlay(): boolean { return this.filenames == null || this.filenames.length == 0; }
@@ -91,11 +100,21 @@ export abstract class Media {
 
 export class TvShow extends Media {
     get isInWatchlist(): boolean { return this.app.tmdb.tvShowWatchlistIds.has(this.id); }
-    get name(): string { return this.tvShowDetails && this.tvShowDetails.name; }
+    get name(): string { return this.tmdbTvShowDetails && this.tmdbTvShowDetails.name; }
 }
 
 export class Movie extends Media {
     get isInWatchlist(): boolean { return this.app.tmdb.movieWatchlistIds.has(this.id); }
-    get name(): string { return this.movieDetails && this.movieDetails.title; }
+    get name(): string { return this.tmdbMovieDetails && this.tmdbMovieDetails.title; }
 
 }
+
+
+//export class TvShowEpisode extends Media {
+//    episodeId: string;
+//    tvShow: TvShow;
+//    get typeAndId() { return this.type + "|" + this.id + "|" + this.episodeId; }
+//    get isInWatchlist(): boolean { return this.tvShow.isInWatchlist; }
+//    get name(): string { return this.tmdbTvShow.name + " " + this.episodeId; }
+
+//}

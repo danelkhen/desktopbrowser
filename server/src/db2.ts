@@ -9,7 +9,11 @@ import { ByFilename as ByFilenameContract } from "contracts"
 export class ByFilename implements ByFilenameContract {
     @PrimaryColumn() key: string;
     @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
-    @Column(CT.STRING, { nullable: true }) tmdbTypeAndId: string;
+    @Column(CT.STRING, { nullable: true }) tmdbKey: string;
+    @Column(CT.STRING, { nullable: true }) episodeKey: string;
+    @Column(CT.STRING, { nullable: true }) watched: boolean;
+    @Column(CT.STRING, { nullable: true }) lastKnownPath: string;
+
 }
 
 @Table()

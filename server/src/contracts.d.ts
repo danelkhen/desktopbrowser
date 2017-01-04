@@ -17,7 +17,10 @@
     export interface ByFilename {
         key: string;
         selectedFiles?: string[];
-        tmdbTypeAndId?: string;
+        tmdbKey?: string;
+        episodeKey?: string;
+        watched?: boolean;
+        lastKnownPath?: string;
     }
 
     export interface DbService<T> {

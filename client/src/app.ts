@@ -2,11 +2,13 @@ import "./utils/global";
 import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
 import { FileService, ByFilenameService, KeyValueService } from "./service"
-import { TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
+import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
 import { promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
 import { Scanner } from "./scanner"
+import { FilenameParser } from "./filename-parser"
+
 import { Media as DsMedia } from "./media"
-import { File } from "contracts"
+import { File, ByFilename, FilenameParsedInfo } from "contracts"
 
 export class App {
     fileService: FileService;
@@ -118,25 +120,40 @@ export class App {
         return this.fileService.db.byFilename.find();
     }
 
-    async getAvailableMedia(): Promise<DsMedia[]> {
+    async getAvailableMedia(): Promise<MediaFile[]> {
         let mds = await this.getAllFilesMetadata();
-        let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
-        let groups = mds.where(t => t.tmdbTypeAndId != null && t.tmdbTypeAndId != "").groupBy(t => t.tmdbTypeAndId);
-        let medias = groups.map(group => {
-            let typeAndId = group[0].tmdbTypeAndId;
-            if (typeAndId == null)
-                return null;
-            let media = this.getMedia(typeAndId);
-            media.filenames = group.map(t => t.key);
-            if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
-                media.info.watched = true;
-            }
-            return media;
-        });
-        console.log({ medias });
-        return medias;
+        let scanner = new Scanner();
+        mds = mds.filter(t => scanner.isVideoFile(t.key));
+        let mfs = mds.map(t => <MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
+        //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
+        //let groups = mfs.where(t => t.md.tmdbKey != null && t.md.tmdbKey != "").groupBy(t => t.md.tmdbKey);
+        //let medias = groups.map(group => {
+        //    let typeAndId = group[0].md.tmdbKey;
+        //    if (typeAndId == null)
+        //        return null;
+        //    let media = this.getMedia(typeAndId);
+        //    media.filenames = group.map(t => t.key);
+        //    if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
+        //        media.info.watched = true;
+        //    }
+        //    return media;
+        //});
+        //console.log({ medias });
+        return mfs;
 
     }
+
+    async loadTmdbMediaDetails(mfs: MediaFile[]): Promise<MediaFile[]> {
+        for (let mf of mfs) {
+            if (mf.tmdb != null)
+                continue;
+            if (mf.md.tmdbKey == null || mf.md.tmdbKey == "")
+                continue;
+            mf.tmdb = await this.tmdb.getMovieOrTvByTypeAndId(mf.md.tmdbKey);
+        }
+        return mfs;
+    }
+
 
     updateMediaInfo(typeAndId: string, info: TmdbMediaInfo): Promise<TmdbMediaInfo> {
         info.key = "mediainfo_" + typeAndId;
@@ -162,7 +179,7 @@ export class App {
         return this.mediaInfos;
     }
     getMedia(typeAndId: string): DsMedia {
-        let media = DsMedia.fromTmdbTypeAndId(typeAndId, this);
+        let media = DsMedia.fromTmdbKey(typeAndId, this);
         return media;
     }
 
@@ -175,6 +192,18 @@ export class App {
         }
     }
 
+    markAsWatched(mf: MediaFile): Promise<any> {
+        mf.md.watched = true;
+        return this.byFilename.persist(mf.md);
+    }
+
+}
+
+export interface MediaFile {
+    md: ByFilename;
+    tmdb: MediaDetails;
+    type: string;
+    parsed: FilenameParsedInfo;
 }
 
 

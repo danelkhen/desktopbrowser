@@ -12,18 +12,22 @@ export class Scanner {
     results: any[];
     errors: any[] = [];
 
+    videoExts = [".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"];
+    isVideoFile(name: string): boolean {
+        return this.videoExts.first(t=>name.endsWith(t))!=null;
+
+    }
     async scan(): Promise<any> {
         this.results = [];
         for (let folder of this.folders)
             await this.scanDir(folder);
     }
     async scanDir(dir: string): Promise<any> {
-        let videoExt = new Set([".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"]);
         let res = await this.service.ListFiles({ Path: dir, IsRecursive: true });
-        let videoFiles = res.Files.filter(t => videoExt.has(t.Extension));
+        let videoFiles = res.Files.filter(t => this.isVideoFile(t.Name));//videoExt.has(t.Extension));
         for (let file of videoFiles) {
             let md = await this.service.db.byFilename.findOneById({ id: file.Name });
-            if (md != null && md.tmdbTypeAndId != null) {
+            if (md != null && md.tmdbKey != null) {
                 console.log("tmdbId already exists, skipping", { file, md });
                 continue;
             }
@@ -33,12 +37,13 @@ export class Scanner {
             if (res2 != null) {
                 let res = res2.movie || res2.tv;
                 if (res != null) {
-                    let tmdbTypeAndId = [res.media_type, res.id].join("|");
+                    let tmdbKey = [res.media_type, res.id].join("|");
+                    let episodeKey = null;
                     if (res2.tv != null && res2.fileInfo.episode != null && res2.fileInfo.season != null) {
-                        tmdbTypeAndId += "|" + "s" + res2.fileInfo.season.format("00") + "e" + res2.fileInfo.episode.format("00");
+                        episodeKey = "s" + res2.fileInfo.season.format("00") + "e" + res2.fileInfo.episode.format("00");
                     }
                     console.log("persist", "start", file.Name, res.id);
-                    await this.service.db.byFilename.persist({ key: file.Name, tmdbTypeAndId });
+                    await this.service.db.byFilename.persist({ key: file.Name, tmdbKey, episodeKey, lastKnownPath: file.Path });
                     console.log("persist", "end", file.Name, res.id);
                 }
             }

@@ -1538,7 +1538,7 @@ export interface TmdbMovieDetails extends TmdbMovie {
     //vote_count: number;
 }
 
-export type MediaDetails = TmdbMovieDetails | TmdbTvShowDetails;
+export type MediaDetails = TmdbMovieDetails & TmdbTvShowDetails;
 
 export interface Certification {
     certification: string;

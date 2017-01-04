@@ -3,8 +3,9 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "./tmdb/tmdb-api"
 import { FileService, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy } from "./utils/utils"
-import { App, Config, } from "./app"
+import { App, Config, MediaFile } from "./app"
 import { Media, Movie, TvShow } from "./media"
+import { File } from "contracts"
 
 @Component({
     selector: 'my-media',
@@ -16,9 +17,9 @@ export class MediaComponent implements OnInit, OnChanges {
 
     }
 
-    movies: Media[];
-    filteredMovies: Media[];
-    selectedMovie: Media;
+    movies: MediaFile[];
+    filteredMovies: MediaFile[];
+    selectedMovie: MediaFile;
 
     ngOnInit(): void {
         this.app.init()
@@ -39,7 +40,7 @@ export class MediaComponent implements OnInit, OnChanges {
 
         this.filteredMovies = list;
     }
-    applyFilterType(list: Media[]): Media[] {
+    applyFilterType(list: MediaFile[]): MediaFile[] {
         if (this.filterType == null)
             return list;
         if (this.filterType == "movie")
@@ -50,9 +51,10 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
 
-    movie_click(movie: Media) {
+    movie_click(movie: MediaFile) {
         this.selectedMovie = movie;
     }
+
     goBack() {
         this.selectedMovie = null;
     }
@@ -61,28 +63,52 @@ export class MediaComponent implements OnInit, OnChanges {
         if (this.movies != null && this.movies.length > 0)
             return Promise.resolve();
         return this.app.tmdb.movieGetPopular({ language: "en" }).then(e => {
-            this.movies = e.results.map(t => Media.fromTmdbMovie(t, this.app));
+            this.movies = e.results.map(t => <MediaFile>{ md: {}, tmdb: t });//Media.fromTmdbMovie(t, this.app));
             console.log(this.movies);
         });
     }
     async getAvailableMedia() {
         let list = await this.app.getAvailableMedia();
-
-        let list2 = list.filter(t => !t.isWatchedOrRated).orderBy(t => t.type + " " + t.name).take(20);
-        if (list2.length == 0)
-            return;
-        for (let t of list2) {
-            await t.getTmdbDetails();
-        }
+        let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
+        console.log(list2);
         this.movies = list2;
+        await this.app.loadTmdbMediaDetails(list.take(20));
+        //if (list2.length == 0)
+        //    return;
+        //for (let t of list2) {
+        //    await t.getTmdbDetails();
+        //}
+    }
+    getName(mf: MediaFile): string {
+        let name = mf.md.key;
+        if (mf.tmdb != null)
+            name = mf.tmdb.name || mf.tmdb.title;
+        else if (mf.parsed != null)
+            name = mf.parsed.name;
+        if (mf.md.episodeKey != null)
+            name += " " + mf.md.episodeKey
+        return name;
+    }
+
+    async play(mf: MediaFile): Promise<any> {
+        if (mf == null || mf.md == null)
+            return;
+        let file: File = null;
+        if (mf.md.lastKnownPath != null)
+            file = await this.app.fileService.GetFile({ Path: mf.md.lastKnownPath });
+        if (file == null)
+            file = await this.app.findFile(mf.md.key);
+        if (file == null)
+            return;
+        await this.app.fileService.Execute({ Path: file.Path });
     }
 
     tmdbV4Login() {
         this.app.tmdbV4.loginToTmdb().then(e => console.log("LOGIN COMPLETE"));
     }
 
-    markAsWatched(media: Media) {
-        return this.app.tmdb.markAsWatched(media.typeAndId);
+    markAsWatched(mf: MediaFile) {
+        return this.app.markAsWatched(mf);
         //return this.app.tmdb.markAsWatched(media.id);
     }
 
