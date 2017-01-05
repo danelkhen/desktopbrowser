@@ -23,11 +23,10 @@ export class MediaComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.app.init()
-            .then(() => this.getAvailableMedia())
-            .then(() => this.getPopularMovies())
+            //.then(() => this.getAvailableMedia())
+            //.then(() => this.getPopularMovies())
             ;
         //this.test4();
-        //this.app.tmdbV4.invoke(t=>t.accountGetCreatedLists({}));
     }
     ngOnChanges(changes: SimpleChanges): void { }
 
@@ -95,6 +94,10 @@ export class MediaComponent implements OnInit, OnChanges {
     tmdbV4Login() {
         this.app.tmdbV4.loginToTmdb().then(e => console.log("LOGIN COMPLETE"));
     }
+    async tmdbV4Tests() {
+        console.log(await this.app.tmdbV4.accountGetLists({}));
+        //console.log(await this.app.tmdbV4.invoke(t => t.accountGetCreatedLists({})));
+    }
 
     markAsWatched(mf: MediaFile) {
         return this.app.markAsWatched(mf);
@@ -115,7 +118,7 @@ export class MediaComponent implements OnInit, OnChanges {
         let favAiringToday = airingToday.filter(t => favIds.has(t.id));
         console.log("favAiringToday", favAiringToday.map(t => t.name));
         let x = await this.app.tmdb.tvGetDetails({ tv_id: favAiringToday[0].id });
-        let x2 = await this.app.tmdb.tvGetSeason({ tv_id: favAiringToday[0].id, season_number:x.seasons.last().season_number });
+        let x2 = await this.app.tmdb.tvGetSeason({ tv_id: favAiringToday[0].id, season_number: x.seasons.last().season_number });
         console.log("TV DETAILS", x, x2);
 
     }

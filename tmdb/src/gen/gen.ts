@@ -16,7 +16,8 @@ function xhrGetJson(url: string): Promise<any> {
 }
 
 function main() {
-    xhrGetJson("../../tmdb.swagger.json").then(e => _doc = e).then(main2);
+    //xhrGetJson("../../tmdb.v3.swagger.json").then(e => _doc = e).then(main2);
+    xhrGetJson("../../tmdb.v4.swagger.json").then(e => _doc = e).then(main2);
 }
 
 function main2() {

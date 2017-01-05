@@ -59,6 +59,7 @@
     <button (click)="app.scan()">scan</button>
     <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
     <button (click)="tmdbV4Login()">tmdb v4 login</button>
+    <button (click)="tmdbV4Tests()">tmdb v4 tests</button>
     <button (click)="getAvailableMedia()">getAvailableMedia</button>
     <button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button>
     <button (click)="app.downloadRatings()">Download Ratings</button>
@@ -66,12 +67,11 @@
     <button (click)="app.getSavedRatings()">getSavedRatings</button>
     <button (click)="tvAiringToday()">airing today</button>
     <button (click)="tvOnTheAir()">on the air</button>
+    
 </div>
 <div style="color:white">
     <div *ngFor="let media of movies">
-        <span>{{media.name}}</span>
-        <span>{{media.info | json}}</span>
-        <span>{{media.filenames | json}}</span>
+        <span>{{getName(media)}}</span>
         <button (click)="markAsWatched(media)">mark as watched</button>
         <button [class.disabled]="media.filenames!=null && media.filenames.length>0" (click)="media.play()">Play</button>
     </div>

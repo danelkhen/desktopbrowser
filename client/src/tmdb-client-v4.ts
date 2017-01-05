@@ -1,12 +1,12 @@
-import { TmdbApiClient, } from "./tmdb/tmdb-client-v4"
+import { TmdbApiClient2, } from "./tmdb/tmdb-client2-v4"
 import { promiseEach, tryParseInt } from "./utils/utils"
 
-export class TmdbClientV4 extends TmdbApiClient {
+export class TmdbClientV4 extends TmdbApiClient2 {
     constructor() {
         super();
         console.log("TmdbClient ctor");
-        let base = this.onInvoke;
-        this.onInvoke = pc => {
+        let base = this.proxy.onInvoke;
+        this.proxy.onInvoke = pc => {
             if (this.account_id != null) {
                 let prm = pc.args[0];
                 if (prm == null) {
@@ -20,7 +20,6 @@ export class TmdbClientV4 extends TmdbApiClient {
         };
     }
     init(): Promise<any> {
-        this.read_access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmE4NTZkZmY0ZDFkYjQ2NzgyZTYxMzI2MTBkZGIzMiIsInN1YiI6IjU4NGZlYzU1OTI1MTQxNmU0YjAwODUwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Jg-T4s-kFV_FlXwG1tovDvCQhXGaw9cjMA9e669xFaE";
         return Promise.resolve();
     }
 
@@ -36,8 +35,8 @@ export class TmdbClientV4 extends TmdbApiClient {
     get access_token(): string { return this.storage.tmdb_v4_access_token; }
     set access_token(value: string) { this.storage.tmdb_v4_access_token = value; }
 
-    get account_id(): number { return tryParseInt(this.storage.tmdb_account_id); }
-    set account_id(value: number) { this.storage.tmdb_account_id = String(value); }
+    get account_id(): string { return this.storage.tmdb_v4_account_id; }
+    set account_id(value: string) { this.storage.tmdb_v4_account_id = value; }
 
 
 
@@ -46,32 +45,9 @@ export class TmdbClientV4 extends TmdbApiClient {
     }
     _loginToTmdb(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            //TODO:
-            //window.addEventListener("message", e => {
-            //    console.log("messsage", e.data, e);
-            //    let x: TmdbLoginPagePrms = e.data;
-            //    if (x.approved != "true") {
-            //        reject();
-            //        return;
-            //    }
-            //    this.invoke(t => t.createAccessToken({request_token:this.request_token}))
-            //        .then(e => {
-            //            console.log("session", e);
-            //            if (!e.success) {
-            //                reject();
-            //                return;
-            //            }
-            //            this.request_token = e.access_token;
-            //            resolve();
-            //        });
-            //});
-            this.invoke(t => t.createRequestToken({})).then(e => {
-                this.request_token = e.request_token;
-                console.log(e);
-                let win = window.open("/tmdb-login.html?v=4&request_token=" + this.request_token);
-            });
-            setTimeout(() => {
-                this.invoke(t => t.createAccessToken({request_token:this.request_token}))
+            window.addEventListener("message", e => {
+                console.log("messsage", e.data, e);
+                this.authCreateAccessToken({ request_token: this.request_token })
                     .then(e => {
                         console.log("createAccessToken", e);
                         if (!e.success) {
@@ -79,11 +55,17 @@ export class TmdbClientV4 extends TmdbApiClient {
                             return;
                         }
                         this.access_token = e.access_token;
-                        this.account_id = tryParseInt(e.account_id);
+                        this.account_id = e.account_id;
                         resolve();
                     });
-
-            }, 5000);
+            });
+            var l = location;
+            let redirect_to = l.protocol+"//"+l.host+"/tmdb-login.html?v=4&back=1";
+            this.authCreateRequestToken({ body: { redirect_to } }).then(e => {
+                this.request_token = e.request_token;
+                console.log(e);
+                let win = window.open("/tmdb-login.html?v=4&request_token=" + this.request_token);
+            });
         });
     }
 
@@ -93,5 +75,5 @@ export class TmdbClientV4 extends TmdbApiClient {
 export interface GeneralStorage {
     tmdb_v4_request_token?: string;
     tmdb_v4_access_token?: string;
-    tmdb_account_id?: string;
+    tmdb_v4_account_id?: string;
 }
