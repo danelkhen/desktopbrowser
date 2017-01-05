@@ -1,4 +1,4 @@
-﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract,  } from "contracts"
+﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
@@ -32,17 +32,16 @@ export class DbService<T> implements DbServiceContract<T> {
         }
         return this._idPropName;
     }
-    persist(obj: T): Promise<T> {
+    async persist(obj: T): Promise<T> {
         let id = obj[this.getIdPropName()];
         if (id != null) {
-            return this.repo.findOneById(id).then(obj2 => {
-                if (obj2 == null)
-                    return this.repo.persist(obj);
-                let final = this.repo.merge(obj2, obj);
-                return this.repo.persist(final);
-            });
+            let obj2 = await this.repo.findOneById(id)
+            if (obj2 == null)
+                return this.repo.persist(obj);
+            let final = this.repo.merge(obj2, obj);
+            return await this.repo.persist(final);
         }
-        return this.repo.persist(obj);
+        return await this.repo.persist(obj);
     }
 
     removeById(req: { id: any }): Promise<T> {

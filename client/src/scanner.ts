@@ -9,7 +9,7 @@ import { MediaFile, App } from "./app"
 export class Scanner {
     folders: string[];
     app: App;
-    results: MediaFileEx[];
+    results: MediaFile[];
     errors: any[] = [];
 
     videoExts = [".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"];
@@ -26,64 +26,55 @@ export class Scanner {
         let res = await this.app.fileService.ListFiles({ Path: dir, IsRecursive: true });
         let videoFiles = res.Files.filter(t => this.isVideoFile(t.Name));
         for (let file of videoFiles) {
-            let md = await this.app.byFilename.findOneById({ id: file.Name });
+            let md = await this.app.getFileMetadata(file);
+            md.modified = file.Modified;
             if (md != null && md.tmdbKey != null) {
                 console.log("tmdbId already exists, skipping", { file, md });
                 continue;
             }
-            let mf: MediaFileEx = { file, md, type: null, parsed: null };
-            await this.analyze(mf);
+            let mf: MediaFile = { file, md, type: null, parsed: null };
+            try {
+                await this.analyze(mf);
+            }
+            catch (e2) {
+                let e: Response = e2;
+                console.warn(e);
+                this.errors.push(e);
+                if (this.errors.length > 3)
+                    throw e2;
+            }
             this.results.push(mf);
-            if (mf == null)
-                continue;
-            let res = mf.movie || mf.tv;
-            if (res == null)
-                continue;
-            let tmdbKey = [res.media_type, res.id].join("|");
-            let episodeKey = null;
-            if (mf.tv != null && mf.parsed.episode != null && mf.parsed.season != null) {
-                episodeKey = "s" + mf.parsed.season.format("00") + "e" + mf.parsed.episode.format("00");
-            }
-            Object.assign(md, <ByFilename>{ key: file.Name, tmdbKey, episodeKey, lastKnownPath: file.Path });
-            await this.app.byFilename.persist(md);
-            console.log("persist", "end", file.Name, res.id);
         }
     }
 
-    async analyze(mf: MediaFileEx): Promise<any> {
+    async analyze(mf: MediaFile): Promise<any> {
         let file = mf.file;
-        try {
-            console.log("getImdbInfo", "start", file.Name);
-            let info = new FilenameParser().parse(file.Name);
-            let isTv = info.season != null;
-            if (isTv) {
-                let e = await this.app.tmdb.searchTvShows({ query: info.name })
-                console.log("getImdbInfo", "end", file.Name, e);
-                Object.assign(mf, <MediaFileEx>{ tv: e.results[0], file, parsed: info, md: null, tmdb: null, type: "tv", tmdbBasic: e.results[0] });
-                return;
-            }
-            else {
-                let e = await this.app.tmdb.searchMovies({ query: info.name })
-                console.log("getImdbInfo", "end", file.Name, e);
-                Object.assign(mf, <MediaFileEx>{ movie: e.results[0], file, parsed: info, md: null, tmdb: null, type: "movie", tmdbBasic: e.results[0] });
-                return;
-            }
+        console.log("getImdbInfo", "start", mf.file.Name);
+        let info = new FilenameParser().parse(mf.file.Name);
+        let isTv = info.season != null;
+        let media: TmdbMedia;
+        if (isTv) {
+            let e = await this.app.tmdb.searchTvShows({ query: info.name })
+            media = e.results[0];
         }
-        catch (e2) {
-            let e: Response = e2;
-            console.warn(e);
-            this.errors.push(e);
-            if (e != null && e.status_code == 25) {
-                return promiseSetTimeout(10 * 1000);
-            }
-            if (this.errors.length > 3)
-                throw e2;
+        else {
+            let e = await this.app.tmdb.searchMovies({ query: info.name })
+            media = e.results[0];
         }
+        if (media == null) {
+            mf.md.tmdbKey = "";
+            mf.md = await this.app.byFilename.persist(mf.md);
+            return;
+        }
+        mf.tmdbBasic = media;
+        mf.type = mf.tmdbBasic.media_type;
+        mf.md.tmdbKey = [mf.tmdbBasic.media_type, mf.tmdbBasic.id].join("|");
+        mf.md.lastKnownPath = file.Path;
+        if (mf.tmdbBasic.media_type == "tv" && mf.parsed.episode != null && mf.parsed.season != null) {
+            mf.md.episodeKey = "s" + mf.parsed.season.format("00") + "e" + mf.parsed.episode.format("00");
+        }
+        mf.md = await this.app.byFilename.persist(mf.md);
     }
 
 
-}
-export interface MediaFileEx extends MediaFile {
-    tv?: TvShow,
-    movie?: TmdbMovie,
 }

@@ -13,6 +13,7 @@ export class ByFilename implements ByFilenameContract {
     @Column(CT.STRING, { nullable: true }) episodeKey: string;
     @Column(CT.STRING, { nullable: true }) watched: boolean;
     @Column(CT.STRING, { nullable: true }) lastKnownPath: string;
+    @Column(CT.STRING, { nullable: true }) modified: string;
 
 }
 
@@ -41,7 +42,6 @@ export class Db {
     get byFilename(): Repository<ByFilename> { return this.connection && this.connection.getRepository(ByFilename); }
     get keyValue(): Repository<KeyValue> { return this.connection && this.connection.getRepository(KeyValue); }
 }
-
 
 //function test() {
 //    let db = new Db();

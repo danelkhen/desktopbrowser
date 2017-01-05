@@ -21,6 +21,7 @@
         episodeKey?: string;
         watched?: boolean;
         lastKnownPath?: string;
+        modified?: string;
     }
 
     export interface DbService<T> {

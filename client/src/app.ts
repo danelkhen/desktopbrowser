@@ -72,13 +72,15 @@ export class App {
     }
 
     config: Config;
-    async scan(): Promise<Scanner> {
+    createScanner(): Scanner {
         let scanner = new Scanner();
-        //scanner.service = this.fileService;
         scanner.app = this;
-        //scanner.tmdb = this.tmdb;
-
         scanner.folders = this.config.folders.map(t => t.path);
+        return scanner;
+    }
+
+    async scan(): Promise<Scanner> {
+        let scanner = this.createScanner();
         console.log("scan started", scanner);
         await scanner.scan();
         console.log("scan completed", scanner);
@@ -124,12 +126,20 @@ export class App {
 
     async getFileMetadata(file: File): Promise<ByFilename> {
         let x = await this.byFilename.findOneById({ id: file.Name });
+        if (x == null)
+            x = { key: x.key };
         return x;
+    }
+
+    async analyzeIfNeeded(mf: MediaFile): Promise<any> {
+        if (mf.tmdb != null)
+            return;
+        await this.createScanner().analyze(mf);
     }
 
     async getAvailableMedia(): Promise<MediaFile[]> {
         let mds = await this.getAllFilesMetadata();
-        let scanner = new Scanner();
+        let scanner = this.createScanner();
         mds = mds.filter(t => scanner.isVideoFile(t.key));
         let mfs = mds.map(t => <MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
         //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
@@ -154,8 +164,11 @@ export class App {
         for (let mf of mfs) {
             if (mf.tmdb != null)
                 continue;
-            if (mf.md.tmdbKey == null || mf.md.tmdbKey == "")
-                continue;
+            if (mf.md.tmdbKey == null) {
+                await this.createScanner().analyze(mf);
+                if (mf.md.tmdbKey == null || mf.md.tmdbKey == "")
+                    continue;
+            }
             mf.tmdb = await this.tmdb.getMovieOrTvByTypeAndId(mf.md.tmdbKey);
         }
         return mfs;
@@ -204,6 +217,23 @@ export class App {
         if (mf.md.tmdbKey != null)
             await this.tmdb.markAsWatched(mf.md.tmdbKey);
         await this.byFilename.persist(mf.md);
+    }
+
+    async checkFileMds() {
+        let mds = await this.getAllFilesMetadata();
+        for (let md of mds) {
+            if (md.lastKnownPath == null)
+                continue;
+            let file = await this.fileService.GetFile({ Path: md.lastKnownPath });
+            if (file == null) {
+                console.log("file in lastKnownPath wasn't found", md);
+                continue;
+            }
+            if (md.modified == null) {
+                md.modified = file.Modified;
+                this.byFilename.persist(md);
+            }
+        }
     }
 
 }

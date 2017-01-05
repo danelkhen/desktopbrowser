@@ -1,4 +1,5 @@
 import "../lib/corex/corex"
+import "./utils/global"
 import { FileService } from "./file-service"
 import * as fs from "fs";
 import * as path from "path";
