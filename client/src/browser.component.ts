@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
-import { TmdbMovie } from "./tmdb/tmdb-api"
+import { TmdbMovie } from "./tmdb/v3/api"
 import { Scanner } from "./scanner"
 import { App } from "./app"
 

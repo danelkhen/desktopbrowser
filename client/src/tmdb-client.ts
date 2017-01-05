@@ -1,5 +1,5 @@
-import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/tmdb-api"
-import { TmdbApiClient2, } from "./tmdb/tmdb-client2"
+import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
+import { TmdbApiClient2, } from "./tmdb/v3/client"
 import { promiseEach, tryParseInt, setMinus } from "./utils/utils"
 import { App } from "./app";
 import { Media as DsMedia } from "./media";

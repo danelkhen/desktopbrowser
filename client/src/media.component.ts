@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
-import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "./tmdb/tmdb-api"
+import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "./tmdb/v3/api"
 import { FileService, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy } from "./utils/utils"
 import { App, Config, MediaFile } from "./app"
@@ -23,8 +23,8 @@ export class MediaComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.app.init()
-            //.then(() => this.getAvailableMedia())
-            //.then(() => this.getPopularMovies())
+            .then(() => this.getAvailableMedia())
+            .then(() => this.getPopularMovies())
             ;
         //this.test4();
     }

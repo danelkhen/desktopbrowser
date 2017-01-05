@@ -1,4 +1,4 @@
-﻿import { TmdbMedia as TmdbMedia, TmdbMovie as TmdbMovie, TvShow as TmdbTvShow, MediaDetails, TmdbTvShowDetails, TmdbMovieDetails } from "./tmdb/tmdb-api"
+﻿import { TmdbMedia as TmdbMedia, TmdbMovie as TmdbMovie, TvShow as TmdbTvShow, MediaDetails, TmdbTvShowDetails, TmdbMovieDetails } from "./tmdb/v3/api"
 import { App, TmdbMediaInfo } from "./app"
 
 export abstract class Media {

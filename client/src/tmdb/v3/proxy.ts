@@ -1,7 +1,7 @@
-import { TmdbApi, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRequest } from "./tmdb-api"
-import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../utils/proxy"
-import { promiseSetTimeout, promiseWhile } from "../utils/utils"
-import { xhr, XhrRequest, } from "./xhr"
+import { TmdbApi, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRequest } from "./api"
+import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
+import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
+import { xhr, XhrRequest, } from "../../utils/xhr"
 
 export class TmdbApiClient extends Proxy<TmdbApi>{
     constructor() {

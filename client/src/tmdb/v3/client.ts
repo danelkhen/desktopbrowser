@@ -1,7 +1,7 @@
-import * as tmdb from "./tmdb-api"
-import { TvShow, TmdbMovie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode } from "./tmdb-api"
-import { Proxy, } from "../utils/proxy"
-import { TmdbApiClient } from "./tmdb-client"
+import * as tmdb from "./api"
+import { TvShow, TmdbMovie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode } from "./api"
+import { Proxy, } from "../../utils/proxy"
+import { TmdbApiClient } from "./proxy"
 
 export class TmdbApiClient2 {
     constructor() {

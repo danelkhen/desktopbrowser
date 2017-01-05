@@ -1,4 +1,4 @@
-import { TmdbApiClient2, } from "./tmdb/tmdb-client2-v4"
+import { TmdbApiClient2, } from "./tmdb/v4/client"
 import { promiseEach, tryParseInt } from "./utils/utils"
 
 export class TmdbClientV4 extends TmdbApiClient2 {
