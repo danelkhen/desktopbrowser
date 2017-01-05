@@ -2,12 +2,16 @@ import { TmdbV3Api, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRe
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"
+import { TmdbScheduler } from "./scheduler"
+
 
 export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
     constructor() {
         super();
-        this.onInvoke = pc => this.enqueueXhrRequest(pc);
+        this.scheduler = new TmdbScheduler(this);
+        this.onInvoke = pc => this.scheduler.enqueueXhrRequest(pc);
     }
+    scheduler: TmdbScheduler;
 
 
     executeProxyCall(pc: ProxyCall<TmdbV3Api>): Promise<any> {
@@ -43,7 +47,7 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
                     remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
                     reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
                 };
-                if (this.isNewer(rl, this.rateLimit)) {
+                if (TmdbHelper.rateLimitIsNewer(rl, this.rateLimit)) {
                     this.rateLimit = rl;
                 }
                 else {
@@ -54,95 +58,8 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
                 return res;
             });
     }
-    isNewer(x: RateLimit, y: RateLimit): boolean {
-        if (y == null)
-            return true;
-        if (x.reset < y.reset)
-            return false;
-        if (x.reset > y.reset)
-            return true;
-        return x.remaining < y.remaining;
-    }
 
-    enqueueXhrRequest(pc: ProxyCall<TmdbV3Api>): Promise<any> {
-        let task = new SingleTask(new ActionTask(() => this.executeProxyCall(pc)));
-        task.data = pc;
-        this.queue.push(task);
-        this.scheduleProcessQueue();
-        return task.toPromise();
-    }
 
-    isScheduled: boolean;
-    scheduleProcessQueue(delay: number = 0) {
-        if (this.isScheduled)
-            return;
-        this.isScheduled = true;
-        promiseSetTimeout(delay).then(() => {
-            this.isScheduled = false;
-            this.processQueue();
-        });
-    }
-
-    processQueue() {
-        console.log("processQueue", "started", this.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
-        this._processQueue();
-        console.log("processQueue", "ended", this.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
-    }
-    _processQueue() {
-        for (let i = 0; i < 10; i++) {
-            if (this.queue.length == 0)
-                return;
-            this.queue.removeAll(t => t.started != null && t.ended != null);
-            if (this.queue.length == 0)
-                return;
-            if (this.queue.filter(t => !t.started).length == 0)
-                return;
-            let tto = this.getTimeToWait();
-            if (tto > 0) {
-                console.log("time to wait", tto);
-                this.scheduleProcessQueue(tto);
-                return;
-            }
-            //if (this.rateLimit != null && this.rateLimit.remaining == 0)
-            //    return this.waitUntilNextResetIfNeeded().then(() => this.scheduleProcessQueue());
-            if (this.queue.filter(t => t.started != null && t.ended == null).length > 10)
-                return;
-
-            let task = this.queue.first(t => !t.started);
-            if (task == null)
-                return;
-            task.execute();
-        }
-        this.scheduleProcessQueue(100);
-    }
-
-    queue: SingleTask<any>[] = [];
-    //lastRequestAt: Date;
-    //isSlotReady(item: QueueItem): boolean {
-    //    return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
-    //}
-    getTimeToWait(): number {
-        if (this.rateLimit == null || this.rateLimit.remaining > 2)
-            return 0;
-        let endTime = this.rateLimit.reset * 1000;
-        let now: number = new Date().valueOf();
-        let diff = endTime - now;
-        return diff;
-    }
-    waitUntilNextResetIfNeeded(): Promise<any> {
-        let diff = this.getTimeToWait();
-        if (diff <= 0)
-            return Promise.resolve();
-        return promiseSetTimeout(diff);
-    }
-    //waitForSlot(req: XhrRequest): Promise<any> {
-    //    return Promise.resolve();
-    //    //let item: QueueItem = { req };
-    //    //this.queue.push(item);
-    //    //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
-    //    //    .then(() => this.queue.removeAt(0));
-
-    //}
 
     getNextPage<T>(action: (req: TmdbV3Api) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<T[]> {
         if (lastRes.total_pages <= lastRes.page)
@@ -153,20 +70,6 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
         req.page = lastRes.page + 1;
         return this.onInvoke(pc2);
     }
-    //getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
-    //    let list: PagedResponse<T>[] = [];
-    //    let onRes = (res: PagedResponse<T>) => {
-    //        list.push(res);
-    //        if (pageAction != null && res != null)
-    //            pageAction(res);
-    //    };
-    //    let next = () => this.getNextPage(action, list.last()).then(onRes);
-
-    //    return this.invoke(action)
-    //        .then(res => onRes(res))
-    //        .then(() => promiseWhile(() => list.last() != null, next))
-    //        .then(() => list.exceptNulls().selectMany(t => t.results));
-    //}
     async getAllPages<T>(action: (req: TmdbV3Api) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
         let page1 = await this.invoke(action);
         let rest: Promise<PagedResponse<T>>[] = [];
@@ -185,54 +88,43 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
     rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
 }
 
-export interface Task<T> {
-    execute(): Promise<T>;
-    started: Date;
-    ended: Date;
-}
 
-export class ActionTask<T> implements Task<T>{
-    constructor(public action: () => Promise<T>) {
-    }
-    started: Date;
-    ended: Date;
-    async execute(): Promise<T> {
-        this.started = new Date();
-        let res = await this.action();
-        this.ended = new Date();
-        return res;
+export class TmdbHelper {
+    static rateLimitIsNewer(x: RateLimit, y: RateLimit): boolean {
+        if (y == null)
+            return true;
+        if (x.reset < y.reset)
+            return false;
+        if (x.reset > y.reset)
+            return true;
+        return x.remaining < y.remaining;
     }
 }
 
-export class SingleTask<T> implements Task<T>{
-    constructor(public task: Task<T>) {
-    }
-    data: any;
 
-    get started(): Date { return this.task.started; }
-    get ended(): Date { return this.task.ended; }
-    resultPromise: Promise<T>;
-    execute(): Promise<T> {
-        if (this.resultPromise != null)
-            return this.resultPromise;
-        this.resultPromise = this.task.execute();
-        if (this.resolve != null)
-            this.resolve(this.resultPromise);
-        return this.resultPromise;
-    }
-    promise: Promise<T>;
-    resolve: (value?: T | PromiseLike<T>) => void;
-    reject: (reason?: any) => void;
-    toPromise(): Promise<T> {
-        if (this.resultPromise != null)
-            return this.resultPromise;
-        if (this.promise != null)
-            return this.promise;
-        this.promise = new Promise((resolve, reject) => {
-            this.resolve = resolve;
-            this.reject = reject;
-        });
-        return this.promise;
+    //lastRequestAt: Date;
+    //isSlotReady(item: QueueItem): boolean {
+    //    return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
+    //}
+    //waitForSlot(req: XhrRequest): Promise<any> {
+    //    return Promise.resolve();
+    //    //let item: QueueItem = { req };
+    //    //this.queue.push(item);
+    //    //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
+    //    //    .then(() => this.queue.removeAt(0));
 
-    }
-}
+    //}
+    //getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
+    //    let list: PagedResponse<T>[] = [];
+    //    let onRes = (res: PagedResponse<T>) => {
+    //        list.push(res);
+    //        if (pageAction != null && res != null)
+    //            pageAction(res);
+    //    };
+    //    let next = () => this.getNextPage(action, list.last()).then(onRes);
+
+    //    return this.invoke(action)
+    //        .then(res => onRes(res))
+    //        .then(() => promiseWhile(() => list.last() != null, next))
+    //        .then(() => list.exceptNulls().selectMany(t => t.results));
+    //}
