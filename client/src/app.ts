@@ -74,8 +74,9 @@ export class App {
     config: Config;
     async scan(): Promise<Scanner> {
         let scanner = new Scanner();
-        scanner.service = this.fileService;
-        scanner.tmdb = this.tmdb;
+        //scanner.service = this.fileService;
+        scanner.app = this;
+        //scanner.tmdb = this.tmdb;
 
         scanner.folders = this.config.folders.map(t => t.path);
         console.log("scan started", scanner);
@@ -117,8 +118,13 @@ export class App {
         });
     }
 
-    async getAllFilesMetadata() {
-        return this.fileService.db.byFilename.find();
+    async getAllFilesMetadata(): Promise<ByFilename[]> {
+        return this.byFilename.find();
+    }
+
+    async getFileMetadata(file: File): Promise<ByFilename> {
+        let x = await this.byFilename.findOneById({ id: file.Name });
+        return x;
     }
 
     async getAvailableMedia(): Promise<MediaFile[]> {
@@ -204,7 +210,9 @@ export class App {
 
 export interface MediaFile {
     md: ByFilename;
-    tmdb: MediaDetails;
+    file: File
+    tmdb?: MediaDetails;
+    tmdbBasic?: TmdbMedia;
     type: string;
     parsed: FilenameParsedInfo;
 }

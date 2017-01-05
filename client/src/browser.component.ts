@@ -650,12 +650,12 @@ export class BrowserComponent implements OnInit, OnChanges {
     SetBaseDbItem(value: ByFilename): void {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
             this.filesMd.removeAll(t => t.key == value.key);
-            this.server.db.byFilename.removeById({ id: value.key });
+            this.app.byFilename.removeById({ id: value.key });
             return;
         }
         this.filesMd.removeAll(t => t.key == value.key);
         this.filesMd.push(value);
-        this.server.db.byFilename.persist(value);
+        this.app.byFilename.persist(value);
     }
 
     getHeaderClass(prop: string) {
@@ -676,8 +676,6 @@ export class BrowserComponent implements OnInit, OnChanges {
     scan() {
         let scanner = new Scanner();
         scanner.folders = ["c:\\tv"];
-        scanner.service = this.server;
-        scanner.tmdb = this.app.tmdb;
         console.log("scan start");
         scanner.scan().then(e => console.log("scan end", scanner));
 

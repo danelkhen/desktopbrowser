@@ -30,15 +30,15 @@ export class FileService extends ServiceBase<FileServiceContract> {
         super();
         console.log("SiteServiceClient ctor");
         this.Url = "/api/fs";
-        this.db = {
-            byFilename: new ByFilenameService(),
-            KeyValue: new KeyValueService(),
-        };
+        //this.db = {
+        //    byFilename: new ByFilenameService(),
+        //    KeyValue: new KeyValueService(),
+        //};
     }
-    db: {
-        byFilename: ByFilenameService,
-        KeyValue: KeyValueService,
-    };
+    //db: {
+    //    byFilename: ByFilenameService,
+    //    KeyValue: KeyValueService,
+    //};
 
     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse> { return this.invoke(t => t.ListFiles(req)); }
     GetFiles(req: ListFilesRequest): Promise<File[]> { return this.invoke(t => t.GetFiles(req)); }

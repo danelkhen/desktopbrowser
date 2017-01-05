@@ -1,4 +1,3 @@
-import "./global"
 import "../lib/corex/corex"
 import { FileService } from "./file-service"
 import * as fs from "fs";
