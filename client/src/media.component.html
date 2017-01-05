@@ -28,7 +28,7 @@
         <div class="gridtop">
             <!-- <div class="title">your watchlist</div> -->
             <div class="search">
-                <input type="text" placeholder="quicksearch">
+                <input type="text" placeholder="Quick Search">
             </div>
         </div>
         <!-- <h3 class="title">your watchlist</h3> -->
@@ -42,7 +42,7 @@
                     <span class="playtime">1hr:45min</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
                     <a class="icon playicon" (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
-                    <a class="status">mark as watched</a>
+                    <button class="status" (click)="markAsWatched(media)">mark as watched</button>
                 </div>
             </li>
         </ul>
