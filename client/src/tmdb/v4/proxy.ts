@@ -7,19 +7,23 @@ import { xhr, XhrRequest, } from "../../utils/xhr"
 import { TmdbScheduler } from "../v3/scheduler"
 
 export class TmdbV4Proxy extends Proxy<TmdbV4Api> {
-    scheduler: TmdbScheduler;
     constructor() {
         super();
         this.scheduler = new TmdbScheduler(this);
         this.onInvoke = pc => this.scheduler.enqueueXhrRequest(pc);
     }
+    
+    read_access_token: string;
+    access_token: string;
+    base_url = 'https://api.themoviedb.org/4';
+    scheduler: TmdbScheduler;
     rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
 
 
     executeProxyCall(pc: ProxyCall<TmdbV4Api>): Promise<any> {
         let md = TmdbApiMetadata[pc.name];
         let path = md.path;
-        let prms: any = {};//api_key: this.api_key };
+        let prms: any = {};
         Object.assign(prms, pc.args[0]);
         let body: any = null;
         if (prms.body != null) {
@@ -27,7 +31,6 @@ export class TmdbV4Proxy extends Proxy<TmdbV4Api> {
             delete prms.body;
         }
         let url = this.base_url + path;
-        //let prms = { api_key: this.api_key, ...prms }
         let xhrReq: XhrRequest = {
             url,
             params: prms,
@@ -44,7 +47,6 @@ export class TmdbV4Proxy extends Proxy<TmdbV4Api> {
         return xhr(xhrReq)
             .then(res => {
                 let x = xhrReq.xhr;
-                //console.log("Date header:", x.getResponseHeader("Date"));
                 let rl: RateLimit = {
                     limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
                     remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
@@ -55,52 +57,10 @@ export class TmdbV4Proxy extends Proxy<TmdbV4Api> {
                 }
                 else {
                     console.log("probably cached response", rl, this.rateLimit);
-                    //cached response
                 }
                 console.log({ name: pc.name, res, path, pc, prms, rateLimit: this.rateLimit });
                 return res;
             });
     }
 
-    xhr(req: XhrRequest): Promise<any> {
-        this.lastRequestAt = new Date();
-        return xhr(req);
-        //.catch((e: Response) => {
-        //    if (e != null && e.status_code == 25) {
-        //        this.lastRequestAt = new Date();
-        //        return this.waitForSlot(req).then(() => this.xhr(req));
-        //    }
-        //    return Promise.reject(e);
-        //});
-    }
-
-    queue: QueueItem[] = [];
-    lastRequestAt: Date;
-    isSlotReady(item: QueueItem): boolean {
-        return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
-    }
-    waitForSlot(req: XhrRequest): Promise<any> {
-        return Promise.resolve();
-        //let item: QueueItem = { req };
-        //this.queue.push(item);
-        //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
-        //    .then(() => this.queue.removeAt(0));
-
-    }
-
-
-    read_access_token: string;
-    access_token: string;
-    base_url = 'https://api.themoviedb.org/4';
-    //rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
 }
-export interface QueueItem {
-    req: XhrRequest;
-}
-
-//function test() {
-//    var x = new TmdbApiClient();
-//    x.read_access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmE4NTZkZmY0ZDFkYjQ2NzgyZTYxMzI2MTBkZGIzMiIsInN1YiI6IjU4NGZlYzU1OTI1MTQxNmU0YjAwODUwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Jg-T4s-kFV_FlXwG1tovDvCQhXGaw9cjMA9e669xFaE";
-//    x.invoke(t => t.authCreateAccessToken({}));
-
-//}

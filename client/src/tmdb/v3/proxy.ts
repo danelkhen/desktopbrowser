@@ -25,7 +25,6 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
             delete prms.body;
         }
         let url = this.base_url + path;
-        //let prms = { api_key: this.api_key, ...prms }
         let xhrReq: XhrRequest = {
             url,
             params: prms,
@@ -41,7 +40,6 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
         return xhr(xhrReq)
             .then(res => {
                 let x = xhrReq.xhr;
-                //console.log("Date header:", x.getResponseHeader("Date"));
                 let rl: RateLimit = {
                     limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
                     remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
@@ -101,30 +99,3 @@ export class TmdbHelper {
     }
 }
 
-
-    //lastRequestAt: Date;
-    //isSlotReady(item: QueueItem): boolean {
-    //    return this.queue[0] == item && new Date().valueOf() - this.lastRequestAt.valueOf() >= 250;
-    //}
-    //waitForSlot(req: XhrRequest): Promise<any> {
-    //    return Promise.resolve();
-    //    //let item: QueueItem = { req };
-    //    //this.queue.push(item);
-    //    //return promiseWhile(() => !this.isSlotReady(item), () => promiseSetTimeout(100))
-    //    //    .then(() => this.queue.removeAt(0));
-
-    //}
-    //getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
-    //    let list: PagedResponse<T>[] = [];
-    //    let onRes = (res: PagedResponse<T>) => {
-    //        list.push(res);
-    //        if (pageAction != null && res != null)
-    //            pageAction(res);
-    //    };
-    //    let next = () => this.getNextPage(action, list.last()).then(onRes);
-
-    //    return this.invoke(action)
-    //        .then(res => onRes(res))
-    //        .then(() => promiseWhile(() => list.last() != null, next))
-    //        .then(() => list.exceptNulls().selectMany(t => t.results));
-    //}
