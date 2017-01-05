@@ -1,10 +1,10 @@
-import { MediaDetails, ListDetails, TmdbApi, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
-import { TmdbApiClient2, } from "./tmdb/v3/client"
+import { MediaDetails, ListDetails, TmdbV3Api, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
+import { TmdbV3Client, } from "./tmdb/v3/client"
 import { promiseEach, tryParseInt, setMinus } from "./utils/utils"
 import { App } from "./app";
 import { Media as DsMedia } from "./media";
 
-export class TmdbClient extends TmdbApiClient2 {
+export class TmdbClient extends TmdbV3Client {
     constructor() {
         super();
         console.log("TmdbClient ctor", this);

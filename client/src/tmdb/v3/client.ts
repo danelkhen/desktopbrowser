@@ -1,18 +1,18 @@
 import * as tmdb from "./api"
 import { TvShow, TmdbMovie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode } from "./api"
 import { Proxy, } from "../../utils/proxy"
-import { TmdbApiClient } from "./proxy"
+import { TmdbV3Proxy } from "./proxy"
 
-export class TmdbApiClient2 {
+export class TmdbV3Client {
     constructor() {
-        this.proxy = new TmdbApiClient();
+        this.proxy = new TmdbV3Proxy();
     }
     get base_url(): string { return this.proxy.base_url; }
     set base_url(value: string) { this.proxy.base_url = value; }
     get api_key(): string { return this.proxy.api_key; }
     set api_key(value: string) { this.proxy.api_key = value; }
 
-    proxy: TmdbApiClient;
+    proxy: TmdbV3Proxy;
     getApiConfiguration(req: tmdb.GetApiConfigurationRequest): Promise<tmdb.GetApiConfigurationResponse> { return this.proxy.invoke(t => t.getApiConfiguration(req)); }
     searchMovies(req: tmdb.SearchMoviesRequest): Promise<tmdb.PagedResponse<TmdbMovie>> { return this.proxy.invoke(t => t.searchMovies(req)); }
     searchTvShows(req: tmdb.SearchSearchTVShowsRequest): Promise<tmdb.PagedResponse<TvShow>> { return this.proxy.invoke(t => t.searchTvShows(req)); }

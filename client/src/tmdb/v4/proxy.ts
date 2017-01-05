@@ -1,9 +1,9 @@
-import { TmdbApiV4, TmdbApiMetadata, Response } from "./api"
+import { TmdbV4Api, TmdbApiMetadata, Response } from "./api"
 import { Proxy, extractInstanceFunctionCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"
 
-export class TmdbApiClient extends Proxy<TmdbApiV4> {
+export class TmdbV4Proxy extends Proxy<TmdbV4Api> {
     constructor() {
         super();
         this.onInvoke = pc => {

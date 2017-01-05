@@ -1,4 +1,4 @@
-export interface TmdbApiV4 {
+export interface TmdbV4Api {
     accountGetFavoriteMovies(req: AccountGetFavoriteMoviesRequestBase): AccountGetFavoriteMoviesResponseBase;
     accountGetFavoriteTVShows(req: AccountGetFavoriteMoviesRequestBase): AccountGetTVShowWatchlistResponseBase;
     accountGetLists(req: AccountGetListsRequest): PagedResponse<AccountGetCreatedListsResponseItem>;
@@ -201,7 +201,7 @@ export interface AccountGetCreatedListsResponseItem {
     poster_path: null;
 }
 
-export let TmdbApiMetadata: Record<keyof TmdbApiV4, ApiMetadata> = {
+export let TmdbApiMetadata: Record<keyof TmdbV4Api, ApiMetadata> = {
     accountGetFavoriteMovies: { path: "/account/{account_id}/movie/favorites", method: "GET" },
     accountGetTVShowWatchlist: { path: "/account/{account_id}/tv/watchlist", method: "GET" },
     listCreateList: { path: "/list", method: "POST" },

@@ -1,16 +1,16 @@
-import { TmdbApi, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRequest } from "./api"
+import { TmdbV3Api, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRequest } from "./api"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"
 
-export class TmdbApiClient extends Proxy<TmdbApi>{
+export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
     constructor() {
         super();
         this.onInvoke = pc => this.enqueueXhrRequest(pc);
     }
 
 
-    executeProxyCall(pc: ProxyCall<TmdbApi>): Promise<any> {
+    executeProxyCall(pc: ProxyCall<TmdbV3Api>): Promise<any> {
         let md = TmdbApiMetadata[pc.name];
         let path = md.path;
         let prms: any = { api_key: this.api_key };
@@ -64,7 +64,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
         return x.remaining < y.remaining;
     }
 
-    enqueueXhrRequest(pc: ProxyCall<TmdbApi>): Promise<any> {
+    enqueueXhrRequest(pc: ProxyCall<TmdbV3Api>): Promise<any> {
         let task = new SingleTask(new ActionTask(() => this.executeProxyCall(pc)));
         task.data = pc;
         this.queue.push(task);
@@ -144,7 +144,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
 
     //}
 
-    getNextPage<T>(action: (req: TmdbApi) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<T[]> {
+    getNextPage<T>(action: (req: TmdbV3Api) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<T[]> {
         if (lastRes.total_pages <= lastRes.page)
             return Promise.resolve(null);
         let pc = extractInstanceFunctionCall(action);
@@ -167,7 +167,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
     //        .then(() => promiseWhile(() => list.last() != null, next))
     //        .then(() => list.exceptNulls().selectMany(t => t.results));
     //}
-    async getAllPages<T>(action: (req: TmdbApi) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
+    async getAllPages<T>(action: (req: TmdbV3Api) => PagedResponse<T>, pageAction?: (res: PagedResponse<T>) => void): Promise<T[]> {
         let page1 = await this.invoke(action);
         let rest: Promise<PagedResponse<T>>[] = [];
         let rest2: PagedResponse<T>[] = new Array(page1.total_pages);
@@ -184,9 +184,7 @@ export class TmdbApiClient extends Proxy<TmdbApi>{
     base_url = 'https://api.themoviedb.org/3';
     rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
 }
-//export interface QueueItem {
-//    req: XhrRequest;
-//}
+
 export interface Task<T> {
     execute(): Promise<T>;
     started: Date;

@@ -1,7 +1,7 @@
-import { TmdbApiClient2, } from "./tmdb/v4/client"
+import { TmdbV4Client, } from "./tmdb/v4/client"
 import { promiseEach, tryParseInt } from "./utils/utils"
 
-export class TmdbClientV4 extends TmdbApiClient2 {
+export class TmdbClientV4 extends TmdbV4Client {
     constructor() {
         super();
         console.log("TmdbClient ctor");

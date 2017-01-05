@@ -1,4 +1,4 @@
-export interface TmdbApi {
+export interface TmdbV3Api {
 
     getApiConfiguration(req: GetApiConfigurationRequest): GetApiConfigurationResponse;
 
@@ -1835,7 +1835,7 @@ export interface RateLimit {
 }
 
 
-export let TmdbApiMetadata: Record<keyof TmdbApi, ApiMetadata> = {
+export let TmdbApiMetadata: Record<keyof TmdbV3Api, ApiMetadata> = {
     tvGetChanges: { path: "/tv/episode/{episode_id}/changes", method: "GET" },
     tvGetAccountStates: { path: "/tv/{tv_id}/account_states", method: "GET" },
     personGetPopular: { path: "/person/popular", method: "GET" },

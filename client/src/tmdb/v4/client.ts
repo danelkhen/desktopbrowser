@@ -2,14 +2,14 @@ import {
     AccountGetCreatedListsResponseItem, AccountGetFavoriteMoviesRequestBase, AccountGetFavoriteMoviesResponseBase, AccountGetListsRequest, AccountGetTVShowWatchlistResponseBase,
     AccountGetTVShowWatchlistResponse_resultsBase, ApiMetadata, AuthCreateAccessTokenResponse, AuthCreateRequestTokenResponse, CreateAccessTokenRequest, CreateRequestTokenRequest,
     ListAddItemsRequestBase, ListAddItemsResponseBase, ListAddItemsResponse_resultsBase, ListCheckItemStatusRequest, ListCheckItemStatusResponse, ListClearListResponse,
-    ListCreateListRequestBase, ListDeleteListRequestBase, ListDeleteListResponseBase, ListGetListRequest, ListGetListResponse, PagedResponse, Request, Response, TmdbApiMetadata, TmdbApiV4
+    ListCreateListRequestBase, ListDeleteListRequestBase, ListDeleteListResponseBase, ListGetListRequest, ListGetListResponse, PagedResponse, Request, Response, TmdbApiMetadata, TmdbV4Api
 } from "./api"
 import { Proxy, } from "../../utils/proxy"
-import { TmdbApiClient, } from "./proxy"
+import { TmdbV4Proxy, } from "./proxy"
 
-export class TmdbApiClient2 {
+export class TmdbV4Client {
     constructor() {
-        this.proxy = new TmdbApiClient();
+        this.proxy = new TmdbV4Proxy();
     }
     get base_url(): string { return this.proxy.base_url; }
     set base_url(value: string) { this.proxy.base_url = value; }
@@ -18,7 +18,7 @@ export class TmdbApiClient2 {
     set read_access_token(value: string) { this.proxy.read_access_token = value; }
 
 
-    proxy: TmdbApiClient;
+    proxy: TmdbV4Proxy;
 
     accountGetFavoriteMovies(req: AccountGetFavoriteMoviesRequestBase): Promise<AccountGetFavoriteMoviesResponseBase> { return this.proxy.invoke(t => t.accountGetFavoriteMovies(req)); }
     accountGetFavoriteTVShows(req: AccountGetFavoriteMoviesRequestBase): Promise<AccountGetTVShowWatchlistResponseBase> { return this.proxy.invoke(t => t.accountGetFavoriteTVShows(req)); }
