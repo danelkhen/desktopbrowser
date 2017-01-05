@@ -3,12 +3,12 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
 import { FileService, ByFilenameService, KeyValueService } from "./service"
 import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
-import { promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
+import { nameof, promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 
 import { Media as DsMedia } from "./media"
-import { File, ByFilename, FilenameParsedInfo } from "contracts"
+import { File, ByFilename, FilenameParsedInfo, OrderBy } from "contracts"
 
 export class App {
     fileService: FileService;
@@ -121,7 +121,7 @@ export class App {
     }
 
     async getAllFilesMetadata(): Promise<ByFilename[]> {
-        return this.byFilename.find();
+        return this.byFilename.find(null);
     }
 
     async getFileMetadata(file: File): Promise<ByFilename> {
@@ -138,7 +138,10 @@ export class App {
     }
 
     async getAvailableMedia(): Promise<MediaFile[]> {
-        let mds = await this.getAllFilesMetadata();
+        let orderBy: Provide<ByFilename, OrderBy> = { modified: "DESC" };
+        let orderBy2 = {};
+        Object.keys(orderBy).forEach(key => orderBy2["t." + key] = orderBy[key]);
+        let mds = await this.byFilename.find({ options: { alias: "t", orderBy: orderBy2, maxResults: 100, } });
         let scanner = this.createScanner();
         mds = mds.filter(t => scanner.isVideoFile(t.key));
         let mfs = mds.map(t => <MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
@@ -265,5 +268,8 @@ export interface ConfigFolder {
 }
 
 
+type Provide<T, V> = {
+[P in keyof T]?: V;
+}
 
 

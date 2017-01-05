@@ -1,4 +1,4 @@
-﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, } from "contracts"
+﻿import { FindRequest, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
@@ -21,8 +21,8 @@ export class DbService<T> implements DbServiceContract<T> {
     findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> {
         return this.repo.findOneById(req.id, req.options);
     }
-    find(): Promise<T[]> {
-        return this.repo.find();
+    find(req: FindRequest): Promise<T[]> {
+        return this.repo.find(req.conditions, req.options);
     }
     _idPropName: string;
     getIdPropName() {
@@ -44,21 +44,20 @@ export class DbService<T> implements DbServiceContract<T> {
         return await this.repo.persist(obj);
     }
 
-    removeById(req: { id: any }): Promise<T> {
-        return this.repo.findOneById(req.id).then(x => {
-            if (x == null)
-                return null;
-            this.repo.remove(x);
-            return x;
-        });
+    async removeById(req: { id: any }): Promise<T> {
+        let x = await this.repo.findOneById(req.id)
+        if (x == null)
+            return null;
+        return await this.repo.remove(x);
     }
 }
 
 export class ByFilenameService extends DbService<ByFilename> {
-    init(): Promise<any> {
+    async init(): Promise<any> {
         console.log("ByFilenameService init");
         this.db = new Db();
-        return this.db.init().then(() => this.repo = this.db.byFilename);
+        await this.db.init();
+        this.repo = this.db.byFilename;
     }
 }
 

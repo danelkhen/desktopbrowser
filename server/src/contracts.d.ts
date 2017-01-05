@@ -26,9 +26,13 @@
 
     export interface DbService<T> {
         findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
-        find(): Promise<T[]>;
+        find(req: FindRequest): Promise<T[]>;
         persist(x: T): Promise<T>;
         removeById(req: { id: any }): Promise<T>;
+    }
+    export interface FindRequest {
+        conditions?: ObjectLiteral;
+        options?: FindOptions;
     }
 
     export interface FileService {
@@ -277,6 +281,8 @@
     export type OrderByCondition = {
         [columnName: string]: "ASC" | "DESC";
     };
+
+    export type OrderBy = "ASC" | "DESC";
 
     export interface FilenameParsedInfo {
         name: string;

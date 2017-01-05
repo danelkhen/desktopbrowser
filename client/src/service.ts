@@ -1,10 +1,10 @@
 ﻿import { Proxy, ProxyCall } from "./utils/proxy"
 import { ServiceBase } from "./utils/service-base"
-import { FindOptions, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, KeyValue } from "contracts"
+import { FindRequest, FindOptions, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, KeyValue } from "contracts"
 
 export class DbService<T> extends ServiceBase<DbServiceContract<T>>{
     findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
-    find(): Promise<T[]> { return this.invoke(t => t.find()); }
+    find(req?: FindRequest): Promise<T[]> { return this.invoke(t => t.find(req)); }
     persist(x: T): Promise<T> { return this.invoke(t => t.persist(x)); }
     removeById(req: { id: any }): Promise<T> { return this.invoke(t => t.removeById(req)); }
 }
