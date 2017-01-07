@@ -15,18 +15,23 @@ class Test {
             "//DESKTOP-P6FV9GO/Download3",
         ];
         x.onDir = async e => {
-            return true;
+            console.log(e.path);
         };
+        //x.onDirChildren = async e => {
+        //    //if (!this.isVideoFile(e.child))
+        //    //    return;
+        //    console.log(e.dir);
+        //};
         x.onDirChild = async e => {
-            if (!this.isVideoFile(e.child))
+            if (!this.isVideoFile(e.path))
                 return;
-            console.log(e.child);
+            //console.log(e.child);
         };
         x.scan(dirs).then(() => console.log("FINISHED"));
-        setTimeout(() => x.pause(), 1000);
-        setTimeout(() => x.resume(), 2000);
-        setTimeout(() => x.pause(), 3000);
-        setTimeout(() => x.resume(), 4000);
+        //setTimeout(() => x.pause(), 200);
+        //setTimeout(() => x.resume(), 2000);
+        //setTimeout(() => x.pause(), 3000);
+        //setTimeout(() => x.resume(), 4000);
     }
 }
 new Test().test2();

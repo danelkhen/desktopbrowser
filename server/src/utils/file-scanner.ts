@@ -3,11 +3,12 @@ import * as Fs from "./fs"
 import * as Process from "process"
 import * as Path from "path"
 
+//normalize('\\foo\\bar\\baz\\');
 export class FileScanner {
-    async onDir(obj: DirEvent): Promise<any> { }
+    async onDir(obj: FileEvent): Promise<boolean | void> { }
     async onDirChildren(obj: DirChildrenEvent): Promise<any> { }
     async onError(e): Promise<any> { console.log(e); }
-    async onDirChild(obj: DirChildEvent): Promise<any> { }
+    async onDirChild(obj: FileEvent): Promise<any> { }
     manual: Manual<any> = new Manual();
     pause() { return this.manual.pause(); }
     resume() { return this.manual.resume(); }
@@ -16,32 +17,34 @@ export class FileScanner {
 
 
     async scan(dirs: string[]): Promise<any> {
+        let stack: FileEvent[] = [];
         for (let startDir of dirs) {
-            let stack: string[] = [];
-            stack.push(startDir);
+            let x = { path: normalizePath(startDir), stats: null };
+            x.stats = await Fs.stat(x.path);
+            stack.push(x);
             while (stack.length > 0) {
                 await this.waitForResume();
                 let dir = stack.pop();
                 try {
-                    await this.onDir({ dir, path: dir });
-                    let children = await Fs.readdir(dir);
+                    let enter = await this.onDir(dir);
+                    if (enter != null && !enter)
+                        continue;
+                    let children = await Fs.readdir(dir.path);
                     await this.onDirChildren({ dir, children });
                     await this.waitForResume();
                     for (let child of children) {
                         await this.waitForResume();
-                        let childPath = Path.join(dir, child);
-                        let stats: Fs.Stats = null;
+                        let dc = <FileEvent>{ stats: null, path: normalizePath(Path.join(dir.path, child)) };
                         try {
-                            stats = await Fs.stat(childPath);
+                            dc.stats = await Fs.stat(dc.path);
                         }
                         catch (e) {
-                            this.onError(e);
+                            await this.onError(e);
                             continue;
                         }
-                        let dc = <DirChildEvent>{ dir, child, stats, path: childPath, };
                         await this.onDirChild(dc);
-                        if (stats.isDirectory)
-                            stack.push(childPath);
+                        if (dc.stats.isDirectory())
+                            stack.push(dc);
                     }
                 }
                 catch (e) {
@@ -92,18 +95,16 @@ export class Manual<T> {
 
 }
 
-export interface DirEvent {
-    dir: string;
-    path: string;
-}
 export interface DirChildrenEvent {
-    dir: string;
+    dir: FileEvent;
     children: string[];
 }
-export interface DirChildEvent {
-    dir: string;
-    child: string;
+export interface FileEvent {
     path: string;
     stats: Fs.Stats;
 }
 
+export function normalizePath(s: string): string {
+    let s2 = s.replace(/\\/g, "/");
+    return s2;
+}
