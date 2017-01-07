@@ -102,6 +102,7 @@ body {
   flex-flow: row wrap;
   justify-content: space-between;
   align-content: flex-start;
+  align-items: flex-start;
   margin-top: 2em; }
   .pool li {
     justify-content: space-between;

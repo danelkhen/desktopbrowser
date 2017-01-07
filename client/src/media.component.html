@@ -39,7 +39,7 @@
                 </div>
                 <div class="details">
                     <h5 class="title">{{movie.tmdb?.title}}</h5>
-                    <span class="playtime">1hr:45min</span>
+                    <span class="playtime">movie.tmdb.runtime}} min</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
                     <a class="icon playicon" (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
                     <button class="status" (click)="markAsWatched(media)">mark as watched</button>
