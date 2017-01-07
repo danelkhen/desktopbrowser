@@ -5,7 +5,7 @@ import * as fs from "fs";
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import * as child_process from "child_process"
 import * as omdb from 'imdb-api';
-import XMLHttpRequest = require('xhr2');
+//import XMLHttpRequest = require('xhr2');
 import * as rimraf from "rimraf";
 import * as trash from 'trash';
 import * as path from "path";

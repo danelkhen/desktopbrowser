@@ -16,7 +16,5 @@
   },
   "author": "Dan-el Khen",
   "license": "MIT",
-  "dependencies": {
-    "@types/core-js": "^0.9.35"
-  }
+  "dependencies": {}
 }

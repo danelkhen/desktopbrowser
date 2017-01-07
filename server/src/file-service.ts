@@ -5,7 +5,7 @@ import * as fs from "fs";
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import * as child_process from "child_process"
 import * as omdb from 'imdb-api';
-import XMLHttpRequest = require('xhr2');
+//import XMLHttpRequest = require('xhr2');
 import * as rimraf from "rimraf";
 import * as trash from 'trash';
 import * as path from "path";
@@ -199,7 +199,7 @@ export class FileService implements FileServiceContract {
             files2 = this.GetHomeFiles();
         }
         else if (!files && !folders)
-            files2 = new File[0];
+            files2 = [];
         //var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         //if (searchPattern.IsNullOrEmpty())
         //    searchPattern = "*";
