@@ -1,4 +1,11 @@
 ﻿declare module "contracts" {
+    export interface Config {
+        key: string;
+        folders?: ConfigFolder[];
+    }
+    export interface ConfigFolder {
+        path: string;
+    }
     export interface KeyValueService {
         findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
         findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]>;

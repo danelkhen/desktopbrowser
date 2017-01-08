@@ -3,9 +3,9 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "./tmdb/v3/api"
 import { FileService, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy } from "./utils/utils"
-import { App, Config, MediaFile } from "./app"
+import { App, MediaFile } from "./app"
 import { Media, Movie, TvShow } from "./media"
-import { File } from "contracts"
+import { File, Config,  } from "contracts"
 
 @Component({
     selector: 'my-media',
@@ -42,6 +42,8 @@ export class MediaComponent implements OnInit, OnChanges {
         if (this.filterType == null)
             return list;
         return list.filter(t => t.type == this.filterType);
+    }
+    setFilter(key: string, value: string) {
     }
 
     movie_click(movie: MediaFile) {

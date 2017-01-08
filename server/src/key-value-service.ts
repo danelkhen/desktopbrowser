@@ -1,8 +1,8 @@
-﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract,  } from "contracts"
+﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
-import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo,  } from "./utils/io"
+import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, } from "./utils/io"
 import * as child_process from "child_process"
 import * as omdb from 'imdb-api';
 //import XMLHttpRequest = require('xhr2');
@@ -10,18 +10,21 @@ import * as rimraf from "rimraf";
 import * as trash from 'trash';
 import * as path from "path";
 import * as os from "os";
-import { Db, ByFilename, KeyValue } from "./db2";
+import { Db, ByFilename, KeyValue } from "./db";
 import { FindOptions, Repository } from "typeorm"
-import { DbService } from "./service"
+import { DbService } from "./db-service"
 
 
 export class KeyValueService implements KeyValueServiceContract {
+    constructor(public db: Db) {
+    }
+
     dbService: DbService<KeyValue>;
 
-    init(): Promise<any> {
+    init() {
         this.dbService = new DbService<KeyValue>();
-        this.dbService.db = new Db();
-        return this.dbService.db.init().then(() => this.dbService.repo = this.dbService.db.keyValue);
+        this.dbService.db = this.db;
+        this.dbService.repo = this.dbService.db.keyValue;
     }
     toKeyValue<T extends HasKey>(obj: T): KeyValue {
         let key = obj.key;

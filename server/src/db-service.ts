@@ -11,7 +11,7 @@ import * as trash from 'trash';
 import * as path from "path";
 //import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
-import { Db, ByFilename, KeyValue } from "./db2";
+import { Db, ByFilename, KeyValue } from "./db";
 import { FindOptions, Repository } from "typeorm"
 
 
@@ -51,16 +51,6 @@ export class DbService<T> implements DbServiceContract<T> {
         return await this.repo.remove(x);
     }
 }
-
-export class ByFilenameService extends DbService<ByFilename> {
-    async init(): Promise<any> {
-        console.log("ByFilenameService init");
-        this.db = new Db();
-        await this.db.init();
-        this.repo = this.db.byFilename;
-    }
-}
-
 
 function getUserHome() {
     return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];

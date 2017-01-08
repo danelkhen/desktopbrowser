@@ -7,7 +7,7 @@ import * as Path from "path"
 export class FileScanner {
     async onDir(obj: FileEvent): Promise<boolean | void> { }
     async onDirChildren(obj: DirChildrenEvent): Promise<any> { }
-    async onError(e): Promise<any> { console.log(e); }
+    async onError(e): Promise<any> { /*console.log(e);*/ }
     async onDirChild(obj: FileEvent): Promise<any> { }
     manual: Manual<any> = new Manual();
     pause() { return this.manual.pause(); }
@@ -16,8 +16,10 @@ export class FileScanner {
 
 
 
+    stack:FileEvent[];
     async scan(dirs: string[]): Promise<any> {
         let stack: FileEvent[] = [];
+        this.stack = stack;
         for (let startDir of dirs) {
             let x = { path: normalizePath(startDir), stats: null };
             x.stats = await Fs.stat(x.path);

@@ -4,28 +4,20 @@ import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import * as child_process from "child_process"
-import * as omdb from 'imdb-api';
-//import XMLHttpRequest = require('xhr2');
 import * as rimraf from "rimraf";
 import * as trash from 'trash';
 import * as path from "path";
-//import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
-import { Db, ByFilename, KeyValue } from "./db2";
+import { Db, ByFilename, KeyValue } from "./db";
 import { FindOptions, Repository } from "typeorm"
-import { ByFilenameService } from "./service"
+import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
 
 
 export class FileService implements FileServiceContract {
-    init(): Promise<any> {
+    init() {
         console.log("SiteService init");
-        this.byFilename = new ByFilenameService();
-        this.keyValue = new KeyValueService();
-        return Promise.all([this.byFilename.init(), this.keyValue.init()]);
     }
-    keyValue: KeyValueService;
-    byFilename: ByFilenameService;
     baseDbFilename: string;
 
     ListFiles(req: ListFilesRequest): ListFilesResponse {

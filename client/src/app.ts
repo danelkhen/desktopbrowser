@@ -6,9 +6,8 @@ import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvSho
 import { nameof, promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
-
 import { Media as DsMedia } from "./media"
-import { File, ByFilename, FilenameParsedInfo, OrderBy } from "contracts"
+import { File, ByFilename, FilenameParsedInfo, OrderBy, Config } from "contracts"
 
 export class App {
     fileService: FileService;
@@ -258,13 +257,6 @@ export interface TmdbMediaInfo {
 export interface TmdbRatingsPage {
     key: string;
     ids: number[];
-}
-export interface Config {
-    key: string;
-    folders?: ConfigFolder[];
-}
-export interface ConfigFolder {
-    path: string;
 }
 
 
