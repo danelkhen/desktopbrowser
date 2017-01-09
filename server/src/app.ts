@@ -54,6 +54,7 @@ export class App {
 
     async foo(): Promise<FsEntry[]> {
         return await this.db.fsEntries.find(null, { alias: "t", orderBy: { "t.mtime": "DESC" }, maxResults: 1000 });
+        //TODO: app.db.byFilename.createQueryBuilder("t").leftJoinAndSelect(FsEntry, "fsEntry", "fsEntry.basename=t.key").getMany().then(e=>console.log(e))
     }
 
 }
