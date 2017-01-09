@@ -37,6 +37,20 @@
         persist(x: T): Promise<T>;
         removeById(req: { id: any }): Promise<T>;
     }
+    export interface FsEntry {
+        key: string;
+        basename: string;
+        dirname: string;
+        extname: string;
+        type: string;
+        atime: string;
+        mtime: string;
+        ctime: string;
+    }
+
+    export interface FsEntryService extends DbService<FsEntry> {
+    }
+
     export interface FindRequest {
         conditions?: ObjectLiteral;
         options?: FindOptions;

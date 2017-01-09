@@ -13,7 +13,7 @@ import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
 import { RequestHandler } from "express"
 import * as proxy from 'express-http-proxy';
-import { app, App } from "./app";
+import { app, App, FsEntryService } from "./app";
 
 
 export class Server {
@@ -24,11 +24,12 @@ export class Server {
         fs: FileService,
         byFilename: ByFilenameService,
         keyValue: KeyValueService,
+        fsEntry: FsEntryService,
     };
 
 
     app: App;
-    async init() {
+    async init(): Promise<this> {
         this.app = app;
         await this.app.init();
 
@@ -40,12 +41,14 @@ export class Server {
         //await this._service.migrateToSqlite();
         await this.initServer();
         await DriveInfo.GetDrives3();
+        return this;
     }
     initServer() {
         this.services = {
             fs: this.app.fileService,
             byFilename: this.app.byFilenameService,
             keyValue: this.app.keyValueService,
+            fsEntry: this.app.fsEntryService,
         };
         this.expApp = express();
         this.expApp.use(bodyParser.json());

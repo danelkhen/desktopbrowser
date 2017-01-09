@@ -1,13 +1,13 @@
 import "./utils/global";
 import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
-import { FileService, ByFilenameService, KeyValueService } from "./service"
+import { FileService, ByFilenameService, KeyValueService, FsEntryService } from "./service"
 import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
 import { nameof, promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 import { Media as DsMedia } from "./media"
-import { File, ByFilename, FilenameParsedInfo, OrderBy, Config } from "contracts"
+import { File, ByFilename, FilenameParsedInfo, OrderBy, Config, FsEntry } from "contracts"
 
 export class App {
     fileService: FileService;
@@ -15,6 +15,7 @@ export class App {
     keyValue: KeyValueService;
     tmdb: TmdbClient;
     tmdbV4: TmdbClientV4;
+    fsEntryService: FsEntryService;
 
     constructor() {
         console.log("App ctor", this);
@@ -22,6 +23,7 @@ export class App {
         this.fileService = new FileService();
         this.byFilename = new ByFilenameService();
         this.keyValue = new KeyValueService();
+        this.fsEntryService = new FsEntryService();
         this.tmdb = new TmdbClient();
         this.tmdb.app = this;
         this.tmdb.base_url = '/tmdb_proxy/3';
@@ -123,10 +125,13 @@ export class App {
         return this.byFilename.find(null);
     }
 
-    async getFileMetadata(file: File): Promise<ByFilename> {
-        let x = await this.byFilename.findOneById({ id: file.Name });
+    async getFileMetadata(file: File|string): Promise<ByFilename> {
+        let name = file as string;
+        if(file instanceof File)
+            name = (file as File).Name;
+        let x = await this.byFilename.findOneById({ id: name });
         if (x == null)
-            x = { key: x.key };
+            x = { key: name };
         return x;
     }
 
@@ -238,6 +243,22 @@ export class App {
         }
     }
 
+    fsEntryToMediaFile(x: FsEntry): MediaFile {
+        return <MediaFile>{ fsEntry: x };
+    }
+    async getLatestFsEntries(): Promise<FsEntry[]> {
+        return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, maxResults: 1000 } });
+    }
+
+    async getLatestMediaFiles(): Promise<MediaFile[]> {
+        let x = await this.getLatestFsEntries();
+        let mfs = x.map(t=>this.fsEntryToMediaFile(t));
+        for(let mf of mfs)
+            mf.md = await this.getFileMetadata(mf.fsEntry.basename);
+        return mfs;
+    }
+
+
 }
 
 export interface MediaFile {
@@ -247,6 +268,7 @@ export interface MediaFile {
     tmdbBasic?: TmdbMedia;
     type: string;
     parsed: FilenameParsedInfo;
+    fsEntry: FsEntry;
 }
 
 

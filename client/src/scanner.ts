@@ -32,7 +32,7 @@ export class Scanner {
                 console.log("tmdbId already exists, skipping", { file, md });
                 continue;
             }
-            let mf: MediaFile = { file, md, type: null, parsed: null };
+            let mf: MediaFile = { file, md, type: null, parsed: null, fsEntry: null };
             try {
                 await this.analyze(mf);
             }
@@ -48,9 +48,10 @@ export class Scanner {
     }
 
     async analyze(mf: MediaFile): Promise<any> {
-        let file = mf.file;
-        console.log("getImdbInfo", "start", mf.file.Name);
-        let info = new FilenameParser().parse(mf.file.Name);
+        let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name);
+        let path = (mf.fsEntry && mf.fsEntry.key) || (mf.file && mf.file.Path);
+        console.log("getImdbInfo", "start", filename);
+        let info = new FilenameParser().parse(filename);
         let isTv = info.season != null;
         let media: TmdbMedia;
         if (isTv) {
@@ -69,7 +70,7 @@ export class Scanner {
         mf.tmdbBasic = media;
         mf.type = mf.tmdbBasic.media_type;
         mf.md.tmdbKey = [mf.tmdbBasic.media_type, mf.tmdbBasic.id].join("|");
-        mf.md.lastKnownPath = file.Path;
+        mf.md.lastKnownPath = path;
         if (mf.tmdbBasic.media_type == "tv" && mf.parsed.episode != null && mf.parsed.season != null) {
             mf.md.episodeKey = "s" + mf.parsed.season.format("00") + "e" + mf.parsed.episode.format("00");
         }

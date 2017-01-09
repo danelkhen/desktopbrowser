@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { Table, Column, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
 import { ColumnTypes as CT } from "typeorm/metadata/types/ColumnTypes";
 import * as path from "path";
-import { ByFilename as ByFilenameContract } from "contracts"
+import { ByFilename as ByFilenameContract, FsEntry as FsEntryContract } from "contracts"
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent, } from "typeorm";
 
 
@@ -18,15 +18,15 @@ export class ByFilename implements ByFilenameContract {
 }
 
 @Table()
-export class FsEntry {
+export class FsEntry implements FsEntryContract {
     @PrimaryColumn() key: string;
     @Column(CT.STRING, { nullable: true }) basename: string;
     @Column(CT.STRING, { nullable: true }) dirname: string;
     @Column(CT.STRING, { nullable: true }) extname: string;
     @Column(CT.STRING, { nullable: true }) type: string;
-    @Column(CT.DATETIME, { nullable: true }) atime: Date;
-    @Column(CT.DATETIME, { nullable: true }) mtime: Date;
-    @Column(CT.DATETIME, { nullable: true }) ctime: Date;
+    @Column(CT.STRING, { nullable: true }) atime: string;
+    @Column(CT.STRING, { nullable: true }) mtime: string;
+    @Column(CT.STRING, { nullable: true }) ctime: string;
 }
 
 @Table()

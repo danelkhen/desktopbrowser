@@ -13,6 +13,7 @@ const FILE_TYPES = [
     "FIFO",
     "Socket",
 ];
+const DefaultDateFormat = "yyyy-MM-dd HH:mm:ss";
 
 export class MediaScanner {
     videoExts = [".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"];
@@ -27,44 +28,49 @@ export class MediaScanner {
         x.type = FILE_TYPES.first(t => e.stats["is" + t]());
         if (x.type != null)
             x.type = x.type.toLowerCase();
-        x.ctime = e.stats.ctime;
-        x.mtime = e.stats.mtime;
-        x.atime = e.stats.atime;
+        x.ctime = e.stats.ctime.format(DefaultDateFormat);
+        x.mtime = e.stats.mtime.format(DefaultDateFormat);
+        x.atime = e.stats.atime.format(DefaultDateFormat);
         x.dirname = Path.dirname(e.path);
         x.extname = Path.extname(e.path);
         x.basename = Path.basename(e.path);
         return x;
     }
     scanner: FileScanner;
-    app:App;
+    app: App;
 
+    isRunning(): boolean {
+        return this.st != null && this.st.started != null && this.st.finished == null;
+    }
     async scan() {
+        if (this.isRunning()) {
+            console.log("scan is already running");
+            return;
+        }
         let config = await this.app.getConfig();
         if (config == null || config.folders == null || config.folders.length == 0)
             return;
+        this.st.started = new Date();
+
         let db = this.app.db;
         let scanner = new FileScanner();
         this.scanner = scanner;
         let dirs = config.folders.map(t => t.path);
         let since: Date = null;
-        since = Date.today().addDays(-7);
-        scanner.onDir = async e => {
-            console.log(e.path);
-            if (since != null && e.stats.mtime.valueOf() - since.valueOf() < 0) {
-                console.log("SKIPPING", e.stats.mtime, e.path);
-                return false;
-            }
-            else
-                console.log("ENTERING", e.stats.mtime, e.path);
+        //since = Date.today().addDays(-7);
+        if (since != null) {
+            scanner.onDir = async e => {
+                console.log(e.path);
+                if (since != null && e.stats.mtime.valueOf() - since.valueOf() < 0) {
+                    console.log("SKIPPING", e.stats.mtime, e.path);
+                    return false;
+                }
+                else
+                    console.log("ENTERING", e.stats.mtime, e.path);
 
-        };
-        //x.onDirChildren = async e => {
-        //    //if (!this.isVideoFile(e.child))
-        //    //    return;
-        //    console.log(e.dir);
-        //};
+            };
+        }
         scanner.onDirChild = async e => {
-            //console.log(e.path);
             this.st.stack = this.scanner.stack && this.scanner.stack.length;
             this.st.scanned++;
             this.st.lastScanned = e.path;
@@ -79,14 +85,11 @@ export class MediaScanner {
             db.fsEntries.persist(x); //non blocking, will be done in background
             this.st.saved++;
             this.st.lastSaved = e.path;
-            //console.log(e.child);
         };
-        scanner.scan(dirs).then(() => console.log("FINISHED"));
-        //this.status();
-        //setTimeout(() => x.pause(), 200);
-        //setTimeout(() => x.resume(), 2000);
-        //setTimeout(() => this.scanner.pause(), 10000);
-        //setTimeout(() => x.resume(), 4000);
+        scanner.scan(dirs).then(() => {
+            console.log("FINISHED");
+            this.st.finished = new Date();
+        });
     }
 
     status() {
@@ -95,7 +98,7 @@ export class MediaScanner {
             return;
         setTimeout(() => this.status(), 1000);
     }
-    st: MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null };
+    st: MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null, started: null, finished: null };
 }
 export interface MediaScannerStatus {
     stack: number;
@@ -103,4 +106,6 @@ export interface MediaScannerStatus {
     saved: number;
     lastScanned: string;
     lastSaved: string;
+    started: Date;
+    finished: Date;
 }

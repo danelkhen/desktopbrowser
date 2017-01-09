@@ -1,6 +1,11 @@
 ﻿import { Proxy, ProxyCall } from "./utils/proxy"
 import { ServiceBase } from "./utils/service-base"
-import { FindRequest, FindOptions, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, KeyValue } from "contracts"
+import {
+    FindRequest, FindOptions, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File,
+    DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, KeyValue,
+    FsEntryService as FsEntryServiceContract,
+    FsEntry,
+} from "contracts"
 
 export class DbService<T> extends ServiceBase<DbServiceContract<T>>{
     findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
@@ -55,5 +60,12 @@ export class FileService extends ServiceBase<FileServiceContract> {
     //CalculateFolderSizeNoCache(path: string): Promise<number> { return this.invoke(t => t.CalculateFolderSizeNoCache(req)); }
     clearCache(): Promise<any> { return this.invoke(t => t.clearCache()); }
 
+}
+
+export class FsEntryService extends DbService<FsEntry> {
+    constructor() {
+        super();
+        this.Url = "/api/fsEntry";
+    }
 }
 

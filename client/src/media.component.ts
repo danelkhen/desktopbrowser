@@ -62,7 +62,7 @@ export class MediaComponent implements OnInit, OnChanges {
         console.log(this.movies);
     }
     async getAvailableMedia() {
-        let list = await this.app.getAvailableMedia();
+        let list = await this.app.getLatestMediaFiles(); //.getAvailableMedia();
         let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
         //console.log(list2);
         this.movies = list2.take(20);
