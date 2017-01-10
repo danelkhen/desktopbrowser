@@ -40,7 +40,7 @@ export class MediaScanner {
     app: App;
 
     isRunning(): boolean {
-        return this.st != null && this.st.started != null && this.st.finished == null;
+        return this.status != null && this.status.started != null && this.status.finished == null;
     }
     async scan() {
         if (this.isRunning()) {
@@ -50,7 +50,7 @@ export class MediaScanner {
         let config = await this.app.getConfig();
         if (config == null || config.folders == null || config.folders.length == 0)
             return;
-        this.st.started = new Date();
+        this.status.started = new Date();
 
         let db = this.app.db;
         let scanner = new FileScanner();
@@ -71,9 +71,9 @@ export class MediaScanner {
             };
         }
         scanner.onDirChild = async e => {
-            this.st.stack = this.scanner.stack && this.scanner.stack.length;
-            this.st.scanned++;
-            this.st.lastScanned = e.path;
+            this.status.stack = this.scanner.stack && this.scanner.stack.length;
+            this.status.scanned++;
+            this.status.lastScanned = e.path;
 
             if (!e.stats.isFile())
                 return;
@@ -83,22 +83,21 @@ export class MediaScanner {
             if (x == null)
                 return;
             db.fsEntries.persist(x); //non blocking, will be done in background
-            this.st.saved++;
-            this.st.lastSaved = e.path;
+            this.status.saved++;
+            this.status.lastSaved = e.path;
         };
         scanner.scan(dirs).then(() => {
             console.log("FINISHED");
-            this.st.finished = new Date();
+            this.status.finished = new Date();
         });
     }
 
-    status() {
-        console.log(this.st);
-        if (this.scanner.stack.length == 0)
-            return;
-        setTimeout(() => this.status(), 1000);
-    }
-    st: MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null, started: null, finished: null };
+    //status() {
+    //    if (this.scanner.stack.length == 0)
+    //        return;
+    //    setTimeout(() => this.status(), 1000);
+    //}
+    status: MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null, started: null, finished: null };
 }
 export interface MediaScannerStatus {
     stack: number;

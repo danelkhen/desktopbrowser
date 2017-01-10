@@ -25,6 +25,7 @@ export class Server {
         byFilename: ByFilenameService,
         keyValue: KeyValueService,
         fsEntry: FsEntryService,
+        app:App,
     };
 
 
@@ -49,6 +50,7 @@ export class Server {
             byFilename: this.app.byFilenameService,
             keyValue: this.app.keyValueService,
             fsEntry: this.app.fsEntryService,
+            app:this.app,
         };
         this.expApp = express();
         this.expApp.use(bodyParser.json());

@@ -1,26 +1,22 @@
 ﻿import { Proxy, ProxyCall } from "./utils/proxy"
 import { ServiceBase } from "./utils/service-base"
-import {
-    FindRequest, FindOptions, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File,
-    DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, KeyValue,
-    FsEntryService as FsEntryServiceContract,
-    FsEntry,
-} from "contracts"
+import { FindRequest, FindOptions, HasKey, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, KeyValue, FsEntry } from "contracts"
+import * as C from "contracts"
 
-export class DbService<T> extends ServiceBase<DbServiceContract<T>>{
+export class DbService<T> extends ServiceBase<C.DbService<T>>{
     findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
     find(req?: FindRequest): Promise<T[]> { return this.invoke(t => t.find(req)); }
     persist(x: T): Promise<T> { return this.invoke(t => t.persist(x)); }
     removeById(req: { id: any }): Promise<T> { return this.invoke(t => t.removeById(req)); }
 }
-export class ByFilenameService extends DbService<ByFilenameContract> {
+export class ByFilenameService extends DbService<C.ByFilename> {
     constructor() {
         super();
         this.Url = "/api/byFilename";
     }
 
 }
-export class KeyValueService extends ServiceBase<KeyValueServiceContract> {
+export class KeyValueService extends ServiceBase<C.KeyValueService> {
     constructor() {
         super();
         this.Url = "/api/keyValue";
@@ -30,7 +26,7 @@ export class KeyValueService extends ServiceBase<KeyValueServiceContract> {
     findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]> { return this.invoke(t => t.findAllWithKeyLike(req)); }
 }
 
-export class FileService extends ServiceBase<FileServiceContract> {
+export class FileService extends ServiceBase<C.FileService> {
     constructor() {
         super();
         console.log("SiteServiceClient ctor");
@@ -66,6 +62,13 @@ export class FsEntryService extends DbService<FsEntry> {
     constructor() {
         super();
         this.Url = "/api/fsEntry";
+    }
+}
+
+export class AppService extends ServiceBase<C.App> {
+    constructor() {
+        super();
+        this.Url = "/api/app";
     }
 }
 

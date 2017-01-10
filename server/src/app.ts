@@ -1,14 +1,15 @@
 ﻿import { Server } from "./server"
-import { Config, FsEntryService as FsEntryServiceContract } from "contracts"
+import { Config } from "contracts"
+import * as C from "contracts"
 import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
 import { FileService } from "./file-service"
 import { DbService } from "./db-service"
 import { Db, ByFilename, KeyValue, FsEntry } from "./db"
-import { MediaScanner } from "./media-scanner"
+import { MediaScanner, MediaScannerStatus } from "./media-scanner"
 
 
-export class App {
+export class App implements C.App {
     server: Server;
     fileService: FileService;
     db: Db;
@@ -37,19 +38,23 @@ export class App {
         this.mediaScanner.app = this;
 
         await this.db.init();
-        
+
         this.fsEntryService.db = this.db;
         this.fsEntryService.repo = this.db.fsEntries;
-        
+
         await this.byFilenameService.init();
         await this.keyValueService.init();
         await this.fileService.init()
     }
 
-    async scanForMedia() {
+    async scanForMedia(): Promise<MediaScannerStatus> {
         if (this.mediaScanner.isRunning())
-            return;
-        await this.mediaScanner.scan();
+            return this.mediaScanner.status;
+        this.mediaScanner.scan();
+        return this.mediaScanner.status;
+    }
+    scanStatus(): MediaScannerStatus {
+        return this.mediaScanner.status;
     }
 
     async foo(): Promise<FsEntry[]> {
@@ -59,7 +64,7 @@ export class App {
 
 }
 
-export class FsEntryService extends DbService<FsEntry> implements FsEntryServiceContract {
+export class FsEntryService extends DbService<FsEntry> implements C.FsEntryService {
 }
 
 export let app = new App();

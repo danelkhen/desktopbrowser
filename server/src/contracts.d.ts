@@ -314,5 +314,20 @@
         filename: string;
     }
 
+    export interface App {
+        scanForMedia(): Promise<MediaScannerStatus>;
+        scanStatus(): MediaScannerStatus;
+    }
+
+    export interface MediaScannerStatus {
+        stack: number;
+        scanned: number;
+        saved: number;
+        lastScanned: string;
+        lastSaved: string;
+        started: Date;
+        finished: Date;
+    }
+
 
 }

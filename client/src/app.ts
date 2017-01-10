@@ -1,7 +1,7 @@
 import "./utils/global";
 import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
-import { FileService, ByFilenameService, KeyValueService, FsEntryService } from "./service"
+import { FileService, ByFilenameService, KeyValueService, FsEntryService, AppService } from "./service"
 import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
 import { nameof, promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
 import { Scanner } from "./scanner"
@@ -16,6 +16,7 @@ export class App {
     tmdb: TmdbClient;
     tmdbV4: TmdbClientV4;
     fsEntryService: FsEntryService;
+    appService: AppService;
 
     constructor() {
         console.log("App ctor", this);
@@ -24,6 +25,7 @@ export class App {
         this.byFilename = new ByFilenameService();
         this.keyValue = new KeyValueService();
         this.fsEntryService = new FsEntryService();
+        this.appService = new AppService();
         this.tmdb = new TmdbClient();
         this.tmdb.app = this;
         this.tmdb.base_url = '/tmdb_proxy/3';
@@ -80,12 +82,14 @@ export class App {
         return scanner;
     }
 
-    async scan(): Promise<Scanner> {
-        let scanner = this.createScanner();
-        console.log("scan started", scanner);
-        await scanner.scan();
-        console.log("scan completed", scanner);
-        return scanner;
+    async scan(): Promise<any> {
+        let x = await this.appService.invoke(t=>t.scanForMedia());
+        console.log(x);
+        //let scanner = this.createScanner();
+        //console.log("scan started", scanner);
+        //await scanner.scan();
+        //console.log("scan completed", scanner);
+        //return scanner;
     }
 
     async downloadRatings() {
