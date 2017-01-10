@@ -1,25 +1,28 @@
 import { TmdbV3Api, RateLimit, Response, PagedResponse, PagedRequest } from "tmdb-v3"
+import * as tmdb from "tmdb-v3"
+import { TmdbV4Api } from "tmdb-v4"
 import { TmdbApiMetadata } from "./md"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"
 import { TmdbScheduler } from "./scheduler"
 
-
-export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
-    constructor() {
-        super();
-        this.scheduler = new TmdbScheduler(this);
-        this.onInvoke = pc => this.scheduler.enqueueXhrRequest(pc);
-    }
+export class TmdbV3Or4Proxy<T extends TmdbV3Api | TmdbV4Api> extends Proxy<T> {
+    md: tmdb.ApiMd<T>;
     scheduler: TmdbScheduler;
+    base_url = 'https://api.themoviedb.org/3';
+    rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
+    api_key: string;
+    read_access_token: string;
+    access_token: string;
 
-
-    executeProxyCall(pc: ProxyCall<TmdbV3Api>): Promise<any> {
-        let md = TmdbApiMetadata[pc.name];
+    async executeProxyCall(pc: ProxyCall<T>): Promise<any> {
+        let md = this.md[pc.name as any];
         let path = md.path;
-        let prms: any = { api_key: this.api_key };
-        Object.assign(prms, pc.args[0]);
+        let prms: any = { ...pc.args[0] };
+        if(this.api_key!=null && prms.api_key==null)
+            prms.api_key = this.api_key;
+
         let body: any = null;
         if (prms.body != null) {
             body = JSON.stringify(prms.body);
@@ -32,33 +35,41 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
             method: md.method || "GET",
             body: body,
             headers: {
+                //"Authorization": "Bearer " + (this.access_token || this.read_access_token),
                 //"Access-Control-Expose-Headers": "X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset",
                 //"If-Modified-Since": "Fri, 15 Feb 2013 13:43:19 GMT",
             },
         };
         if (body != null)
             xhrReq.headers["Content-Type"] = "application/json;charset=utf-8";
-        return xhr(xhrReq)
-            .then(res => {
-                let x = xhrReq.xhr;
-                let rl: RateLimit = {
-                    limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
-                    remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
-                    reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
-                };
-                if (TmdbHelper.rateLimitIsNewer(rl, this.rateLimit)) {
-                    this.rateLimit = rl;
-                }
-                else {
-                    console.log("probably cached response", rl, this.rateLimit);
-                    //cached response
-                }
-                console.log({ name: pc.name, res, path, pc, prms, rateLimit: this.rateLimit });
-                return res;
-            });
+        if (this.access_token != null || this.read_access_token != null)
+            xhrReq.headers["Authorization"] = "Bearer " + (this.access_token || this.read_access_token);
+        let res = await xhr(xhrReq);
+        let x = xhrReq.xhr;
+        let rl: RateLimit = {
+            limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
+            remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
+            reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
+        };
+        if (TmdbHelper.rateLimitIsNewer(rl, this.rateLimit)) {
+            this.rateLimit = rl;
+        }
+        else {
+            console.log("probably cached response", rl, this.rateLimit);
+            //cached response
+        }
+        console.log({ name: pc.name, res, path, pc, prms, rateLimit: this.rateLimit });
+        return res;
     }
 
-
+}
+export class TmdbV3Proxy extends TmdbV3Or4Proxy<TmdbV3Api> {
+    constructor() {
+        super();
+        this.scheduler = new TmdbScheduler(this);
+        this.onInvoke = pc => this.scheduler.enqueueXhrRequest(pc);
+        this.md = TmdbApiMetadata;
+    }
 
     getNextPage<T>(action: (req: TmdbV3Api) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<T[]> {
         if (lastRes.total_pages <= lastRes.page)
@@ -82,9 +93,6 @@ export class TmdbV3Proxy extends Proxy<TmdbV3Api>{
         return results;
     }
 
-    api_key: string;
-    base_url = 'https://api.themoviedb.org/3';
-    rateLimit: RateLimit = { limit: null, remaining: null, reset: null };
 }
 
 
@@ -99,4 +107,5 @@ export class TmdbHelper {
         return x.remaining < y.remaining;
     }
 }
+
 

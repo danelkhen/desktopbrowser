@@ -1,5 +1,7 @@
-import { TmdbV4Api, ApiMetadata } from "tmdb-v4"
-export let TmdbApiMetadata: Record<keyof TmdbV4Api, ApiMetadata> = {
+import * as T3 from "tmdb-v3";
+import * as T4 from "tmdb-v4";
+
+export let TmdbApiMetadata: T3.ApiMd<T4.TmdbV4Api> = {
     accountGetFavoriteMovies: { path: "/account/{account_id}/movie/favorites", method: "GET" },
     accountGetTVShowWatchlist: { path: "/account/{account_id}/tv/watchlist", method: "GET" },
     listCreateList: { path: "/list", method: "POST" },

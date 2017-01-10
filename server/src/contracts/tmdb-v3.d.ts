@@ -1824,7 +1824,7 @@ declare module "tmdb-v3" {
         total_results?: number;
     }
 
-    export interface ApiMetadata {
+    export interface ApiMdItem {
         path: string;
         method: string;
     }
@@ -1834,4 +1834,5 @@ declare module "tmdb-v3" {
         remaining: number;
         reset: number;
     }
+    export type ApiMd<T> = Record<keyof T, ApiMdItem>;
 }

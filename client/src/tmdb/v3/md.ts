@@ -1,5 +1,6 @@
 import * as tmdb from "tmdb-v3";
-export let TmdbApiMetadata: Record<keyof tmdb.TmdbV3Api, tmdb.ApiMetadata> = {
+
+export let TmdbApiMetadata: tmdb.ApiMd<tmdb.TmdbV3Api> = {
     tvGetChanges: { path: "/tv/episode/{episode_id}/changes", method: "GET" },
     tvGetAccountStates: { path: "/tv/{tv_id}/account_states", method: "GET" },
     personGetPopular: { path: "/person/popular", method: "GET" },
