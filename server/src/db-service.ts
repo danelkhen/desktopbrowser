@@ -1,4 +1,6 @@
-﻿import { FindRequest, HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, } from "contracts"
+﻿import { FindRequest, HasKey, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, } from "contracts"
+import * as C from "contracts"
+
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
@@ -15,7 +17,7 @@ import { Db, ByFilename, KeyValue } from "./db";
 import { FindOptions, Repository } from "typeorm"
 
 
-export class DbService<T> implements DbServiceContract<T> {
+export class DbService<T> implements C.DbService<T> {
     db: Db;
     repo: Repository<T>;
     findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> {

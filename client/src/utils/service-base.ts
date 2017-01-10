@@ -1,5 +1,7 @@
 import { Proxy, ProxyCall } from "./proxy"
-import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService, ByFilename as ByFilenameContract, } from "contracts"
+import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, DbService, } from "contracts"
+import * as C from "contracts"
+
 
 export class ServiceBase<T> extends Proxy<T> {
     Url: string;

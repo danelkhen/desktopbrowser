@@ -1,10 +1,11 @@
-﻿import { File, FileRelativesInfo, ListFilesRequest, SortRequest as SortRequestContract, SortColumn as SortColumnContract } from "contracts"
+﻿import { File, FileRelativesInfo, ListFilesRequest, } from "contracts"
 import * as express from "express";
 import {Parse} from "./utils/parse"
+import * as C from "contracts"
 
 
 
-//export class SiteRequest implements SiteRequestContract {
+//export class SiteRequest implements C.SiteRequest {
 //    //constructor(cfg: SiteRequest) {
 //    //    Object.keys(cfg).forEach(key => this[key] = cfg[key]);
 //    //}
@@ -194,7 +195,7 @@ import {Parse} from "./utils/parse"
 
 
 
-export class SortRequest implements SortRequestContract {
+export class SortRequest implements C.SortRequest {
     constructor(cfg?: SortRequest) {
         this.Columns = [];
         if (cfg != null)
@@ -227,7 +228,7 @@ export class SortRequest implements SortRequestContract {
 }
 
 
-export class SortColumn implements SortColumnContract {
+export class SortColumn implements C.SortColumn {
     constructor(cfg: SortColumn) {
         Object.keys(cfg).forEach(key => this[key] = cfg[key]);
     }

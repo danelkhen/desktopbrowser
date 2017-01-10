@@ -1,4 +1,4 @@
-﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract,  } from "contracts"
+﻿import { HasKey, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
@@ -12,9 +12,10 @@ import { Db, ByFilename, KeyValue } from "./db";
 import { FindOptions, Repository } from "typeorm"
 import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
+import * as C from "contracts"
 
 
-export class FileService implements FileServiceContract {
+export class FileService implements C.FileService {
     init() {
         console.log("SiteService init");
     }

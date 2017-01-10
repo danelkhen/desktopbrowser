@@ -1,9 +1,9 @@
 ﻿//import * as rp from "request-promise-native"
 //export const OMDB_API_URL = "https://www.omdbapi.com/";
-//import { ByTitleOrId, ByTitleOrIdResponse, BySearch, SearchResponse, OmdbApi as OmdbApiContract } from "omdb-contracts"
+//import { ByTitleOrId, ByTitleOrIdResponse, BySearch, SearchResponse, } from "omdb-contracts"
 //import { Proxy, ProxyCall } from "../utils/proxy"
 
-//export class OmdbApi extends Proxy<OmdbApiContract> {
+//export class OmdbApi extends Proxy<C.OmdbApi> {
 //    onInvoke<R>(pc: ProxyCall): Promise<R> {
 //        let req = pc.args[0];
 //        let q = Object.keys(req).map(key => key + "=" + encodeURIComponent(req[key])).join("&");

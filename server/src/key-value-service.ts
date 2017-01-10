@@ -1,4 +1,4 @@
-﻿import { HasKey, KeyValueService as KeyValueServiceContract, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, DbService as DbServiceContract, ByFilename as ByFilenameContract, FileService as FileServiceContract, } from "contracts"
+﻿import { HasKey, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
 import * as fs from "fs";
@@ -13,9 +13,10 @@ import * as os from "os";
 import { Db, ByFilename, KeyValue } from "./db";
 import { FindOptions, Repository } from "typeorm"
 import { DbService } from "./db-service"
+import * as C from "contracts"
 
 
-export class KeyValueService implements KeyValueServiceContract {
+export class KeyValueService implements C.KeyValueService {
     constructor(public db: Db) {
     }
 

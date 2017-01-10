@@ -2,12 +2,12 @@ import "reflect-metadata";
 import { Table, Column, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
 import { ColumnTypes as CT } from "typeorm/metadata/types/ColumnTypes";
 import * as path from "path";
-import { ByFilename as ByFilenameContract, FsEntry as FsEntryContract } from "contracts"
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent, } from "typeorm";
+import * as C from "contracts"
 
 
 @Table()
-export class ByFilename implements ByFilenameContract {
+export class ByFilename implements C.ByFilename {
     @PrimaryColumn() key: string;
     @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
     @Column(CT.STRING, { nullable: true }) tmdbKey: string;
@@ -18,7 +18,7 @@ export class ByFilename implements ByFilenameContract {
 }
 
 @Table()
-export class FsEntry implements FsEntryContract {
+export class FsEntry implements C.FsEntry {
     @PrimaryColumn() key: string;
     @Column(CT.STRING, { nullable: true }) basename: string;
     @Column(CT.STRING, { nullable: true }) dirname: string;
