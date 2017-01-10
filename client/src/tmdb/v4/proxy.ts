@@ -1,4 +1,4 @@
-import { RateLimit, } from "../v3/api"
+import { RateLimit, } from "tmdb-v3"
 import { TmdbHelper, } from "../v3/proxy"
 import { TmdbV4Api, TmdbApiMetadata, Response } from "./api"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"

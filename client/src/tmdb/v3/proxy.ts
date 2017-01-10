@@ -1,4 +1,5 @@
-import { TmdbV3Api, TmdbApiMetadata, RateLimit, Response, PagedResponse, PagedRequest } from "./api"
+import { TmdbV3Api, RateLimit, Response, PagedResponse, PagedRequest } from "tmdb-v3"
+import { TmdbApiMetadata } from "./md"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"

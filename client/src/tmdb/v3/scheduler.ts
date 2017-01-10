@@ -1,4 +1,4 @@
-import { RateLimit } from "./api"
+import { RateLimit } from "tmdb-v3"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 

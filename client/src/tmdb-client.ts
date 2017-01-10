@@ -1,4 +1,4 @@
-import { MediaDetails, ListDetails, TmdbV3Api, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "./tmdb/v3/api"
+import { MediaDetails, ListDetails, TmdbV3Api, GetApiConfigurationResponse, TmdbMovie, TmdbMedia, AccountDetails, AccountGetDetailsRequest, RatedMovie, RatedTvShow } from "tmdb-v3"
 import { TmdbV3Client, } from "./tmdb/v3/client"
 import { promiseEach, tryParseInt, setMinus } from "./utils/utils"
 import { App } from "./app";

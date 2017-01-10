@@ -1,5 +1,5 @@
-import * as tmdb from "./api"
-import { TvShow, TmdbMovie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode } from "./api"
+import * as tmdb from "tmdb-v3"
+import { TvShow, TmdbMovie, AccountRatedTVEpisode, Person, RatedMovie, RatedTvShow, ChangeList, PopularPerson, SessionRatedTVEpisode } from "tmdb-v3"
 import { Proxy, } from "../../utils/proxy"
 import { TmdbV3Proxy } from "./proxy"
 
