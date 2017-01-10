@@ -2,10 +2,12 @@ import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "tmdb-v3"
 import { FileService, } from "./service"
-import { promiseEach, promiseMap, arrayDistinctBy } from "./utils/utils"
+import { promiseEach, promiseMap, arrayDistinctBy, promiseWhile, promiseSetTimeout } from "./utils/utils"
 import { App, MediaFile } from "./app"
 import { Media, Movie, TvShow } from "./media"
-import { File, Config,  } from "contracts"
+import { File, Config, } from "contracts"
+import * as C from "contracts"
+
 
 @Component({
     selector: 'my-media',
@@ -128,6 +130,15 @@ export class MediaComponent implements OnInit, OnChanges {
     async tvOnTheAir() {
         let onTheAir = await this.app.tmdb.proxy.getAllPages(t => t.tvGetTVOnTheAir({}));
         console.log(onTheAir.map(t => t.name), onTheAir);
+    }
+
+    scanStatus: C.MediaScannerStatus;
+    async scan() {
+        this.scanStatus = await this.app.appService.scanForMedia();
+        while (this.scanStatus != null && this.scanStatus.finished == null) {
+            this.scanStatus = await this.app.appService.scanStatus();
+            await promiseSetTimeout(3000);
+        }
     }
 
 

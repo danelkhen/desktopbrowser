@@ -2,8 +2,9 @@ import {
     AccountGetCreatedListsResponseItem, AccountGetFavoriteMoviesRequestBase, AccountGetFavoriteMoviesResponseBase, AccountGetListsRequest, AccountGetTVShowWatchlistResponseBase,
     AccountGetTVShowWatchlistResponse_resultsBase, ApiMetadata, AuthCreateAccessTokenResponse, AuthCreateRequestTokenResponse, CreateAccessTokenRequest, CreateRequestTokenRequest,
     ListAddItemsRequestBase, ListAddItemsResponseBase, ListAddItemsResponse_resultsBase, ListCheckItemStatusRequest, ListCheckItemStatusResponse, ListClearListResponse,
-    ListCreateListRequestBase, ListDeleteListRequestBase, ListDeleteListResponseBase, ListGetListRequest, ListGetListResponse, PagedResponse, Request, Response, TmdbApiMetadata, TmdbV4Api
-} from "./api"
+    ListCreateListRequestBase, ListDeleteListRequestBase, ListDeleteListResponseBase, ListGetListRequest, ListGetListResponse, PagedResponse, Request, Response, TmdbV4Api
+} from "tmdb-v4"
+import {TmdbApiMetadata,  } from "./md"
 import { Proxy, } from "../../utils/proxy"
 import { TmdbV4Proxy, } from "./proxy"
 

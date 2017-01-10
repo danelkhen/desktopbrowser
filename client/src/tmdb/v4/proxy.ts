@@ -1,6 +1,7 @@
 import { RateLimit, } from "tmdb-v3"
 import { TmdbHelper, } from "../v3/proxy"
-import { TmdbV4Api, TmdbApiMetadata, Response } from "./api"
+import { TmdbV4Api,  Response } from "tmdb-v4"
+import { TmdbApiMetadata, } from "./md"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
 import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"

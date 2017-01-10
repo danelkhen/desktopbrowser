@@ -1,5 +1,8 @@
-/// <reference path="../../server/src/contracts.d.ts" />
-/// <reference path="../../server/src/contracts-typeorm.d.ts" />
+/// <reference path="../../server/src/contracts/model.d.ts" />
+/// <reference path="../../server/src/contracts/tmdb-v3.d.ts" />
+/// <reference path="../../server/src/contracts/tmdb-v4.d.ts" />
+/// <reference path="../../server/src/contracts/typeorm.d.ts" />
+
 import "./utils/global";
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
