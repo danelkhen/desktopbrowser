@@ -51,15 +51,19 @@ export class Scanner {
         let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name);
         let path = (mf.fsEntry && mf.fsEntry.key) || (mf.file && mf.file.Path);
         console.log("getImdbInfo", "start", filename);
-        let info = new FilenameParser().parse(filename);
-        let isTv = info.season != null;
+        mf.parsed = new FilenameParser().parse(filename);
+        if (mf.parsed == null) {
+            console.log("filename parsing returned null", filename);
+            return;
+        }
+        let isTv = mf.parsed.season != null;
         let media: TmdbMedia;
         if (isTv) {
-            let e = await this.app.tmdb.searchTvShows({ query: info.name })
+            let e = await this.app.tmdb.searchTvShows({ query: mf.parsed.name })
             media = e.results[0];
         }
         else {
-            let e = await this.app.tmdb.searchMovies({ query: info.name })
+            let e = await this.app.tmdb.searchMovies({ query: mf.parsed.name })
             media = e.results[0];
         }
         if (media == null) {

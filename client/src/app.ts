@@ -8,6 +8,7 @@ import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 import { Media as DsMedia } from "./media"
 import { File, ByFilename, FilenameParsedInfo, OrderBy, Config, FsEntry } from "contracts"
+import * as C from "contracts"
 
 export class App {
     fileService: FileService;
@@ -83,7 +84,7 @@ export class App {
     }
 
     async scan(): Promise<any> {
-        let x = await this.appService.invoke(t=>t.scanForMedia());
+        let x = await this.appService.invoke(t => t.scanForMedia());
         console.log(x);
         //let scanner = this.createScanner();
         //console.log("scan started", scanner);
@@ -129,9 +130,9 @@ export class App {
         return this.byFilename.find(null);
     }
 
-    async getFileMetadata(file: File|string): Promise<ByFilename> {
+    async getFileMetadata(file: File | string): Promise<ByFilename> {
         let name = file as string;
-        if(file instanceof File)
+        if (file instanceof File)
             name = (file as File).Name;
         let x = await this.byFilename.findOneById({ id: name });
         if (x == null)
@@ -250,17 +251,29 @@ export class App {
     fsEntryToMediaFile(x: FsEntry): MediaFile {
         return <MediaFile>{ fsEntry: x };
     }
-    async getLatestFsEntries(): Promise<FsEntry[]> {
-        return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, maxResults: 1000 } });
+    async getMediaFiles(): Promise<C.MediaFile[]> {
+        let x = await this.appService.getMediaFiles();
+        x.forEach(t => {
+            if (t.md == null) {
+                t.md = { key: t.fsEntry.basename };
+            }
+        });
+        return x;
+
     }
 
-    async getLatestMediaFiles(): Promise<MediaFile[]> {
-        let x = await this.getLatestFsEntries();
-        let mfs = x.map(t=>this.fsEntryToMediaFile(t));
-        for(let mf of mfs)
-            mf.md = await this.getFileMetadata(mf.fsEntry.basename);
-        return mfs;
-    }
+    //async getLatestFsEntries(): Promise<FsEntry[]> {
+    //    return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, maxResults: 1000 } });
+    //}
+
+    //async getLatestMediaFiles(): Promise<MediaFile[]> {
+    //    let x = await this.getLatestFsEntries();
+    //    console.log({ x });
+    //    let mfs = x.map(t => this.fsEntryToMediaFile(t));
+    //    for (let mf of mfs)
+    //        mf.md = await this.getFileMetadata(mf.fsEntry.basename);
+    //    return mfs;
+    //}
 
 
 }

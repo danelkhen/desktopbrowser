@@ -72,6 +72,7 @@ export class AppService extends ServiceBase<C.App> {
     }
     scanForMedia(): Promise<C.MediaScannerStatus> { return this.invoke(t => t.scanForMedia()); }
     scanStatus(): Promise<C.MediaScannerStatus> { return this.invoke(t => t.scanStatus()); }
+    getMediaFiles(): Promise<C.MediaFile[]> { return this.invoke(t => t.getMediaFiles()); }
 
 }
 

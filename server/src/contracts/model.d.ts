@@ -176,7 +176,7 @@
     export interface App {
         scanForMedia(): Promise<MediaScannerStatus>;
         scanStatus(): MediaScannerStatus;
-        getMediaFiles(): Promise<Partial<MediaFile>[]>;
+        getMediaFiles(): Promise<MediaFile[]>;
     }
 
     export interface MediaScannerStatus {

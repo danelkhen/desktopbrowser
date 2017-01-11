@@ -57,10 +57,13 @@ export class App implements C.App {
         return this.mediaScanner.status;
     }
 
-    async getMediaFiles(): Promise<Partial<C.MediaFile>[]> {
-        let q = this.db.fsEntries.createQueryBuilder("t").leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key").orderBy("t.mtime", "DESC").setMaxResults(1000);
+    async getMediaFiles(): Promise<C.MediaFile[]> {
+        let q = this.db.fsEntries.createQueryBuilder("t")
+            .leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key")
+            .orderBy("t.mtime", "DESC").setMaxResults(500);
+
         let x = await q.getMany();
-        let mfs = x.map(t => <Partial<C.MediaFile>>{ fsEntry: t, md: (t as any).md });
+        let mfs = x.map(t => <C.MediaFile>{ fsEntry: t, md: (t as any).md });
         x.forEach(t => delete (t as any).md);
         return mfs;
     }

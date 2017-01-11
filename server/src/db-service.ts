@@ -23,8 +23,16 @@ export class DbService<T> implements C.DbService<T> {
     findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> {
         return this.repo.findOneById(req.id, req.options);
     }
-    find(req: FindRequest): Promise<T[]> {
-        return this.repo.find(req.conditions, req.options);
+    async find(req: FindRequest): Promise<T[]> {
+        console.log("find", req);
+        try {
+            let res = await this.repo.find(req.conditions, req.options);
+            return res;
+        }
+        catch (e) {
+            console.log(e);
+            throw e;
+        }
     }
     _idPropName: string;
     getIdPropName() {

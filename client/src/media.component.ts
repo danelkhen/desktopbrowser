@@ -23,12 +23,10 @@ export class MediaComponent implements OnInit, OnChanges {
     filteredMovies: MediaFile[];
     selectedMovie: MediaFile;
 
-    ngOnInit(): void {
-        this.app.init()
-            .then(() => this.getAvailableMedia())
-            .then(() => this.getPopularMovies())
-            ;
-        //this.test4();
+    async ngOnInit() {
+        await this.app.init();
+        await this.getAvailableMedia();
+        await this.getPopularMovies();
     }
     ngOnChanges(changes: SimpleChanges): void { }
 
@@ -63,11 +61,18 @@ export class MediaComponent implements OnInit, OnChanges {
         this.movies = e.results.map(t => <MediaFile>{ md: {}, tmdb: t });
         console.log(this.movies);
     }
+    pageSize = 20;
+    nextPage() {
+        this.skip += this.pageSize;
+        this.getAvailableMedia();
+    }
+    skip: 0;
     async getAvailableMedia() {
-        let list = await this.app.getLatestMediaFiles(); //.getAvailableMedia();
-        let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
+        let list = await this.app.getMediaFiles();
+        console.log(list);
+        //let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
         //console.log(list2);
-        this.movies = list2.take(20);
+        this.movies = list.skip(this.skip).take(this.pageSize);
         await this.app.loadTmdbMediaDetails(this.movies);
         console.log(this.movies);
     }
@@ -135,6 +140,8 @@ export class MediaComponent implements OnInit, OnChanges {
     scanStatus: C.MediaScannerStatus;
     async scan() {
         this.scanStatus = await this.app.appService.scanForMedia();
+        await promiseSetTimeout(3000);
+        this.getAvailableMedia();
         while (this.scanStatus != null && this.scanStatus.finished == null) {
             this.scanStatus = await this.app.appService.scanStatus();
             await promiseSetTimeout(3000);

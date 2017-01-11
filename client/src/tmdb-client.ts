@@ -35,8 +35,8 @@ export class TmdbClient extends TmdbV3Client {
     }
 
     async onLogin(): Promise<any> {
-        await this.accountGetDetails();
-        console.log("onLogin finished", { rated: this.rated });
+        //TEMP: await this.accountGetDetails();
+        //console.log("onLogin finished", { rated: this.rated });
 
         //return Promise.resolve()
         //    .then(() => this.accountGetDetails())

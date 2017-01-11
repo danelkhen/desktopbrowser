@@ -45,10 +45,14 @@ export class Db {
         subscribers: [EverythingSubscriber],
         entities: [ByFilename, KeyValue, FsEntry],
         autoSchemaSync: true,
-        logging: { logQueries: false, }
+        logging: { logQueries: true, }
     };
-    init(): Promise<any> {
-        return createConnection(this.connectionOptions).then(connection => this.connection = connection);
+    async init(): Promise<any> {
+        this.connection = await createConnection(this.connectionOptions);
+        //this.connection.logger.logQuery = (a, b) => console.log(a.substr(0, 1000));
+        //this.connection.logger.logFailedQuery = (a, b) => { }; //console.log({ a: a.substr(0, 1000) });
+        //this.connection.logger.logQueryError = a => { }; //console.log({ a: a.substr(0, 1000) });
+        //this.connection.logger.log = (a, b) => { }; //console.log({ a: a.substr(0, 1000), b });
     }
     get byFilename(): Repository<ByFilename> { return this.connection && this.connection.getRepository(ByFilename); }
     get keyValue(): Repository<KeyValue> { return this.connection && this.connection.getRepository(KeyValue); }
