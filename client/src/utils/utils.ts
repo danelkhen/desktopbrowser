@@ -75,3 +75,14 @@ export function setIntersect<T>(x: Set<T>, y: Set<T>): Set<T> {
     x.forEach(t => x.has(t) && y.has(t) && list.push(t));
     return new Set(list);
 }
+
+export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => Promise<T> {
+    let promise: Promise<T> = null;
+    return function () {
+        console.log("promiseReuseIfStillRunning", { this: this });
+        if (promise != null)
+            return promise;
+        promise = action.call(this).then(t => { promise = null; return t; });
+        return promise;
+    };
+}

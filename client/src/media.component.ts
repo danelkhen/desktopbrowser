@@ -27,6 +27,7 @@ export class MediaComponent implements OnInit, OnChanges {
         await this.app.init();
         await this.getAvailableMedia();
         await this.getPopularMovies();
+        await this.app.scanAllFsEntries();
     }
     ngOnChanges(changes: SimpleChanges): void { }
 
@@ -68,11 +69,12 @@ export class MediaComponent implements OnInit, OnChanges {
     }
     skip: 0;
     async getAvailableMedia() {
-        let list = await this.app.getMediaFiles();
-        console.log(list);
+        let mfs = await this.app.getMediaFiles();
+        this.app.analyzeIfNeeded(mfs);
+        console.log(mfs);
         //let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
         //console.log(list2);
-        this.movies = list.skip(this.skip).take(this.pageSize);
+        this.movies = mfs.skip(this.skip).take(this.pageSize);
         await this.app.loadTmdbMediaDetails(this.movies);
         console.log(this.movies);
     }

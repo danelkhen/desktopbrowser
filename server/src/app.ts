@@ -57,10 +57,27 @@ export class App implements C.App {
         return this.mediaScanner.status;
     }
 
-    async getMediaFiles(): Promise<C.MediaFile[]> {
+    async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
+        //let files = await this.fsEntryService.find(req.find);
+        //let mfs: C.MediaFile[] = files.map(t => <C.MediaFile>{ fsEntry: t });
+        //let byKey = new Map<string, C.MediaFile>();
+        //mfs.forEach(t => byKey.set(t.fsEntry.basename, t));
+        //let keys = Array.from(files.keys());
+        //let mds = await this.db.byFilename.findByIds(keys);
+        //mds.forEach(md => {
+        //    let mf = byKey.get(md.key);
+        //    mf.md = md;
+        //});
+        //req.find.options.alias = "t";
+        //let q = this.db.fsEntries.createFindQueryBuilder(req.find.conditions, req.find.options);
+
         let q = this.db.fsEntries.createQueryBuilder("t")
-            .leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key")
-            .orderBy("t.mtime", "DESC").setMaxResults(500);
+            .leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key");
+        if (req.notScannedOnly)
+            q = q.where("md.scanned is null");
+        q = q.orderBy("t.mtime", "DESC").setFirstResult(req.firstResult || 0).setMaxResults(req.maxResults || 100);
+        //.where()
+        ;
 
         let x = await q.getMany();
         let mfs = x.map(t => <C.MediaFile>{ fsEntry: t, md: (t as any).md });

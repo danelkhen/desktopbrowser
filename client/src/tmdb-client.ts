@@ -172,19 +172,20 @@ export class TmdbClient extends TmdbV3Client {
         });
     }
 
-    getMovieOrTvByTypeAndId(typeAndId: string): Promise<MediaDetails> {
+    async getMovieOrTvByTypeAndId(typeAndId: string): Promise<MediaDetails> {
         if (typeAndId == null)
-            return Promise.resolve(null);
+            return null;
         let tokens = typeAndId.split("|");
         if (tokens.length < 2)
-            return Promise.resolve(null);
+            return null;
         let media_type = tokens[0];
         let id = tokens[1];
+        let media: MediaDetails = null;
         if (media_type == "movie")
-            return this.movieGetDetails({ movie_id: id as any, append_to_response: "account_states" });
-        if (media_type == "tv")
-            return this.tvGetDetails({ tv_id: id as any, append_to_response: "account_states" });
-        return Promise.resolve(null);
+            media = await this.movieGetDetails({ movie_id: id as any, append_to_response: "account_states" }) as MediaDetails;
+        else if (media_type == "tv")
+            media = await this.tvGetDetails({ tv_id: id as any, append_to_response: "account_states" }) as MediaDetails;
+        return media;
     }
 
     //watchedList: ListDetails;

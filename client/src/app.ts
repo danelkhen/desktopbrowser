@@ -3,7 +3,7 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
 import { FileService, ByFilenameService, KeyValueService, FsEntryService, AppService } from "./service"
 import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "tmdb-v3"
-import { nameof, promiseEach, setMinus, setPlus, setIntersect } from "./utils/utils"
+import { nameof, promiseEach, setMinus, setPlus, setIntersect, promiseReuseIfStillRunning } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 import { Media as DsMedia } from "./media"
@@ -50,6 +50,12 @@ export class App {
         await this.getSavedWatchlists();
         await this.refreshMediaInfos();
         await this.onInit();
+        let p1 = this.scanAllFsEntries();
+        let p2 = this.scanAllFsEntries();
+        await p1;
+        console.log("FINISHED p1");
+        await p2;
+        console.log("FINISHED p2");
     }
     onInit() {
         let t = this.tmdb;
@@ -140,10 +146,12 @@ export class App {
         return x;
     }
 
-    async analyzeIfNeeded(mf: MediaFile): Promise<any> {
-        if (mf.tmdb != null)
-            return;
-        await this.createScanner().analyze(mf);
+    async analyzeIfNeeded(mfs: MediaFile[]): Promise<any> {
+        for (let mf of mfs) {
+            if (mf.tmdb != null)
+                continue;
+            await this.createScanner().analyze(mf);
+        }
     }
 
     async getAvailableMedia(): Promise<MediaFile[]> {
@@ -176,11 +184,7 @@ export class App {
         for (let mf of mfs) {
             if (mf.tmdb != null)
                 continue;
-            if (mf.md.tmdbKey == null) {
-                await this.createScanner().analyze(mf);
-                if (mf.md.tmdbKey == null || mf.md.tmdbKey == "")
-                    continue;
-            }
+            await this.analyzeIfNeeded([mf]);
             mf.tmdb = await this.tmdb.getMovieOrTvByTypeAndId(mf.md.tmdbKey);
         }
         return mfs;
@@ -251,8 +255,8 @@ export class App {
     fsEntryToMediaFile(x: FsEntry): MediaFile {
         return <MediaFile>{ fsEntry: x };
     }
-    async getMediaFiles(): Promise<C.MediaFile[]> {
-        let x = await this.appService.getMediaFiles();
+    async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
+        let x = await this.appService.getMediaFiles(req);
         x.forEach(t => {
             if (t.md == null) {
                 t.md = { key: t.fsEntry.basename };
@@ -275,7 +279,32 @@ export class App {
     //    return mfs;
     //}
 
+    //scanAllFsEntries: () => Promise<any> = promiseReuseIfStillRunning(() => this._scanAllFsEntries());
+    @reusePromiseIfStillRunning()
+    async scanAllFsEntries(): Promise<any> {
+        console.log("STARTED scanAllFsEntries");
+        let req: C.GetMediaFilesRequest = { firstResult: 0, maxResults: 500, notScannedOnly: true };
+        while (true) {
+            let mfs = await this.getMediaFiles(req);
+            if (mfs.length == 0)
+                return;
+            req.firstResult += req.maxResults;
+            await this.analyzeIfNeeded(mfs);
+        }
 
+    }
+}
+
+function reusePromiseIfStillRunning() {
+    console.log("reusePromiseIfStillRunning att");
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        console.log("reusePromiseIfStillRunning apply", { target, propertyKey });
+        let func: () => Promise<any> = descriptor.value;
+        descriptor.value = promiseReuseIfStillRunning(func);
+        //let descriptor2 = Object.defineProperty(target, propertyKey, { value: promiseReuseIfStillRunning(func) });
+        //return descriptor2;
+        //descriptor.value = promiseReuseIfStillRunning(func); //TODO: return new descriptor instead
+    };
 }
 
 export interface MediaFile {

@@ -15,6 +15,7 @@ export class ByFilename implements C.ByFilename {
     @Column(CT.STRING, { nullable: true }) watched: boolean;
     @Column(CT.STRING, { nullable: true }) lastKnownPath: string;
     @Column(CT.STRING, { nullable: true }) modified: string;
+    @Column(CT.STRING, { nullable: true }) scanned: string;
 }
 
 @Table()
@@ -45,7 +46,7 @@ export class Db {
         subscribers: [EverythingSubscriber],
         entities: [ByFilename, KeyValue, FsEntry],
         autoSchemaSync: true,
-        logging: { logQueries: true, }
+        logging: { logQueries: false, }
     };
     async init(): Promise<any> {
         this.connection = await createConnection(this.connectionOptions);

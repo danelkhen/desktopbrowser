@@ -28,7 +28,9 @@
         episodeKey?: string;
         watched?: boolean;
         lastKnownPath?: string;
+        /** TODO: Deprecate */
         modified?: string;
+        scanned?: string;
     }
 
     export interface DbService<T> {
@@ -176,7 +178,13 @@
     export interface App {
         scanForMedia(): Promise<MediaScannerStatus>;
         scanStatus(): MediaScannerStatus;
-        getMediaFiles(): Promise<MediaFile[]>;
+        getMediaFiles(req?: GetMediaFilesRequest): Promise<MediaFile[]>;
+    }
+    export interface GetMediaFilesRequest {
+        firstResult?: number;
+        maxResults?: number;
+        //find?: FindRequest;
+        notScannedOnly?: boolean;
     }
 
     export interface MediaScannerStatus {
@@ -188,7 +196,7 @@
         started: Date;
         finished: Date;
     }
-    
+
     export interface MediaFile {
         md: ByFilename;
         file: File
