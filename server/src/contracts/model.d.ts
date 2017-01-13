@@ -199,7 +199,7 @@
 
     export interface MediaFile {
         md: ByFilename;
-        file: File
+        file?: File
         tmdb?;//TODO:: MediaDetails;
         tmdbBasic?//TODO:: TmdbMedia;
         type: string;

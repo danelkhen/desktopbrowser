@@ -4,13 +4,13 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbMedia, TmdbMovie, TvShow, Response } from "tmdb-v3"
 import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilename, FilenameParsedInfo } from "contracts"
 import { promiseEach, promiseSetTimeout, promiseReuseIfStillRunning } from "./utils/utils"
-import { MediaFile, App } from "./app"
+import { App } from "./app"
 import * as C from "contracts"
 
 export class Scanner {
     folders: string[];
     app: App;
-    results: MediaFile[];
+    results: C.MediaFile[];
     errors: any[] = [];
 
     videoExts = [".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"];
@@ -33,7 +33,7 @@ export class Scanner {
                 console.log("tmdbId already exists, skipping", { file, md });
                 continue;
             }
-            let mf: MediaFile = { file, md, type: null, parsed: null, fsEntry: null };
+            let mf: C.MediaFile = { file, md, type: null, parsed: null, fsEntry: null };
             try {
                 await this.analyze(mf);
             }
@@ -49,14 +49,14 @@ export class Scanner {
     }
 
 
-    async analyze(mf: MediaFile): Promise<any> {
+    async analyze(mf: C.MediaFile): Promise<any> {
         if (mf.md.scanned != null && mf.md.scanned != "")
             return;
         mf.md.scanned = new Date().format("yyyy-MM-dd HH:mm:ss");
         await this._analyze(mf);
         this.app.byFilename.persist(mf.md);
     }
-    async _analyze(mf: MediaFile): Promise<any> {
+    async _analyze(mf: C.MediaFile): Promise<any> {
         let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name);
         let path = (mf.fsEntry && mf.fsEntry.key) || (mf.file && mf.file.Path);
         console.log("getImdbInfo", "start", filename);

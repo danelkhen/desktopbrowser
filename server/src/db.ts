@@ -28,6 +28,7 @@ export class FsEntry implements C.FsEntry {
     @Column(CT.STRING, { nullable: true }) atime: string;
     @Column(CT.STRING, { nullable: true }) mtime: string;
     @Column(CT.STRING, { nullable: true }) ctime: string;
+    @Column(CT.BOOLEAN, { nullable: true }) exists: boolean;
 }
 
 @Table()

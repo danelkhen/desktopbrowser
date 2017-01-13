@@ -3,6 +3,7 @@ import { FileScanner, FileEvent } from "./utils/file-scanner"
 import { Db, FsEntry } from "./db";
 import * as Path from "path";
 import { App } from "./app";
+import * as C from "contracts";
 
 const FILE_TYPES = [
     "File",
@@ -34,6 +35,7 @@ export class MediaScanner {
         x.dirname = Path.dirname(e.path);
         x.extname = Path.extname(e.path);
         x.basename = Path.basename(e.path);
+        x.exists = true;
         return x;
     }
     scanner: FileScanner;
@@ -97,14 +99,5 @@ export class MediaScanner {
     //        return;
     //    setTimeout(() => this.status(), 1000);
     //}
-    status: MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null, started: null, finished: null };
-}
-export interface MediaScannerStatus {
-    stack: number;
-    scanned: number;
-    saved: number;
-    lastScanned: string;
-    lastSaved: string;
-    started: Date;
-    finished: Date;
+    status: C.MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null, started: null, finished: null };
 }

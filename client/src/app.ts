@@ -146,7 +146,7 @@ export class App {
         return x;
     }
 
-    async analyzeIfNeeded(mfs: MediaFile[]): Promise<any> {
+    async analyzeIfNeeded(mfs: C.MediaFile[]): Promise<any> {
         for (let mf of mfs) {
             if (mf.tmdb != null)
                 continue;
@@ -154,14 +154,14 @@ export class App {
         }
     }
 
-    async getAvailableMedia(): Promise<MediaFile[]> {
+    async getAvailableMedia(): Promise<C.MediaFile[]> {
         let orderBy: Provide<ByFilename, OrderBy> = { modified: "DESC" };
         let orderBy2 = {};
         Object.keys(orderBy).forEach(key => orderBy2["t." + key] = orderBy[key]);
         let mds = await this.byFilename.find({ options: { alias: "t", orderBy: orderBy2, maxResults: 100, } });
         let scanner = this.createScanner();
         mds = mds.filter(t => scanner.isVideoFile(t.key));
-        let mfs = mds.map(t => <MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
+        let mfs = mds.map(t => <C.MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
         //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
         //let groups = mfs.where(t => t.md.tmdbKey != null && t.md.tmdbKey != "").groupBy(t => t.md.tmdbKey);
         //let medias = groups.map(group => {
@@ -180,7 +180,7 @@ export class App {
 
     }
 
-    async loadTmdbMediaDetails(mfs: MediaFile[]): Promise<MediaFile[]> {
+    async loadTmdbMediaDetails(mfs: C.MediaFile[]): Promise<C.MediaFile[]> {
         for (let mf of mfs) {
             if (mf.tmdb != null)
                 continue;
@@ -228,7 +228,7 @@ export class App {
         }
     }
 
-    async markAsWatched(mf: MediaFile): Promise<any> {
+    async markAsWatched(mf: C.MediaFile): Promise<any> {
         mf.md.watched = true;
         if (mf.md.tmdbKey != null)
             await this.tmdb.markAsWatched(mf.md.tmdbKey);
@@ -252,8 +252,8 @@ export class App {
         }
     }
 
-    fsEntryToMediaFile(x: FsEntry): MediaFile {
-        return <MediaFile>{ fsEntry: x };
+    fsEntryToMediaFile(x: FsEntry): C.MediaFile {
+        return <C.MediaFile>{ fsEntry: x };
     }
     async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
         let x = await this.appService.getMediaFiles(req);
@@ -280,14 +280,16 @@ export class App {
     //}
 
     //scanAllFsEntries: () => Promise<any> = promiseReuseIfStillRunning(() => this._scanAllFsEntries());
-    @reusePromiseIfStillRunning()
+    @ReusePromiseIfStillRunning()
     async scanAllFsEntries(): Promise<any> {
         console.log("STARTED scanAllFsEntries");
         let req: C.GetMediaFilesRequest = { firstResult: 0, maxResults: 500, notScannedOnly: true };
         while (true) {
             let mfs = await this.getMediaFiles(req);
-            if (mfs.length == 0)
+            if (mfs.length == 0) {
+                console.log("Finished scanAllFsEntries");
                 return;
+            }
             req.firstResult += req.maxResults;
             await this.analyzeIfNeeded(mfs);
         }
@@ -295,27 +297,22 @@ export class App {
     }
 }
 
-function reusePromiseIfStillRunning() {
-    console.log("reusePromiseIfStillRunning att");
+function ReusePromiseIfStillRunning(): MethodDecorator {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        console.log("reusePromiseIfStillRunning apply", { target, propertyKey });
         let func: () => Promise<any> = descriptor.value;
         descriptor.value = promiseReuseIfStillRunning(func);
-        //let descriptor2 = Object.defineProperty(target, propertyKey, { value: promiseReuseIfStillRunning(func) });
-        //return descriptor2;
-        //descriptor.value = promiseReuseIfStillRunning(func); //TODO: return new descriptor instead
     };
 }
 
-export interface MediaFile {
-    md: ByFilename;
-    file: File
-    tmdb?: MediaDetails;
-    tmdbBasic?: TmdbMedia;
-    type: string;
-    parsed: FilenameParsedInfo;
-    fsEntry: FsEntry;
-}
+//export interface MediaFile {
+//    md: ByFilename;
+//    file: File
+//    tmdb?: MediaDetails;
+//    tmdbBasic?: TmdbMedia;
+//    type: string;
+//    parsed: FilenameParsedInfo;
+//    fsEntry: FsEntry;
+//}
 
 
 export interface TmdbMediaInfo {

@@ -6,7 +6,7 @@ import { KeyValueService } from "./key-value-service"
 import { FileService } from "./file-service"
 import { DbService } from "./db-service"
 import { Db, ByFilename, KeyValue, FsEntry } from "./db"
-import { MediaScanner, MediaScannerStatus } from "./media-scanner"
+import { MediaScanner } from "./media-scanner"
 
 
 export class App implements C.App {
@@ -47,13 +47,13 @@ export class App implements C.App {
         await this.fileService.init()
     }
 
-    async scanForMedia(): Promise<MediaScannerStatus> {
+    async scanForMedia(): Promise<C.MediaScannerStatus> {
         if (this.mediaScanner.isRunning())
             return this.mediaScanner.status;
         this.mediaScanner.scan();
         return this.mediaScanner.status;
     }
-    scanStatus(): MediaScannerStatus {
+    scanStatus(): C.MediaScannerStatus {
         return this.mediaScanner.status;
     }
 
@@ -80,7 +80,7 @@ export class App implements C.App {
         ;
 
         let x = await q.getMany();
-        let mfs = x.map(t => <C.MediaFile>{ fsEntry: t, md: (t as any).md });
+        let mfs = x.map(t => <C.MediaFile>{ fsEntry: t, md: (t as any).md, type: null, parsed: null });
         x.forEach(t => delete (t as any).md);
         return mfs;
     }

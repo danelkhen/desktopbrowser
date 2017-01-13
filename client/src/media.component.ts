@@ -3,7 +3,7 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "tmdb-v3"
 import { FileService, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy, promiseWhile, promiseSetTimeout } from "./utils/utils"
-import { App, MediaFile } from "./app"
+import { App } from "./app"
 import { Media, Movie, TvShow } from "./media"
 import { File, Config, } from "contracts"
 import * as C from "contracts"
@@ -19,9 +19,9 @@ export class MediaComponent implements OnInit, OnChanges {
 
     }
 
-    movies: MediaFile[];
-    filteredMovies: MediaFile[];
-    selectedMovie: MediaFile;
+    movies: C.MediaFile[];
+    filteredMovies: C.MediaFile[];
+    selectedMovie: C.MediaFile;
 
     async ngOnInit() {
         await this.app.init();
@@ -39,7 +39,7 @@ export class MediaComponent implements OnInit, OnChanges {
         this.filteredMovies = list;
     }
 
-    applyFilterType(list: MediaFile[]): MediaFile[] {
+    applyFilterType(list: C.MediaFile[]): C.MediaFile[] {
         if (this.filterType == null)
             return list;
         return list.filter(t => t.type == this.filterType);
@@ -47,7 +47,7 @@ export class MediaComponent implements OnInit, OnChanges {
     setFilter(key: string, value: string) {
     }
 
-    movie_click(movie: MediaFile) {
+    movie_click(movie: C.MediaFile) {
         this.selectedMovie = movie;
     }
 
@@ -59,7 +59,7 @@ export class MediaComponent implements OnInit, OnChanges {
         if (this.movies != null && this.movies.length > 0)
             return;
         let e = await this.app.tmdb.movieGetPopular({ language: "en" });
-        this.movies = e.results.map(t => <MediaFile>{ md: {}, tmdb: t });
+        this.movies = e.results.map(t => <C.MediaFile>{ md: {}, tmdb: t });
         console.log(this.movies);
     }
     pageSize = 20;
@@ -79,7 +79,7 @@ export class MediaComponent implements OnInit, OnChanges {
         console.log(this.movies);
     }
 
-    getName(mf: MediaFile): string {
+    getName(mf: C.MediaFile): string {
         let name = mf.md.key;
         if (mf.tmdb != null)
             name = mf.tmdb.name || mf.tmdb.title;
@@ -90,17 +90,28 @@ export class MediaComponent implements OnInit, OnChanges {
         return name;
     }
 
-    async play(mf: MediaFile): Promise<any> {
-        if (mf == null || mf.md == null)
+    canPlay(mf: C.MediaFile): boolean {
+        return true;
+    }
+    async play(mf: C.MediaFile): Promise<any> {
+        if (mf == null)
             return;
-        let file: File = null;
-        if (mf.md.lastKnownPath != null)
-            file = await this.app.fileService.GetFile({ Path: mf.md.lastKnownPath });
-        if (file == null)
-            file = await this.app.findFile(mf.md.key);
-        if (file == null)
+        let path: string = null;
+        if (path == null && mf.fsEntry != null)
+            path = mf.fsEntry.key;
+        if (path == null && mf.md != null) {
+            let file: File = null;
+            if (mf.md.lastKnownPath != null)
+                file = await this.app.fileService.GetFile({ Path: mf.md.lastKnownPath });
+            if (file == null)
+                file = await this.app.findFile(mf.md.key);
+            if (file == null)
+                return;
+            path = file.Path;
+        }
+        if (path == null)
             return;
-        await this.app.fileService.Execute({ Path: file.Path });
+        await this.app.fileService.Execute({ Path: path });
     }
 
     tmdbV4Login() {
@@ -111,7 +122,7 @@ export class MediaComponent implements OnInit, OnChanges {
         //console.log(await this.app.tmdbV4.invoke(t => t.accountGetCreatedLists({})));
     }
 
-    markAsWatched(mf: MediaFile) {
+    markAsWatched(mf: C.MediaFile) {
         return this.app.markAsWatched(mf);
         //return this.app.tmdb.markAsWatched(media.id);
     }

@@ -35,13 +35,13 @@
         <ul class="pool">
             <li *ngFor="let movie of movies">
                 <div class="poster">
-                    <img src="{{movie.tmdb?.poster?.w342}}">
+                    <img *ngIf="movie.tmdb?.poster?.w342" src="{{movie.tmdb?.poster?.w342}}">
                 </div>
                 <div class="details">
                     <h5 class="title">{{movie.tmdb?.title}}</h5>
                     <span class="playtime">{{movie.tmdb?.runtime}} min</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
-                    <a class="icon playicon" (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
+                    <a class="icon playicon" (click)="play(movie)"><img src="../img/media/play-icon.svg" /></a>
                     <button class="status" (click)="markAsWatched(media)">mark as watched</button>
                 </div>
             </li>
@@ -77,7 +77,7 @@
         <div *ngFor="let media of movies">
             <span>{{getName(media)}}</span> - <span>{{media.fsEntry?.mtime}}</span>
             <button (click)="markAsWatched(media)">mark as watched</button>
-            <button [class.disabled]="media.filenames!=null && media.filenames.length>0" (click)="media.play()">Play</button>
+            <button [class.disabled]="canPlay(media)" (click)="play(media)">Play</button>
         </div>
     </div>
     <br />
