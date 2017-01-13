@@ -6,7 +6,7 @@ import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvSho
 import { nameof, promiseEach, setMinus, setPlus, setIntersect, promiseReuseIfStillRunning } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
-import { Media as DsMedia } from "./media"
+//import { Media as DsMedia } from "./media"
 import { File, ByFilename, FilenameParsedInfo, OrderBy, Config, FsEntry } from "contracts"
 import * as C from "contracts"
 
@@ -214,10 +214,10 @@ export class App {
         Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
         return this.mediaInfos;
     }
-    getMedia(typeAndId: string): DsMedia {
-        let media = DsMedia.fromTmdbKey(typeAndId, this);
-        return media;
-    }
+    //getMedia(typeAndId: string): DsMedia {
+    //    let media = DsMedia.fromTmdbKey(typeAndId, this);
+    //    return media;
+    //}
 
     async findFile(name: string): Promise<File> {
         for (let folder of this.config.folders) {

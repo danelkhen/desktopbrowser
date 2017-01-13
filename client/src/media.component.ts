@@ -4,7 +4,7 @@ import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "tmdb-
 import { FileService, } from "./service"
 import { promiseEach, promiseMap, arrayDistinctBy, promiseWhile, promiseSetTimeout } from "./utils/utils"
 import { App } from "./app"
-import { Media, Movie, TvShow } from "./media"
+//import { Media, Movie, TvShow } from "./media"
 import { File, Config, } from "contracts"
 import * as C from "contracts"
 
@@ -19,6 +19,7 @@ export class MediaComponent implements OnInit, OnChanges {
 
     }
 
+    allMovies: C.MediaFile[];
     movies: C.MediaFile[];
     filteredMovies: C.MediaFile[];
     selectedMovie: C.MediaFile;
@@ -63,18 +64,25 @@ export class MediaComponent implements OnInit, OnChanges {
         console.log(this.movies);
     }
     pageSize = 20;
+    skip = 0;
+
+    prevPage() {
+        this.skip -= this.pageSize;
+        this.getAvailableMedia();
+    }
     nextPage() {
         this.skip += this.pageSize;
         this.getAvailableMedia();
     }
-    skip: 0;
     async getAvailableMedia() {
-        let mfs = await this.app.getMediaFiles();
-        this.app.analyzeIfNeeded(mfs);
-        console.log(mfs);
+        if (this.allMovies == null) {
+            this.allMovies = await this.app.getMediaFiles();
+            this.app.analyzeIfNeeded(this.allMovies);
+        }
         //let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
         //console.log(list2);
-        this.movies = mfs.skip(this.skip).take(this.pageSize);
+        this.movies = this.allMovies.skip(this.skip).take(this.pageSize);
+        console.log({ allMovies: this.allMovies, movies: this.movies });
         await this.app.loadTmdbMediaDetails(this.movies);
         console.log(this.movies);
     }

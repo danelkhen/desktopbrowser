@@ -2,7 +2,6 @@ import { MediaDetails, ListDetails, TmdbV3Api, GetApiConfigurationResponse, Tmdb
 import { TmdbV3Client, } from "./tmdb/v3/client"
 import { promiseEach, tryParseInt, setMinus } from "./utils/utils"
 import { App } from "./app";
-import { Media as DsMedia } from "./media";
 
 export class TmdbClient extends TmdbV3Client {
     constructor() {
@@ -202,14 +201,14 @@ export class TmdbClient extends TmdbV3Client {
     rated = new Set<string>();
     watched = new Set<string>();
 
-    markAsWatched(typeAndId: string, watched: boolean = true, refreshList?: boolean): Promise<any> {
-        let media = this.app.getMedia(typeAndId);
-        //return media.getInfo().then(() => {
-        if (media.info.watched != watched) {
-            media.info.watched = true;
-            return media.saveInfo();
-        }
-        return Promise.resolve();
+    async markAsWatched(typeAndId: string, watched: boolean = true, refreshList?: boolean): Promise<any> {
+        //let media = this.app.getMedia(typeAndId);
+        ////return media.getInfo().then(() => {
+        //if (media.info.watched != watched) {
+        //    media.info.watched = true;
+        //    return media.saveInfo();
+        //}
+        //return Promise.resolve();
         //});
         //if (this.watchedList == null)
         //    throw new Error();
