@@ -107,10 +107,11 @@ body {
   .pool li {
     justify-content: space-between;
     width: 11.25em;
-    height: auto;
     position: relative;
     border-radius: 4px;
-    margin-bottom: 1em; }
+    margin-bottom: 1em;
+    height: 16.875em;
+    align-self: flex-start; }
 
 .poster {
   width: 100%;

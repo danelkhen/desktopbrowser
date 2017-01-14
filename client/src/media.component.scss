@@ -142,11 +142,12 @@ body {
     li {
 	    justify-content: space-between;
 	    width: em(180);
-	    height: auto;
 	    position: relative;
 	    // border: 1px solid $media-border;
 	    border-radius: 4px;
 	    margin-bottom: em(16);
+      height: em(270);
+      align-self: flex-start;
 	}
 }
 
