@@ -76,12 +76,7 @@
     </div>
     <div>
         <div *ngFor="let media of movies">
-<<<<<<< HEAD
             <span>{{getName(media)}}</span> - <span>{{media.fsEntry?.mtime}}</span>
-=======
-            <span>{{getName(media)}}</span>
-
->>>>>>> updated the list height
             <button (click)="markAsWatched(media)">mark as watched</button>
             <button [class.disabled]="canPlay(media)" (click)="play(media)">Play</button>
         </div>
