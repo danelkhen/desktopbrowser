@@ -38,11 +38,11 @@
                     <img *ngIf="movie.tmdb?.poster?.w342" src="{{movie.tmdb?.poster?.w342}}">
                 </div>
                 <div class="details">
-                    <h5 class="title">{{movie.parsed.name}}</h5>
-                    <span class="playtime">{{movie.parsed.year}}</span>
+                    <h5 class="title">{{movie.tmdb?.original_title}}</h5>
+                    <span class="playtime">{{movie.tmdb?.release_date}}</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
                     <a class="icon playicon"><img src="../img/media/play-icon.svg" /></a>
-                    <button class="status">mark as watched</button>
+                    <button class="status" (click)="markAsWatched(media)">mark as watched</button>
                 </div>
             </li>
         </ul>
