@@ -16,6 +16,7 @@ body {
 /* Container Settings */
 .media {
   width: 100%;
+  font-family: "FreightSansProBook-Regular", "helvetica-neue", helvetica, sans-serif;
   display: flex; }
 
 /*** Everything on the left pane ***/
@@ -67,12 +68,6 @@ body {
 .rightpane {
   width: 85%;
   padding: 0 2.5em 2.5em; }
-
-.title {
-  margin-right: 1.25em;
-  font-size: 1.5em;
-  font-family: "FreightTextBold", monospace, "helvetica-neue", helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased; }
 
 .gridtop {
   display: flex;
@@ -215,3 +210,62 @@ body {
   box-shadow: 0px 0px 20px 3px rgba(0, 0, 0, 0.5); }
   .pool li:hover .details {
     opacity: 1; }
+
+/* Selected Movies */
+.backBtn {
+  position: absolute;
+  top: 0;
+  left: 0; }
+
+.selectedMovie {
+  width: 100%;
+  height: 100vh;
+  font-family: "FreightSansProBook-Regular", "helvetica-neue", helvetica, sans-serif; }
+  .selectedMovie .background-cover {
+    color: #fff;
+    display: flex;
+    flex-flow: row wrap;
+    position: relative;
+    padding: 4em;
+    width: 100%;
+    height: 100vh;
+    align-items: flex-end;
+    justify-content: flex-start;
+    background-image: linear-gradient(-269deg, #00010F 1%, rgba(0, 0, 15, 0.74) 74%); }
+  .selectedMovie .detailsLarge {
+    width: 60%;
+    padding-left: 2em; }
+    .selectedMovie .detailsLarge .title {
+      font-size: 3.5em;
+      color: #fff;
+      font-family: "FreightTextBold", monospace, "helvetica-neue", helvetica, sans-serif;
+      color: #07E2D4;
+      -webkit-font-smoothing: antialiased; }
+    .selectedMovie .detailsLarge .metadata {
+      margin-bottom: 1.5em;
+      padding: 0.75em 0; }
+      .selectedMovie .detailsLarge .metadata span {
+        margin-right: 1em;
+        font-size: 1.5em;
+        color: #4C4F64;
+        line-height: 0;
+        -webkit-font-smoothing: antialiased; }
+      .selectedMovie .detailsLarge .metadata .rate {
+        border: 1px solid #21263f;
+        border-radius: 50px;
+        padding: 0.1875em 0.375em; }
+        .selectedMovie .detailsLarge .metadata .rate object {
+          margin-right: 10px; }
+    .selectedMovie .detailsLarge .tag {
+      margin-bottom: 1em;
+      text-transform: uppercase;
+      letter-spacing: 2px; }
+    .selectedMovie .detailsLarge .synopsis {
+      font-size: 1.25em;
+      -webkit-font-smoothing: antialiased; }
+  .selectedMovie .cover {
+    width: 250px;
+    position: relative; }
+    .selectedMovie .cover img {
+      width: 100%;
+      height: auto; }

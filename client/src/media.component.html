@@ -1,7 +1,22 @@
 <div *ngIf="selectedMovie != null">
-    <button (click)="goBack()">Back</button>
-    <p>This will show when there's a selected movie</p>
-    <p><img src="{{selectedMovie.poster?.w185}}" /></p>
+    <div class="selectedMovie" [ngStyle]="{ 'background': 'transparent url(' + selectedMovie.tmdb?.backdrop?.original + ') top center no-repeat', 'background-size': 'cover' }">
+        <div class="background-cover">
+            <button class="backBtn" (click)="goBack()">Back</button>
+            <div class="cover"><img src="{{selectedMovie.tmdb?.poster?.w342}}" /></div>
+            <div class="detailsLarge">
+                <h3 class="title">{{selectedMovie.tmdb?.title}}</h3>
+                <div class="tag">{{selectedMovie.tmdb?.tagline}}</div>
+                <div class="metadata">
+                    <span class="rate">
+                    <object type="image/svg+xml" data="../img/media/rate-icon.svg"></object>{{selectedMovie.tmdb?.vote_average}}</span>
+                    <span>{{selectedMovie.tmdb?.release_date}}</span>
+                    <span>{{selectedMovie.tmdb?.runtime}} minutes</span>
+                    <span>{{selectedMovie.tmdb?.genres?.name}}</span>
+                </div>
+                <p class="synopsis">{{selectedMovie.tmdb?.overview}}</p>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="media" *ngIf="selectedMovie == null">
     <div class="leftpane">
@@ -41,7 +56,8 @@
                     <h5 class="title">{{movie.tmdb?.original_title}}</h5>
                     <span class="playtime">{{movie.tmdb?.release_date}}</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
-                    <a class="icon playicon"><img src="../img/media/play-icon.svg" /></a>
+                    <a class="icon playicon"  (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
+                    <button class="status">View</button>
                     <button class="status" (click)="markAsWatched(media)">mark as watched</button>
                 </div>
             </li>

@@ -14,6 +14,7 @@ body {
 .media {
     // max-width: em(1280);
     width: 100%;
+    font-family: $media-font-regular;
     display: flex;
 }
 
@@ -86,13 +87,6 @@ body {
 .rightpane {
     width: 85%;
     padding: 0 em(40) em(40);
-}
-
-.title {
-    margin-right: em(20);
-    font-size: em(24);
-    font-family: $media-font-bold;
-    -webkit-font-smoothing: antialiased;
 }
 
 .gridtop {
@@ -265,4 +259,89 @@ body {
             opacity: 1;
         }
     }
+}
+
+
+/* Selected Movies */
+
+.backBtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.selectedMovie {
+  width: 100%;
+  height: 100vh;
+  font-family: $media-font-regular;
+
+  .background-cover {
+    color: #fff;
+    display: flex;
+    flex-flow: row wrap;
+    position: relative;
+    padding: em(64);
+    width: 100%;
+    height: 100vh;
+    align-items: flex-end;
+    justify-content: flex-start;
+    background-image: linear-gradient(-269deg, #00010F 1%, rgba(0,0,15,0.74) 74%);
+  }
+
+  .detailsLarge {
+    width: 60%;
+    padding-left: em(32);
+
+    .title {
+      font-size: em(56);
+      color: #fff;
+      font-family: $media-font-bold;
+      color: $media-sec-color;
+       -webkit-font-smoothing: antialiased;
+    }
+
+    .metadata {
+      margin-bottom: em(24);
+      padding: em(12) 0;    
+
+      span {
+        margin-right: em(16);
+        font-size: em(24);
+        color: $media-grey-color;
+        line-height: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .rate {
+        border: 1px solid $media-border;
+        border-radius: 50px;
+        padding: em(3) em(6);
+
+        object {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .tag {
+      margin-bottom: em(16);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .synopsis {
+      font-size: em(20);
+       -webkit-font-smoothing: antialiased;
+    }
+  }
+
+  .cover {
+    width: 250px;
+    position : relative;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
