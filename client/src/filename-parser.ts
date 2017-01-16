@@ -26,7 +26,7 @@ export class FilenameParser {
     parseToken(token: string): Token {
         if (/^\[.+\]$/.test(token) || /^\(.+\)$/.test(token)) {
             let s = token.substr(1, token.length - 2);
-            let x = this.parseToken(token);
+            let x = this.parseToken(s);
             x.braces = token.substr(0, 1) + token.substr(token.length - 1);
             return x;
         }
