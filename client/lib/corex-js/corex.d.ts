@@ -63,7 +63,7 @@ interface ArrayConstructor {
     fromIterator(iterator: any): any;
 }
 interface Array<T> {
-    takeWhile(pred: any): T[];
+    takeWhile(pred: (item: T, index?: number) => boolean): T[];
     isArrayOfPairs?: boolean;
     contains(obj: T): boolean;
     remove(obj: T): boolean;

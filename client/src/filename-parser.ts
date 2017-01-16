@@ -1,4 +1,4 @@
-import {FilenameParsedInfo} from "contracts";
+import { FilenameParsedInfo } from "contracts";
 
 export class FilenameParser {
     parse(name: string): FilenameParsedInfo {
@@ -11,7 +11,7 @@ export class FilenameParser {
         let tokens2 = tokens.map(token => this.parseToken(token));
         let yearToken = tokens2.first(t => t.type == "year");
         let seToken = tokens2.first(t => t.type == "seasonEpisode");
-        let nameTokens = tokens2.takeWhile(t => t.type == "tag");
+        let nameTokens = tokens2.takeWhile(t => t.type == "tag" && t.braces == null);
         if (nameTokens.length > 0)
             x.name = nameTokens.map(t => t.value).join(" ");
         if (yearToken != null)
@@ -24,6 +24,12 @@ export class FilenameParser {
         return x;
     }
     parseToken(token: string): Token {
+        if (/^\[.+\]$/.test(token) || /^\(.+\)$/.test(token)) {
+            let s = token.substr(1, token.length - 2);
+            let x = this.parseToken(token);
+            x.braces = token.substr(0, 1) + token.substr(token.length - 1);
+            return x;
+        }
         let year = this.tryYear(token);
         let se = this.trySeasonEpisode(token);
         if (year != null) {
@@ -77,5 +83,6 @@ export interface Token {
     text: string;
     type: string;
     value: any;
+    braces?: string;
 }
 

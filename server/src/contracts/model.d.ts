@@ -1,4 +1,6 @@
 ﻿declare module "contracts" {
+    import * as tmdb from "tmdb-v3";
+
     export interface Config {
         key: string;
         folders?: ConfigFolder[];
@@ -200,8 +202,8 @@
     export interface MediaFile {
         md: ByFilename;
         file?: File
-        tmdb?;//TODO:: MediaDetails;
-        tmdbBasic?//TODO:: TmdbMedia;
+        tmdb?: tmdb.MediaDetails;
+        tmdbBasic?: tmdb.TmdbMedia;
         type: string;
         parsed: FilenameParsedInfo;
         fsEntry: FsEntry;

@@ -73,7 +73,7 @@
         <button (click)="addConfigFolder()">+</button>
         <button (click)="app.saveConfig()">save</button>
         <button (click)="scan()">scan</button>
-        <label>{{skip}}-{{skip+pageSize}} / {{allMovies?.length}}</label>
+        <label>{{skip}}-{{skip+pageSize}} / {{filteredMovies?.length}} (total: {{allMovies?.length}})</label>
         <button (click)="prevPage()">Prev Page</button>
         <button (click)="nextPage()">Next Page</button>
         <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>

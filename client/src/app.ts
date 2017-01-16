@@ -255,12 +255,21 @@ export class App {
     fsEntryToMediaFile(x: FsEntry): C.MediaFile {
         return <C.MediaFile>{ fsEntry: x };
     }
+    parseFilename(mf: C.MediaFile) {
+        if (mf.parsed != null)
+            return;
+        if (mf.fsEntry == null)
+            return;
+        let name = mf.fsEntry.basename;
+        mf.parsed = new FilenameParser().parse(mf.fsEntry.basename);
+    }
     async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
         let x = await this.appService.getMediaFiles(req);
         x.forEach(t => {
             if (t.md == null) {
                 t.md = { key: t.fsEntry.basename };
             }
+            this.parseFilename(t);
         });
         return x;
 

@@ -25,6 +25,8 @@ export class MediaComponent implements OnInit, OnChanges {
     selectedMovie: C.MediaFile;
 
     async ngOnInit() {
+        let win = window as any;
+        win._page = this;
         await this.app.init();
         await this.getAvailableMedia();
         await this.getPopularMovies();
@@ -35,17 +37,34 @@ export class MediaComponent implements OnInit, OnChanges {
     filterType: "movie" | "tv" | null;
 
     applyFilter() {
-        let list = this.movies;
+        let list = this.allMovies;
         list = this.applyFilterType(list);
         this.filteredMovies = list;
     }
 
+    getType(mf: C.MediaFile): string {
+        if (mf.type != null)
+            return mf.type;
+        if (mf.tmdb != null && mf.tmdb.media_type != null)
+            return mf.tmdb.media_type;
+        if (mf.parsed != null && mf.parsed.episode != null)
+            return "tv";
+        return null;
+    }
     applyFilterType(list: C.MediaFile[]): C.MediaFile[] {
         if (this.filterType == null)
             return list;
-        return list.filter(t => t.type == this.filterType);
+
+        return list.filter(t => {
+            let type = this.getType(t);
+            return type == null || type == this.filterType;
+        });
     }
+
     setFilter(key: string, value: string) {
+        if (key == "type")
+            this.filterType = value as any;
+        this.getAvailableMedia();
     }
 
     movie_click(movie: C.MediaFile) {
@@ -73,10 +92,10 @@ export class MediaComponent implements OnInit, OnChanges {
         this.getAvailableMedia();
     }
     nextPage() {
-        if (this.allMovies == null)
+        if (this.filteredMovies == null)
             return;
         this.skip += this.pageSize;
-        if (this.skip >= this.allMovies.length) {
+        if (this.skip >= this.filteredMovies.length) {
             this.skip -= this.pageSize;
             ////TODO: load more
             //this.skip = this.allMovies.length - this.pageSize;
@@ -86,33 +105,41 @@ export class MediaComponent implements OnInit, OnChanges {
         this.getAvailableMedia();
     }
     isLastPage(): boolean {
-        return this.skip + this.pageSize >= this.allMovies.length;
+        return this.skip + this.pageSize >= this.filteredMovies.length;
     }
     noMoreMoviesOnServer: boolean;
     async getAvailableMedia() {
         if (this.allMovies == null) {
-            this.allMovies = await this.app.getMediaFiles();
-            this.app.analyzeIfNeeded(this.allMovies);
+            let movies = await this.app.getMediaFiles();
+            this.allMovies = movies;
+            this.applyFilter();
+            this.applyPaging();
+            //this.app.analyzeIfNeeded(this.allMovies);
+            await this.app.loadTmdbMediaDetails(this.movies);
+            await this.app.loadTmdbMediaDetails(movies);
         }
-        else if (!this.noMoreMoviesOnServer && this.isLastPage()) {
+
+        this.applyFilter();
+        this.applyPaging();
+
+        if (!this.noMoreMoviesOnServer && this.isLastPage()) {
             let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length });
             if (moreMovies.length == 0) {
                 this.noMoreMoviesOnServer = true;
             }
             else {
+                console.log("Loading more movies");
                 this.allMovies.push(...moreMovies);
-                this.app.analyzeIfNeeded(moreMovies);
+                //this.app.analyzeIfNeeded(moreMovies);
+                await this.app.loadTmdbMediaDetails(moreMovies);
+                await this.getAvailableMedia();
             }
         }
-
-        //this.applyFilter();
-        await this.applyPaging();
+        //TODO: add higher priority: this.app.loadTmdbMediaDetails(this.movies);
     }
-    async applyPaging() {
-        this.movies = this.allMovies.skip(this.skip).take(this.pageSize);
-        console.log({ allMovies: this.allMovies, movies: this.movies });
-        await this.app.loadTmdbMediaDetails(this.movies);
-        console.log(this.movies);
+    applyPaging() {
+        this.movies = this.filteredMovies.skip(this.skip).take(this.pageSize);
+        console.log({ allMovies: this.allMovies, movies: this.movies, filtered: this.filteredMovies });
     }
 
     getName(mf: C.MediaFile): string {
