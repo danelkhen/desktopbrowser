@@ -4,7 +4,7 @@
             <button class="backBtn" (click)="goBack()">Back</button>
             <div class="cover"><img src="{{selectedMovie.tmdb?.poster?.w342}}" /></div>
             <div class="detailsLarge">
-                <h3 class="title">{{selectedMovie.tmdb?.title}}</h3>
+                <h3 class="title">{{getName(selectedMovie)}}</h3>
                 <div class="tag">{{selectedMovie.tmdb?.tagline}}</div>
                 <div class="metadata">
                     <span class="rate">
@@ -53,7 +53,7 @@
                     <img *ngIf="movie.tmdb?.poster?.w342" src="{{movie.tmdb?.poster?.w342}}">
                 </div>
                 <div class="details">
-                    <h5 class="title">{{movie.tmdb?.original_title}}</h5>
+                    <h5 class="title">{{getName(movie)}}</h5>
                     <span class="playtime">{{movie.tmdb?.release_date}}</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
                     <a class="icon playicon"  (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
@@ -73,6 +73,7 @@
         <button (click)="addConfigFolder()">+</button>
         <button (click)="app.saveConfig()">save</button>
         <button (click)="scan()">scan</button>
+        <label>{{skip}}-{{skip+pageSize}} / {{allMovies?.length}}</label>
         <button (click)="prevPage()">Prev Page</button>
         <button (click)="nextPage()">Next Page</button>
         <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>

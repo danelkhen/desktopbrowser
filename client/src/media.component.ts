@@ -68,19 +68,47 @@ export class MediaComponent implements OnInit, OnChanges {
 
     prevPage() {
         this.skip -= this.pageSize;
+        if (this.skip < 0)
+            this.skip = 0;
         this.getAvailableMedia();
     }
     nextPage() {
+        if (this.allMovies == null)
+            return;
         this.skip += this.pageSize;
+        if (this.skip >= this.allMovies.length) {
+            this.skip -= this.pageSize;
+            ////TODO: load more
+            //this.skip = this.allMovies.length - this.pageSize;
+        }
+        if (this.skip < 0)
+            this.skip = 0;
         this.getAvailableMedia();
     }
+    isLastPage(): boolean {
+        return this.skip + this.pageSize >= this.allMovies.length;
+    }
+    noMoreMoviesOnServer: boolean;
     async getAvailableMedia() {
         if (this.allMovies == null) {
             this.allMovies = await this.app.getMediaFiles();
             this.app.analyzeIfNeeded(this.allMovies);
         }
-        //let list2 = list.orderBy(t => [t.md.tmdbKey ? "1" : "2", t.md.watched ? "1" : "2", t.type, t.md.key].join("\t"));
-        //console.log(list2);
+        else if (!this.noMoreMoviesOnServer && this.isLastPage()) {
+            let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length });
+            if (moreMovies.length == 0) {
+                this.noMoreMoviesOnServer = true;
+            }
+            else {
+                this.allMovies.push(...moreMovies);
+                this.app.analyzeIfNeeded(moreMovies);
+            }
+        }
+
+        //this.applyFilter();
+        await this.applyPaging();
+    }
+    async applyPaging() {
         this.movies = this.allMovies.skip(this.skip).take(this.pageSize);
         console.log({ allMovies: this.allMovies, movies: this.movies });
         await this.app.loadTmdbMediaDetails(this.movies);
