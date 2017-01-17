@@ -25,8 +25,7 @@ export class MediaComponent implements OnInit, OnChanges {
     selectedMovie: C.MediaFile;
 
     async ngOnInit() {
-        let win = window as any;
-        win._page = this;
+        window["_page"] = this;
         await this.app.init();
         await this.getAvailableMedia();
         await this.getPopularMovies();
@@ -35,11 +34,13 @@ export class MediaComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void { }
 
     filterType: "movie" | "tv" | null;
+    filterWatched: boolean;
 
     applyFilter() {
         let list = this.allMovies;
         list = this.applyFilterType(list);
         list = this.applyFilterSearch(list);
+        list = this.applyFilterWatched(list);
         this.filteredMovies = list;
     }
 
@@ -77,12 +78,22 @@ export class MediaComponent implements OnInit, OnChanges {
             return x;
         });
     }
+    isWatched(mf: C.MediaFile): boolean {
+        return mf.md != null && mf.md.watched;
+    }
+    applyFilterWatched(list: C.MediaFile[]): C.MediaFile[] {
+        if (this.filterWatched == null)
+            return list;
+        return list.filter(t => this.filterWatched == this.isWatched(t));
+    }
 
-    setFilter(key: string, value: string) {
+    setFilter(key: string, value: any) {
         if (key == "type")
-            this.filterType = value as any;
+            this.filterType = value;
         else if (key == "search")
             this.filterSearch = value;
+        else if (key == "watched")
+            this.filterWatched = value;
         this.getAvailableMedia();
     }
     async scheduleApplyFilter() {
@@ -245,6 +256,10 @@ export class MediaComponent implements OnInit, OnChanges {
             this.scanStatus = await this.app.appService.scanStatus();
             await promiseSetTimeout(3000);
         }
+    }
+
+    async reAnalyze() {
+        await this.app.analyze(this.movies, { force: true });
     }
 
 

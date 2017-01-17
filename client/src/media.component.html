@@ -30,6 +30,10 @@
             <button (click)="setFilter('type', null)" class="allmedia selected">All Media</button>
             <button (click)="setFilter('type', 'tv')" class="tv">TV Shows</button>
             <button (click)="setFilter('type', 'movie')" class="movie">Movies</button>
+
+            <button (click)="setFilter('watched', null)" class="selected">All Media</button>
+            <button (click)="setFilter('watched', true)">watched</button>
+            <button (click)="setFilter('watched', false)">not watched</button>
         </div>
         <div class="filter explore">
             <span class="title">Explore</span>
@@ -73,6 +77,7 @@
         <button (click)="addConfigFolder()">+</button>
         <button (click)="app.saveConfig()">save</button>
         <button (click)="scan()">scan</button>
+        <button (click)="reAnalyze()">re-analyze</button>
         <label>{{skip}}-{{skip+pageSize}} / {{filteredMovies?.length}} (total: {{allMovies?.length}})</label>
         <button (click)="prevPage()">Prev Page</button>
         <button (click)="nextPage()">Next Page</button>

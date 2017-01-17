@@ -9,7 +9,21 @@ export class TmdbScheduler {
     }
 
     enqueueXhrRequest(pc: ProxyCall<any>): Promise<any> {
-        let task = new SingleTask(new ActionTask(() => this.owner.executeProxyCall(pc)));
+        let task = this.queue.find(t => {
+            let pc2 = t.data as ProxyCall<any>;
+            if (pc.name != pc2.name)
+                return false;
+            if (pc.args.length != pc2.args.length)
+                return false;
+            if (JSON.stringify(pc.args) != JSON.stringify(pc2.args))
+                return false;
+            return true;
+        });
+        if (task != null) {
+            console.log("found similar ProxyCall, reusing", task, pc);
+            return task.toPromise();
+        }
+        task = new SingleTask(new ActionDataTask(pc, t => this.owner.executeProxyCall(t)));
         task.data = pc;
         this.queue.push(task);
         this.scheduleProcessQueue();
@@ -28,9 +42,9 @@ export class TmdbScheduler {
     }
 
     processQueue() {
-        console.log("processQueue", "started", this.owner.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
+        //console.log("processQueue", "started", this.owner.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
         this._processQueue();
-        console.log("processQueue", "ended", this.owner.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
+        //console.log("processQueue", "ended", this.owner.rateLimit, this.queue.length, JSON.stringify(this.queue.map(t => ({ started: t.started, ended: t.ended, name: t.data.name }))));
     }
     _processQueue() {
         for (let i = 0; i < 10; i++) {
@@ -62,7 +76,7 @@ export class TmdbScheduler {
 
     queue: SingleTask<any>[] = [];
     getTimeToWait(): number {
-        if (this.owner.rateLimit == null || this.owner.rateLimit.remaining > 2)
+        if (this.owner.rateLimit == null || this.owner.rateLimit.remaining > 10)
             return 0;
         let endTime = this.owner.rateLimit.reset * 1000;
         let now: number = new Date().valueOf();
@@ -99,6 +113,18 @@ export class ActionTask<T> implements Task<T>{
     async execute(): Promise<T> {
         this.started = new Date();
         let res = await this.action();
+        this.ended = new Date();
+        return res;
+    }
+}
+export class ActionDataTask<D, T> implements Task<T>{
+    constructor(public data: D, public action: (data: D) => Promise<T>) {
+    }
+    started: Date;
+    ended: Date;
+    async execute(): Promise<T> {
+        this.started = new Date();
+        let res = await this.action(this.data);
         this.ended = new Date();
         return res;
     }

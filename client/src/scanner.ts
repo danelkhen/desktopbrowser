@@ -28,7 +28,7 @@ export class Scanner {
         let videoFiles = res.Files.filter(t => this.isVideoFile(t.Name));
         for (let file of videoFiles) {
             let md = await this.app.getFileMetadata(file);
-            md.modified = file.Modified;
+            //md.modified = file.Modified;
             if (md != null && md.tmdbKey != null) {
                 console.log("tmdbId already exists, skipping", { file, md });
                 continue;
@@ -49,8 +49,8 @@ export class Scanner {
     }
 
 
-    async analyze(mf: C.MediaFile): Promise<any> {
-        if (mf.md.scanned != null && mf.md.scanned != "")
+    async analyze(mf: C.MediaFile, opts?: { force?: boolean }): Promise<any> {
+        if (mf.md.scanned != null && mf.md.scanned != "" && (opts == null || !opts.force))
             return;
         mf.md.scanned = new Date().format("yyyy-MM-dd HH:mm:ss");
         await this._analyze(mf);
@@ -68,13 +68,17 @@ export class Scanner {
         let isTv = mf.parsed.season != null;
         let media: TmdbMedia;
         if (isTv) {
-            let e = await this.app.tmdb.searchTvShows({ query: mf.parsed.name })
+            let e = await this.app.tmdb.searchTvShows({ query: mf.parsed.name });
             media = e.results[0];
         }
         else {
-            let e = await this.app.tmdb.searchMovies({ query: mf.parsed.name })
-            media = e.results[0];
+            let e = await this.app.tmdb.searchMulti({ query: mf.parsed.name });
+            media = e.results.first(t => t.media_type == "tv" || t.media_type == "movie") as TmdbMedia;
         }
+        //else {
+        //    let e = await this.app.tmdb.searchMovies({ query: mf.parsed.name })
+        //    media = e.results[0];
+        //}
         mf.tmdbBasic = media;
         if (mf.tmdbBasic != null) {
             mf.type = mf.tmdbBasic.media_type;

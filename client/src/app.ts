@@ -21,7 +21,7 @@ export class App {
 
     constructor() {
         console.log("App ctor", this);
-        window["app"] = this;
+        window["_app"] = this;
         this.fileService = new FileService();
         this.byFilename = new ByFilenameService();
         this.keyValue = new KeyValueService();
@@ -133,7 +133,7 @@ export class App {
     }
 
     async getAllFilesMetadata(): Promise<ByFilename[]> {
-        return this.byFilename.find(null);
+        return this.byFilename.find();
     }
 
     async getFileMetadata(file: File | string): Promise<ByFilename> {
@@ -146,11 +146,11 @@ export class App {
         return x;
     }
 
-    async analyzeIfNeeded(mfs: C.MediaFile[]): Promise<any> {
+    async analyze(mfs: C.MediaFile[], opts?: { force?: boolean }): Promise<any> {
         for (let mf of mfs) {
-            if (mf.tmdb != null)
+            if (mf.tmdb != null && (opts == null || !opts.force))
                 continue;
-            await this.createScanner().analyze(mf);
+            await this.createScanner().analyze(mf, opts);
         }
     }
 
@@ -184,7 +184,7 @@ export class App {
         for (let mf of mfs) {
             if (mf.tmdb != null)
                 continue;
-            await this.analyzeIfNeeded([mf]);
+            await this.analyze([mf]);
             mf.tmdb = await this.tmdb.getMovieOrTvByTypeAndId(mf.md.tmdbKey);
         }
         return mfs;
@@ -275,9 +275,9 @@ export class App {
 
     }
 
-    //async getLatestFsEntries(): Promise<FsEntry[]> {
-    //    return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, maxResults: 1000 } });
-    //}
+    async getLatestFsEntries(): Promise<FsEntry[]> {
+        return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, } }); //maxResults: 1000 
+    }
 
     //async getLatestMediaFiles(): Promise<MediaFile[]> {
     //    let x = await this.getLatestFsEntries();
@@ -300,7 +300,7 @@ export class App {
                 return;
             }
             req.firstResult += req.maxResults;
-            await this.analyzeIfNeeded(mfs);
+            await this.analyze(mfs);
         }
 
     }

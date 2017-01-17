@@ -3,7 +3,6 @@ import * as Fs from "./fs"
 import * as Process from "process"
 import * as Path from "path"
 
-//normalize('\\foo\\bar\\baz\\');
 export class FileScanner {
     async onDir(obj: FileEvent): Promise<boolean | void> { }
     async onDirChildren(obj: DirChildrenEvent): Promise<any> { }
@@ -14,45 +13,63 @@ export class FileScanner {
     resume() { return this.manual.resume(); }
     waitForResume() { return this.manual.waitForResume(); }
 
+    prioritizeRecentlyModified: boolean;
+
+    protected stackPush(fe: FileEvent) {
+        this.stack.push(fe);
+        if (this.prioritizeRecentlyModified)
+            this.stack.orderByDescending(t => t.stats.mtime.valueOf());
+    }
+    protected stackPop(): FileEvent {
+        return this.stack.pop();
+    }
+    protected stackHasMore(): boolean {
+        return this.stack.length > 0;
+    }
 
 
-    stack:FileEvent[];
+
+    stack: FileEvent[];
     async scan(dirs: string[]): Promise<any> {
-        let stack: FileEvent[] = [];
-        this.stack = stack;
+        this.stack = [];
         for (let startDir of dirs) {
+            await this.waitForResume();
             let x = { path: normalizePath(startDir), stats: null };
             x.stats = await Fs.stat(x.path);
-            stack.push(x);
-            while (stack.length > 0) {
-                await this.waitForResume();
-                let dir = stack.pop();
-                try {
-                    let enter = await this.onDir(dir);
-                    if (enter != null && !enter)
-                        continue;
-                    let children = await Fs.readdir(dir.path);
-                    await this.onDirChildren({ dir, children });
-                    await this.waitForResume();
-                    for (let child of children) {
-                        await this.waitForResume();
-                        let dc = <FileEvent>{ stats: null, path: normalizePath(Path.join(dir.path, child)) };
-                        try {
-                            dc.stats = await Fs.stat(dc.path);
-                        }
-                        catch (e) {
-                            await this.onError(e);
-                            continue;
-                        }
-                        await this.onDirChild(dc);
-                        if (dc.stats.isDirectory())
-                            stack.push(dc);
-                    }
-                }
-                catch (e) {
-                    this.onError(e);
+            this.stackPush(x);
+        }
+        await this._scan();
+    }
+
+    protected async _scan(): Promise<any> {
+        while (this.stackHasMore()) {
+            await this.waitForResume();
+            let dir = this.stackPop();
+            try {
+                let enter = await this.onDir(dir);
+                if (enter != null && !enter)
                     continue;
+                let children = await Fs.readdir(dir.path);
+                await this.onDirChildren({ dir, children });
+                await this.waitForResume();
+                for (let child of children) {
+                    await this.waitForResume();
+                    let dc = <FileEvent>{ stats: null, path: normalizePath(Path.join(dir.path, child)) };
+                    try {
+                        dc.stats = await Fs.stat(dc.path);
+                    }
+                    catch (e) {
+                        await this.onError(e);
+                        continue;
+                    }
+                    await this.onDirChild(dc);
+                    if (dc.stats.isDirectory())
+                        this.stackPush(dc);
                 }
+            }
+            catch (e) {
+                this.onError(e);
+                continue;
             }
         }
     }

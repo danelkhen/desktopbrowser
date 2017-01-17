@@ -56,6 +56,7 @@ export class MediaScanner {
 
         let db = this.app.db;
         let scanner = new FileScanner();
+        scanner.prioritizeRecentlyModified = true;
         this.scanner = scanner;
         let dirs = config.folders.map(t => t.path);
         let since: Date = null;

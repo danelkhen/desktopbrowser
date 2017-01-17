@@ -3,7 +3,7 @@ import * as tmdb from "tmdb-v3"
 import { TmdbV4Api } from "tmdb-v4"
 import { TmdbApiMetadata } from "./md"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
-import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
+import { promiseSetTimeout, promiseWhile, tryParseInt } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"
 import { TmdbScheduler } from "./scheduler"
 
@@ -20,7 +20,7 @@ export class TmdbV3Or4Proxy<T extends TmdbV3Api | TmdbV4Api> extends Proxy<T> {
         let md = this.md[pc.name as any];
         let path = md.path;
         let prms: any = { ...pc.args[0] };
-        if(this.api_key!=null && prms.api_key==null)
+        if (this.api_key != null && prms.api_key == null)
             prms.api_key = this.api_key;
 
         let body: any = null;
@@ -47,15 +47,19 @@ export class TmdbV3Or4Proxy<T extends TmdbV3Api | TmdbV4Api> extends Proxy<T> {
         let res = await xhr(xhrReq);
         let x = xhrReq.xhr;
         let rl: RateLimit = {
-            limit: parseInt(x.getResponseHeader("X-RateLimit-Limit")),
-            remaining: parseInt(x.getResponseHeader("X-RateLimit-Remaining")),
-            reset: parseInt(x.getResponseHeader("X-RateLimit-Reset")),
+            limit: tryParseInt(x.getResponseHeader("X-RateLimit-Limit")),
+            remaining: tryParseInt(x.getResponseHeader("X-RateLimit-Remaining")),
+            reset: tryParseInt(x.getResponseHeader("X-RateLimit-Reset")),
         };
-        if (TmdbHelper.rateLimitIsNewer(rl, this.rateLimit)) {
+        let resDate = new Date(x.getResponseHeader("date"));
+        let now = new Date();
+        let diff = now.valueOf() - resDate.valueOf();
+        let probablyCached =  diff > (60 * 1000);
+        if (!probablyCached && TmdbHelper.rateLimitIsNewer(rl, this.rateLimit)) {
             this.rateLimit = rl;
         }
         else {
-            console.log("probably cached response", rl, this.rateLimit);
+            console.log("probably cached response", rl, this.rateLimit, diff);
             //cached response
         }
         console.log({ name: pc.name, res, path, pc, prms, rateLimit: this.rateLimit });
@@ -100,6 +104,8 @@ export class TmdbHelper {
     static rateLimitIsNewer(x: RateLimit, y: RateLimit): boolean {
         if (y == null)
             return true;
+        if (x.limit == null || x.remaining == null || x.reset == null)
+            return false;
         if (x.reset < y.reset)
             return false;
         if (x.reset > y.reset)
