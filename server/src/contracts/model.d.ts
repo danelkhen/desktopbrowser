@@ -31,7 +31,7 @@
         watched?: boolean;
         lastKnownPath?: string;
         /** TODO: Deprecate */
-        modified?: string;
+        //modified?: string;
         scanned?: string;
     }
 

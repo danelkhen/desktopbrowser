@@ -43,7 +43,7 @@
         <div class="gridtop">
             <!-- <div class="title">your watchlist</div> -->
             <div class="search">
-                <input type="text" placeholder="Quick Search">
+                <input type="text" placeholder="Quick Search" [(ngModel)]="filterSearch" (input)="scheduleApplyFilter()" />
             </div>
         </div>
         <!-- <h3 class="title">your watchlist</h3> -->
@@ -95,6 +95,7 @@
         <div *ngFor="let media of movies">
             <span>{{getName(media)}}</span> - <span>{{media.fsEntry?.mtime}}</span>
             <button (click)="markAsWatched(media)">mark as watched</button>
+            <label>watched={{media.md?.watched}}</label>
             <button [class.disabled]="canPlay(media)" (click)="play(media)">Play</button>
         </div>
     </div>

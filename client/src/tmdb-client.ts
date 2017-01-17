@@ -181,9 +181,9 @@ export class TmdbClient extends TmdbV3Client {
         let id = tokens[1];
         let media: MediaDetails = null;
         if (media_type == "movie")
-            media = await this.movieGetDetails({ movie_id: id as any, append_to_response: "account_states" }) as MediaDetails;
+            media = await this.movieGetDetails({ movie_id: id as any, }) as MediaDetails; //append_to_response: "account_states" 
         else if (media_type == "tv")
-            media = await this.tvGetDetails({ tv_id: id as any, append_to_response: "account_states" }) as MediaDetails;
+            media = await this.tvGetDetails({ tv_id: id as any, }) as MediaDetails; //append_to_response: "account_states"
         return media;
     }
 

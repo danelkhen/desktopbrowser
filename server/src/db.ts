@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Table, Column, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
+import { Table, Column, Index, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
 import { ColumnTypes as CT } from "typeorm/metadata/types/ColumnTypes";
 import * as path from "path";
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent, } from "typeorm";
@@ -10,7 +10,7 @@ import * as C from "contracts"
 export class ByFilename implements C.ByFilename {
     @PrimaryColumn() key: string;
     @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
-    @Column(CT.STRING, { nullable: true }) tmdbKey: string;
+    @Column(CT.STRING, { nullable: true }) @Index() tmdbKey: string;
     @Column(CT.STRING, { nullable: true }) episodeKey: string;
     @Column(CT.STRING, { nullable: true }) watched: boolean;
     @Column(CT.STRING, { nullable: true }) lastKnownPath: string;
@@ -21,7 +21,7 @@ export class ByFilename implements C.ByFilename {
 @Table()
 export class FsEntry implements C.FsEntry {
     @PrimaryColumn() key: string;
-    @Column(CT.STRING, { nullable: true }) basename: string;
+    @Column(CT.STRING, { nullable: true }) @Index() basename: string;
     @Column(CT.STRING, { nullable: true }) dirname: string;
     @Column(CT.STRING, { nullable: true }) extname: string;
     @Column(CT.STRING, { nullable: true }) type: string;

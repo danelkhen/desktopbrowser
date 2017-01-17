@@ -154,31 +154,31 @@ export class App {
         }
     }
 
-    async getAvailableMedia(): Promise<C.MediaFile[]> {
-        let orderBy: Provide<ByFilename, OrderBy> = { modified: "DESC" };
-        let orderBy2 = {};
-        Object.keys(orderBy).forEach(key => orderBy2["t." + key] = orderBy[key]);
-        let mds = await this.byFilename.find({ options: { alias: "t", orderBy: orderBy2, maxResults: 100, } });
-        let scanner = this.createScanner();
-        mds = mds.filter(t => scanner.isVideoFile(t.key));
-        let mfs = mds.map(t => <C.MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
-        //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
-        //let groups = mfs.where(t => t.md.tmdbKey != null && t.md.tmdbKey != "").groupBy(t => t.md.tmdbKey);
-        //let medias = groups.map(group => {
-        //    let typeAndId = group[0].md.tmdbKey;
-        //    if (typeAndId == null)
-        //        return null;
-        //    let media = this.getMedia(typeAndId);
-        //    media.filenames = group.map(t => t.key);
-        //    if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
-        //        media.info.watched = true;
-        //    }
-        //    return media;
-        //});
-        //console.log({ medias });
-        return mfs;
+    //async getAvailableMedia(): Promise<C.MediaFile[]> {
+    //    let orderBy: Provide<ByFilename, OrderBy> = { modified: "DESC" };
+    //    let orderBy2 = {};
+    //    Object.keys(orderBy).forEach(key => orderBy2["t." + key] = orderBy[key]);
+    //    let mds = await this.byFilename.find({ options: { alias: "t", orderBy: orderBy2, maxResults: 100, } });
+    //    let scanner = this.createScanner();
+    //    mds = mds.filter(t => scanner.isVideoFile(t.key));
+    //    let mfs = mds.map(t => <C.MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
+    //    //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
+    //    //let groups = mfs.where(t => t.md.tmdbKey != null && t.md.tmdbKey != "").groupBy(t => t.md.tmdbKey);
+    //    //let medias = groups.map(group => {
+    //    //    let typeAndId = group[0].md.tmdbKey;
+    //    //    if (typeAndId == null)
+    //    //        return null;
+    //    //    let media = this.getMedia(typeAndId);
+    //    //    media.filenames = group.map(t => t.key);
+    //    //    if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
+    //    //        media.info.watched = true;
+    //    //    }
+    //    //    return media;
+    //    //});
+    //    //console.log({ medias });
+    //    return mfs;
 
-    }
+    //}
 
     async loadTmdbMediaDetails(mfs: C.MediaFile[]): Promise<C.MediaFile[]> {
         for (let mf of mfs) {
@@ -235,22 +235,22 @@ export class App {
         await this.byFilename.persist(mf.md);
     }
 
-    async checkFileMds() {
-        let mds = await this.getAllFilesMetadata();
-        for (let md of mds) {
-            if (md.lastKnownPath == null)
-                continue;
-            let file = await this.fileService.GetFile({ Path: md.lastKnownPath });
-            if (file == null) {
-                console.log("file in lastKnownPath wasn't found", md);
-                continue;
-            }
-            if (md.modified == null) {
-                md.modified = file.Modified;
-                this.byFilename.persist(md);
-            }
-        }
-    }
+    //async checkFileMds() {
+    //    let mds = await this.getAllFilesMetadata();
+    //    for (let md of mds) {
+    //        if (md.lastKnownPath == null)
+    //            continue;
+    //        let file = await this.fileService.GetFile({ Path: md.lastKnownPath });
+    //        if (file == null) {
+    //            console.log("file in lastKnownPath wasn't found", md);
+    //            continue;
+    //        }
+    //        if (md.modified == null) {
+    //            md.modified = file.Modified;
+    //            this.byFilename.persist(md);
+    //        }
+    //    }
+    //}
 
     fsEntryToMediaFile(x: FsEntry): C.MediaFile {
         return <C.MediaFile>{ fsEntry: x };

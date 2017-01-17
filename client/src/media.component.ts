@@ -39,6 +39,7 @@ export class MediaComponent implements OnInit, OnChanges {
     applyFilter() {
         let list = this.allMovies;
         list = this.applyFilterType(list);
+        list = this.applyFilterSearch(list);
         this.filteredMovies = list;
     }
 
@@ -60,11 +61,33 @@ export class MediaComponent implements OnInit, OnChanges {
             return type == null || type == this.filterType;
         });
     }
+    filterSearch: string;
+    applyFilterSearch(list: C.MediaFile[]): C.MediaFile[] {
+        if (this.filterSearch == null || this.filterSearch == "" || this.filterSearch.trim() == "")
+            return list;
+        let tokens = this.filterSearch.split(' ').map(t => t.trim().toLowerCase());
+
+        return list.filter(t => {
+            if (t.fsEntry == null)
+                return true;
+            let name = t.fsEntry.basename.toLowerCase();
+            if (name == null)
+                return true;
+            let x = tokens.every(t => name.contains(t))
+            return x;
+        });
+    }
 
     setFilter(key: string, value: string) {
         if (key == "type")
             this.filterType = value as any;
+        else if (key == "search")
+            this.filterSearch = value;
         this.getAvailableMedia();
+    }
+    async scheduleApplyFilter() {
+        await promiseSetTimeout(100);
+        await this.getAvailableMedia();
     }
 
     movie_click(movie: C.MediaFile) {
