@@ -19,6 +19,12 @@ export class MediaComponent implements OnInit, OnChanges {
 
     }
 
+    filter: MediaFilters = {
+        type: null,
+        watched: null,
+        groupSimilar: true,
+        search: null,
+    };
     allMovies: C.MediaFile[];
     movies: C.MediaFile[];
     filteredMovies: C.MediaFile[];
@@ -33,14 +39,13 @@ export class MediaComponent implements OnInit, OnChanges {
     }
     ngOnChanges(changes: SimpleChanges): void { }
 
-    filterType: "movie" | "tv" | null;
-    filterWatched: boolean;
 
     applyFilter() {
         let list = this.allMovies;
         list = this.applyFilterType(list);
         list = this.applyFilterSearch(list);
         list = this.applyFilterWatched(list);
+        list = this.applyFilterGroupSimilar(list);
         this.filteredMovies = list;
     }
 
@@ -54,19 +59,31 @@ export class MediaComponent implements OnInit, OnChanges {
         return null;
     }
     applyFilterType(list: C.MediaFile[]): C.MediaFile[] {
-        if (this.filterType == null)
+        if (this.filter.type == null)
             return list;
 
         return list.filter(t => {
             let type = this.getType(t);
-            return type == null || type == this.filterType;
+            return type == null || type == this.filter.type;
         });
     }
-    filterSearch: string;
-    applyFilterSearch(list: C.MediaFile[]): C.MediaFile[] {
-        if (this.filterSearch == null || this.filterSearch == "" || this.filterSearch.trim() == "")
+
+    getSimilarKey(mf: C.MediaFile): string {
+        return mf.md && mf.md.tmdbKey || mf.parsed && mf.parsed.name || mf.fsEntry && mf.fsEntry.basename;
+    }
+    applyFilterGroupSimilar(list: C.MediaFile[]): C.MediaFile[] {
+        if (!this.filter.groupSimilar)
             return list;
-        let tokens = this.filterSearch.split(' ').map(t => t.trim().toLowerCase());
+        return list.groupBy(t => this.getSimilarKey(t)).map(group => {
+            let list2 = group.orderBy(t => t.md && t.md.episodeKey);
+            let best = list2.first(t => !this.isWatched(t));
+            return best || list2.first();
+        });
+    }
+    applyFilterSearch(list: C.MediaFile[]): C.MediaFile[] {
+        if (this.filter.search == null || this.filter.search == "" || this.filter.search.trim() == "")
+            return list;
+        let tokens = this.filter.search.split(' ').map(t => t.trim().toLowerCase());
 
         return list.filter(t => {
             if (t.fsEntry == null)
@@ -79,23 +96,19 @@ export class MediaComponent implements OnInit, OnChanges {
         });
     }
     isWatched(mf: C.MediaFile): boolean {
-        return mf.md != null && mf.md.watched;
+        return mf.md != null && mf.md.watched || false;
     }
     applyFilterWatched(list: C.MediaFile[]): C.MediaFile[] {
-        if (this.filterWatched == null)
+        if (this.filter.watched == null)
             return list;
-        return list.filter(t => this.filterWatched == this.isWatched(t));
+        return list.filter(t => this.filter.watched == this.isWatched(t));
     }
 
-    setFilter(key: string, value: any) {
-        if (key == "type")
-            this.filterType = value;
-        else if (key == "search")
-            this.filterSearch = value;
-        else if (key == "watched")
-            this.filterWatched = value;
+    setFilter(key: keyof(MediaFilters), value: any) {
+        this.filter[key] = value;
         this.getAvailableMedia();
     }
+
     async scheduleApplyFilter() {
         await promiseSetTimeout(100);
         await this.getAvailableMedia();
@@ -177,12 +190,14 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
     getName(mf: C.MediaFile): string {
-        let name = mf.md.key;
+        let name = "";
         if (mf.tmdb != null)
             name = mf.tmdb.name || mf.tmdb.title;
         else if (mf.parsed != null)
             name = mf.parsed.name;
-        if (mf.md.episodeKey != null)
+        else
+            return mf.fsEntry && mf.fsEntry.basename;
+        if (mf.md != null && mf.md.episodeKey != null)
             name += " " + mf.md.episodeKey
         return name;
     }
@@ -263,5 +278,13 @@ export class MediaComponent implements OnInit, OnChanges {
     }
 
 
+
 }
 
+
+export interface MediaFilters {
+    type: "movie" | "tv" | null;
+    watched: boolean;
+    groupSimilar: boolean;
+    search: string;
+}

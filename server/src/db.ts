@@ -12,7 +12,7 @@ export class ByFilename implements C.ByFilename {
     @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
     @Column(CT.STRING, { nullable: true }) @Index() tmdbKey: string;
     @Column(CT.STRING, { nullable: true }) episodeKey: string;
-    @Column(CT.STRING, { nullable: true }) watched: boolean;
+    @Column(CT.BOOLEAN, { nullable: true }) watched: boolean;
     @Column(CT.STRING, { nullable: true }) lastKnownPath: string;
     @Column(CT.STRING, { nullable: true }) modified: string;
     @Column(CT.STRING, { nullable: true }) scanned: string;

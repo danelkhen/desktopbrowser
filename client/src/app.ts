@@ -263,6 +263,7 @@ export class App {
         let name = mf.fsEntry.basename;
         mf.parsed = new FilenameParser().parse(mf.fsEntry.basename);
     }
+    filenameParser = new FilenameParser();
     async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
         let x = await this.appService.getMediaFiles(req);
         x.forEach(t => {

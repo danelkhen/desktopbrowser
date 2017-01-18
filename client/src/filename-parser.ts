@@ -11,7 +11,8 @@ export class FilenameParser {
         let tokens2 = tokens.map(token => this.parseToken(token));
         let yearToken = tokens2.first(t => t.type == "year");
         let seToken = tokens2.first(t => t.type == "seasonEpisode");
-        let nameTokens = tokens2.takeWhile(t => t.type == "tag" && t.braces == null);
+        let index = tokens2.findIndex(t => t.type == "tag" && t.braces == null);
+        let nameTokens = tokens2.skip(index).takeWhile(t => t.type == "tag" && t.braces == null);
         if (nameTokens.length > 0)
             x.name = nameTokens.map(t => t.value).join(" ");
         if (yearToken != null)
@@ -28,6 +29,7 @@ export class FilenameParser {
             let s = token.substr(1, token.length - 2);
             let x = this.parseToken(s);
             x.braces = token.substr(0, 1) + token.substr(token.length - 1);
+            x.type = x.type;
             return x;
         }
         let year = this.tryYear(token);

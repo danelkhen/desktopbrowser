@@ -8,7 +8,8 @@
                 <div class="tag">{{selectedMovie.tmdb?.tagline}}</div>
                 <div class="metadata">
                     <span class="rate">
-                    <object type="image/svg+xml" data="../img/media/rate-icon.svg"></object>{{selectedMovie.tmdb?.vote_average}}</span>
+                        <object type="image/svg+xml" data="../img/media/rate-icon.svg"></object>{{selectedMovie.tmdb?.vote_average}}
+                    </span>
                     <span>{{selectedMovie.tmdb?.release_date}}</span>
                     <span>{{selectedMovie.tmdb?.runtime}} minutes</span>
                     <span>{{selectedMovie.tmdb?.genres?.name}}</span>
@@ -27,13 +28,16 @@
         </header>
         <div class="filter local">
             <span class="title">Watchlist</span>
-            <button (click)="setFilter('type', null)" class="allmedia selected">All Media</button>
-            <button (click)="setFilter('type', 'tv')" class="tv">TV Shows</button>
-            <button (click)="setFilter('type', 'movie')" class="movie">Movies</button>
-
-            <button (click)="setFilter('watched', null)" class="selected">All Media</button>
-            <button (click)="setFilter('watched', true)">watched</button>
-            <button (click)="setFilter('watched', false)">not watched</button>
+            <button [class.selected]="filter.type == null" (click)="setFilter('type', null)" class="allmedia">All Media</button>
+            <button [class.selected]="filter.type == 'tv'" (click)="setFilter('type', 'tv')" class="tv">TV Shows</button>
+            <button [class.selected]="filter.type == 'movie'" (click)="setFilter('type', 'movie')" class="movie">Movies</button>
+            <hr />
+            <button [class.selected]="filter.watched == null" (click)="setFilter('watched', null)" class="selected">Both</button>
+            <button [class.selected]="filter.watched == true" (click)="setFilter('watched', true)">Watched</button>
+            <button [class.selected]="filter.watched == false" (click)="setFilter('watched', false)">Not Watched</button>
+            <hr />
+            <button [class.selected]="filter.groupSimilar == true" (click)="setFilter('groupSimilar', true)">Group</button>
+            <button [class.selected]="filter.groupSimilar == false" (click)="setFilter('groupSimilar', false)">Ungroup</button>
         </div>
         <div class="filter explore">
             <span class="title">Explore</span>
@@ -52,7 +56,7 @@
         </div>
         <!-- <h3 class="title">your watchlist</h3> -->
         <ul class="pool">
-            <li *ngFor="let movie of movies">
+            <li *ngFor="let movie of movies" class="media" [class.has-poster]="movie.tmdb?.poster?.w342 != null">
                 <div class="poster">
                     <img *ngIf="movie.tmdb?.poster?.w342" src="{{movie.tmdb?.poster?.w342}}">
                 </div>
@@ -60,7 +64,7 @@
                     <h5 class="title">{{getName(movie)}}</h5>
                     <span class="playtime">{{movie.tmdb?.release_date}}</span>
                     <div class="rating">{{movie.tmdb?.vote_average}}</div>
-                    <a class="icon playicon"  (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
+                    <a class="icon playicon" (click)="movie_click(movie)"><img src="../img/media/play-icon.svg" /></a>
                     <button class="status">View</button>
                     <button class="status" (click)="markAsWatched(media)">mark as watched</button>
                 </div>
@@ -91,7 +95,6 @@
         <button (click)="app.getSavedRatings()">getSavedRatings</button>
         <button (click)="tvAiringToday()">airing today</button>
         <button (click)="tvOnTheAir()">on the air</button>
-
     </div>
     <div>
         <pre>{{scanStatus | json}}</pre>
