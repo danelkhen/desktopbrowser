@@ -64,7 +64,7 @@ export class MediaComponent implements OnInit, OnChanges {
 
         return list.filter(t => {
             let type = this.getType(t);
-            return type == null || type == this.filter.type;
+            return type == this.filter.type;//type == null || 
         });
     }
 
@@ -157,7 +157,7 @@ export class MediaComponent implements OnInit, OnChanges {
     noMoreMoviesOnServer: boolean;
     async getAvailableMedia(req?: { force?: boolean }) {
         if (this.allMovies == null || (req && req.force)) {
-            let movies = await this.app.getMediaFiles();
+            let movies = await this.app.getMediaFiles({ maxResults: 500 });
             this.allMovies = movies;
             this.applyFilter();
             this.applyPaging();
@@ -170,7 +170,7 @@ export class MediaComponent implements OnInit, OnChanges {
         this.applyPaging();
 
         if (!this.noMoreMoviesOnServer && this.isLastPage()) {
-            let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length });
+            let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length, maxResults: 500 });
             if (moreMovies.length == 0) {
                 this.noMoreMoviesOnServer = true;
             }
