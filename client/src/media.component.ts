@@ -155,8 +155,8 @@ export class MediaComponent implements OnInit, OnChanges {
         return this.skip + this.pageSize >= this.filteredMovies.length;
     }
     noMoreMoviesOnServer: boolean;
-    async getAvailableMedia() {
-        if (this.allMovies == null) {
+    async getAvailableMedia(req?: { force?: boolean }) {
+        if (this.allMovies == null || (req && req.force)) {
             let movies = await this.app.getMediaFiles();
             this.allMovies = movies;
             this.applyFilter();
@@ -266,7 +266,7 @@ export class MediaComponent implements OnInit, OnChanges {
     async scan() {
         this.scanStatus = await this.app.appService.scanForMedia();
         await promiseSetTimeout(3000);
-        this.getAvailableMedia();
+        this.getAvailableMedia({ force: true });
         while (this.scanStatus != null && this.scanStatus.finished == null) {
             this.scanStatus = await this.app.appService.scanStatus();
             await promiseSetTimeout(3000);
