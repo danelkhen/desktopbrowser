@@ -79,7 +79,7 @@ export class Server {
         return new Promise<any>((resolve, reject) => this.expApp.listen(7777, resolve));
     }
 
-    handleServiceRequest: RequestHandler = (req, res, next) => {
+    handleServiceRequest: RequestHandler = async (req, res, next) => {
         let serviceName = req.params["service"];
         let action = req.params["action"];
         let service = this.services[serviceName];
@@ -96,14 +96,15 @@ export class Server {
             arg = req.query;
         console.log(action, req.params, req.query);
         try {
-            let result = service[action](arg);
-            if (isPromise(result)) {
-                let promise: Promise<any> = result;
-                promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
-            }
-            else {
-                res.json(result)
-            }
+            let result = await service[action](arg);
+            res.json(result)
+            //if (isPromise(result)) {
+            //    let promise: Promise<any> = result;
+            //    promise.then(t => res.json(t), e => res.status(500).json({ err: String(e) }));
+            //}
+            //else {
+            //    res.json(result)
+            //}
         }
         catch (e) {
             console.log("api action error", e);

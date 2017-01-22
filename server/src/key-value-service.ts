@@ -44,25 +44,25 @@ export class KeyValueService implements C.KeyValueService {
         obj.key = kv.key;
         return obj;
     }
-    findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined> {
-        return this.dbService.findOneById(req).then(t => this.fromKeyValue<T>(t));
+    findOneById<T>(req: { id: any, options?: FindOptions }): Promise<C.KeyValue<T>> {
+        return this.dbService.findOneById(req);//.then(t => this.fromKeyValue<T>(t));
     }
-    findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]> {
-        return this.dbService.repo.createQueryBuilder("kv").where("kv.key like :x", { x: req.like }).getMany().then(list => list.map(t => this.fromKeyValue<T>(t)));
+    findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> {
+        return this.dbService.repo.createQueryBuilder("kv").where("kv.key like :x", { x: req.like }).getMany();//.then(list => list.map(t => this.fromKeyValue<T>(t)));
     }
 
 
     copyOverwrite<T>(src: T, target: T): T {
         return Q.copy(src, target, { overwrite: true });
     }
-    persist<T extends HasKey>(obj: T): Promise<any> {
+    persist<T>(obj: C.KeyValue<T>): Promise<C.KeyValue<T>> {
         return this.findOneById({ id: obj.key }).then(obj2 => {
             if (obj2 != null)
-                this.copyOverwrite(obj, obj2);
+                this.copyOverwrite(obj.value, obj2.value);
             else
                 obj2 = obj;
-            let kv = this.toKeyValue(obj2);
-            return this.dbService.repo.persist(kv).then(t => this.fromKeyValue<T>(t));
+            //let kv = this.toKeyValue(obj2);
+            return this.dbService.repo.persist(obj2);//.then(t => this.fromKeyValue<T>(t));
         });
     }
 }

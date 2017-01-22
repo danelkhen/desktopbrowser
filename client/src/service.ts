@@ -21,9 +21,9 @@ export class KeyValueService extends ServiceBase<C.KeyValueService> {
         super();
         this.Url = "/api/keyValue";
     }
-    findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
-    persist<T extends HasKey>(obj: T): Promise<T> { return this.invoke(t => t.persist(obj)); }
-    findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]> { return this.invoke(t => t.findAllWithKeyLike(req)); }
+    findOneById<T>(req: { id: any, options?: FindOptions }): Promise<KeyValue<T>> { return this.invoke(t => t.findOneById<T>(req)); }
+    persist<T>(obj: KeyValue<T>): Promise<KeyValue<T>> { return this.invoke(t => t.persist<T>(obj)); }
+    findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> { return this.invoke(t => t.findAllWithKeyLike<T>(req)); }
 }
 
 export class FileService extends ServiceBase<C.FileService> {
@@ -70,6 +70,8 @@ export class AppService extends ServiceBase<C.App> {
         super();
         this.Url = "/api/app";
     }
+    getConfig(): Promise<C.Config> { return this.invoke(t => t.getConfig()); }
+    saveConfig(config: C.Config): Promise<any> { return this.invoke(t => t.saveConfig(config)); }
     scanForMedia(): Promise<C.MediaScannerStatus> { return this.invoke(t => t.scanForMedia()); }
     scanStatus(): Promise<C.MediaScannerStatus> { return this.invoke(t => t.scanStatus()); }
     getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> { return this.invoke(t => t.getMediaFiles(req)); }

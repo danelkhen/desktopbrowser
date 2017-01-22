@@ -72,13 +72,13 @@ export class App {
     }
 
     async initConfig(): Promise<any> {
-        let config = await this.keyValue.findOneById<Config>({ id: "config" });
-        this.config = config || { key: "config" };
+        let config = await this.appService.getConfig();//.keyValue.findOneById<Config>({ id: "config" });
+        this.config = config || {};
         if (this.config.folders == null)
             this.config.folders = [];
     }
     async saveConfig() {
-        await this.keyValue.persist(this.config);
+        await this.appService.saveConfig(this.config);//.keyValue.persist({ key: "config", value: this.config });
     }
 
     config: Config;
@@ -109,16 +109,16 @@ export class App {
     }
 
     async savePage(name: string, media_type: "movie" | "tv", page: number, ids: number[]) {
-        await this.keyValue.persist<TmdbRatingsPage>({ key: "tmdb_" + name + "_" + media_type + "_page_" + page, ids: ids });
+        await this.keyValue.persist<TmdbRatingsPage>({ key: "tmdb_" + name + "_" + media_type + "_page_" + page, value: { ids: ids } });
     }
 
     async getSavedRatings(): Promise<any> {
         let pages = await this.keyValue.findAllWithKeyLike<TmdbRatingsPage>({ like: "tmdb_ratings_%" });
         pages.forEach(page => {
             if (page.key.contains("_tv_"))
-                page.ids.forEach(id => this.tmdb.rated.add("tv|" + id));
+                page.value.ids.forEach(id => this.tmdb.rated.add("tv|" + id));
             else if (page.key.contains("_movie_"))
-                page.ids.forEach(id => this.tmdb.rated.add("movie|" + id));
+                page.value.ids.forEach(id => this.tmdb.rated.add("movie|" + id));
         });
     }
 
@@ -126,9 +126,9 @@ export class App {
         let pages = await this.keyValue.findAllWithKeyLike<TmdbRatingsPage>({ like: "tmdb_watchlist_%" });
         pages.forEach(page => {
             if (page.key.contains("_tv_"))
-                page.ids.forEach(id => this.tmdb.tvShowWatchlistIds.add(id));
+                page.value.ids.forEach(id => this.tmdb.tvShowWatchlistIds.add(id));
             else if (page.key.contains("_movie_"))
-                page.ids.forEach(id => this.tmdb.movieWatchlistIds.add(id));
+                page.value.ids.forEach(id => this.tmdb.movieWatchlistIds.add(id));
         });
     }
 
@@ -180,20 +180,29 @@ export class App {
 
     //}
 
+    async getMovieOrTvByTypeAndId(tmdbKey: string): Promise<MediaDetails> {
+        let cacheKey = "tmdb|details|" + tmdbKey;
+        let x = await this.keyValue.findOneById<MediaDetails>({ id: cacheKey });
+        if (x != null && x.value != null)
+            return x.value;
+        let x2 = await this.tmdb.getMovieOrTvByTypeAndId(tmdbKey);
+        this.keyValue.persist({ key: cacheKey, value: x2 });
+        return x2;
+    }
     async loadTmdbMediaDetails(mfs: C.MediaFile[]): Promise<C.MediaFile[]> {
         for (let mf of mfs) {
             if (mf.tmdb != null)
                 continue;
             await this.analyze([mf]);
-            mf.tmdb = await this.tmdb.getMovieOrTvByTypeAndId(mf.md.tmdbKey);
+            mf.tmdb = await this.getMovieOrTvByTypeAndId(mf.md.tmdbKey);
         }
         return mfs;
     }
 
 
     updateMediaInfo(typeAndId: string, info: TmdbMediaInfo): Promise<TmdbMediaInfo> {
-        info.key = "mediainfo_" + typeAndId;
-        return this.keyValue.persist(info);
+        //info.key = "mediainfo_" + typeAndId;
+        return this.keyValue.persist({ key: "mediainfo_" + typeAndId, value: info });
     }
     getMediaInfo(typeAndId: string): TmdbMediaInfo {
         let x = this.mediaInfos.get(typeAndId);
@@ -206,10 +215,10 @@ export class App {
 
     mediaInfos: Map<string, TmdbMediaInfo> = new Map<string, TmdbMediaInfo>();
     async refreshMediaInfos(): Promise<Map<string, TmdbMediaInfo>> {
-        let list = await this.keyValue.findAllWithKeyLike({ like: "mediainfo_%" });
+        let list = await this.keyValue.findAllWithKeyLike<TmdbMediaInfo>({ like: "mediainfo_%" });
         list.forEach(info => {
             let typeAndId = info.key.substr("mediainfo_".length);
-            this.mediaInfos.set(typeAndId, info);
+            this.mediaInfos.set(typeAndId, info.value);
         });
         Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
         return this.mediaInfos;
@@ -330,7 +339,6 @@ export interface TmdbMediaInfo {
     watched?: boolean;
 }
 export interface TmdbRatingsPage {
-    key: string;
     ids: number[];
 }
 

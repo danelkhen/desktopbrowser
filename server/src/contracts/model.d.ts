@@ -2,25 +2,24 @@
     import * as tmdb from "tmdb-v3";
 
     export interface Config {
-        key: string;
         folders?: ConfigFolder[];
     }
     export interface ConfigFolder {
         path: string;
     }
-    export interface KeyValueService {
-        findOneById<T extends HasKey>(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
-        findAllWithKeyLike<T extends HasKey>(req: { like: string }): Promise<T[]>;
-        persist<T extends HasKey>(obj: T): Promise<T>;
+    export interface KeyValueService { //extends DbService<KeyValue<any>>
+        findOneById<T>(req: { id: any, options?: FindOptions }): Promise<KeyValue<T>>;
+        findAllWithKeyLike<T>(req: { like: string }): Promise<KeyValue<T>[]>;
+        persist<T>(obj: KeyValue<T>): Promise<KeyValue<T>>;
     }
 
     export interface HasKey {
         key: string;
     }
 
-    export interface KeyValue {
+    export interface KeyValue<T> {
         key: string;
-        value: any;
+        value: T;
     }
 
     export interface ByFilename {
@@ -178,6 +177,8 @@
     }
 
     export interface App {
+        getConfig(): Promise<Config>;
+        saveConfig(config: Config): Promise<any>;
         scanForMedia(): Promise<MediaScannerStatus>;
         scanStatus(): MediaScannerStatus;
         getMediaFiles(req?: GetMediaFilesRequest): Promise<MediaFile[]>;
@@ -197,6 +198,7 @@
         lastSaved: string;
         started: Date;
         finished: Date;
+        dir: { path: string, mtime: string };
     }
 
     export interface MediaFile {

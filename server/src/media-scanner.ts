@@ -61,8 +61,9 @@ export class MediaScanner {
         let dirs = config.folders.map(t => t.path);
         let since: Date = null;
         //since = Date.today().addDays(-7);
-        if (since != null) {
-            scanner.onDir = async e => {
+        scanner.onDir = async e => {
+            this.status.dir = { path: e.path, mtime: e.stats.mtime.ToDefaultString() };
+            if (since != null) {
                 console.log(e.path);
                 if (since != null && e.stats.mtime.valueOf() - since.valueOf() < 0) {
                     console.log("SKIPPING", e.stats.mtime, e.path);
@@ -71,8 +72,8 @@ export class MediaScanner {
                 else
                     console.log("ENTERING", e.stats.mtime, e.path);
 
-            };
-        }
+            }
+        };
         scanner.onDirChild = async e => {
             this.status.stack = this.scanner.stack && this.scanner.stack.length;
             this.status.scanned++;
@@ -100,5 +101,5 @@ export class MediaScanner {
     //        return;
     //    setTimeout(() => this.status(), 1000);
     //}
-    status: C.MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, lastScanned: null, lastSaved: null, started: null, finished: null };
+    status: C.MediaScannerStatus = { scanned: 0, saved: 0, stack: 0, dir: null, lastScanned: null, lastSaved: null, started: null, finished: null };
 }

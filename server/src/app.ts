@@ -7,7 +7,9 @@ import { FileService } from "./file-service"
 import { DbService } from "./db-service"
 import { Db, ByFilename, KeyValue, FsEntry } from "./db"
 import { MediaScanner } from "./media-scanner"
-
+import * as Fs from "./utils/fs"
+import * as Path from "path"
+import * as Tmdb from "tmdb-v3"
 
 export class App implements C.App {
     server: Server;
@@ -19,8 +21,29 @@ export class App implements C.App {
     fsEntryService: FsEntryService;
 
     async getConfig(): Promise<Config> {
-        let config = await this.keyValueService.findOneById<Config>({ id: "config" });
-        config = config || { key: "config" };
+        let root = Path.join(__dirname, "../../");
+        let file = "config.json";
+        let path = Path.join(root, file);
+        let exists = await Fs.exists(path);
+        if (!exists)
+            return {};
+        let text = await Fs.readFile(path, "utf8");
+        if (text == null || text == "")
+            return {};
+        let config = JSON.parse(text) as Config;
+        return config;
+    }
+    async saveConfig(config:Config): Promise<any> {
+        let root = Path.join(__dirname, "../../");
+        let file = "config.json";
+        let path = Path.join(root, file);
+        let json = JSON.stringify(config, null, "    ");
+        await Fs.writeFile(path, json);
+    }
+
+    async getConfig2(): Promise<Config> {
+        let config2 = await this.keyValueService.findOneById<Config>({ id: "config" });
+        let config = (config2 && config2.value) || {};
         if (config.folders == null)
             config.folders = [];
         return config;
@@ -82,6 +105,19 @@ export class App implements C.App {
         let x = await q.getMany();
         let mfs = x.map(t => <C.MediaFile>{ fsEntry: t, md: (t as any).md, type: null, parsed: null });
         x.forEach(t => delete (t as any).md);
+
+        let hasTmdbKeys = mfs.where(t => t.md != null && t.md.tmdbKey != null);
+        if (hasTmdbKeys.length>0) {
+            let tmdbKeys = hasTmdbKeys.select(t => t.md.tmdbKey).distinct();
+            let cachePrefix = "tmdb|details|";
+            let cacheKeys = tmdbKeys.select(t => cachePrefix + t);
+            console.log({ cacheKeys, hasTmdbKeys });
+            let cachedMediaDetails = await this.keyValueService.dbService.repo.findByIds(cacheKeys) as C.KeyValue<Tmdb.MediaDetails>[];
+            for (let media of cachedMediaDetails) {
+                let tmdbKey = media.key.substr(cachePrefix.length);
+                hasTmdbKeys.where(t => t.md.tmdbKey == tmdbKey).forEach(t => t.tmdb = media.value);
+            }
+        }
         return mfs;
     }
 

@@ -9,3 +9,4 @@ base.db
 base.db.bak
 db.sqlite
 db.sqlite-journal
+config.json
