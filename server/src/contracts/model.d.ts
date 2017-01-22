@@ -172,6 +172,7 @@
         season: number;
         episode: number;
         year: number;
+        date: string;
         tags: string[];
         filename: string;
     }

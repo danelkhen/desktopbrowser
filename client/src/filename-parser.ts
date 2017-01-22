@@ -4,7 +4,7 @@ export class FilenameParser {
     parse(name: string): FilenameParsedInfo {
         if (name == null || name == "")
             return null;
-        let x: FilenameParsedInfo = { episode: null, name: null, season: null, tags: [], year: null, filename: name };
+        let x: FilenameParsedInfo = { episode: null, name: null, season: null, tags: [], year: null, filename: name, date: null };
         let tokens = name.split(/[\. ]/);
         if (tokens.length == 1)
             return x;
@@ -15,8 +15,16 @@ export class FilenameParser {
         let nameTokens = tokens2.skip(index).takeWhile(t => t.type == "tag" && t.braces == null);
         if (nameTokens.length > 0)
             x.name = nameTokens.map(t => t.value).join(" ");
-        if (yearToken != null)
+        if (yearToken != null) {
             x.year = yearToken.value;
+            let uints = tokens2.skip(tokens2.indexOf(yearToken)+1).takeWhile(t => t.type == "uint");
+            if (uints.length >= 2 && uints.take(2).every(t => t.value <= 31)) {
+                let dateString = `${x.year}-${uints[0].value.toString().padLeft(2, '0')}-${uints[1].value.toString().padLeft(2, '0')}`;
+                let date = Date.tryParseExact(dateString, "yyyy-MM-dd");
+                if (date != null)
+                    x.date = date.format("yyyy-MM-dd");
+            }
+        }
         if (seToken != null) {
             x.season = seToken.value.season;
             x.episode = seToken.value.episode;
@@ -48,12 +56,25 @@ export class FilenameParser {
                 value: se,
             };
         }
+        let uint = this.tryUInt(token);
+        if (uint != null) {
+            return <Token>{
+                type: "uint",
+                text: token,
+                value: uint,
+            };
+        }
         let t: Token = {
             type: "tag",
             text: token,
             value: token,
         };
         return t;
+    }
+    tryUInt(token: string): number {
+        if (!/^[0-9]+$/.test(token))
+            return null;
+        return parseInt(token);
     }
     tryYear(token: string): number {
         if (!/[0-9][0-9][0-9][0-9]/.test(token))
