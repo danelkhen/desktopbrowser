@@ -50,12 +50,12 @@ export class App {
         await this.getSavedWatchlists();
         await this.refreshMediaInfos();
         await this.onInit();
-        let p1 = this.scanAllFsEntries();
-        let p2 = this.scanAllFsEntries();
-        await p1;
-        console.log("FINISHED p1");
-        await p2;
-        console.log("FINISHED p2");
+        //let p1 = this.scanAllFsEntries();
+        //let p2 = this.scanAllFsEntries();
+        //await p1;
+        //console.log("FINISHED p1");
+        //await p2;
+        //console.log("FINISHED p2");
     }
     onInit() {
         let t = this.tmdb;

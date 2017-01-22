@@ -21,7 +21,7 @@ export class FileService implements C.FileService {
     }
     baseDbFilename: string;
 
-    ListFiles(req: ListFilesRequest): ListFilesResponse {
+    async ListFiles(req: ListFilesRequest): Promise<ListFilesResponse> {
         //if (req.Path == null) {
         //    return {
         //        Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null },
@@ -31,19 +31,18 @@ export class FileService implements C.FileService {
         //}
         if (req.Path != null && req.Path.endsWith(":"))
             req.Path += "\\";
-        var res: ListFilesResponse =
-            {
-                Relatives: this.GetFileRelatives(req.Path),
-                File: this.GetFile({ Path: req.Path }),
-                Files: null,
-            };
+        let res: ListFilesResponse = {
+            Relatives: await this.GetFileRelatives(req.Path),
+            File: await this.GetFile({ Path: req.Path }),
+            Files: null,
+        };
         if (res.File.IsFolder) {
-            res.Files = this.GetFiles(req).toArray();
+            res.Files = await this.GetFiles(req);//.toArray();
         }
         return res;
     }
 
-    public GetFiles(req: ListFilesRequest): File[] {
+    async GetFiles(req: ListFilesRequest): Promise<File[]> {
         if (req.HideFiles && req.HideFolders)
             return [];
         //else if (!req.MixFilesAndFolders && !req.HideFiles && !req.HideFolders && !req.IsRecursive) {
@@ -57,8 +56,8 @@ export class FileService implements C.FileService {
         //    return all;
         //}
         //else {
-        var files = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, !req.HideFiles, !req.HideFolders);
-        files = this.ApplyRequest(files, req);
+        let files = await this.GetFileAndOrFolders({ path: req.Path, searchPattern: req.SearchPattern, recursive: req.IsRecursive, files: !req.HideFiles, folders: !req.HideFolders });
+        files = await this.ApplyRequest(files, req);
         files = this.ApplyPaging(files, req);
         files = this.ApplyCaching(files);
         return files;
@@ -77,20 +76,21 @@ export class FileService implements C.FileService {
         return files;
     }
 
-    public GetFileRelatives(path: string): FileRelativesInfo {
+    async GetFileRelatives(path: string): Promise<FileRelativesInfo> {
         if (String.isNullOrEmpty(path))
             return { ParentFolder: null, NextSibling: null, PreviousSibling: null };
         var pathInfo = new PathInfo(path);
         var info: FileRelativesInfo = { ParentFolder: null, NextSibling: null, PreviousSibling: null };
-        info.ParentFolder = this.GetFile({ Path: pathInfo.ParentPath.Value });
-        var parentFiles = this.GetFileAndOrFolders(info.ParentFolder.Path, null, false, false, true).where(t => t.IsFolder).orderBy(t => t.Name).toArray();
+        info.ParentFolder = await this.GetFile({ Path: pathInfo.ParentPath.Value });
+        let xxx = await this.GetFileAndOrFolders({ path: info.ParentFolder.Path, files: false, folders: true });
+        var parentFiles = xxx.where(t => t.IsFolder).orderBy(t => t.Name).toArray();
         var index = parentFiles.findIndex(t => t.Name.equalsIgnoreCase(pathInfo.Name));
         info.NextSibling = index >= 0 && index + 1 < parentFiles.length ? parentFiles[index + 1] : null;
         info.PreviousSibling = index > 0 ? parentFiles[index - 1] : null;
         return info;
     }
 
-    public GetFile(req: PathRequest): File {
+    async GetFile(req: PathRequest): Promise<File> {
         var path = req.Path;
         if (String.isNullOrEmpty(path))
             return /*new File*/ { IsFolder: true, Path: "", Name: "Home" };
@@ -150,7 +150,7 @@ export class FileService implements C.FileService {
 
 
 
-    ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File> {
+    async ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>> {
         var calculatedFolderSize = false;
         if (!req.ShowHiddenFiles)
             files = files.where(t => !t.IsHidden);
@@ -159,7 +159,8 @@ export class FileService implements C.FileService {
         if (req.HideFiles)
             files = files.where(t => t.IsFolder);
         if (req.Sort != null && req.Sort.Columns != null) {
-            req.Sort.Columns.forEach(t => {
+            for (let t of req.Sort.Columns) {
+                //req.Sort.Columns.forEach(t => {
                 if (t.Name == "Name")
                     files = this.OrderBy(files, x => x.Name, t.Descending);
                 else if (t.Name == "Modified")
@@ -168,22 +169,24 @@ export class FileService implements C.FileService {
                     files = this.OrderBy(files, x => x.Extension, t.Descending);
                 else if (t.Name == "Size") {
                     if (req.FolderSize && !req.HideFolders) {
-                        files = this.CalculateFoldersSize(files);
+                        files = await this.CalculateFoldersSize(files);
                         calculatedFolderSize = true;
                     }
                     files = this.OrderBy(files, x => x.Size, t.Descending);
                 }
                 if (t.Descending)
                     files.reverse();
-            });
+            }//);
         }
         if (!calculatedFolderSize && req.FolderSize && !req.HideFolders)
-            files = this.CalculateFoldersSize(files);
+            files = await this.CalculateFoldersSize(files);
         return files;
 
     }
 
-    GetFileAndOrFolders(path: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean): IEnumerable<File> {
+    async GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
+        let {path, searchPattern, recursive, files, folders} = req;
+        //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
         var isFiltered = false;
         let files2: IEnumerable<File>;
         if (String.isNullOrEmpty(path) && !this.isWindows())
@@ -207,7 +210,7 @@ export class FileService implements C.FileService {
             else if (folders && !files)
                 files2 = dir.EnumerateDirectories().select(t => this.ToFile(t));
             else if (folders && files)
-                files2 = dir.EnumerateFileSystemInfos().select(t => this.ToFile(t));
+                files2 = dir.GetFileSystemInfos().select(t => this.ToFile(t));
             else
                 throw new Error();
             isFiltered = true;
@@ -231,20 +234,33 @@ export class FileService implements C.FileService {
         return DriveInfo.GetDrives().select(t => /*new File*/({ IsFolder: true, Name: t.Name, Path: t.Name, Size: t.IsReady ? parseInt(t.AvailableFreeSpace as string) : null })).toArray();
     }
 
-    CalculateFoldersSize(folders: File[]): IEnumerable<File> {
-        //console.log("CalculateFoldersSize", folders.length);
-        return folders.map(file => {
+    async CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>> {
+        let list = [];
+        for (let file of folders) {
             try {
                 //console.log("CalculateFoldersSize", file);
                 if (file.IsFolder)
-                    file.Size = this.CalculateFolderSize(file.Path);
+                    file.Size = await this.CalculateFolderSize(file.Path);
             }
             catch (e) {
             }
-            return file;
-        });
+            list.push(file);
+        }
+        return list;
+        ////console.log("CalculateFoldersSize", folders.length);
+        //let x = await folders.map(file => {
+        //    try {
+        //        //console.log("CalculateFoldersSize", file);
+        //        if (file.IsFolder)
+        //            file.Size = await this.CalculateFolderSize(file.Path);
+        //    }
+        //    catch (e) {
+        //    }
+        //    return file;
+        //});
+        //return x;
     }
-    CalculateFolderSize(path: string): number {
+    CalculateFolderSize(path: string): Promise<number> {
         return this.CacheMethod(`CalculateFolderSize(${path})`, 100, 100, () => this.CalculateFolderSizeNoCache(path));
     }
 
@@ -263,15 +279,15 @@ export class FileService implements C.FileService {
     }
 
 
-    CalculateFolderSizeNoCache(path: string): number {
+    async CalculateFolderSizeNoCache(path: string): Promise<number> {
         var size = 0;
         try {
             var list = new FileSystemInfo(path).GetFileSystemInfos();
-            for (var item of list) {
+            for (let item of list) {
                 if (item.isFile)
                     size += item.Length;
                 else if (item.isDir)
-                    size += this.CalculateFolderSize(item.FullName);
+                    size += await this.CalculateFolderSize(item.FullName);
             }
         }
         catch (e) {
@@ -282,7 +298,8 @@ export class FileService implements C.FileService {
     }
 
     GetConfig(): SiteConfiguration {
-        return this.CacheMethod("GetConfig()", 10, 0, this.GetConfigNoCache);
+        return this.GetConfigNoCache();
+        //return this.CacheMethod("GetConfig()", 10, 0, this.GetConfigNoCache);
     }
 
     GetConfigNoCache(): SiteConfiguration {
@@ -330,7 +347,7 @@ export class FileService implements C.FileService {
         return false;
     }
 
-    cache: any = {};
+    cache: { [key: string]: Promise<any> } = {};
     /// <summary>
     /// Executes the specified Func[R] with cache
     /// </summary>
@@ -338,13 +355,13 @@ export class FileService implements C.FileService {
     /// <param name="cacheKey"></param>
     /// <param name="method"></param>
     /// <returns></returns>
-    CacheMethod<R>(cacheKey: string, expirationInSeconds: number, methodMinTimeInMs: number, method: JsFunc<R>): R {
+    CacheMethod<R>(cacheKey: string, expirationInSeconds: number, methodMinTimeInMs: number, method: JsFunc<Promise<R>>): Promise<R> {
         if (expirationInSeconds <= 0)
             return method();
         let cache = this.cache;
         var cacheValue = cache[cacheKey];
         if (cacheValue !== undefined) {
-            return <R>cacheValue;
+            return <Promise<R>>cacheValue;
         }
         var stopper = new Stopwatch();
         stopper.Start();
@@ -370,4 +387,12 @@ export class Stopwatch {
     Start() { }
     Stop() { }
     ElapsedMilliseconds: number;
+}
+
+export interface GetFileAndFoldersRequest {
+    path: string,
+    searchPattern?: string,
+    recursive?: boolean,
+    files?: boolean,
+    folders?: boolean
 }

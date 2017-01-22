@@ -63,20 +63,20 @@
     export interface FileService {
         //init();
         //migrateToSqlite();
-        ListFiles(req: ListFilesRequest): ListFilesResponse;
-        GetFiles(req: ListFilesRequest): File[];
-        GetFileRelatives(path: string): FileRelativesInfo;
-        GetFile(req: PathRequest): File;
+        ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>;
+        GetFiles(req: ListFilesRequest): Promise<File[]>;
+        GetFileRelatives(path: string): Promise<FileRelativesInfo>;
+        GetFile(req: PathRequest): Promise<File>;
         Execute(req: PathRequest): void;
         Explore(req: PathRequest): void;
         Delete(req: PathRequest): Promise<any>;
         trash(req: PathRequest): Promise<any>;
-        ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File>;
+        ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>;
         isWindows();
         GetHomeFiles(): File[];
-        CalculateFoldersSize(folders: File[]): IEnumerable<File>;
-        CalculateFolderSize(path: string): number;
-        CalculateFolderSizeNoCache(path: string): number;
+        CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>;
+        CalculateFolderSize(path: string): Promise<number>;
+        CalculateFolderSizeNoCache(path: string): Promise<number>;
         clearCache();
         //omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
         //imdbRss(req: { path: string }): Promise<string>;

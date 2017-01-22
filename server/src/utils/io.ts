@@ -75,28 +75,26 @@ export class FileSystemInfo {
     Extension?: string;
 
     EnumerateFiles(): IEnumerable<FileSystemInfo> {
-        return this.EnumerateFileSystemInfos().filter(t => t.isFile);
+        return this.GetFileSystemInfos().filter(t => t.isFile);
     }
     EnumerateDirectories(): IEnumerable<FileSystemInfo> {
-        return this.EnumerateFileSystemInfos().filter(t => t.isDir);
+        return this.GetFileSystemInfos().filter(t => t.isDir);
     }
     EnumerateFileSystemElementsRecursive(): IEnumerable<FileSystemInfo> {
-        let list = this.EnumerateFileSystemInfos();
+        let list = this.GetFileSystemInfos();
         let i = 0;
         while (i < list.length) {
             let file = list[i];
             if (file.isDir) {
-                list.push(...file.EnumerateFileSystemInfos());
+                list.push(...file.GetFileSystemInfos());
             }
             i++;
         }
         return list;
     }
-    EnumerateFileSystemInfos(): IEnumerable<FileSystemInfo> {
-        return fs.readdirSync(this.path).map(t => new FileSystemInfo(path.join(this.path, t)));
-    }
-    GetFileSystemInfos(): FileSystemInfo[] {
-        return this.EnumerateFileSystemInfos();
+    GetFileSystemInfos(): IEnumerable<FileSystemInfo> {
+        let list = fs.readdirSync(this.path);
+        return list.map(t => new FileSystemInfo(path.join(this.path, t)));
     }
 
 }
