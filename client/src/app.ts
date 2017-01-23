@@ -48,7 +48,7 @@ export class App {
         await this.tmdb.init();
         await this.getSavedRatings();
         await this.getSavedWatchlists();
-        await this.refreshMediaInfos();
+        //await this.refreshMediaInfos();
         await this.onInit();
         //let p1 = this.scanAllFsEntries();
         //let p2 = this.scanAllFsEntries();
@@ -181,7 +181,7 @@ export class App {
     //}
 
     async getMovieOrTvByTypeAndId(tmdbKey: string): Promise<MediaDetails> {
-        if (tmdbKey == null || tmdbKey == "")
+        if (tmdbKey == null || tmdbKey == "" || tmdbKey.split("|").some(t => t.length == 0))
             return null;
         let cacheKey = "tmdb|details|" + tmdbKey;
         let x = await this.keyValue.findOneById<MediaDetails>({ id: cacheKey });
@@ -202,29 +202,25 @@ export class App {
     }
 
 
-    updateMediaInfo(typeAndId: string, info: TmdbMediaInfo): Promise<TmdbMediaInfo> {
-        //info.key = "mediainfo_" + typeAndId;
-        return this.keyValue.persist({ key: "mediainfo_" + typeAndId, value: info });
-    }
-    getMediaInfo(typeAndId: string): TmdbMediaInfo {
-        let x = this.mediaInfos.get(typeAndId);
-        if (x == null) {
-            x = { key: "mediainfo_" + typeAndId };
-            this.mediaInfos.set(typeAndId, x);
-        }
-        return x;
-    }
+    //getMediaInfo(typeAndId: string): TmdbMediaInfo {
+    //    let x = this.mediaInfos.get(typeAndId);
+    //    if (x == null) {
+    //        x = { key: "mediainfo_" + typeAndId };
+    //        this.mediaInfos.set(typeAndId, x);
+    //    }
+    //    return x;
+    //}
 
-    mediaInfos: Map<string, TmdbMediaInfo> = new Map<string, TmdbMediaInfo>();
-    async refreshMediaInfos(): Promise<Map<string, TmdbMediaInfo>> {
-        let list = await this.keyValue.findAllWithKeyLike<TmdbMediaInfo>({ like: "mediainfo_%" });
-        list.forEach(info => {
-            let typeAndId = info.key.substr("mediainfo_".length);
-            this.mediaInfos.set(typeAndId, info.value);
-        });
-        Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
-        return this.mediaInfos;
-    }
+    //mediaInfos: Map<string, TmdbMediaInfo> = new Map<string, TmdbMediaInfo>();
+    //async refreshMediaInfos(): Promise<Map<string, TmdbMediaInfo>> {
+    //    let list = await this.keyValue.findAllWithKeyLike<TmdbMediaInfo>({ like: "mediainfo_%" });
+    //    list.forEach(info => {
+    //        let typeAndId = info.key.substr("mediainfo_".length);
+    //        this.mediaInfos.set(typeAndId, info.value);
+    //    });
+    //    Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
+    //    return this.mediaInfos;
+    //}
     //getMedia(typeAndId: string): DsMedia {
     //    let media = DsMedia.fromTmdbKey(typeAndId, this);
     //    return media;
