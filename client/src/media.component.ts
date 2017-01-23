@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "tmdb-v3"
 import { FileService, } from "./service"
-import { promiseEach, promiseMap, arrayDistinctBy, promiseWhile, promiseSetTimeout } from "./utils/utils"
+import { promiseEach, promiseMap, arrayDistinctBy, promiseWhile, promiseSetTimeout, ReusePromiseIfStillRunning } from "./utils/utils"
 import { App } from "./app"
 //import { Media, Movie, TvShow } from "./media"
 import { File, Config, } from "contracts"
@@ -24,6 +24,7 @@ export class MediaComponent implements OnInit, OnChanges {
         watched: null,
         groupSimilar: true,
         search: null,
+        sortBy: "fsEntry.mtime desc",
     };
     allMovies: C.MediaFile[];
     movies: C.MediaFile[];
@@ -46,7 +47,26 @@ export class MediaComponent implements OnInit, OnChanges {
         list = this.applyFilterSearch(list);
         list = this.applyFilterWatched(list);
         list = this.applyFilterGroupSimilar(list);
+        list = this.applyFilterSortBy(list);
         this.filteredMovies = list;
+    }
+    applyFilterSortBy(list: C.MediaFile[]): C.MediaFile[] {
+        let list2 = list;
+        if (this.filter.sortBy == null)
+            return list2;
+        let tokens = this.filter.sortBy.split(' ');
+        let key = tokens[0];
+        let dir = (tokens[1] || "ASC").toUpperCase();
+        if (key == null || key == "")
+            return list2;
+        let desc = dir == "DESC";
+        if (key == "fsEntry.mtime")
+            list2 = list.orderBy(t => t.fsEntry.mtime, desc);
+        else if (key == "md.episodeKey")
+            list2 = list.orderBy(t => t.md.episodeKey, desc);
+        else 
+            console.log("not implemented sortBy", key);
+        return list2;
     }
 
     getType(mf: C.MediaFile): string {
@@ -156,34 +176,41 @@ export class MediaComponent implements OnInit, OnChanges {
     }
     noMoreMoviesOnServer: boolean;
     async getAvailableMedia(req?: { force?: boolean }) {
-        if (this.allMovies == null || (req && req.force)) {
-            let movies = await this.app.getMediaFiles({ maxResults: 500 });
-            this.allMovies = movies;
-            this.applyFilter();
-            this.applyPaging();
-            //this.app.analyzeIfNeeded(this.allMovies);
-            await this.app.loadTmdbMediaDetails(this.movies);
-            await this.app.loadTmdbMediaDetails(movies);
-        }
+        if (this.allMovies == null || (req && req.force))
+            this.getAllMediaFiles();
 
+        this.onAllMoviesChanged();
+    }
+
+    onFiltersChanged() {
+        this.onAllMoviesChanged();
+    }
+
+    onAllMoviesChanged() {
         this.applyFilter();
         this.applyPaging();
+    }
 
-        if (!this.noMoreMoviesOnServer && this.isLastPage()) {
+    @ReusePromiseIfStillRunning()
+    async getAllMediaFiles(): Promise<any> {
+        this.allMovies = [];
+        this.onAllMoviesChanged();
+        while (!this.noMoreMoviesOnServer) {
             let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length, maxResults: 500 });
             if (moreMovies.length == 0) {
                 this.noMoreMoviesOnServer = true;
+                break;
             }
             else {
                 console.log("Loading more movies");
                 this.allMovies.push(...moreMovies);
-                //this.app.analyzeIfNeeded(moreMovies);
+                this.onAllMoviesChanged();
                 await this.app.loadTmdbMediaDetails(moreMovies);
-                await this.getAvailableMedia();
+                this.onAllMoviesChanged();
             }
         }
-        //TODO: add higher priority: this.app.loadTmdbMediaDetails(this.movies);
     }
+
     applyPaging() {
         this.movies = this.filteredMovies.skip(this.skip).take(this.pageSize);
         console.log({ allMovies: this.allMovies, movies: this.movies, filtered: this.filteredMovies });
@@ -287,4 +314,6 @@ export interface MediaFilters {
     watched: boolean;
     groupSimilar: boolean;
     search: string;
+
+    sortBy: string;
 }

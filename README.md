@@ -4,15 +4,25 @@ DesktopBrowser
 Web based file explorer, runs locally on your browser, designed for media desktops.
 
 ### Installation
-Install Node.js
+Install [Node.js](https://nodejs.org)
 
 ```
-npm install desktopbrowser -g
+git clone https://github.com/danelkhen/desktopbrowser.git
+cd desktopbrowser
+cd client
+npm install
+tsc
+cd ..
+cd server
+npm install
+tsc
+cd ..
 ```
 
 ### Run
 ```
-desktopbrowser
+cd desktopbrowser
+node server
 ```
 browse to http://localhost:7777/
 

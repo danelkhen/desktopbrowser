@@ -3,7 +3,7 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
 import { FileService, ByFilenameService, KeyValueService, FsEntryService, AppService } from "./service"
 import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "tmdb-v3"
-import { nameof, promiseEach, setMinus, setPlus, setIntersect, promiseReuseIfStillRunning } from "./utils/utils"
+import { nameof, promiseEach, setMinus, setPlus, setIntersect, promiseReuseIfStillRunning, ReusePromiseIfStillRunning } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 //import { Media as DsMedia } from "./media"
@@ -181,6 +181,8 @@ export class App {
     //}
 
     async getMovieOrTvByTypeAndId(tmdbKey: string): Promise<MediaDetails> {
+        if (tmdbKey == null || tmdbKey == "")
+            return null;
         let cacheKey = "tmdb|details|" + tmdbKey;
         let x = await this.keyValue.findOneById<MediaDetails>({ id: cacheKey });
         if (x != null && x.value != null)
@@ -316,12 +318,6 @@ export class App {
     }
 }
 
-function ReusePromiseIfStillRunning(): MethodDecorator {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        let func: () => Promise<any> = descriptor.value;
-        descriptor.value = promiseReuseIfStillRunning(func);
-    };
-}
 
 //export interface MediaFile {
 //    md: ByFilename;

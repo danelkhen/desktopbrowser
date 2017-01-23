@@ -86,3 +86,10 @@ export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => P
         return promise;
     };
 }
+
+export function ReusePromiseIfStillRunning(): MethodDecorator {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        let func: () => Promise<any> = descriptor.value;
+        descriptor.value = promiseReuseIfStillRunning(func);
+    };
+}

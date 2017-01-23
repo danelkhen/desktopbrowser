@@ -86,6 +86,9 @@ export class Scanner {
             if (mf.tmdbBasic.media_type == "tv" && mf.parsed.episode != null && mf.parsed.season != null)
                 mf.md.episodeKey = "s" + mf.parsed.season.format("00") + "e" + mf.parsed.episode.format("00");
         }
+        else {
+            mf.md.tmdbKey = null;
+        }
         mf.md.lastKnownPath = path;
     }
 

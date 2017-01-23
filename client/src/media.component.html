@@ -26,18 +26,23 @@
                 <img src="../img/media/logo.svg" />
             </a>
         </header>
-        <div class="filter local">
+        <div class="filter local" (click)="onFiltersChanged()">
             <span class="title">Watchlist</span>
-            <button [class.selected]="filter.type == null" (click)="setFilter('type', null)" class="allmedia">All Media</button>
-            <button [class.selected]="filter.type == 'tv'" (click)="setFilter('type', 'tv')" class="tv">TV Shows</button>
-            <button [class.selected]="filter.type == 'movie'" (click)="setFilter('type', 'movie')" class="movie">Movies</button>
+            <button [class.selected]="filter.type == null" (click)="filter.type = null" class="allmedia">All Media</button>
+            <button [class.selected]="filter.type == 'tv'" (click)="filter.type = 'tv'" class="tv">TV Shows</button>
+            <button [class.selected]="filter.type == 'movie'" (click)="filter.type = 'movie'" class="movie">Movies</button>
             <hr />
-            <button [class.selected]="filter.watched == null" (click)="setFilter('watched', null)" class="selected">Both</button>
-            <button [class.selected]="filter.watched == true" (click)="setFilter('watched', true)">Watched</button>
-            <button [class.selected]="filter.watched == false" (click)="setFilter('watched', false)">Not Watched</button>
+            <button [class.selected]="filter.watched == null" (click)="filter.watched = null" class="selected">Both</button>
+            <button [class.selected]="filter.watched == true" (click)="filter.watched = true">Watched</button>
+            <button [class.selected]="filter.watched == false" (click)="filter.watched = false">Not Watched</button>
             <hr />
-            <button [class.selected]="filter.groupSimilar == true" (click)="setFilter('groupSimilar', true)">Group</button>
-            <button [class.selected]="filter.groupSimilar == false" (click)="setFilter('groupSimilar', false)">Ungroup</button>
+            <button [class.selected]="filter.groupSimilar == true" (click)="filter.groupSimilar  = true">Group</button>
+            <button [class.selected]="filter.groupSimilar == false" (click)="filter.groupSimilar = false">Ungroup</button>
+            <hr />
+            <button [class.selected]="filter.sortBy == 'fsEntry.mtime desc'" (click)="filter.sortBy = 'fsEntry.mtime desc'">Sort1</button>
+            <button [class.selected]="filter.sortBy == 'fsEntry.mtime asc'" (click)="filter.sortBy = 'fsEntry.mtime asc'">Sort2</button>
+            <button [class.selected]="filter.sortBy == 'md.episodeKey desc'" (click)="filter.sortBy = 'md.episodeKey desc'">Sort3</button>
+            <button [class.selected]="filter.sortBy == 'md.episodeKey asc'" (click)="filter.sortBy = 'md.episodeKey asc'">Sort4</button>
         </div>
         <div class="filter explore">
             <span class="title">Explore</span>
@@ -88,7 +93,7 @@
         <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
         <button (click)="tmdbV4Login()">tmdb v4 login</button>
         <button (click)="tmdbV4Tests()">tmdb v4 tests</button>
-        <button (click)="getAvailableMedia()">getAvailableMedia</button>
+        <button (click)="getAllMediaFiles()">Refresh</button>
         <button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button>
         <button (click)="app.downloadRatings()">Download Ratings</button>
         <button (click)="app.downloadWatchlists()">downloadWatchlists</button>
