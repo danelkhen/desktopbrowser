@@ -1,6 +1,6 @@
 import { RateLimit } from "tmdb-v3"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
-import { promiseSetTimeout, promiseWhile } from "../../utils/utils"
+import { promiseSetTimeout, } from "../../utils/utils"
 
 
 export class TmdbScheduler {
@@ -31,14 +31,13 @@ export class TmdbScheduler {
     }
 
     isScheduled: boolean;
-    scheduleProcessQueue(delay: number = 0) {
+    async scheduleProcessQueue(delay: number = 0) {
         if (this.isScheduled)
             return;
         this.isScheduled = true;
-        promiseSetTimeout(delay).then(() => {
-            this.isScheduled = false;
-            this.processQueue();
-        });
+        await promiseSetTimeout(delay);
+        this.isScheduled = false;
+        this.processQueue();
     }
 
     processQueue() {

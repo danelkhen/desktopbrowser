@@ -3,7 +3,7 @@ import { FilenameParser, } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"
 import { TmdbMedia, TmdbMovie, TvShow, Response } from "tmdb-v3"
 import { ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, ByFilename, FilenameParsedInfo } from "contracts"
-import { promiseEach, promiseSetTimeout, promiseReuseIfStillRunning } from "./utils/utils"
+import { promiseEach, promiseSetTimeout } from "./utils/utils"
 import { App } from "./app"
 import * as C from "contracts"
 

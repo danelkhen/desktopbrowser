@@ -111,7 +111,6 @@ export class App implements C.App {
             let tmdbKeys = hasTmdbKeys.select(t => t.md.tmdbKey).distinct();
             let cachePrefix = "tmdb|details|";
             let cacheKeys = tmdbKeys.select(t => cachePrefix + t);
-            console.log({ cacheKeys, hasTmdbKeys });
             let cachedMediaDetails = await this.keyValueService.dbService.repo.findByIds(cacheKeys) as C.KeyValue<Tmdb.MediaDetails>[];
             for (let media of cachedMediaDetails) {
                 let tmdbKey = media.key.substr(cachePrefix.length);

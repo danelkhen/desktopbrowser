@@ -16,13 +16,6 @@ export function nameof<T>(prop: SelectorFunc<T, any>): string {
         code = prop.toString();
     return code.substringBetween(".", ";");
 }
-//export async function promiseEach<T>(list: T[], handler: (obj: T, index: number) => Promise<any> | any): Promise<any> {
-//    let index = -1;
-//    for (let x of list) {
-//        index++;
-//        await handler(x, index);
-//    }
-//}
 
 export function promiseEach<T>(list: T[], handler: (obj: T, index: number) => Promise<any> | any): Promise<any> {
     return promiseMap<T, any>(list, handler);
@@ -87,9 +80,38 @@ export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => P
     };
 }
 
+/** Will wrap the function and cause it to be reused if it's still running, use for long running async operations that should never run in parallel */
 export function ReusePromiseIfStillRunning(): MethodDecorator {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        let func: () => Promise<any> = descriptor.value;
-        descriptor.value = promiseReuseIfStillRunning(func);
+        let originalFuncKey = "_" + propertyKey + "_original";
+        let promiseKey = "_" + propertyKey + "_promise";
+        target[originalFuncKey] = descriptor.value;
+        descriptor.value = new Function(`// generated code
+if (this.${promiseKey} == null) {
+    this.${promiseKey} = this.${originalFuncKey}().then(t => { 
+        this.${promiseKey} = null; 
+        return t;
+    }, 
+    err => {
+        this.${promiseKey} = null; 
+        return Promise.reject(err); 
+    });
+}
+return this.${promiseKey};
+`);
+    };
+}
+
+/** Will wrap the function and cause it to run only once, regardless of how many times it was called, use for things like init() */
+export function ReusePromise(): MethodDecorator {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        let originalFuncKey = "_" + propertyKey + "_original";
+        let promiseKey = "_" + propertyKey + "_promise";
+        target[originalFuncKey] = descriptor.value;
+        descriptor.value = new Function(`// generated code
+if (this.${promiseKey} == null)
+    this.${promiseKey} = this.${originalFuncKey}();
+return this.${promiseKey};
+`);
     };
 }

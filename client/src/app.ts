@@ -3,7 +3,7 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbClientV4 } from "./tmdb-client-v4"
 import { FileService, ByFilenameService, KeyValueService, FsEntryService, AppService } from "./service"
 import { MediaDetails, TmdbMovie, TmdbMedia, ListDetails, RatedMovie, RatedTvShow } from "tmdb-v3"
-import { nameof, promiseEach, setMinus, setPlus, setIntersect, promiseReuseIfStillRunning, ReusePromiseIfStillRunning } from "./utils/utils"
+import { nameof, promiseEach, setMinus, setPlus, setIntersect, ReusePromise, ReusePromiseIfStillRunning } from "./utils/utils"
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 //import { Media as DsMedia } from "./media"
@@ -36,27 +36,15 @@ export class App {
         this.tmdbV4.read_access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmE4NTZkZmY0ZDFkYjQ2NzgyZTYxMzI2MTBkZGIzMiIsInN1YiI6IjU4NGZlYzU1OTI1MTQxNmU0YjAwODUwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Jg-T4s-kFV_FlXwG1tovDvCQhXGaw9cjMA9e669xFaE";
     }
 
-    _initing: Promise<any>;
-    init(): Promise<any> {
-        if (this._initing != null)
-            return this._initing;
-        this._initing = this._init();
-        return this._initing;
-    }
-    async _init() {
+    @ReusePromise()
+    async init() {
         await this.initConfig();
         await this.tmdb.init();
         await this.getSavedRatings();
         await this.getSavedWatchlists();
-        //await this.refreshMediaInfos();
         await this.onInit();
-        //let p1 = this.scanAllFsEntries();
-        //let p2 = this.scanAllFsEntries();
-        //await p1;
-        //console.log("FINISHED p1");
-        //await p2;
-        //console.log("FINISHED p2");
     }
+
     onInit() {
         let t = this.tmdb;
         let inWatchlist = setPlus(t.movieWatchlistIds, t.tvShowWatchlistIds);
@@ -72,13 +60,13 @@ export class App {
     }
 
     async initConfig(): Promise<any> {
-        let config = await this.appService.getConfig();//.keyValue.findOneById<Config>({ id: "config" });
+        let config = await this.appService.getConfig();
         this.config = config || {};
         if (this.config.folders == null)
             this.config.folders = [];
     }
     async saveConfig() {
-        await this.appService.saveConfig(this.config);//.keyValue.persist({ key: "config", value: this.config });
+        await this.appService.saveConfig(this.config);
     }
 
     config: Config;
@@ -154,31 +142,6 @@ export class App {
         }
     }
 
-    //async getAvailableMedia(): Promise<C.MediaFile[]> {
-    //    let orderBy: Provide<ByFilename, OrderBy> = { modified: "DESC" };
-    //    let orderBy2 = {};
-    //    Object.keys(orderBy).forEach(key => orderBy2["t." + key] = orderBy[key]);
-    //    let mds = await this.byFilename.find({ options: { alias: "t", orderBy: orderBy2, maxResults: 100, } });
-    //    let scanner = this.createScanner();
-    //    mds = mds.filter(t => scanner.isVideoFile(t.key));
-    //    let mfs = mds.map(t => <C.MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
-    //    //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
-    //    //let groups = mfs.where(t => t.md.tmdbKey != null && t.md.tmdbKey != "").groupBy(t => t.md.tmdbKey);
-    //    //let medias = groups.map(group => {
-    //    //    let typeAndId = group[0].md.tmdbKey;
-    //    //    if (typeAndId == null)
-    //    //        return null;
-    //    //    let media = this.getMedia(typeAndId);
-    //    //    media.filenames = group.map(t => t.key);
-    //    //    if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
-    //    //        media.info.watched = true;
-    //    //    }
-    //    //    return media;
-    //    //});
-    //    //console.log({ medias });
-    //    return mfs;
-
-    //}
 
     async getMovieOrTvByTypeAndId(tmdbKey: string): Promise<MediaDetails> {
         if (tmdbKey == null || tmdbKey == "" || tmdbKey.split("|").some(t => t.length == 0))
@@ -202,29 +165,6 @@ export class App {
     }
 
 
-    //getMediaInfo(typeAndId: string): TmdbMediaInfo {
-    //    let x = this.mediaInfos.get(typeAndId);
-    //    if (x == null) {
-    //        x = { key: "mediainfo_" + typeAndId };
-    //        this.mediaInfos.set(typeAndId, x);
-    //    }
-    //    return x;
-    //}
-
-    //mediaInfos: Map<string, TmdbMediaInfo> = new Map<string, TmdbMediaInfo>();
-    //async refreshMediaInfos(): Promise<Map<string, TmdbMediaInfo>> {
-    //    let list = await this.keyValue.findAllWithKeyLike<TmdbMediaInfo>({ like: "mediainfo_%" });
-    //    list.forEach(info => {
-    //        let typeAndId = info.key.substr("mediainfo_".length);
-    //        this.mediaInfos.set(typeAndId, info.value);
-    //    });
-    //    Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
-    //    return this.mediaInfos;
-    //}
-    //getMedia(typeAndId: string): DsMedia {
-    //    let media = DsMedia.fromTmdbKey(typeAndId, this);
-    //    return media;
-    //}
 
     async findFile(name: string): Promise<File> {
         for (let folder of this.config.folders) {
@@ -242,22 +182,6 @@ export class App {
         await this.byFilename.persist(mf.md);
     }
 
-    //async checkFileMds() {
-    //    let mds = await this.getAllFilesMetadata();
-    //    for (let md of mds) {
-    //        if (md.lastKnownPath == null)
-    //            continue;
-    //        let file = await this.fileService.GetFile({ Path: md.lastKnownPath });
-    //        if (file == null) {
-    //            console.log("file in lastKnownPath wasn't found", md);
-    //            continue;
-    //        }
-    //        if (md.modified == null) {
-    //            md.modified = file.Modified;
-    //            this.byFilename.persist(md);
-    //        }
-    //    }
-    //}
 
     fsEntryToMediaFile(x: FsEntry): C.MediaFile {
         return <C.MediaFile>{ fsEntry: x };
@@ -287,16 +211,6 @@ export class App {
         return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, } }); //maxResults: 1000 
     }
 
-    //async getLatestMediaFiles(): Promise<MediaFile[]> {
-    //    let x = await this.getLatestFsEntries();
-    //    console.log({ x });
-    //    let mfs = x.map(t => this.fsEntryToMediaFile(t));
-    //    for (let mf of mfs)
-    //        mf.md = await this.getFileMetadata(mf.fsEntry.basename);
-    //    return mfs;
-    //}
-
-    //scanAllFsEntries: () => Promise<any> = promiseReuseIfStillRunning(() => this._scanAllFsEntries());
     @ReusePromiseIfStillRunning()
     async scanAllFsEntries(): Promise<any> {
         console.log("STARTED scanAllFsEntries");
@@ -315,15 +229,6 @@ export class App {
 }
 
 
-//export interface MediaFile {
-//    md: ByFilename;
-//    file: File
-//    tmdb?: MediaDetails;
-//    tmdbBasic?: TmdbMedia;
-//    type: string;
-//    parsed: FilenameParsedInfo;
-//    fsEntry: FsEntry;
-//}
 
 
 export interface TmdbMediaInfo {
@@ -340,3 +245,88 @@ type Provide<T, V> = {
 }
 
 
+
+
+    //getMediaInfo(typeAndId: string): TmdbMediaInfo {
+    //    let x = this.mediaInfos.get(typeAndId);
+    //    if (x == null) {
+    //        x = { key: "mediainfo_" + typeAndId };
+    //        this.mediaInfos.set(typeAndId, x);
+    //    }
+    //    return x;
+    //}
+
+    //mediaInfos: Map<string, TmdbMediaInfo> = new Map<string, TmdbMediaInfo>();
+    //async refreshMediaInfos(): Promise<Map<string, TmdbMediaInfo>> {
+    //    let list = await this.keyValue.findAllWithKeyLike<TmdbMediaInfo>({ like: "mediainfo_%" });
+    //    list.forEach(info => {
+    //        let typeAndId = info.key.substr("mediainfo_".length);
+    //        this.mediaInfos.set(typeAndId, info.value);
+    //    });
+    //    Array.from(this.mediaInfos.entries()).filter(t => t[1].watched).forEach(t => this.tmdb.watched.add(t[0]));
+    //    return this.mediaInfos;
+    //}
+    //getMedia(typeAndId: string): DsMedia {
+    //    let media = DsMedia.fromTmdbKey(typeAndId, this);
+    //    return media;
+    //}
+//export interface MediaFile {
+//    md: ByFilename;
+//    file: File
+//    tmdb?: MediaDetails;
+//    tmdbBasic?: TmdbMedia;
+//    type: string;
+//    parsed: FilenameParsedInfo;
+//    fsEntry: FsEntry;
+//}
+    //async getLatestMediaFiles(): Promise<MediaFile[]> {
+    //    let x = await this.getLatestFsEntries();
+    //    console.log({ x });
+    //    let mfs = x.map(t => this.fsEntryToMediaFile(t));
+    //    for (let mf of mfs)
+    //        mf.md = await this.getFileMetadata(mf.fsEntry.basename);
+    //    return mfs;
+    //}
+
+    //scanAllFsEntries: () => Promise<any> = promiseReuseIfStillRunning(() => this._scanAllFsEntries());
+    //async checkFileMds() {
+    //    let mds = await this.getAllFilesMetadata();
+    //    for (let md of mds) {
+    //        if (md.lastKnownPath == null)
+    //            continue;
+    //        let file = await this.fileService.GetFile({ Path: md.lastKnownPath });
+    //        if (file == null) {
+    //            console.log("file in lastKnownPath wasn't found", md);
+    //            continue;
+    //        }
+    //        if (md.modified == null) {
+    //            md.modified = file.Modified;
+    //            this.byFilename.persist(md);
+    //        }
+    //    }
+    //}
+    //async getAvailableMedia(): Promise<C.MediaFile[]> {
+    //    let orderBy: Provide<ByFilename, OrderBy> = { modified: "DESC" };
+    //    let orderBy2 = {};
+    //    Object.keys(orderBy).forEach(key => orderBy2["t." + key] = orderBy[key]);
+    //    let mds = await this.byFilename.find({ options: { alias: "t", orderBy: orderBy2, maxResults: 100, } });
+    //    let scanner = this.createScanner();
+    //    mds = mds.filter(t => scanner.isVideoFile(t.key));
+    //    let mfs = mds.map(t => <C.MediaFile>{ md: t, tmdb: null, type: t.tmdbKey != null ? t.tmdbKey.split("|")[0] : null, parsed: new FilenameParser().parse(t.key) });
+    //    //let selectedFiles = new Set(mds.selectMany(t => t.selectedFiles || []));
+    //    //let groups = mfs.where(t => t.md.tmdbKey != null && t.md.tmdbKey != "").groupBy(t => t.md.tmdbKey);
+    //    //let medias = groups.map(group => {
+    //    //    let typeAndId = group[0].md.tmdbKey;
+    //    //    if (typeAndId == null)
+    //    //        return null;
+    //    //    let media = this.getMedia(typeAndId);
+    //    //    media.filenames = group.map(t => t.key);
+    //    //    if (!media.info.watched && media.filenames.some(t => selectedFiles.has(t))) {
+    //    //        media.info.watched = true;
+    //    //    }
+    //    //    return media;
+    //    //});
+    //    //console.log({ medias });
+    //    return mfs;
+
+    //}

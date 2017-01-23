@@ -3,7 +3,7 @@ import * as tmdb from "tmdb-v3"
 import { TmdbV4Api } from "tmdb-v4"
 import { TmdbApiMetadata } from "./md"
 import { Proxy, extractInstanceFunctionCall, ProxyCall } from "../../utils/proxy"
-import { promiseSetTimeout, promiseWhile, tryParseInt } from "../../utils/utils"
+import { promiseSetTimeout, tryParseInt } from "../../utils/utils"
 import { xhr, XhrRequest, } from "../../utils/xhr"
 import { TmdbScheduler } from "./scheduler"
 

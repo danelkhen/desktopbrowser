@@ -2,9 +2,8 @@ import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie, TmdbMedia, TmdbMovieDetails, TmdbTvShowDetails } from "tmdb-v3"
 import { FileService, } from "./service"
-import { promiseEach, promiseMap, arrayDistinctBy, promiseWhile, promiseSetTimeout, ReusePromiseIfStillRunning } from "./utils/utils"
+import { promiseEach, promiseMap, promiseSetTimeout, ReusePromiseIfStillRunning } from "./utils/utils"
 import { App } from "./app"
-//import { Media, Movie, TvShow } from "./media"
 import { File, Config, } from "contracts"
 import * as C from "contracts"
 
