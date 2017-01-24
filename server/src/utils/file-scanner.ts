@@ -7,7 +7,7 @@ export class FileScanner {
     async onDir(obj: FileEvent): Promise<boolean | void> { }
     async onDirChildren(obj: DirChildrenEvent): Promise<any> { }
     async onError(e): Promise<any> { /*console.log(e);*/ }
-    async onDirChild(obj: FileEvent): Promise<any> { }
+    async onDirChild(obj: FileEvent): Promise<boolean | void> { }
     manual: Manual<any> = new Manual();
     pause() { return this.manual.pause(); }
     resume() { return this.manual.resume(); }
@@ -62,7 +62,9 @@ export class FileScanner {
                         await this.onError(e);
                         continue;
                     }
-                    await this.onDirChild(dc);
+                    let enter2 = await this.onDirChild(dc);
+                    if (enter2 != null && !enter2)
+                        continue;
                     if (dc.stats.isDirectory())
                         this.stackPush(dc);
                 }
