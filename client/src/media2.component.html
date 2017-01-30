@@ -1,0 +1,102 @@
+<div class="setup">
+    <div *ngIf="app.config!=null">
+        <h3>Folders</h3>
+        <div *ngFor="let folder of app.config.folders">
+            <input [(ngModel)]="folder.path" />
+        </div>
+        <button (click)="addConfigFolder()">+</button>
+        <button (click)="app.saveConfig()">save</button>
+        <button (click)="scan()">scan</button>
+        <button (click)="reAnalyze()">re-analyze</button>
+        <label>{{skip}}-{{skip+pageSize}} / {{filteredMovies?.length}} (total: {{allMovies?.length}})</label>
+        <button (click)="prevPage()">Prev Page</button>
+        <button (click)="nextPage()">Next Page</button>
+        <button (click)="app.tmdb.loginToTmdb()">tmdb login</button>
+        <button (click)="tmdbV4Login()">tmdb v4 login</button>
+        <button (click)="tmdbV4Tests()">tmdb v4 tests</button>
+        <button (click)="getAllMediaFiles()">Refresh</button>
+        <button (click)="app.tmdb.markAllRatedAsWatched()">Mark all rated as watched</button>
+        <button (click)="app.downloadRatings()">Download Ratings</button>
+        <button (click)="app.downloadWatchlists()">downloadWatchlists</button>
+        <button (click)="app.getSavedRatings()">getSavedRatings</button>
+        <button (click)="tvAiringToday()">airing today</button>
+        <button (click)="tvOnTheAir()">on the air</button>
+    </div>
+    <div>
+        <pre>{{scanStatus | json}}</pre>
+    </div>
+    <div>
+        <div *ngFor="let media of movies">
+        </div>
+    </div>
+</div>
+
+
+<div class="filter local" (click)="onFiltersChanged()">
+    <span class="title">Watchlist</span>
+    <button [class.selected]="filter.type == null" (click)="filter.type = null" class="allmedia">All Media</button>
+    <button [class.selected]="filter.type == 'tv'" (click)="filter.type = 'tv'" class="tv">TV Shows</button>
+    <button [class.selected]="filter.type == 'movie'" (click)="filter.type = 'movie'" class="movie">Movies</button>
+    <hr />
+    <button [class.selected]="filter.watched == null" (click)="filter.watched = null" class="selected">Both</button>
+    <button [class.selected]="filter.watched == true" (click)="filter.watched = true">Watched</button>
+    <button [class.selected]="filter.watched == false" (click)="filter.watched = false">Not Watched</button>
+    <hr />
+    <button [class.selected]="filter.groupSimilar == true" (click)="filter.groupSimilar  = true">Group</button>
+    <button [class.selected]="filter.groupSimilar == false" (click)="filter.groupSimilar = false">Ungroup</button>
+    <hr />
+    <button [class.selected]="filter.sortBy == 'fsEntry.mtime desc'" (click)="filter.sortBy = 'fsEntry.mtime desc'">Sort1</button>
+    <button [class.selected]="filter.sortBy == 'fsEntry.mtime asc'" (click)="filter.sortBy = 'fsEntry.mtime asc'">Sort2</button>
+    <button [class.selected]="filter.sortBy == 'md.episodeKey desc'" (click)="filter.sortBy = 'md.episodeKey desc'">Sort3</button>
+    <button [class.selected]="filter.sortBy == 'md.episodeKey asc'" (click)="filter.sortBy = 'md.episodeKey asc'">Sort4</button>
+</div>
+<div class="filter explore">
+    <span class="title">Explore</span>
+    <button class="allmedia">Most Popular</button>
+    <button class="tv">Your Feed</button>
+    <button class="movie">Recommended</button>
+</div>
+
+
+<div class="search">
+    <input type="text" placeholder="Quick Search" [(ngModel)]="filter.search" (input)="scheduleApplyFilter()" />
+</div>
+
+<div class="medias">
+    <div *ngFor="let media of movies" class="media" [class.has-poster]="showPosters && media.tmdb?.poster?.w342 != null">
+        <div class="poster" *ngIf="showPosters"><img *ngIf="media.tmdb?.poster?.w342" src="{{media.tmdb?.poster?.w342}}"></div>
+        <div class="details">
+            <span>{{getName(media)}}</span>
+            <span>{{media.tmdb?.release_date}}</span>
+            <span>{{media.tmdb?.vote_average}}</span>
+            <span>{{media.fsEntry?.mtime}}</span>
+            <label>watched={{media.md?.watched}}</label>
+            <button (click)="movie_click(media)">open</button>
+            <button (click)="markAsWatched(media)">mark as watched</button>
+            <button (click)="markAsWatched(media)">mark as watched</button>
+            <button [class.disabled]="canPlay(media)" (click)="play(media)">Play</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="selectedMovie != null">
+    <div class="selectedMovie" [ngStyle]="showPosters ? { 'background': 'transparent url(' + selectedMovie.tmdb?.backdrop?.original + ') top center no-repeat', 'background-size': 'cover' } : {}">
+        <div class="background-cover">
+            <button class="backBtn" (click)="goBack()">Back</button>
+            <div class="cover"><img src="{{selectedMovie.tmdb?.poster?.w342}}" /></div>
+            <div class="detailsLarge">
+                <h3 class="title">{{getName(selectedMovie)}}</h3>
+                <div class="tag">{{selectedMovie.tmdb?.tagline}}</div>
+                <div class="metadata">
+                    <span class="rate">
+                        <img src="/img/media/rate-icon.svg" />{{selectedMovie.tmdb?.vote_average}}
+                    </span>
+                    <span>{{selectedMovie.tmdb?.release_date}}</span>
+                    <span>{{selectedMovie.tmdb?.runtime}} minutes</span>
+                    <span>{{selectedMovie.tmdb?.genres?.name}}</span>
+                </div>
+                <p class="synopsis">{{selectedMovie.tmdb?.overview}}</p>
+            </div>
+        </div>
+    </div>
+</div>

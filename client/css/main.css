@@ -80,6 +80,7 @@ table {
 /* Typography */
 body {
   background-color: #060606;
+  color:white;
   font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
   line-height: 1.5;
   font-size: 1em; }

@@ -14,7 +14,7 @@ import * as C from "contracts"
     styleUrls: ['_res_/src/media.component.css'],
 })
 export class MediaComponent implements OnInit, OnChanges {
-    constructor(private app: App) {
+    constructor(public app: App) {
 
     }
 
@@ -135,6 +135,7 @@ export class MediaComponent implements OnInit, OnChanges {
 
     movie_click(movie: C.MediaFile) {
         this.selectedMovie = movie;
+        console.log("movie_click", this.selectedMovie);
     }
 
     goBack() {
