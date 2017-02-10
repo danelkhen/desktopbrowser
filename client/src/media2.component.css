@@ -1,3 +1,9 @@
-body {
-    color:white;
+.flex {
+    display: flex;
+}
+
+table.medias td {
+    border:1px solid #ccc;
+    padding: 3px 6px;
+
 }

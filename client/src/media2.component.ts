@@ -13,6 +13,7 @@ import { MediaComponent } from "./media.component"
 @Component({
     selector: 'my-media2',
     templateUrl: '/src/media2.component.html',
+    styleUrls: ['src/media2.component.css'],
 })
 export class Media2Component extends MediaComponent {
     constructor(public app: App) {
