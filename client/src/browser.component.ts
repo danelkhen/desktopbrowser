@@ -411,8 +411,8 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     onFilesChanged(): void {
-        this.Res.Files.forEach(t => t.parsed = new FilenameParser().parse(t.Name));
-        console.log(this.Res.Files.map(t => t.parsed));
+        //this.Res.Files.forEach(t => t.parsed = new FilenameParser().parse(t.Name));
+        //console.log(this.Res.Files.map(t => t.parsed));
         this.applySort();
         this.filesView.refresh();
         this.FileSelection.AllItems = this.filesView.target;

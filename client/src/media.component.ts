@@ -63,6 +63,10 @@ export class MediaComponent implements OnInit, OnChanges {
             list2 = list.orderBy(t => t.fsEntry.mtime, desc);
         else if (key == "md.episodeKey")
             list2 = list.orderBy(t => t.md.episodeKey, desc);
+        else if (key == "name")
+            list2 = list.orderBy(t => this.getName(t), desc);
+        else if (key == "fsEntry.basename")
+            list2 = list.orderBy(t => t.fsEntry.basename, desc);
         else 
             console.log("not implemented sortBy", key);
         return list2;
@@ -220,8 +224,8 @@ export class MediaComponent implements OnInit, OnChanges {
         let name = "";
         if (mf.tmdb != null)
             name = mf.tmdb.name || mf.tmdb.title;
-        else if (mf.parsed != null)
-            name = mf.parsed.name;
+        //else if (mf.parsed != null)
+        //    name = mf.parsed.name;
         else
             return mf.fsEntry && mf.fsEntry.basename;
         if (mf.md != null && mf.md.episodeKey != null)

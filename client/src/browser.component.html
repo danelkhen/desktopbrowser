@@ -76,7 +76,6 @@
                         <th *ngIf="column==SIZE" [class]="getHeaderClass(SIZE)" (click)="orderBy(SIZE)">Size</th>
                         <th *ngIf="column==EXTENSION" [class]="getHeaderClass(EXTENSION)" (click)="orderBy(EXTENSION)">Ext</th>
                     </template>
-                    <th>parsed</th>
                 </tr>
             </thead>
         </table>
@@ -156,7 +155,6 @@
                     <td *ngIf="column==SIZE" class="Size"><span>{{FormatFriendlySize(file.Size)}}</span></td>
                     <td *ngIf="column==EXTENSION" class="Extension"><span *ngIf="!file.IsFolder">{{file.Extension}}</span></td>
                 </template>
-                <td>{{file?.parsed | json}}</td>
             </tr>
         </tbody>
     </table>

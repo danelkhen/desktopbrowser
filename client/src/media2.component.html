@@ -14,11 +14,6 @@
         <button (click)="tvOnTheAir()">on the air</button>
     </section>
 
-    <section class="flex">
-        <button (click)="prevPage()">Prev Page</button>
-        <button (click)="nextPage()">Next Page</button>
-        <label>{{skip}}-{{skip+pageSize}} / {{filteredMovies?.length}} (total: {{allMovies?.length}})</label>
-    </section>
     <section *ngIf="app.config!=null">
         <h3>Folders</h3>
         <button (click)="addConfigFolder()">+</button>
@@ -55,12 +50,20 @@
 </nav>
 
 
-
+<section class="flex">
+    <button (click)="prevPage()">Prev Page</button>
+    <button (click)="nextPage()">Next Page</button>
+    <label>{{skip}}-{{skip+pageSize}} / {{filteredMovies?.length}} (total: {{allMovies?.length}})</label>
+</section>
 <table class="medias">
     <thead>
         <tr>
             <th></th>
-            <th>name</th>
+            <th>
+                name
+                <button [class.selected]="filter.sortBy == 'fsEntry.basename desc'" (click)="filter.sortBy = 'fsEntry.basename desc'; getAvailableMedia();">desc</button>
+                <button [class.selected]="filter.sortBy == 'fsEntry.basename asc'" (click)="filter.sortBy = 'fsEntry.basename asc'; getAvailableMedia();">asc</button>
+            </th>
             <th>released</th>
             <th>vote</th>
             <th>
@@ -70,8 +73,8 @@
             </th>
             <th>
                 md.watched
-                <button [class.selected]="filter.sortBy == 'md.episodeKey desc'" (click)="filter.sortBy = 'md.episodeKey desc'">desc</button>
-                <button [class.selected]="filter.sortBy == 'md.episodeKey asc'" (click)="filter.sortBy = 'md.episodeKey asc'">asc</button>
+                <button [class.selected]="filter.sortBy == 'md.episodeKey desc'" (click)="filter.sortBy = 'md.episodeKey desc'; getAvailableMedia();">desc</button>
+                <button [class.selected]="filter.sortBy == 'md.episodeKey asc'" (click)="filter.sortBy = 'md.episodeKey asc'; getAvailableMedia();">asc</button>
             </th>
             <th>md.episodeKey</th>
             <th></th>
@@ -82,7 +85,7 @@
     <tbody>
         <tr *ngFor="let media of movies" class="media" [class.has-poster]="showPosters && media.tmdb?.poster?.w342 != null">
             <td><img *ngIf="showPosters && media.tmdb?.poster?.w342" src="{{media.tmdb?.poster?.w342}}"></td>
-            <td>{{getName(media)}}</td>
+            <td>{{media.fsEntry?.basename}}</td>
             <td>{{media.tmdb?.release_date}}</td>
             <td>{{media.tmdb?.vote_average}}</td>
             <td>{{media.fsEntry?.mtime}}</td>
