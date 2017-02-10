@@ -15,13 +15,6 @@ import { RequestHandler } from "express"
 import * as proxy from 'express-http-proxy';
 import { app, App, FsEntryService } from "./app";
 
-//var globalTunnel = require('global-tunnel');
-
-//globalTunnel.initialize({
-//    host: '',
-//    port: 0,
-//});
-
 export class Server {
     expApp: express.Application;
     root: string;
