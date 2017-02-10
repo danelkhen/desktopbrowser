@@ -25,7 +25,7 @@ export class Server {
         byFilename: ByFilenameService,
         keyValue: KeyValueService,
         fsEntry: FsEntryService,
-        app:App,
+        app: App,
     };
 
 
@@ -50,7 +50,7 @@ export class Server {
             byFilename: this.app.byFilenameService,
             keyValue: this.app.keyValueService,
             fsEntry: this.app.fsEntryService,
-            app:this.app,
+            app: this.app,
         };
         this.expApp = express();
         this.expApp.use(bodyParser.json());
@@ -120,11 +120,11 @@ function isPromise(obj) {
 }
 export let server: Server;
 
-function main() {
+async function main() {
     server = new Server();
-    return server.init()
-        .then(() => server.start())
-        .then(() => console.log('server started: http://localhost:7777'));
+    await server.init();
+    await server.start();
+    console.log('server started: http://localhost:7777');
 }
 
 main();

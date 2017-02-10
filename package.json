@@ -9,7 +9,7 @@
     "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css --unix-newlines --sourcemap=none",
     "compilesass": "sass client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
     "design": "sass --watch client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
-    "dev": "start cmd /C tsc -p client -w && start cmd /C tsc -p server -w && npm start"
+    "dev": "concurrently \"tsc -p client -w\" \"tsc -p server -w\" \"node server/out/server\""
   },
   "bin": {
     "desktopbrowser": "./bin/desktopbrowser"
