@@ -47,7 +47,7 @@ export class Db {
         subscribers: [EverythingSubscriber],
         entities: [ByFilename, KeyValue, FsEntry],
         autoSchemaSync: true,
-        logging: { logQueries: false, }
+        logging: { logQueries: true, }
     };
     async init(): Promise<any> {
         this.connection = await createConnection(this.connectionOptions);

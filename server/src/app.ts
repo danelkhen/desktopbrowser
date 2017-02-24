@@ -33,7 +33,7 @@ export class App implements C.App {
         let config = JSON.parse(text) as Config;
         return config;
     }
-    async saveConfig(config:Config): Promise<any> {
+    async saveConfig(config: Config): Promise<any> {
         let root = Path.join(__dirname, "../../");
         let file = "config.json";
         let path = Path.join(root, file);
@@ -107,7 +107,27 @@ export class App implements C.App {
         x.forEach(t => delete (t as any).md);
 
         let hasTmdbKeys = mfs.where(t => t.md != null && t.md.tmdbKey != null);
-        if (hasTmdbKeys.length>0) {
+        if (hasTmdbKeys.length > 0) {
+            let tmdbKeys = hasTmdbKeys.select(t => t.md.tmdbKey).distinct();
+            let cachePrefix = "tmdb|details|";
+            let cacheKeys = tmdbKeys.select(t => cachePrefix + t);
+            let cachedMediaDetails = await this.keyValueService.dbService.repo.findByIds(cacheKeys) as C.KeyValue<Tmdb.MediaDetails>[];
+            for (let media of cachedMediaDetails) {
+                let tmdbKey = media.key.substr(cachePrefix.length);
+                hasTmdbKeys.where(t => t.md.tmdbKey == tmdbKey).forEach(t => t.tmdb = media.value);
+            }
+        }
+        return mfs;
+    }
+    async getMediaFiles2(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
+        let fsEntries = await this.db.fsEntries.find({ alias: "t", maxResults: req.maxResults, firstResult: req.firstResult });
+        let mds = await this.db.byFilename.find();
+        let mdMap = new Map<string, ByFilename>();
+        mds.forEach(md => mdMap.set(md.key, md));
+
+        let mfs: C.MediaFile[] = fsEntries.map(fsEntry => <C.MediaFile>{ fsEntry: fsEntry, md: mdMap.get(fsEntry.basename), type: null, parsed: null });
+        let hasTmdbKeys = mfs.where(t => t.md != null && t.md.tmdbKey != null);
+        if (hasTmdbKeys.length > 0) {
             let tmdbKeys = hasTmdbKeys.select(t => t.md.tmdbKey).distinct();
             let cachePrefix = "tmdb|details|";
             let cacheKeys = tmdbKeys.select(t => cachePrefix + t);
