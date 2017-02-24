@@ -68,6 +68,10 @@ export class BrowserComponent implements OnInit, OnChanges {
         console.log("ngOnOnit");
         this.location.subscribe(t => console.log("location changed", { location: t }));
 
+        this.route.params.subscribe(params => {
+            console.log("PARAMS", { params, p: params["p"] });
+        });
+
         let nameof2 = Name.of<File>();
 
         //this.route.url.subscribe(t => console.log("URL SUBSCRIBE", t));
@@ -369,11 +373,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
     navigateToReq(): void {
         console.log("navigateToReq", this.Req);
-        let url = this.serializeReq(this.Req);
-        this.location.replaceState(url);
-        this.onUrlChanged(null);
-
-        //this.router.navigateByUrl(url);
+        this.router.navigate([""], { queryParams: { p: JSON.stringify(this.Req) } });
     }
 
     GetDefaultFileComparer(): JsFunc2<File, File, number> {
