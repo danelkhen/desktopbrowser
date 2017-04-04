@@ -17,7 +17,7 @@ export class ServiceBase<T> extends Proxy<T> {
     Invoke<R>(action: string, prms?: any): Promise<R> {
         let method = "GET";
         let contentType: string = null;
-        let data = null;
+        let data: any = null;
         if (prms != null) {
             let json = JSON.stringify(prms);
             if (json.length > 1000) { //prms != null && typeof (prms) == "object" && Object.keys(prms).some(key => !this.isQueryStringable(prms[key])) != null) {

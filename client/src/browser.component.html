@@ -69,13 +69,13 @@
         <table class="grid-header">
             <thead>
                 <tr>
-                    <template ngFor let-column [ngForOf]="columns">
+                    <ng-template ngFor let-column [ngForOf]="columns">
                         <th *ngIf="column==TYPE" [class]="getHeaderClass(TYPE)" (click)="orderBy(TYPE)"></th>
                         <th *ngIf="column==NAME" [class]="getHeaderClass(NAME)" (click)="orderBy(NAME)">Name</th>
                         <th *ngIf="column==MODIFIED" [class]="getHeaderClass(MODIFIED)" (click)="orderBy(MODIFIED)">Modified</th>
                         <th *ngIf="column==SIZE" [class]="getHeaderClass(SIZE)" (click)="orderBy(SIZE)">Size</th>
                         <th *ngIf="column==EXTENSION" [class]="getHeaderClass(EXTENSION)" (click)="orderBy(EXTENSION)">Ext</th>
-                    </template>
+                    </ng-template>
                 </tr>
             </thead>
         </table>
@@ -148,13 +148,13 @@
     <table>
         <tbody>
             <tr *ngFor="let file of filesView.target" [class]="GetRowClass(file, index)" (mousedown)="grdFiles_mousedown($event, file)" (click)="grdFiles_click($event, file)" (dblclick)="grdFiles_dblclick($event, file)">
-                <template ngFor let-column [ngForOf]="columns">
+                <ng-template ngFor let-column [ngForOf]="columns">
                     <td *ngIf="column==TYPE" class="type"><span [class]="GetFileClass(file)"></span></td>
                     <td *ngIf="column==NAME" class="Name"><span><a class="Name">{{file.Name}}</a></span></td>
                     <td *ngIf="column==MODIFIED" class="Modified"><span>{{FormatFriendlyDate(file.Modified)}}</span></td>
                     <td *ngIf="column==SIZE" class="Size"><span>{{FormatFriendlySize(file.Size)}}</span></td>
                     <td *ngIf="column==EXTENSION" class="Extension"><span *ngIf="!file.IsFolder">{{file.Extension}}</span></td>
-                </template>
+                </ng-template>
             </tr>
         </tbody>
     </table>

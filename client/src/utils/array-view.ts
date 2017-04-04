@@ -86,7 +86,7 @@ export class ArrayView<T> {
         this.refresh();
     }
 
-    static comparerFunc(x, y) {
+    static comparerFunc(x: any, y: any): number {
         let x1 = x == null ? x : x.valueOf();
         let y1 = y == null ? y : y.valueOf();
         let val: number;

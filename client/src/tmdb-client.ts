@@ -98,7 +98,7 @@ export class TmdbClient extends TmdbV3Client {
             }
             this.getImageSizes(prop).forEach(size => images[size] = this.getImageUrl(movie, prop, size));
         });
-        Object.values(res).forEach(t => this.fixResponse(t, methodName));
+        Object.values(res).forEach((t: any) => this.fixResponse(t, methodName));
         return res;
 
     }
@@ -183,7 +183,7 @@ export class TmdbClient extends TmdbV3Client {
         let tokens = typeAndId.split("|");
         if (tokens.length < 2)
             return null;
-        
+
         let media_type = tokens[0];
         let id = tokens[1];
         if (media_type == "movie")
@@ -204,7 +204,7 @@ export class TmdbClient extends TmdbV3Client {
             return true;
         return false; //this.watchedList != null && this.watchedList.items.find(t => t.id == media_id) != null;
     }
-    failed = [];
+    failed:any[] = [];
     rated = new Set<string>();
     watched = new Set<string>();
 

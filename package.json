@@ -5,7 +5,7 @@
   "main": "server/out/server.js",
     "scripts": {
         "start": "node server/out/server",
-        "postinstall": "npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
+        "postinstall": "rem npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
         "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css --unix-newlines --sourcemap=none",
         "compilesass": "sass client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
         "design": "sass --watch client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",

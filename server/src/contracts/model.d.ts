@@ -71,12 +71,12 @@
         Delete(req: PathRequest): Promise<any>;
         trash(req: PathRequest): Promise<any>;
         ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>;
-        isWindows();
+        isWindows():boolean;
         GetHomeFiles(): File[];
         CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>;
         CalculateFolderSize(path: string): Promise<number>;
         CalculateFolderSizeNoCache(path: string): Promise<number>;
-        clearCache();
+        clearCache():void;
         //omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
         //imdbRss(req: { path: string }): Promise<string>;
     }
@@ -141,13 +141,13 @@
 
 
     interface IEnumerable<T> extends Array<T> {
-        OrderByDescending?(sel): IOrderedEnumerable<T>;
-        OrderBy?(sel): IOrderedEnumerable<T>;
+        OrderByDescending?(sel:any): IOrderedEnumerable<T>;
+        OrderBy?(sel:any): IOrderedEnumerable<T>;
     }
 
     interface IOrderedEnumerable<T> extends IEnumerable<T> {
-        ThenByDescending?(sel): IOrderedEnumerable<T>;
-        ThenBy?(sel): IOrderedEnumerable<T>;
+        ThenByDescending?(sel:any): IOrderedEnumerable<T>;
+        ThenBy?(sel:any): IOrderedEnumerable<T>;
     }
 
 

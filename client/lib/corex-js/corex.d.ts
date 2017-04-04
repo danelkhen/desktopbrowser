@@ -42,7 +42,7 @@ interface ObjectConstructor {
     select(obj: any, selector: any): any;
     deleteKeysWithValues(obj: any, keysValues: any): any;
     getHashKey(obj: any): any;
-    values(obj: any): any;
+    values(obj: any): any[];
     removeAll(obj: any, predicate: any): any;
     clear(obj: any): any;
 }
@@ -125,7 +125,7 @@ interface Array<T> {
     joinWith(list2: any, keySelector1: any, keySelector2: any, resultSelector: any): any;
     all(predicate: any): any;
     flatten(): any;
-    selectToObject(keySelector: any, valueSelector: any): any;
+    selectToObject<K, V>(keySelector: SelectorFunc<T,K>, valueSelector: SelectorFunc<T,V>): any;
     groupByToObject(keySelector: any, itemSelector: any): any;
     splitIntoChunksOf(countInEachChunk: any): any;
     avg(): any;

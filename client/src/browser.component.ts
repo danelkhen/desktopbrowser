@@ -273,7 +273,7 @@ export class BrowserComponent implements OnInit, OnChanges {
     }
 
     LoadReq(): void {
-        let x = { p: null };
+        let x = { p: <string>null };
         QueryString.parse(null, x, null);
         let req = x.p != null && x.p != "" ? JSON.parse(x.p) : {};
         this.Req = req;

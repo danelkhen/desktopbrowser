@@ -130,7 +130,7 @@ Number.prototype.toFriendlyNumber = function (): string {
 }
 
 interface LessStatic {
-    modifyVars(obj:any);
+    modifyVars(obj:any):void;
 }
 
 

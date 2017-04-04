@@ -166,7 +166,7 @@
         mapToProperty?: string;
         entities: {
             entity: any;
-            metadata;//TODO: EntityMetadata;
+            metadata: any;//TODO: EntityMetadata;
         }[];
     }
     /**
@@ -629,7 +629,7 @@
          * Clones query builder as it is.
          */
         clone(options?: {
-            queryRunnerProvider?;//TODO:: QueryRunnerProvider;
+            queryRunnerProvider?: any;//TODO:: QueryRunnerProvider;
             skipOrderBys?: boolean;
             skipLimit?: boolean;
             skipOffset?: boolean;
@@ -646,7 +646,7 @@
         target: Function | string;
         parentPropertyName: string;
         parentAliasName: string;
-        constructor(name: string);
+        constructor(name: string): Alias;
         readonly selection: string;
     }
     export interface JoinOptions {
