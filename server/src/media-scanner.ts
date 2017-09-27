@@ -86,7 +86,7 @@ export class MediaScanner {
             let x = this.toFsEntry(e);
             if (x == null)
                 return;
-            db.fsEntries.persist(x); //non blocking, will be done in background
+            db.fsEntries.save(x); //non blocking, will be done in background
             this.status.saved++;
             this.status.lastSaved = e.path;
         };

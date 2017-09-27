@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 
-import { Table, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
-@Table()
+@Entity()
 export class Photo {
 
     @PrimaryGeneratedColumn()

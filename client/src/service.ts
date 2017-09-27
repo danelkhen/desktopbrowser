@@ -2,10 +2,11 @@
 import { ServiceBase } from "./utils/service-base"
 import { FindRequest, FindOptions, HasKey, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, KeyValue, FsEntry } from "contracts"
 import * as C from "contracts"
+import { FindManyOptions } from "typeorm"
 
 export class DbService<T> extends ServiceBase<C.DbService<T>>{
-    findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
-    find(req?: FindRequest): Promise<T[]> { return this.invoke(t => t.find(req)); }
+    findOneById(req: { id: any, options?: FindManyOptions<T> }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
+    find(req?: FindManyOptions<T>): Promise<T[]> { return this.invoke(t => t.find(req)); }
     persist(x: T): Promise<T> { return this.invoke(t => t.persist(x)); }
     removeById(req: { id: any }): Promise<T> { return this.invoke(t => t.removeById(req)); }
 }

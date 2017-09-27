@@ -11,7 +11,7 @@ import * as trash from 'trash';
 import * as path from "path";
 import * as os from "os";
 import { Db, ByFilename, KeyValue } from "./db";
-import { FindOptions, Repository } from "typeorm"
+import { FindManyOptions, Repository } from "typeorm"
 import { DbService } from "./db-service"
 import * as C from "contracts"
 
@@ -62,7 +62,7 @@ export class KeyValueService implements C.KeyValueService {
             else
                 obj2 = obj;
             //let kv = this.toKeyValue(obj2);
-            return this.dbService.repo.persist(obj2);//.then(t => this.fromKeyValue<T>(t));
+            return this.dbService.repo.save(obj2);//.then(t => this.fromKeyValue<T>(t));
         });
     }
 }

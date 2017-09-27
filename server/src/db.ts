@@ -1,37 +1,36 @@
 import "reflect-metadata";
-import { Table, Column, Index, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, } from "typeorm";
-import { ColumnTypes as CT } from "typeorm/metadata/types/ColumnTypes";
+import { Entity, Column, Index, PrimaryGeneratedColumn, PrimaryColumn, Connection, ConnectionOptions, createConnection, Repository, ColumnType as CT } from "typeorm";
 import * as path from "path";
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent, } from "typeorm";
 import * as C from "contracts"
 
 
-@Table()
+@Entity()
 export class ByFilename implements C.ByFilename {
     @PrimaryColumn() key: string;
-    @Column(CT.SIMPLE_ARRAY, { nullable: true }) selectedFiles: string[];
-    @Column(CT.STRING, { nullable: true }) @Index() tmdbKey: string;
-    @Column(CT.STRING, { nullable: true }) episodeKey: string;
-    @Column(CT.BOOLEAN, { nullable: true }) watched: boolean;
-    @Column(CT.STRING, { nullable: true }) lastKnownPath: string;
-    @Column(CT.STRING, { nullable: true }) modified: string;
-    @Column(CT.STRING, { nullable: true }) scanned: string;
+    @Column("simple-array", { nullable: true }) selectedFiles: string[];
+    @Column("varchar", { nullable: true }) @Index() tmdbKey: string;
+    @Column("varchar", { nullable: true }) episodeKey: string;
+    @Column("boolean", { nullable: true }) watched: boolean;
+    @Column("varchar", { nullable: true }) lastKnownPath: string;
+    @Column("varchar", { nullable: true }) modified: string;
+    @Column("varchar", { nullable: true }) scanned: string;
 }
 
-@Table()
+@Entity()
 export class FsEntry implements C.FsEntry {
     @PrimaryColumn() key: string;
-    @Column(CT.STRING, { nullable: true }) @Index() basename: string;
-    @Column(CT.STRING, { nullable: true }) dirname: string;
-    @Column(CT.STRING, { nullable: true }) extname: string;
-    @Column(CT.STRING, { nullable: true }) type: string;
-    @Column(CT.STRING, { nullable: true }) atime: string;
-    @Column(CT.STRING, { nullable: true }) mtime: string;
-    @Column(CT.STRING, { nullable: true }) ctime: string;
-    @Column(CT.BOOLEAN, { nullable: true }) exists: boolean;
+    @Column("varchar", { nullable: true }) @Index() basename: string;
+    @Column("varchar", { nullable: true }) dirname: string;
+    @Column("varchar", { nullable: true }) extname: string;
+    @Column("varchar", { nullable: true }) type: string;
+    @Column("varchar", { nullable: true }) atime: string;
+    @Column("varchar", { nullable: true }) mtime: string;
+    @Column("varchar", { nullable: true }) ctime: string;
+    @Column("boolean", { nullable: true }) exists: boolean;
 }
 
-@Table()
+@Entity()
 export class KeyValue {
     @PrimaryColumn() key: string;
     @Column(CT.JSON, { nullable: true }) value: any;

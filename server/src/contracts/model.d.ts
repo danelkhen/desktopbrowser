@@ -1,5 +1,6 @@
 ﻿declare module "contracts" {
     import * as tmdb from "tmdb-v3";
+    import { FindManyOptions } from "typeorm"
 
     export interface Config {
         folders?: ConfigFolder[];
@@ -35,8 +36,8 @@
     }
 
     export interface DbService<T> {
-        findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined>;
-        find(req: FindRequest): Promise<T[]>;
+        findOneById(req: { id: any, options?: FindManyOptions<T> }): Promise<T | undefined>;
+        find(req: FindManyOptions<T>): Promise<T[]>;
         persist(x: T): Promise<T>;
         removeById(req: { id: any }): Promise<T>;
     }
@@ -71,12 +72,12 @@
         Delete(req: PathRequest): Promise<any>;
         trash(req: PathRequest): Promise<any>;
         ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>;
-        isWindows():boolean;
+        isWindows(): boolean;
         GetHomeFiles(): File[];
         CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>;
         CalculateFolderSize(path: string): Promise<number>;
         CalculateFolderSizeNoCache(path: string): Promise<number>;
-        clearCache():void;
+        clearCache(): void;
         //omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
         //imdbRss(req: { path: string }): Promise<string>;
     }
@@ -141,13 +142,13 @@
 
 
     interface IEnumerable<T> extends Array<T> {
-        OrderByDescending?(sel:any): IOrderedEnumerable<T>;
-        OrderBy?(sel:any): IOrderedEnumerable<T>;
+        OrderByDescending?(sel: any): IOrderedEnumerable<T>;
+        OrderBy?(sel: any): IOrderedEnumerable<T>;
     }
 
     interface IOrderedEnumerable<T> extends IEnumerable<T> {
-        ThenByDescending?(sel:any): IOrderedEnumerable<T>;
-        ThenBy?(sel:any): IOrderedEnumerable<T>;
+        ThenByDescending?(sel: any): IOrderedEnumerable<T>;
+        ThenBy?(sel: any): IOrderedEnumerable<T>;
     }
 
 

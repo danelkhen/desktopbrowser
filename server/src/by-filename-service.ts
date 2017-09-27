@@ -12,7 +12,7 @@ import * as path from "path";
 //import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
 import { Db, ByFilename, KeyValue } from "./db";
-import { FindOptions, Repository } from "typeorm"
+import { FindManyOptions, Repository } from "typeorm"
 import { DbService } from "./db-service"
 import * as C from "contracts"
 

@@ -9,7 +9,7 @@ import * as trash from 'trash';
 import * as path from "path";
 import * as os from "os";
 import { Db, ByFilename, KeyValue } from "./db";
-import { FindOptions, Repository } from "typeorm"
+import { FindManyOptions, Repository } from "typeorm"
 import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
 import * as C from "contracts"

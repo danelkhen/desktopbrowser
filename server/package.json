@@ -1,5 +1,5 @@
 {
-  "name": "desktopbrowser-server",
+  "name": "server",
   "version": "0.0.5",
   "description": "",
   "main": "index.js",
@@ -16,18 +16,16 @@
     "dirty": "^1.1.0",
     "diskinfo": "0.0.3",
     "express": "^4.15.2",
-    "express-http-proxy": "^0.11.0",
+    "express-http-proxy": "^1",
     "global-tunnel": "^1.2.0",
-    "imdb-api": "^2.2.2",
-    "install": "^0.8.8",
+    "imdb-api": "^3",
     "minimatch": "^3.0.3",
     "mongodb": "^2.2.25",
     "reflect-metadata": "^0.1.10",
     "request-promise": "^4.2.0",
     "request-promise-native": "^1.0.3",
     "rimraf": "^2.6.1",
-    "sqlite3": "^3.1.8",
     "trash": "^4.0.1",
-    "typeorm": "0.0.7-alpha.1"
+    "typeorm": "0.1.0-alpha.49"
   }
 }

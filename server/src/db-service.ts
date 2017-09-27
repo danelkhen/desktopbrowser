@@ -14,19 +14,20 @@ import * as path from "path";
 //import { KeyValueStorage, Bucket } from "./db";
 import * as os from "os";
 import { Db, ByFilename, KeyValue } from "./db";
-import { FindOptions, Repository } from "typeorm"
+import { FindOneOptions, FindManyOptions, Repository } from "typeorm"
 
 
 export class DbService<T> implements C.DbService<T> {
     db: Db;
     repo: Repository<T>;
-    findOneById(req: { id: any, options?: FindOptions }): Promise<T | undefined> {
+    findOneById(req: { id: any, options?: FindOneOptions<T> }): Promise<T | undefined> {
         return this.repo.findOneById(req.id, req.options);
     }
-    async find(req: FindRequest): Promise<T[]> {
+
+    async find(req: FindManyOptions<T>): Promise<T[]> {
         console.log("find", req);
         try {
-            let res = await this.repo.find(req.conditions, req.options);
+            let res = await this.repo.find(req);
             return res;
         }
         catch (e) {
@@ -38,7 +39,7 @@ export class DbService<T> implements C.DbService<T> {
     getIdPropName() {
         if (this._idPropName == null) {
             let md = this.db.connection.getMetadata(this.repo.target);
-            this._idPropName = md.primaryColumn.propertyName;
+            this._idPropName = md.primaryColumns[0].propertyName;
         }
         return this._idPropName;
     }
@@ -47,11 +48,11 @@ export class DbService<T> implements C.DbService<T> {
         if (id != null) {
             let obj2 = await this.repo.findOneById(id)
             if (obj2 == null)
-                return this.repo.persist(obj);
-            let final = this.repo.merge(obj2, obj);
-            return await this.repo.persist(final);
+                return this.repo.save(obj);
+            let final = this.repo.merge(obj2, obj as any);
+            return await this.repo.save(final);
         }
-        return await this.repo.persist(obj);
+        return await this.repo.save(obj);
     }
 
     async removeById(req: { id: any }): Promise<T> {

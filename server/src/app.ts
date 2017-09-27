@@ -98,7 +98,7 @@ export class App implements C.App {
             .leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key");
         if (req.notScannedOnly)
             q = q.where("md.scanned is null");
-        q = q.orderBy("t.mtime", "DESC").setFirstResult(req.firstResult || 0).setMaxResults(req.maxResults || 100);
+        q = q.orderBy("t.mtime", "DESC").offset(req.firstResult || 0).limit(req.maxResults || 100);
         //.where()
         ;
 
@@ -120,7 +120,7 @@ export class App implements C.App {
         return mfs;
     }
     async getMediaFiles2(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
-        let fsEntries = await this.db.fsEntries.find({ alias: "t", maxResults: req.maxResults, firstResult: req.firstResult });
+        let fsEntries = await this.db.fsEntries.find({ take: req.maxResults, skip: req.firstResult });
         let mds = await this.db.byFilename.find();
         let mdMap = new Map<string, ByFilename>();
         mds.forEach(md => mdMap.set(md.key, md));
