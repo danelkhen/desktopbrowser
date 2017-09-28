@@ -123,7 +123,7 @@ export class TmdbClient extends TmdbV3Client {
         return `${c.base_url}${size}${movie[prop]}`;
     }
 
-    storage: GeneralStorage = localStorage;
+    storage: Storage = localStorage;
 
     get request_token(): string { return this.storage.tmdb_request_token; }
     set request_token(value: string) { this.storage.tmdb_request_token = value; }

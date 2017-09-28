@@ -27,7 +27,7 @@ export class TmdbClientV4 extends TmdbV4Client {
         return Promise.resolve();
     }
 
-    storage: GeneralStorage = localStorage;
+    storage: Storage = localStorage;
 
     get request_token(): string { return this.storage.tmdb_v4_request_token; }
     set request_token(value: string) { this.storage.tmdb_v4_request_token = value; }

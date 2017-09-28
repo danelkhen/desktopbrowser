@@ -1,5 +1,5 @@
 export module MyModule {
-    export type object = Object;
+    //export type object = Object;
     export type integer = number;
     export interface Client {
         accountAddtoWatchlist(req: AccountAddtoWatchlistRequestBase): any;

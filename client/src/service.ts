@@ -1,12 +1,12 @@
 ﻿import { Proxy, ProxyCall } from "./utils/proxy"
 import { ServiceBase } from "./utils/service-base"
-import { FindRequest, FindOptions, HasKey, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, KeyValue, FsEntry } from "contracts"
+import { FindManyOptions, FindOneOptions, HasKey, ListFilesRequest, ListFilesResponse, PathRequest, FileRelativesInfo, File, KeyValue, FsEntry } from "contracts"
 import * as C from "contracts"
-import { FindManyOptions } from "typeorm"
+//import { FindManyOptions } from "typeorm"
 
 export class DbService<T> extends ServiceBase<C.DbService<T>>{
-    findOneById(req: { id: any, options?: FindManyOptions<T> }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
-    find(req?: FindManyOptions<T>): Promise<T[]> { return this.invoke(t => t.find(req)); }
+    findOneById(req: { id: any, options?: C.FindManyOptions<T> }): Promise<T | undefined> { return this.invoke(t => t.findOneById(req)); }
+    find(req?: C.FindManyOptions<T>): Promise<T[]> { return this.invoke(t => t.find(req)); }
     persist(x: T): Promise<T> { return this.invoke(t => t.persist(x)); }
     removeById(req: { id: any }): Promise<T> { return this.invoke(t => t.removeById(req)); }
 }
@@ -22,7 +22,7 @@ export class KeyValueService extends ServiceBase<C.KeyValueService> {
         super();
         this.Url = "/api/keyValue";
     }
-    findOneById<T>(req: { id: any, options?: FindOptions }): Promise<KeyValue<T>> { return this.invoke(t => t.findOneById<T>(req)); }
+    findOneById<T>(req: { id: any, options?: C.FindOneOptions<KeyValue<T>> }): Promise<KeyValue<T>> { return this.invoke(t => t.findOneById<T>(req)); }
     persist<T>(obj: KeyValue<T>): Promise<KeyValue<T>> { return this.invoke(t => t.persist<T>(obj)); }
     findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> { return this.invoke(t => t.findAllWithKeyLike<T>(req)); }
 }

@@ -75,7 +75,7 @@ export class TmdbV3Proxy extends TmdbV3Or4Proxy<TmdbV3Api> {
         this.md = TmdbApiMetadata;
     }
 
-    getNextPage<T>(action: (req: TmdbV3Api) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<T[]> {
+    getNextPage<T>(action: (req: TmdbV3Api) => PagedResponse<T>, lastRes: PagedResponse<T>): Promise<PagedResponse<T>> {
         if (lastRes.total_pages <= lastRes.page)
             return Promise.resolve(null);
         let pc = extractInstanceFunctionCall(action);

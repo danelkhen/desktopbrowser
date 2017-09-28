@@ -11,7 +11,7 @@ import * as trash from 'trash';
 import * as path from "path";
 import * as os from "os";
 import { Db, ByFilename, KeyValue } from "./db";
-import { FindManyOptions, Repository } from "typeorm"
+import { FindManyOptions, FindOneOptions, Repository } from "typeorm"
 import { DbService } from "./db-service"
 import * as C from "contracts"
 
@@ -44,7 +44,7 @@ export class KeyValueService implements C.KeyValueService {
         obj.key = kv.key;
         return obj;
     }
-    findOneById<T>(req: { id: any, options?: FindOptions }): Promise<C.KeyValue<T>> {
+    findOneById<T>(req: { id: any, options?: FindOneOptions<C.KeyValue<T>> }): Promise<C.KeyValue<T>> {
         return this.dbService.findOneById(req);//.then(t => this.fromKeyValue<T>(t));
     }
     findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> {

@@ -1,4 +1,4 @@
-﻿import { FindRequest, HasKey, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, } from "contracts"
+﻿import { HasKey, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, } from "contracts"
 import * as C from "contracts"
 
 import { PathInfo } from "./utils/path-info"

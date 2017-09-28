@@ -18,7 +18,7 @@ export class TmdbV4Client {
 
     accountGetFavoriteMovies(req: T4.AccountGetFavoriteMoviesRequestBase): Promise<T4.AccountGetFavoriteMoviesResponseBase> { return this.proxy.invoke(t => t.accountGetFavoriteMovies(req)); }
     accountGetFavoriteTVShows(req: T4.AccountGetFavoriteMoviesRequestBase): Promise<T4.AccountGetTVShowWatchlistResponseBase> { return this.proxy.invoke(t => t.accountGetFavoriteTVShows(req)); }
-    accountGetLists(req: T4.AccountGetListsRequest): T4.PagedResponse<Promise<T4.AccountGetCreatedListsResponseItem>> { return this.proxy.invoke(t => t.accountGetLists(req)); }
+    accountGetLists(req: T4.AccountGetListsRequest): Promise<T4.PagedResponse<T4.AccountGetCreatedListsResponseItem>> { return this.proxy.invoke(t => t.accountGetLists(req)); }
     accountGetMovieRecommendations(req: T4.AccountGetFavoriteMoviesRequestBase): Promise<T4.AccountGetFavoriteMoviesResponseBase> { return this.proxy.invoke(t => t.accountGetMovieRecommendations(req)); }
     accountGetMovieWatchlist(req: T4.AccountGetFavoriteMoviesRequestBase): Promise<T4.AccountGetFavoriteMoviesResponseBase> { return this.proxy.invoke(t => t.accountGetMovieWatchlist(req)); }
     accountGetRatedMovies(req: T4.AccountGetFavoriteMoviesRequestBase): Promise<T4.AccountGetFavoriteMoviesResponseBase> { return this.proxy.invoke(t => t.accountGetRatedMovies(req)); }

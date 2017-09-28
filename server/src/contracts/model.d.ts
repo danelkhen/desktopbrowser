@@ -1,6 +1,6 @@
 ﻿declare module "contracts" {
     import * as tmdb from "tmdb-v3";
-    import { FindManyOptions } from "typeorm"
+    import { FindManyOptions } from "contracts"
 
     export interface Config {
         folders?: ConfigFolder[];
@@ -9,7 +9,7 @@
         path: string;
     }
     export interface KeyValueService { //extends DbService<KeyValue<any>>
-        findOneById<T>(req: { id: any, options?: FindOptions }): Promise<KeyValue<T>>;
+        findOneById<T>(req: { id: any, options?: FindManyOptions<KeyValue<T>> }): Promise<KeyValue<T>>;
         findAllWithKeyLike<T>(req: { like: string }): Promise<KeyValue<T>[]>;
         persist<T>(obj: KeyValue<T>): Promise<KeyValue<T>>;
     }
@@ -55,10 +55,10 @@
     export interface FsEntryService extends DbService<FsEntry> {
     }
 
-    export interface FindRequest {
-        conditions?: ObjectLiteral;
-        options?: FindOptions;
-    }
+    //export interface FindRequest {
+    //    conditions?: ObjectLiteral;
+    //    options?: FindOptions;
+    //}
 
     export interface FileService {
         //init();

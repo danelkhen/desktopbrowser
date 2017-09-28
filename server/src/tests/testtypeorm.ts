@@ -28,19 +28,21 @@ export class Photo {
 }
 
 createConnection({
-    driver: {
-        type: "sqlite",
-        host: "localhost",
-        port: 3306,
-        username: "root",
-        password: "admin",
-        database: "test",
-        storage: "test.sqlite",
-    },
+    //driver: {
+    type: "sqlite",
+    host: "localhost",
+    port: 3306,
+    username: "root",
+    password: "admin",
+    database: "test.sqlite",
+
+    //storage: "test.sqlite",
+    //},
     entities: [
         Photo
     ],
-    autoSchemaSync: true,
+    synchronize: true,
+    //autoSchemaSync: true,
 }).then(connection => {
 
     let photo = new Photo();
@@ -50,14 +52,14 @@ createConnection({
     photo.views = 1;
     photo.isPublished = true;
 
-    connection.entityManager
-        .persist(photo)
-        .then(photo => {
-            console.log("Photo has been saved");
-            connection.entityManager.find(Photo).then(savedPhotos => {
-                console.log("All photos from the db: ", savedPhotos);
-            });
-        });
+    //connection.entityManager
+    //    .persist(photo)
+    //    .then(photo => {
+    //        console.log("Photo has been saved");
+    //        connection.entityManager.find(Photo).then(savedPhotos => {
+    //            console.log("All photos from the db: ", savedPhotos);
+    //        });
+    //    });
 
 
 

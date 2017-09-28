@@ -7,7 +7,7 @@ import { nameof, promiseEach, setMinus, setPlus, setIntersect, ReusePromise, Reu
 import { Scanner } from "./scanner"
 import { FilenameParser } from "./filename-parser"
 //import { Media as DsMedia } from "./media"
-import { File, ByFilename, FilenameParsedInfo, OrderBy, Config, FsEntry } from "contracts"
+import { File, ByFilename, FilenameParsedInfo, Config, FsEntry } from "contracts"
 import * as C from "contracts"
 
 export class App {
@@ -208,7 +208,7 @@ export class App {
     }
 
     async getLatestFsEntries(): Promise<FsEntry[]> {
-        return await this.fsEntryService.find({ options: { alias: "t", orderBy: { "t.mtime": "DESC" }, } }); //maxResults: 1000 
+        return await this.fsEntryService.find({  order: { "mtime": "DESC" }, }); //maxResults: 1000 
     }
 
     @ReusePromiseIfStillRunning()

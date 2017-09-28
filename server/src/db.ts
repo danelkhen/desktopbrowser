@@ -33,20 +33,20 @@ export class FsEntry implements C.FsEntry {
 @Entity()
 export class KeyValue {
     @PrimaryColumn() key: string;
-    @Column(CT.JSON, { nullable: true }) value: any;
+    @Column("varchar", { nullable: true }) value: any;
 }
 
 export class Db {
     connection: Connection;
     connectionOptions: ConnectionOptions = {
-        driver: {
-            type: "sqlite",
-            storage: path.join(__dirname, "../../db.sqlite"),
-        },
+        //driver: {
+        type: "sqlite",
+        database: path.join(__dirname, "../../db.sqlite"),
+        //},
         subscribers: [EverythingSubscriber],
         entities: [ByFilename, KeyValue, FsEntry],
-        autoSchemaSync: true,
-        logging: { logQueries: false, }
+        synchronize: true,
+        //logging: {  logQueries: false, }
     };
     async init(): Promise<any> {
         this.connection = await createConnection(this.connectionOptions);
