@@ -3,19 +3,21 @@
   "version": "0.0.9",
   "description": "Web based file explorer, runs locally on your browser, designed for media desktops.",
   "main": "server/out/server.js",
-    "scripts": {
-        "start": "node server/out/server",
-        "postinstall": "rem npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
-        "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css --unix-newlines --sourcemap=none",
-        "compilesass": "sass client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
-        "design": "sass --watch client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
-        "dev": "concurrently \"tsc -p client -w\" \"tsc -p server -w\" \"node server/out/server\"",
-        "watch": "concurrently \"tsc -p client -w\" \"tsc -p server -w\""
-    },
+  "scripts": {
+    "start": "node server/out/server",
+    "postinstall": "rem npm install client/ --prefix client/ --no-bin-links && npm install server/ --prefix server/ --no-bin-links",
+    "compile": "tsc -p client && tsc -p server && sass client/scss/main.scss:client/css/main.css --unix-newlines --sourcemap=none",
+    "compilesass": "sass client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
+    "design": "sass --watch client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none",
+    "dev": "concurrently \"tsc -p client -w\" \"tsc -p server -w\" \"node server/out/server\"",
+    "watch": "concurrently \"tsc -p client -w\" \"tsc -p server -w\""
+  },
   "bin": {
     "desktopbrowser": "./bin/desktopbrowser"
   },
   "author": "Dan-el Khen",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "sqlite3": "^3.1.13"
+  }
 }
