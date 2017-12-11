@@ -30,10 +30,10 @@ export class Photo {
 createConnection({
     //driver: {
     type: "sqlite",
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "admin",
+    //host: "localhost",
+    //port: 3306,
+    //username: "root",
+    //password: "admin",
     database: "test.sqlite",
 
     //storage: "test.sqlite",
