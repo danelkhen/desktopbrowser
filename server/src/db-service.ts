@@ -48,11 +48,11 @@ export class DbService<T> implements C.DbService<T> {
         if (id != null) {
             let obj2 = await this.repo.findOneById(id)
             if (obj2 == null)
-                return this.repo.save(obj);
+                return this.repo.manager.save(obj);
             let final = this.repo.merge(obj2, obj as any);
-            return await this.repo.save(final);
+            return await this.repo.manager.save(final);
         }
-        return await this.repo.save(obj);
+        return await this.repo.manager.save(obj);
     }
 
     async removeById(req: { id: any }): Promise<T> {

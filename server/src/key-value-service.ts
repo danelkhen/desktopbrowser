@@ -55,15 +55,14 @@ export class KeyValueService implements C.KeyValueService {
     copyOverwrite<T>(src: T, target: T): T {
         return Q.copy(src, target, { overwrite: true });
     }
-    persist<T>(obj: C.KeyValue<T>): Promise<C.KeyValue<T>> {
-        return this.findOneById({ id: obj.key }).then(obj2 => {
-            if (obj2 != null)
-                this.copyOverwrite(obj.value, obj2.value);
-            else
-                obj2 = obj;
-            //let kv = this.toKeyValue(obj2);
-            return this.dbService.repo.save(obj2);//.then(t => this.fromKeyValue<T>(t));
-        });
+    async persist<T>(obj: C.KeyValue<T>): Promise<C.KeyValue<T>> {
+        let obj2 = await this.findOneById({ id: obj.key });
+        if (obj2 != null)
+            this.copyOverwrite(obj.value, obj2.value);
+        else
+            obj2 = obj;
+        //let kv = this.toKeyValue(obj2);
+        return this.dbService.repo.manager.save(obj2 as any);//.then(t => this.fromKeyValue<T>(t));
     }
 }
 
