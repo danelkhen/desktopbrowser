@@ -14,8 +14,12 @@ import { KeyValueService } from "./key-value-service"
 import { RequestHandler } from "express"
 import * as proxy from 'express-http-proxy';
 import { app, App, FsEntryService } from "./app";
+import * as http from "http"
+import * as ws from "ws"
+import * as url from "url"
 
 export class Server {
+    server: http.Server;
     expApp: express.Application;
     root: string;
     nodeModulesDir: string;
@@ -70,6 +74,8 @@ export class Server {
         this.expApp.get(['/', '/media', '/media2'], (req: express.Request, res: express.Response) => {
             res.sendFile('index.html', { root: this.root });
         });
+        this.server = http.createServer(this.expApp);
+        this.setupWebsockets(this.server);
     }
 
 
@@ -109,6 +115,29 @@ export class Server {
             console.log("api action error", e);
             res.status(500).json({ err: e.toString() });
         }
+    }
+
+    setupWebsockets(server: http.Server | https.Server) {
+        const wss = new ws.Server({ server });
+
+        wss.on('connection', (ws, req) => {
+            console.log("wss.onconnection", req.url);
+            //const url2 = url.parse(req.url, true);
+            //console.log("wss.onconnection", url2, url2.query);
+            //let queueId = (url2.query as any).queue;
+            //console.log("ws queueid", queueId);
+
+            // You might use location.query.access_token to authenticate or share sessions
+            // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+
+            //ws.on('message', message => {
+            //    console.log('ws.message received: %s', message);
+            //    //ws.send(JSON.stringify('you sent '+message));
+            //});
+            ws.on('error', e => console.log('ws.error', e));
+            //ws.send(JSON.stringify('something'));
+        });
+
     }
 
 }

@@ -32,20 +32,20 @@ export class PathInfo {
             return this;
         return new PathInfo(IoPath.GetFullPath(this.Value));
     }
-    ToAbsoluteExact(): PathInfo {
+    async ToAbsoluteExact(): Promise<PathInfo> {
         if (this.IsEmpty)
             return this;
-        return new PathInfo(new FileSystemInfo(this.Value).FullName);
+        return new PathInfo((await FileSystemInfo.create(this.Value)).FullName);
     }
 
     toString(): string {
         return this.Value;
     }
 
-    get IsFile(): boolean {
+    get IsFile(): Promise<boolean> {
         return IoFile.Exists(this.Value);
     }
-    get IsDirectory(): boolean {
+    get IsDirectory(): Promise<boolean> {
         return IoDir.Exists(this.Value);
     }
     get ParentPath(): PathInfo {

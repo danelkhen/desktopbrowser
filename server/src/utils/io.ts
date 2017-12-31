@@ -1,16 +1,27 @@
 ﻿import * as path from "path"
-import * as fs from "fs"
+//import * as fs from "fs"
+import * as fse from "fs-extra"
 import { getDrives, DiskInfoItem } from "diskinfo"
 import { IEnumerable } from "contracts"
 
 
 export class IoDir {
-    static Exists(s: string): boolean { return fs.existsSync(s) && fs.statSync(s).isDirectory(); }
+    static async Exists(s: string): Promise<boolean> {
+        if (!(await fse.pathExists(s)))
+            return;
+        let stat = await fse.stat(s);
+        return stat.isDirectory();
+    }
 }
 export class IoFile {
-    static Exists(s: string): boolean { return fs.existsSync(s) && fs.statSync(s).isFile(); }
-    static Delete(s: string): boolean {
-        fs.unlinkSync(s);
+    static async Exists(s: string): Promise<boolean> {
+        if (!(await fse.pathExists(s)))
+            return;
+        let stat = await fse.stat(s);
+        return stat.isFile();
+    }
+    static async Delete(s: string): Promise<boolean> {
+        await fse.unlink(s);
         return true;
     }
 }
@@ -39,8 +50,19 @@ export class IoPath {
 
 
 export class FileSystemInfo {
-    constructor(path2: string) {
+    protected constructor(path2: string) {
         this.path = path2;
+    }
+
+    static async create(path2: string): Promise<FileSystemInfo> {
+        let x = new FileSystemInfo(path2);
+        await x.init();
+        return x;
+    }
+
+
+    async init() {
+        let path2 = this.path;
         this.Attributes = {
             HasFlag: () => false, //TODO:
         };
@@ -50,7 +72,7 @@ export class FileSystemInfo {
         this.Name = path.basename(path2);
         this.Extension = path.extname(path2);
         try {
-            this.stats = fs.lstatSync(path2);
+            this.stats = await fse.lstatSync(path2);
             this.Length = this.stats.size;
             this.isFile = this.stats.isFile();
             this.isDir = this.stats.isDirectory();
@@ -61,8 +83,9 @@ export class FileSystemInfo {
         }
         if (this.Name == null || this.Name == "")
             this.Name = this.path; //console.log(path2, this);
+
     }
-    stats: fs.Stats;
+    stats: fse.Stats;
     path: string;
     isLink: boolean;
     isFile: boolean;
@@ -74,27 +97,32 @@ export class FileSystemInfo {
     Length?: number;
     Extension?: string;
 
-    EnumerateFiles(): IEnumerable<FileSystemInfo> {
-        return this.GetFileSystemInfos().filter(t => t.isFile);
+    async EnumerateFiles(): Promise<IEnumerable<FileSystemInfo>> {
+        return (await this.GetFileSystemInfos()).filter(t => t.isFile);
     }
-    EnumerateDirectories(): IEnumerable<FileSystemInfo> {
-        return this.GetFileSystemInfos().filter(t => t.isDir);
+    async EnumerateDirectories(): Promise<IEnumerable<FileSystemInfo>> {
+        return (await this.GetFileSystemInfos()).filter(t => t.isDir);
     }
-    EnumerateFileSystemElementsRecursive(): IEnumerable<FileSystemInfo> {
-        let list = this.GetFileSystemInfos();
+    async EnumerateFileSystemElementsRecursive(): Promise<IEnumerable<FileSystemInfo>> {
+        let list = await this.GetFileSystemInfos();
         let i = 0;
         while (i < list.length) {
             let file = list[i];
             if (file.isDir) {
-                list.push(...file.GetFileSystemInfos());
+                let list2 = await file.GetFileSystemInfos();
+                list.push(...list2);
             }
             i++;
         }
         return list;
     }
-    GetFileSystemInfos(): IEnumerable<FileSystemInfo> {
-        let list = fs.readdirSync(this.path);
-        return list.map(t => new FileSystemInfo(path.join(this.path, t)));
+    async GetFileSystemInfos(): Promise<FileSystemInfo[]> {
+        let list = await fse.readdir(this.path);
+        let list2: FileSystemInfo[] = [];
+        for (let t of list) {
+            list2.push(await FileSystemInfo.create(path.join(this.path, t)));
+        }
+        return list2;
     }
 
 }

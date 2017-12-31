@@ -1,7 +1,8 @@
 ﻿import { HasKey, ListFilesRequest, ListFilesResponse, File, FileRelativesInfo, PathRequest, IEnumerable, IOrderedEnumerable, } from "contracts"
 import { PathInfo } from "./utils/path-info"
 import { SiteConfiguration, Page } from "./config"
-import * as fs from "fs";
+//import * as fs from "fs";
+import * as fse from "fs-extra"
 import { IoFile, IoDir, IoPath, DriveInfo, FileSystemInfo, FileAttributes, } from "./utils/io"
 import * as child_process from "child_process"
 import * as rimraf from "rimraf";
@@ -96,10 +97,10 @@ export class FileService implements C.FileService {
             return /*new File*/ { IsFolder: true, Path: "", Name: "Home" };
         var absPath = new PathInfo(path).ToAbsolute();
         if (absPath.IsFile) {
-            return this.ToFile(new FileSystemInfo(absPath.Value));
+            return this.ToFile(await FileSystemInfo.create(absPath.Value));
         }
-        else if (absPath.IsDirectory || absPath.IsRoot) {
-            return this.ToFile(new FileSystemInfo(absPath.Value));
+        else if (await absPath.IsDirectory || absPath.IsRoot) {
+            return this.ToFile(await FileSystemInfo.create(absPath.Value));
         }
         return null;
     }
@@ -118,17 +119,16 @@ export class FileService implements C.FileService {
     }
 
 
-    Delete(req: PathRequest): Promise<any> {
+    async Delete(req: PathRequest): Promise<any> {
         var path = req.Path;
-        if (IoFile.Exists(path))
-            IoFile.Delete(path);
-        else if (IoDir.Exists(path)) {
+        if (await IoFile.Exists(path))
+            await IoFile.Delete(path);
+        else if (await IoDir.Exists(path)) {
             if (path.split('\\').length <= 2)
                 throw new Error("Delete protection, cannot delete path so short, should be at least depth of 3 levels or more");
             //IoDir.Delete(path, true);
-            return this.rimraf(path, { glob: false, maxBusyTries: null, emfileWait: null, disableGlob: null });
+            await this.rimraf(path, { glob: false, maxBusyTries: null, emfileWait: null, disableGlob: null });
         }
-        return Promise.resolve();
     }
 
     trash(req: PathRequest): Promise<any> {
@@ -200,17 +200,17 @@ export class FileService implements C.FileService {
         //if (searchPattern.IsNullOrEmpty())
         //    searchPattern = "*";
         else if (recursive) {
-            var dir = new FileSystemInfo(path);
-            files2 = dir.EnumerateFileSystemElementsRecursive().select(t => this.ToFile(t));
+            var dir = await FileSystemInfo.create(path);
+            files2 = (await dir.EnumerateFileSystemElementsRecursive()).select(t => this.ToFile(t));
         }
         else {
-            var dir = new FileSystemInfo(path);
+            var dir = await FileSystemInfo.create(path);
             if (files && !folders)
-                files2 = dir.EnumerateFiles().select(t => this.ToFile(t));
+                files2 = (await dir.EnumerateFiles()).select(t => this.ToFile(t));
             else if (folders && !files)
-                files2 = dir.EnumerateDirectories().select(t => this.ToFile(t));
+                files2 = (await dir.EnumerateDirectories()).select(t => this.ToFile(t));
             else if (folders && files)
-                files2 = dir.GetFileSystemInfos().select(t => this.ToFile(t));
+                files2 = (await dir.GetFileSystemInfos()).select(t => this.ToFile(t));
             else
                 throw new Error();
             isFiltered = true;
@@ -282,7 +282,7 @@ export class FileService implements C.FileService {
     async CalculateFolderSizeNoCache(path: string): Promise<number> {
         var size = 0;
         try {
-            var list = new FileSystemInfo(path).GetFileSystemInfos();
+            var list = await (await FileSystemInfo.create(path)).GetFileSystemInfos();
             for (let item of list) {
                 if (item.isFile)
                     size += item.Length;
