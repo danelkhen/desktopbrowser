@@ -284,7 +284,16 @@ export class BrowserComponent implements OnInit, OnChanges {
 
     async ListFiles(): Promise<any> {
         console.log("ListFiles");
-        let res = await this.server.ListFiles(this.Req);
+        let req = this.Req;
+        if (this.Req.FolderSize) {
+            let req2 = { ...req };
+            req2.FolderSize = false;
+            await this._ListFiles(req2);
+        }
+        await this._ListFiles(req);
+    }
+    async _ListFiles(req: ListFilesRequest): Promise<any> {
+        let res = await this.server.ListFiles(req);
         if (res == null)
             return; //TODO: handle errors
         this.Res = res;
