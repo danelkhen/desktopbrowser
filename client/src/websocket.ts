@@ -1,5 +1,7 @@
 ﻿import { iterateDomEvent, iterateEvent } from "./event"
 import { extractInstanceFunctionCall, ProxyCall } from "./utils/proxy"
+import { App } from "contracts"
+
 let webSocket: WebSocket;
 
 main();
@@ -17,15 +19,15 @@ export function main() {
     });
 }
 
-export async function test() {
-    let res = send2(t => t.testAsyncIterable());
-    for await (let item of res) {
-        console.log(item);
-    }
-}
+//export async function test() {
+//    let res = send2(t => t.testAsyncIterable());
+//    for await (let item of res) {
+//        console.log(item);
+//    }
+//}
 
 
-export async function* send2<T>(func: Function): AsyncIterableIterator<T> {
+export async function* send2<T>(func: (server: App) => T): AsyncIterableIterator<T> {
     let pc = extractInstanceFunctionCall(func);
     console.log(pc);
     let cmd = `${pc.name}(${pc.args.map(t => JSON.stringify(t)).join(",")})`;
