@@ -710,13 +710,19 @@ export class BrowserComponent implements OnInit, OnChanges {
     //}
 
     replCmd: string = "";
-    replOutput: string[];
+    replOutput: string[] = [];
     async sendReplCmd() {
         if (this.replCmd == null || this.replCmd == "")
             return;
-        let res = websocket.send(this.replCmd);
-        for await (let item of res) {
-            this.replOutput.push(item);
+        try {
+            let res = websocket.send(this.replCmd);
+            for await (let item of res) {
+                console.log("repl", item);
+                this.replOutput.push(item);
+            }
+        }
+        catch (err) {
+            this.replOutput.push(err);
         }
         //fillArray(this.replOutput, res);
 

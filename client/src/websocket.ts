@@ -28,7 +28,7 @@ export async function test() {
 export async function* send2<T>(func: Function): AsyncIterableIterator<T> {
     let pc = extractInstanceFunctionCall(func);
     console.log(pc);
-    let cmd = `${pc.name}(${pc.args.map(t=>JSON.stringify(t)).join(",")})`;
+    let cmd = `${pc.name}(${pc.args.map(t => JSON.stringify(t)).join(",")})`;
     let events = send(cmd);
     for await (let data of events) {
         if (data == "[") {
@@ -69,6 +69,10 @@ export async function* send<T>(cmd: string): AsyncIterableIterator<string> {
                 throw new Error();
             yield data;
             break;
+        }
+        else if (data.startsWith == "ERROR: ") {
+            let err = JSON.parse(data.substr("ERROR: ".length));
+            throw new Error(err.message || err);
         }
         else {
             if (iterable === true)

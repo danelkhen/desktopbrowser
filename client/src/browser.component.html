@@ -124,14 +124,13 @@
     <p class="actors">{{imdb.actors}}</p>
     <p class="plot">{{imdb.plot}}</p>
 </div>
-
 <div class="tmdb" *ngIf="movie!=null">
     <div class="title">{{movie.title}}</div>
     <img class="poster_url" src="{{movie.poster_url}}" />
     <img class="backdrop_url" src="{{movie.backdrop_url}}" />
-    
+
     <div class="overview">{{movie.overview}}</div>
-    
+
     <div class="adult">{{movie.adult}}</div>
     <div class="release_date">{{movie.release_date}}</div>
     <div class="genre_ids">{{movie.genre_ids}}</div>
@@ -143,10 +142,10 @@
     <div class="video">{{movie.video}}</div>
     <div class="vote_average">{{movie.vote_average}}</div>
 </div>
-<div class="repl">
-    <input type="text" [(ngModel)]="replCmd"/>
+<div class="repl" style="display:none">
+    <input type="text" [(ngModel)]="replCmd" />
     <button (click)="sendReplCmd()">send</button>
-    <pre *ngFor="let replLine of replOuput">{{replLine}}</pre>
+    <pre *ngFor="let replLine of replOutput">{{replLine}}</pre>
 </div>
 <div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">
     <table>
