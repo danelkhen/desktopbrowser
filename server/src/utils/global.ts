@@ -33,3 +33,10 @@ Date.prototype.ToDefaultString = function () {
     return this.format(defaultDateFormat);
 
 }
+
+if (typeof (Symbol.asyncIterator) == "undefined") {
+    let x: any = Symbol;
+    x.asyncIterator = Symbol("asyncIterator");
+}
+
+

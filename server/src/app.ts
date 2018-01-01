@@ -10,6 +10,7 @@ import { MediaScanner } from "./media-scanner"
 import * as Fs from "./utils/fs"
 import * as Path from "path"
 import * as Tmdb from "tmdb-v3"
+import { sleep } from "./utils";
 
 export class App implements C.App {
     server: Server;
@@ -138,6 +139,17 @@ export class App implements C.App {
             }
         }
         return mfs;
+    }
+
+    *testIterable() {
+        for (let i = 0; i < 10; i++)
+            yield i;
+    }
+    async *testAsyncIterable() {
+        for (let i = 0; i < 10; i++) {
+            await sleep(1000);
+            yield i;
+        }
     }
 
 }

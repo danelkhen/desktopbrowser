@@ -17,7 +17,7 @@ export function main() {
 }
 
 export async function test() {
-    let res = send2(t => t.doSomething(7,"abc"));
+    let res = send2(t => t.testAsyncIterable());
     for await (let item of res) {
         console.log(item);
     }

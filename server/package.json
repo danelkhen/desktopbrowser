@@ -13,6 +13,7 @@
     "@types/mongodb": "^2.2.16",
     "@types/request-promise-native": "^1.0.10",
     "@types/ws": "^3.2.1",
+    "async-iter-stream": "^1.2.0",
     "body-parser": "^1.17.1",
     "core-js": "^2.5.2",
     "dirty": "^1.1.0",

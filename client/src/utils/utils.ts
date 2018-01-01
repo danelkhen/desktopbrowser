@@ -14,7 +14,10 @@ export function nameof<T>(prop: SelectorFunc<T, any>): string {
         code = prop2.func.toString();
     else
         code = prop.toString();
-    return code.substringBetween(".", ";");
+    let res = /\.([a-zA-Z_][a-zA-Z0-9_]*)/.exec(code);
+    let name = res[1];//code.substringBetween(".", ";");
+    console.log({code, name});
+    return name;
 }
 
 export function promiseEach<T>(list: T[], handler: (obj: T, index: number) => Promise<any> | any): Promise<any> {
