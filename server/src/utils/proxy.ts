@@ -1,0 +1,33 @@
+﻿export interface ProxyCall<T> {
+    name: keyof T;
+    args: any[];
+}
+
+export function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
+    let code = func.toString();
+    let index = code.indexOf(".");
+    let index2 = code.indexOf("(", index);
+    let res: ProxyCall<any> = {
+        name: code.substring(index + 1, index2),
+        args: null,
+    };
+    let fake: any = {};
+    fake[res.name] = function () {
+        res.args = Array.from(arguments);
+    };
+    func(fake);
+    if (res.args == null)
+        res.args = [];
+    return res;
+}
+
+export function extractFunctionCall(code: string): ProxyCall<any> {
+    let match = /^([a-zA-Z0-9_]+)\((.*)\)$/.exec(code);
+    console.log(code, match[0], match[1], match[2]);
+    let name = match[1];
+    let args = JSON.parse("[" + match[2] + "]");
+    let func = new Function(name, code);
+    let res: ProxyCall<any> = { name, args, };
+    return res;
+}
+

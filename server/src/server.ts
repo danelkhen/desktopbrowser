@@ -6,7 +6,9 @@ import * as path from "path";
 import * as express from "express"
 import { DriveInfo } from "./utils/io"
 import * as child_process from "child_process"
+import * as http from "http"
 import * as https from "https"
+import * as ws from "ws"
 import * as bodyParser from "body-parser";
 import * as os from "os";
 import { ByFilenameService } from "./by-filename-service"
@@ -14,9 +16,8 @@ import { KeyValueService } from "./key-value-service"
 import { RequestHandler } from "express"
 import * as proxy from 'express-http-proxy';
 import { app, App, FsEntryService } from "./app";
-import * as http from "http"
-import * as ws from "ws"
 import * as url from "url"
+import {setupWebsockets} from "./websocket"
 
 export class Server {
     server: http.Server;
@@ -81,7 +82,7 @@ export class Server {
 
 
     start(): Promise<any> {
-        return new Promise<any>((resolve, reject) => this.expApp.listen(7777, resolve));
+        return new Promise<any>((resolve, reject) => this.server.listen(7777, resolve));
     }
 
     handleServiceRequest: RequestHandler = async (req, res, next) => {
@@ -118,26 +119,7 @@ export class Server {
     }
 
     setupWebsockets(server: http.Server | https.Server) {
-        const wss = new ws.Server({ server });
-
-        wss.on('connection', (ws, req) => {
-            console.log("wss.onconnection", req.url);
-            //const url2 = url.parse(req.url, true);
-            //console.log("wss.onconnection", url2, url2.query);
-            //let queueId = (url2.query as any).queue;
-            //console.log("ws queueid", queueId);
-
-            // You might use location.query.access_token to authenticate or share sessions
-            // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
-            //ws.on('message', message => {
-            //    console.log('ws.message received: %s', message);
-            //    //ws.send(JSON.stringify('you sent '+message));
-            //});
-            ws.on('error', e => console.log('ws.error', e));
-            //ws.send(JSON.stringify('something'));
-        });
-
+        setupWebsockets(server);
     }
 
 }

@@ -14,6 +14,8 @@ import { TmdbClient } from "./tmdb-client"
 import { TmdbMovie } from "tmdb-v3"
 import { Scanner } from "./scanner"
 import { App } from "./app"
+import * as websocket from "./websocket"
+import * as proxy from "./utils/proxy"
 
 @Component({
     selector: 'my-browser',
@@ -59,6 +61,8 @@ export class BrowserComponent implements OnInit, OnChanges {
         this.filesView = new ArrayView<File>(() => this.Res.Files);
         this.filesView.pageSize = 200;
         window["_browser"] = this;
+        window["websocket"] = websocket;
+        window["proxy"] = proxy;
         var x = new FilenameParser();
         window["filenameParser"] = x;
     }

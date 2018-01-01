@@ -1,60 +1,49 @@
-﻿let rxq: string[] = [];
+﻿import { iterateDomEvent, iterateEvent } from "./event"
+import { extractInstanceFunctionCall, ProxyCall } from "./utils/proxy"
 let webSocket: WebSocket;
-function main() {
+
+export function main() {
     let url = location.href.replace(/^https|http/, "ws");
+    url = url.replace(/\?.*$/, "");
     webSocket = new WebSocket(url, ["protocolOne", "protocolTwo"]);
     webSocket.addEventListener("message", e => {
         console.log(e.data);
-        rxq.push(e.data);
     });
     // Connection opened
     webSocket.addEventListener('open', e => {
+        console.log("websocket open");
         //socket.send('Hello Server!');
     });
 }
 
-async function* iterateEvent(target: EventTarget, name: string): AsyncIterableIterator<any> {
-    let list: Promise<any>[] = [];
-    let pResolve: Function;
-    let p = new Promise((resolve, reject) => pResolve = resolve);
-    list.push(p);
-    target.addEventListener(name, e => {
-        pResolve(e);
-        p = new Promise((resolve, reject) => pResolve = resolve);
-        list.push(p);
-    });
-
-    for (let p of list) {
-        let item = await p;
-        yield item;
+export async function test() {
+    let res = send2(t => t.doSomething(7,"abc"));
+    for await (let item of res) {
+        console.log(item);
     }
 }
 
 
-
-function send(cmd: string) {
-    webSocket.send(cmd);
-    let result: any;
-
-    webSocket.addEventListener("message", e => {
-
-        let data = e.data;
+export async function* send2<T>(func: Function): AsyncIterableIterator<T> {
+    let pc = extractInstanceFunctionCall(func);
+    console.log(pc);
+    let cmd = `${pc.name}(${pc.args.map(t=>JSON.stringify(t)).join(",")})`;
+    let events = send(cmd);
+    for await (let data of events) {
         if (data == "[") {
-            result = [];
         }
         else if (data.endsWith(",")) {
             let item = JSON.parse(data.substr(0, data.length - 1));
-            result.push(item);
+            yield item;
         }
         else if (data == "]") {
-            //done();
+            break;
         }
         else {
-            result = JSON.parse(data);
-            // done();
+            let item = JSON.parse(data) as T;
+            yield item;
         }
-    });
-
+    }
 }
 
 function receive(data: string) {
@@ -73,3 +62,36 @@ export interface Response<T> {
     isComplete: boolean;
 }
 
+
+
+export async function* send<T>(cmd: string): AsyncIterableIterator<string> {
+    webSocket.send(cmd);
+    let events = iterateDomEvent<MessageEvent>(webSocket, "message");
+    let iterable: boolean;
+    for await (let e of events) {
+        let data = e.data;
+        if (data == "[") {
+            if (iterable != null)
+                throw new Error();
+            iterable = true;
+            yield data;
+        }
+        else if (data.endsWith(",")) {
+            if (iterable !== true)
+                throw new Error();
+            yield data;
+        }
+        else if (data == "]") {
+            if (iterable !== true)
+                throw new Error();
+            yield data;
+            break;
+        }
+        else {
+            if (iterable === true)
+                throw new Error();
+            yield data;
+            break;
+        }
+    }
+}
