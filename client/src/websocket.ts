@@ -2,6 +2,7 @@
 import { extractInstanceFunctionCall, ProxyCall } from "./utils/proxy"
 let webSocket: WebSocket;
 
+main();
 export function main() {
     let url = location.href.replace(/^https|http/, "ws");
     url = url.replace(/\?.*$/, "");
@@ -46,24 +47,6 @@ export async function* send2<T>(func: Function): AsyncIterableIterator<T> {
     }
 }
 
-function receive(data: string) {
-
-}
-
-export interface Request {
-
-
-}
-
-export interface Response<T> {
-    error: any;
-    result: T;
-    resultType: "iterable" | "object";
-    isComplete: boolean;
-}
-
-
-
 export async function* send<T>(cmd: string): AsyncIterableIterator<string> {
     webSocket.send(cmd);
     let events = iterateDomEvent<MessageEvent>(webSocket, "message");
@@ -95,3 +78,4 @@ export async function* send<T>(cmd: string): AsyncIterableIterator<string> {
         }
     }
 }
+

@@ -16,7 +16,7 @@ export function nameof<T>(prop: SelectorFunc<T, any>): string {
         code = prop.toString();
     let res = /\.([a-zA-Z_][a-zA-Z0-9_]*)/.exec(code);
     let name = res[1];//code.substringBetween(".", ";");
-    console.log({code, name});
+    console.log({ code, name });
     return name;
 }
 
@@ -49,7 +49,7 @@ export function promiseSetTimeout(ms: number): Promise<any> {
     return new Promise((resolve, reject) => window.setTimeout(resolve, ms));
 }
 export function promiseWhile(condition: () => boolean, action: () => Promise<any>): Promise<any> {
-    function loop():Promise<any> {
+    function loop(): Promise<any> {
         if (!condition())
             return Promise.resolve();
         return action().then(loop);
@@ -78,7 +78,7 @@ export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => P
         console.log("promiseReuseIfStillRunning", { this: this });
         if (promise != null)
             return promise;
-        promise = action.call(this).then((t:any) => { promise = null; return t; });
+        promise = action.call(this).then((t: any) => { promise = null; return t; });
         return promise;
     };
 }
@@ -118,3 +118,22 @@ return this.${promiseKey};
 `);
     };
 }
+
+
+export function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms || 0));
+}
+
+
+
+//export function fillArray<T>(asyncIterable: AsyncIterable<T>): T[] {
+//    let _list;
+//    async function runAsyncIterable() {
+//        _list = [];
+//        for await (let item of asyncIterable) {
+//            _list.push(item);
+//        }
+//    }
+//    runAsyncIterable();
+//    return _list;
+//}

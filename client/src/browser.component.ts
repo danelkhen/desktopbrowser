@@ -16,6 +16,7 @@ import { Scanner } from "./scanner"
 import { App } from "./app"
 import * as websocket from "./websocket"
 import * as proxy from "./utils/proxy"
+import { sleep } from "./utils/utils"
 
 @Component({
     selector: 'my-browser',
@@ -691,6 +692,33 @@ export class BrowserComponent implements OnInit, OnChanges {
         scanner.folders = ["c:\\tv"];
         console.log("scan start");
         scanner.scan().then(e => console.log("scan end", scanner));
+
+    }
+
+    //_testAsyncList;
+    //testAsyncIterable() {
+    //    if (this._testAsyncList == null)
+    //        this._testAsyncList = fillArray(this.doTestAsyncIterable());
+    //    return this._testAsyncList;
+    //}
+
+    //async *doTestAsyncIterable() {
+    //    for (let i = 0; i < 10; i++) {
+    //        await sleep(1000);
+    //        yield i;
+    //    }
+    //}
+
+    replCmd: string = "";
+    replOutput: string[];
+    async sendReplCmd() {
+        if (this.replCmd == null || this.replCmd == "")
+            return;
+        let res = websocket.send(this.replCmd);
+        for await (let item of res) {
+            this.replOutput.push(item);
+        }
+        //fillArray(this.replOutput, res);
 
     }
 }

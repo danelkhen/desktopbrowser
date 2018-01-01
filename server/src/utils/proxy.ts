@@ -21,13 +21,15 @@ export function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
     return res;
 }
 
-export function extractFunctionCall(code: string): ProxyCall<any> {
-    let match = /^([a-zA-Z0-9_]+)\((.*)\)$/.exec(code);
-    console.log(code, match[0], match[1], match[2]);
-    let name = match[1];
+export function extractFunctionCall(code: string): { target: string[], funcName: string, args: any[] } {
+    let match = /^([a-zA-Z0-9_\.]+)\((.*)\)$/.exec(code);
+    console.log("extractFunctionCall", code);
+    if (match != null)
+        console.log("extractFunctionCall", match[0], match[1], match[2]);
+    let target = match[1].split(".");
     let args = JSON.parse("[" + match[2] + "]");
-    let func = new Function(name, code);
-    let res: ProxyCall<any> = { name, args, };
+    let funcName = target.pop();
+    let res = { target, funcName, args };
     return res;
 }
 

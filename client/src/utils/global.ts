@@ -134,3 +134,7 @@ interface LessStatic {
 }
 
 
+//interface AsyncIterableIterator<T> extends AsyncIterator<T> {
+//    toA
+
+//}

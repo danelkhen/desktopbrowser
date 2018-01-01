@@ -143,7 +143,11 @@
     <div class="video">{{movie.video}}</div>
     <div class="vote_average">{{movie.vote_average}}</div>
 </div>
-
+<div class="repl">
+    <input type="text" [(ngModel)]="replCmd"/>
+    <button (click)="sendReplCmd()">send</button>
+    <pre *ngFor="let replLine of replOuput">{{replLine}}</pre>
+</div>
 <div class="grdFiles Grid" *ngIf="Res!=null && Res.Files!=null">
     <table>
         <tbody>

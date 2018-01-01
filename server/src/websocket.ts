@@ -4,6 +4,7 @@ import * as ws from "ws"
 import { extractFunctionCall, ProxyCall } from "./utils/proxy"
 import { app } from "./app"
 
+
 export function setupWebsockets(server: http.Server | https.Server) {
     console.log("setupWebsockets");
     const wss = new ws.Server({ server });
@@ -12,9 +13,10 @@ export function setupWebsockets(server: http.Server | https.Server) {
         console.log("wss.onconnection", req.url);
         ws.on('message', async (message) => {
             let data = String(message);
+            console.log('ws.message received: %s', message);
             let pc = extractFunctionCall(data);
-            console.log('ws.message received: %s', data, pc);
-            let res = await app[pc.name](...pc.args);
+            let target = Object.tryGet(app, pc.target);
+            let res = await target[pc.funcName](...pc.args);
             if (isIterable(res)) {
                 console.log("sending iterable!!!!!!!!!!!!!!!!");
                 ws.send("[");
