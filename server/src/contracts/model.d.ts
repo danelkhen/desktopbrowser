@@ -184,6 +184,10 @@
         scanForMedia(): Promise<MediaScannerStatus>;
         scanStatus(): MediaScannerStatus;
         getMediaFiles(req?: GetMediaFilesRequest): Promise<MediaFile[]>;
+        fileService: FileService;
+        keyValueService: KeyValueService;
+        fsEntryService: FsEntryService;
+
     }
     export interface GetMediaFilesRequest {
         firstResult?: number;
