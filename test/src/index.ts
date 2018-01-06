@@ -1,48 +1,57 @@
 let rules: [[RegExp, string]] = [
-    [/([A-Z]\s*d\s*[A-Z])/, "M"], // member.member
-    [/([A-Z]\s*O)/, "I"], // invocation()
-    [/([A-Z]\s*[a-z]\s*[A-Z])/, "B"], // exp binaryOp exp
+    [/([A-Z]d[A-Z])/, "M"], // member.member
+    [/([A-Z]O)/, "I"], // invocation()
+    [/([A-Z][a-z][A-Z])/, "B"], // exp binaryOp exp
 ];
 
 
 //export function Identifier()
-
+let id = 0;
 class Node {
     constructor(a?, b?, c?, d?, e?) {
+        this.id = id++;
         this.nodes = [a, b, c, d, e].filter(t => t != null);
         //console.log(this.constructor.name, this.nodes.map(t=>t.constructor.name));
     }
-    nodes: Node[];
+    id: number;
+    nodes: Node[] = [];
     toCode() {
-        return this.constructor.name;
+        return this.constructor.name + this.id + " " + this.nodes.map(t => t.toCode()).join(" ");
     }
 }
 class Operator extends Node {
 }
 class Dot extends Operator {
     toCode() {
-        return "."+this.nodes.map(t=>t.toCode()).join(" ");
+        return "." + this.nodes.map(t => t.toCode()).join(" ");
     }
 }
 class BinaryOperator extends Operator {
     toCode() {
-        return "("+this.nodes.map(t=>t.toCode()).join(" ")+")";
+        return "(" + this.nodes.map(t => t.toCode()).join(" ") + ")";
     }
 }
 class Plus extends BinaryOperator {
+    toCode() {
+        return "+" + this.nodes.map(t => t.toCode()).join(" ");
+    }
+
 
 }
 class Const extends BinaryOperator {
 
 }
 class Multiply extends BinaryOperator {
+    toCode() {
+        return "*" + this.nodes.map(t => t.toCode()).join(" ");
+    }
 
 }
 class Identifier extends Node {
 }
 class ParenthesizedExpression extends Node {
     toCode() {
-        return "()"+" " + this.nodes.map(t=>t.toCode()).join(" ");
+        return "()" + " " + this.nodes.map(t => t.toCode()).join(" ");
     }
 }
 class Member extends Node {
@@ -51,7 +60,7 @@ class Member extends Node {
     }
 
     toCode() {
-        return [this.left, this.dot, this.right].map(t=>t.toCode()).join("");
+        return [this.left, this.dot, this.right].map(t => t.toCode()).join("");
     }
 }
 
@@ -79,7 +88,7 @@ function createFromNotation(s: string, args: any[]): Node {
     let ctor = mapping[s];
     if (ctor == null)
         throw new Error("ctor not found for " + JSON.stringify(s));
-    console.log(ctor);
+    //console.log(ctor);
     let node = new ctor(args[0], args[1], args[2], args[3], args[4]);
     return node;
 }
@@ -131,9 +140,19 @@ function tryRule(tokens: string, nodes: Node[], find: RegExp, replace: string) {
 
 
 function main() {
-    let nodes = Array.from("IdIdIOpCxIO").map(t => createFromNotation(t, []));
-    let result = parseExpression(nodes);
+    // abc.def.ghj() + 7 * abc()
+    /*
+              *
+         +        abc()
+ abc.def.ghj()       7
 
-    console.log("FINAL: ", JSON.stringify(nodes[0].toCode()));//JSON.stringify(nodes)); //a.b.hello() + 7 * foo()
+    */
+    let s = "IdIdIOpCxIO";  
+    let nodes = Array.from(s).map(t => createFromNotation(t, []));
+    console.log(nodes);
+    let result = parseExpression(nodes);
+    console.log(nodes);
+    //console.log("SRC:", s);
+    //console.log("FINAL: ", JSON.stringify(nodes[0].toCode()));//JSON.stringify(nodes)); //a.b.hello() + 7 * foo()
 }
 main();
