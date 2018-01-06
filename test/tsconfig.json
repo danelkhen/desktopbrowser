@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "out",
+    "newLine": "LF",
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  }
+}
