@@ -1,6 +1,6 @@
 let rules: [[RegExp, string]] = [
     [/([A-Z]d[A-Z])/, "M"], // member.member
-    [/([A-Z]O)/, "I"], // invocation()
+    [/([A-Z]O)/, "X"], // invocation()
     [/([A-Z][a-z][A-Z])/, "B"], // exp binaryOp exp
 ];
 
@@ -15,43 +15,58 @@ class Node {
     }
     id: number;
     nodes: Node[] = [];
-    toCode() {
-        return this.constructor.name + this.id + " " + this.nodes.map(t => t.toCode()).join(" ");
+    value: string;
+    toString() {
+        return this.value;
     }
 }
 class Operator extends Node {
 }
-class Dot extends Operator {
-    toCode() {
-        return "." + this.nodes.map(t => t.toCode()).join(" ");
+class Dot extends Node {
+    toString() {
+        return ".";
     }
 }
 class BinaryOperator extends Operator {
-    toCode() {
-        return "(" + this.nodes.map(t => t.toCode()).join(" ") + ")";
+    constructor(public left, public op, public right) {
+        super();
+    }
+    toString() {
+        return ["(", this.left, this.op, this.right, ")"].join("");// + this.nodes.map(t => t.toString()).join(" ") + ")";
     }
 }
-class Plus extends BinaryOperator {
-    toCode() {
-        return "+" + this.nodes.map(t => t.toCode()).join(" ");
+class Plus extends Node {
+    toString() {
+        return "+";
     }
-
+}
+class Const extends Node {
 
 }
-class Const extends BinaryOperator {
-
-}
-class Multiply extends BinaryOperator {
-    toCode() {
-        return "*" + this.nodes.map(t => t.toCode()).join(" ");
+class Multiply extends Node {
+    toString() {
+        return "*";
     }
 
 }
 class Identifier extends Node {
+    toString() {
+        return this.value + this.id;
+    }
+
+}
+class Invocation extends Node {
+    constructor(public target, public args) {
+        super();
+
+    }
+    toString() {
+        return "(" + this.target + this.args + ")";
+    }
 }
 class ParenthesizedExpression extends Node {
-    toCode() {
-        return "()" + " " + this.nodes.map(t => t.toCode()).join(" ");
+    toString() {
+        return "( " + this.nodes.join("") + " )";
     }
 }
 class Member extends Node {
@@ -59,13 +74,14 @@ class Member extends Node {
         super();
     }
 
-    toCode() {
-        return [this.left, this.dot, this.right].map(t => t.toCode()).join("");
+    toString() {
+        return ["(", this.left, this.dot, this.right, ")"].map(t => t.toString()).join("");
     }
 }
 
 let mapping = {
     "I": Identifier,
+    "X": Invocation,
     "d": Dot,
     "O": ParenthesizedExpression,
     "p": Plus,
@@ -90,6 +106,7 @@ function createFromNotation(s: string, args: any[]): Node {
         throw new Error("ctor not found for " + JSON.stringify(s));
     //console.log(ctor);
     let node = new ctor(args[0], args[1], args[2], args[3], args[4]);
+    node.value = s;
     return node;
 }
 
@@ -114,6 +131,7 @@ function _parseExpression(tokens: string, nodes: Node[]): string {
     for (let rule of rules) {
         let res = tryRule(tokens, nodes, rule[0], rule[1]);
         if (res != tokens) {
+            console.log("rule matched", tokens, nodes.join(""), nodes, rule);
             return res;
         }
     }
@@ -147,12 +165,14 @@ function main() {
  abc.def.ghj()       7
 
     */
-    let s = "IdIdIOpCxIO";  
+    let s = "IdIdIOpCxIO";
     let nodes = Array.from(s).map(t => createFromNotation(t, []));
     console.log(nodes);
+    console.log(nodes.join(""));
     let result = parseExpression(nodes);
+    console.log(nodes.join(""));
     console.log(nodes);
     //console.log("SRC:", s);
-    //console.log("FINAL: ", JSON.stringify(nodes[0].toCode()));//JSON.stringify(nodes)); //a.b.hello() + 7 * foo()
+    //console.log("FINAL: ", JSON.stringify(nodes[0].toString()));//JSON.stringify(nodes)); //a.b.hello() + 7 * foo()
 }
 main();
