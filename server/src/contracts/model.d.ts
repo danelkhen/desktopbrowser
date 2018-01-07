@@ -82,6 +82,28 @@
         //imdbRss(req: { path: string }): Promise<string>;
     }
 
+        export interface FileService2 {
+        //init();
+        //migrateToSqlite();
+        ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>;
+        GetFiles(req: ListFilesRequest): AsyncIterableIterator<File>;
+        GetFileRelatives(path: string): Promise<FileRelativesInfo>;
+        GetFile(req: PathRequest): Promise<File>;
+        Execute(req: PathRequest): void;
+        Explore(req: PathRequest): void;
+        Delete(req: PathRequest): Promise<any>;
+        trash(req: PathRequest): Promise<any>;
+        //ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>;
+        isWindows(): boolean;
+        GetHomeFiles(): File[];
+        CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>;
+        CalculateFolderSize(path: string): Promise<number>;
+        CalculateFolderSizeNoCache(path: string): Promise<number>;
+        clearCache(): void;
+        //omdbGet(req: MovieRequest): Promise<OmdbGetResponse>;
+        //imdbRss(req: { path: string }): Promise<string>;
+    }
+
     //export interface OmdbGetResponse {
     //    data: OmdbMovie;
     //    err: { meesage: string, name: string };
@@ -185,6 +207,7 @@
         scanStatus(): MediaScannerStatus;
         getMediaFiles(req?: GetMediaFilesRequest): Promise<MediaFile[]>;
         fileService: FileService;
+        fileService2: FileService2;
         keyValueService: KeyValueService;
         fsEntryService: FsEntryService;
 

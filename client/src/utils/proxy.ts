@@ -14,6 +14,7 @@
 export interface ProxyCall<T> {
     name: keyof T;
     args: any[];
+    target?: string[];
 }
 
 export function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
@@ -33,6 +34,56 @@ export function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
         res.args = [];
     return res;
 }
+
+
+
+
+export function extractInstanceFunctionCall2(func: Function): { target: string[], funcName: string, args: any[] } {
+    let code = func.toString();
+    code = code.replace(/^\s*([a-zA-Z0-9_]+)\s*\=\>\s*\1\s*\.\s*/, "");
+    let parsed = parseFunctionCall(code);
+    let index = code.indexOf(".");
+    let index2 = code.indexOf("(", index);
+    let res: { target: string[], funcName: string, args: any[] } = {
+        funcName: parsed.funcName,
+        target: parsed.target,
+        args: null,
+    };
+    let fake: any = {};
+    let lastTarget = fake;
+    for (let target of parsed.target) {
+        lastTarget = {};
+        fake[target] = lastTarget;
+    }
+    lastTarget[parsed.funcName] = function () {
+        res.args = Array.from(arguments);
+    };
+    func(fake);
+    if (res.args == null)
+        res.args = [];
+    return res;
+}
+
+
+export function parseFunctionCall(code: string): { target: string[], funcName: string, args: string } {
+    let match = /^([a-zA-Z0-9_\.]+)\((.*)\)$/.exec(code);
+    console.log("extractFunctionCall", code);
+    if (match != null)
+        console.log("extractFunctionCall", match[0], match[1], match[2]);
+    let target = match[1].split(".");
+    let args = match[2];
+    let funcName = target.pop();
+    let res = { target, funcName, args };
+    return res;
+}
+
+
+
+
+
+
+
+
 
 //type Proxy2<T> = {
 //[P in keyof T]: <X>(req: X) => Promise<T[P]>;

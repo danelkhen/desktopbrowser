@@ -298,8 +298,11 @@ export class BrowserComponent implements OnInit, OnChanges {
         await this._ListFiles(req);
     }
     async _ListFiles(req: ListFilesRequest): Promise<any> {
-        //websocket.send2(t => t.fileService.ListFiles(req));
-        let res = await this.server.ListFiles(req);
+        //for await (let item of websocket.invokeStreaming(t => t.fileService2.GetFiles(req))) {
+        //    console.log(item);
+        //}
+
+        let res = await websocket.invoke(t => t.fileService.ListFiles(req)); //this.server.ListFiles(req);
         if (res == null)
             return; //TODO: handle errors
         this.Res = res;

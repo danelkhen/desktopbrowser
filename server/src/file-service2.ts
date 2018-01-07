@@ -14,22 +14,15 @@ import { FindManyOptions, Repository } from "typeorm"
 import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
 import * as C from "contracts"
+import { toQueryable, Queryable } from "./queryable"
 
-
-export class FileService implements C.FileService {
+export class FileService2 implements C.FileService2 { 
     init() {
         console.log("SiteService init");
     }
     baseDbFilename: string;
 
     async ListFiles(req: ListFilesRequest): Promise<ListFilesResponse> {
-        //if (req.Path == null) {
-        //    return {
-        //        Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null },
-        //        File: { Name: "", IsFolder: true },
-        //        Files: this.GetHomeFiles(),
-        //    };
-        //}
         if (req.Path != null && req.Path.endsWith(":"))
             req.Path += "\\";
         let res: ListFilesResponse = {
@@ -38,38 +31,27 @@ export class FileService implements C.FileService {
             Files: null,
         };
         if (res.File.IsFolder) {
-            res.Files = await this.GetFiles(req);//.toArray();
+            res.Files = await toQueryable(this.GetFiles(req)).toArray();
         }
         return res;
     }
 
-    async GetFiles(req: ListFilesRequest): Promise<File[]> {
+    async *GetFiles(req: ListFilesRequest): AsyncIterableIterator<File> {
         if (req.HideFiles && req.HideFolders)
-            return [];
-        //else if (!req.MixFilesAndFolders && !req.HideFiles && !req.HideFolders && !req.IsRecursive) {
-        //    var folders = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, false, true);
-        //    var files = this.GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, true, false);
-        //    folders = this.ApplyRequest(folders, req);
-        //    files = this.ApplyRequest(files, req);
-        //    var all = folders.concat(files);
-        //    all = this.ApplyPaging(all, req);
-        //    all = this.ApplyCaching(all);
-        //    return all;
-        //}
-        //else {
-        let files = await this.GetFileAndOrFolders({ path: req.Path, searchPattern: req.SearchPattern, recursive: req.IsRecursive, files: !req.HideFiles, folders: !req.HideFolders });
-        files = await this.ApplyRequest(files, req);
-        files = this.ApplyPaging(files, req);
-        files = this.ApplyCaching(files);
-        return files;
-        //}
+            return;
+        let files = this.GetFileAndOrFolders({ path: req.Path, searchPattern: req.SearchPattern, recursive: req.IsRecursive, files: !req.HideFiles, folders: !req.HideFolders });
+        let files2 = toQueryable(files);
+        files2 = this.ApplyRequest(files2, req);
+        files2 = this.ApplyPaging(files2, req);
+        files2 = this.ApplyCaching(files2);
+        return files2.source;
     }
 
-    private ApplyCaching(files: IEnumerable<File>): IEnumerable<File> {
+    private ApplyCaching(files: Queryable<File>): Queryable<File> {
         return files;//TODO: new CachedEnumerable<File>(files);
     }
 
-    private ApplyPaging(files: IEnumerable<File>, req: ListFilesRequest): IEnumerable<File> {
+    private ApplyPaging(files: Queryable<File>, req: ListFilesRequest): Queryable<File> {
         if (req.skip != null)
             files = files.skip(req.skip);
         if (req.take != null)
@@ -84,7 +66,8 @@ export class FileService implements C.FileService {
         var info: FileRelativesInfo = { ParentFolder: null, NextSibling: null, PreviousSibling: null };
         info.ParentFolder = await this.GetFile({ Path: pathInfo.ParentPath.Value });
         let xxx = await this.GetFileAndOrFolders({ path: info.ParentFolder.Path, files: false, folders: true });
-        var parentFiles = xxx.where(t => t.IsFolder).orderBy(t => t.Name).toArray();
+        let yyy = toQueryable(xxx);
+        var parentFiles = (await yyy.where(t => t.IsFolder).toArray()).orderBy(t => t.Name).toArray();
         var index = parentFiles.findIndex(t => t.Name.equalsIgnoreCase(pathInfo.Name));
         info.NextSibling = index >= 0 && index + 1 < parentFiles.length ? parentFiles[index + 1] : null;
         info.PreviousSibling = index > 0 ? parentFiles[index - 1] : null;
@@ -150,7 +133,7 @@ export class FileService implements C.FileService {
 
 
 
-    async ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>> {
+    ApplyRequest(files: Queryable<File>, req: ListFilesRequest): Queryable<File> {
         var calculatedFolderSize = false;
         if (!req.ShowHiddenFiles)
             files = files.where(t => !t.IsHidden);
@@ -158,33 +141,33 @@ export class FileService implements C.FileService {
             files = files.where(t => !t.IsFolder);
         if (req.HideFiles)
             files = files.where(t => t.IsFolder);
-        if (req.Sort != null && req.Sort.Columns != null) {
-            for (let t of req.Sort.Columns) {
-                //req.Sort.Columns.forEach(t => {
-                if (t.Name == "Name")
-                    files = this.OrderBy(files, x => x.Name, t.Descending);
-                else if (t.Name == "Modified")
-                    files = this.OrderBy(files, x => x.Modified, t.Descending);
-                else if (t.Name == "Extension")
-                    files = this.OrderBy(files, x => x.Extension, t.Descending);
-                else if (t.Name == "Size") {
-                    if (req.FolderSize && !req.HideFolders) {
-                        files = await this.CalculateFoldersSize(files);
-                        calculatedFolderSize = true;
-                    }
-                    files = this.OrderBy(files, x => x.Size, t.Descending);
-                }
-                if (t.Descending)
-                    files.reverse();
-            }//);
-        }
-        if (!calculatedFolderSize && req.FolderSize && !req.HideFolders)
-            files = await this.CalculateFoldersSize(files);
+        //if (req.Sort != null && req.Sort.Columns != null) {
+        //    for (let t of req.Sort.Columns) {
+        //        //req.Sort.Columns.forEach(t => {
+        //        if (t.Name == "Name")
+        //            files = this.OrderBy(files, x => x.Name, t.Descending);
+        //        else if (t.Name == "Modified")
+        //            files = this.OrderBy(files, x => x.Modified, t.Descending);
+        //        else if (t.Name == "Extension")
+        //            files = this.OrderBy(files, x => x.Extension, t.Descending);
+        //        else if (t.Name == "Size") {
+        //            if (req.FolderSize && !req.HideFolders) {
+        //                files = await this.CalculateFoldersSize(files);
+        //                calculatedFolderSize = true;
+        //            }
+        //            files = this.OrderBy(files, x => x.Size, t.Descending);
+        //        }
+        //        if (t.Descending)
+        //            files.reverse();
+        //    }//);
+        //}
+        //if (!calculatedFolderSize && req.FolderSize && !req.HideFolders)
+        //    files = await this.CalculateFoldersSize(files);
         return files;
 
     }
 
-    async GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
+    async *GetFileAndOrFolders(req: GetFileAndFoldersRequest): AsyncIterableIterator<File> {
         let { path, searchPattern, recursive, files, folders } = req;
         //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
         var isFiltered = false;
@@ -381,6 +364,8 @@ export class FileService implements C.FileService {
 
 
 
+
+
 }
 
 export class Stopwatch {
@@ -396,3 +381,7 @@ export interface GetFileAndFoldersRequest {
     files?: boolean,
     folders?: boolean
 }
+
+
+
+

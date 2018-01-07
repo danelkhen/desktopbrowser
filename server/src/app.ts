@@ -4,6 +4,7 @@ import * as C from "contracts"
 import { ByFilenameService } from "./by-filename-service"
 import { KeyValueService } from "./key-value-service"
 import { FileService } from "./file-service"
+import { FileService2 } from "./file-service2"
 import { DbService } from "./db-service"
 import { Db, ByFilename, KeyValue, FsEntry } from "./db"
 import { MediaScanner } from "./media-scanner"
@@ -50,6 +51,7 @@ export class App implements C.App {
         return config;
     }
 
+    fileService2: FileService2;
     async init() {
         if (this.db != null)
             return;
@@ -58,6 +60,7 @@ export class App implements C.App {
         this.keyValueService = new KeyValueService(this.db);
         this.fsEntryService = new FsEntryService();
         this.fileService = new FileService();
+        this.fileService2 = new FileService2();
         this.mediaScanner = new MediaScanner();
         this.mediaScanner.app = this;
 

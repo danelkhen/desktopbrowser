@@ -1,5 +1,5 @@
 ﻿import { iterateDomEvent, iterateEvent } from "./event"
-import { extractInstanceFunctionCall, ProxyCall } from "./utils/proxy"
+import { extractInstanceFunctionCall2, ProxyCall } from "./utils/proxy"
 import { App } from "contracts"
 
 let webSocket: WebSocket;
@@ -19,18 +19,21 @@ export function main() {
     });
 }
 
-//export async function test() {
-//    let res = send2(t => t.testAsyncIterable());
-//    for await (let item of res) {
-//        console.log(item);
-//    }
+
+//TODO:
+//export function invoke2<T>(func: (server: App) => AsyncIterableIterator<T>): AsyncIterableIterator<T>
+//export function invoke2<T>(func: (server: App) => T): Promise<T> {
 //}
 
+export async function invoke<T>(func: (server: App) => T): Promise<T> {
+    for await (let res of invokeStreaming(func))
+        return res;
+}
 
-export async function* send2<T>(func: (server: App) => T): AsyncIterableIterator<T> {
-    let pc = extractInstanceFunctionCall(func);
+export async function* invokeStreaming<T>(func: (server: App) => T): AsyncIterableIterator<T> {
+    let pc = extractInstanceFunctionCall2(func);
     console.log(pc);
-    let cmd = `${pc.name}(${pc.args.map(t => JSON.stringify(t)).join(",")})`;
+    let cmd = `${pc.target.join('.')}.${pc.funcName}(${pc.args.map(t => JSON.stringify(t)).join(",")})`;
     let events = send(cmd);
     for await (let data of events) {
         if (data == "[") {
@@ -85,3 +88,9 @@ export async function* send<T>(cmd: string): AsyncIterableIterator<string> {
     }
 }
 
+//export async function test() {
+//    let res = send2(t => t.testAsyncIterable());
+//    for await (let item of res) {
+//        console.log(item);
+//    }
+//}
