@@ -47,8 +47,10 @@ export class DbService<T> implements C.DbService<T> {
         let id = obj[this.getIdPropName()];
         if (id != null) {
             let obj2 = await this.repo.findOneById(id)
-            if (obj2 == null)
-                return this.repo.manager.save(obj);
+            if (obj2 == null) {
+                let obj3 = this.repo.create([obj as any])[0];
+                return this.repo.manager.save(obj3);
+            }
             let final = this.repo.merge(obj2, obj as any);
             return await this.repo.manager.save(final);
         }

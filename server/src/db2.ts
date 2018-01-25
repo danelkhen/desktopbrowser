@@ -23,7 +23,7 @@ async function startMongoDbServer(): Promise<mongodb.Server> {
 async function main(): Promise<any> {
     server = await startMongoDbServer();
     mdb = new mongodb.Db('mydb', server, { w: 1 });
-    await mdb.open();
+    //await mdb.open();
     db = new Db();
     db.connection = mdb;
     await db.init();
@@ -43,7 +43,7 @@ export class Db {
         if (this.connection != null)
             return;
         this.connection = new mongodb.Db('mydb', server, { w: 1 });
-        await this.connection.open();
+        //await this.connection.open();
     }
     get byFilename(): Collection<C.ByFilename> { return this.connection && this.connection.collection("ByFilename"); }
     get keyValue(): Collection<C.KeyValue<any>> { return this.connection && this.connection.collection("KeyValue"); }
