@@ -2,7 +2,6 @@ import * as fse from "fs-extra"
 import * as process from "process"
 import * as child_process from "child_process"
 import { sleep } from "./utils"
-import * as sass2 from "./sass"
 
 export let projects = ["server", "client"]
 
@@ -26,8 +25,17 @@ export async function serverPm2Stop() { await exec("pm2 stop server/out/server.j
 export async function serverPm2Restart() { await exec("pm2 restart server/out/server.js"); }
 export async function loadtest() { await exec(`loadtest -c 500 -t 10 --rps 500 "https://opencode.be/sleep?ms=1000"`); }
 
-export async function sass() { await sass2.main(); }
-// exec(`sass client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none`); }
+export async function sass() {
+    await exec(`node-sass --linefeed lf --output-style nested client/scss/main.scss > client/css/main.css`);
+    await exec(`node-sass --linefeed lf --output-style nested client/src/media.component.scss > client/src/media.component.css`);
+}
+export async function sassWatch() {
+    await Promise.all([
+        exec(`node-sass --watch --linefeed lf --output-style nested client/scss/main.scss > client/css/main.css`),
+        exec(`node-sass --watch --linefeed lf --output-style nested client/src/media.component.scss > client/src/media.component.css`),
+    ]);
+}
+
 //export async function compileSassWatch() { await exec(`sass --watch client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none`); }
 
 
