@@ -26,13 +26,13 @@ export async function serverPm2Restart() { await exec("pm2 restart server/out/se
 export async function loadtest() { await exec(`loadtest -c 500 -t 10 --rps 500 "https://opencode.be/sleep?ms=1000"`); }
 
 export async function sass() {
-    await exec(`node-sass --linefeed lf --output-style nested client/scss/main.scss > client/css/main.css`);
-    await exec(`node-sass --linefeed lf --output-style nested client/src/media.component.scss > client/src/media.component.css`);
+    await exec(`node-sass --linefeed lf --output-style nested client/scss/ --output client/css/`);
+    await exec(`node-sass --linefeed lf --output-style nested client/src/ --output client/src/`);
 }
 export async function sassWatch() {
     await Promise.all([
-        exec(`node-sass --watch --linefeed lf --output-style nested client/scss/main.scss > client/css/main.css`),
-        exec(`node-sass --watch --linefeed lf --output-style nested client/src/media.component.scss > client/src/media.component.css`),
+        exec(`node-sass --watch --linefeed lf --output-style nested client/scss/ --output client/css/`),
+        exec(`node-sass --watch --linefeed lf --output-style nested client/src/ --output client/src/`),
     ]);
 }
 
@@ -43,6 +43,10 @@ export function compileWatch(): Promise<any> {
     let promises: Promise<any>[] = [];
     for (let project of projects)
         promises.push(exec(`tsc -w -p ${project}`, { name: project }));
+    promises.push(
+        exec(`node-sass --watch --linefeed lf --output-style nested client/scss/ --output client/css/`),
+        exec(`node-sass --watch --linefeed lf --output-style nested client/src/ --output client/src/`),
+    );
     //promises.push(exec(`watch-run -i -p src/editor/index.less,src/editor/index2.less node run lessc`));
     //promises.push(exec(`watch-run -i -p src/editor/*.html node run tmplc`));
     return Promise.all(promises);
@@ -75,6 +79,7 @@ export async function docs() {
 }
 
 let actions = {
+    "sass-w": sassWatch,
     "compile-w": compileWatch,
     "server-d": serverDebug,
     "server-w": serverWatch,
