@@ -449,6 +449,41 @@ export class BrowserComponent implements OnInit, OnChanges {
         if (file != null)
             filename = file.Name;
         this.SaveSelection(this.Res.File.Name, filename);
+        this.verifySelectionInView();
+
+    }
+
+    async verifySelectionInView() {
+        await sleep(10);
+        let el = $('.Selected')[0];
+        if (el == null)
+            return;
+        let container = document.body;
+        let containerHeight = container.clientHeight - 100;
+
+        let top = el.offsetTop;
+        let bottom = el.offsetTop + el.offsetHeight;
+
+        let top2 = container.scrollTop;
+        let bottom2 = container.scrollTop + containerHeight;
+
+        console.log({ top, bottom, top2, bottom2, containerHeight });
+
+        let finalTop: number = null;
+
+        if (top < top2) {
+            finalTop = top;
+        }
+        else if (bottom > bottom2) {
+            let finalBottom = bottom;
+            finalTop = finalBottom - containerHeight;
+        }
+
+        if (finalTop != null) {
+            console.log("scrolling", top2, finalTop);
+            container.scrollTop = finalTop;
+        }
+
     }
 
     async DeleteAndRefresh(file: File): Promise<any> {
