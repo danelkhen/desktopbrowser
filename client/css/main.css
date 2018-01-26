@@ -14,6 +14,7 @@ html {
   /* Legacy iOS */
   font-style: normal;
   font-weight: 400; }
+
 @font-face {
   font-family: 'FreightTextBold';
   src: url("../fonts/FreightTextBold.eot");
@@ -22,6 +23,7 @@ html {
   /* Legacy iOS */
   font-style: normal;
   font-weight: 700; }
+
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
@@ -80,7 +82,6 @@ table {
 /* Typography */
 body {
   background-color: #060606;
-  color:white;
   font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
   line-height: 1.5;
   font-size: 1em; }
@@ -269,13 +270,13 @@ nav {
   -moz-transition: all 0.3s ease;
   -ms-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  cursor: pointer; }
+  transition: all 0.3s ease; }
   .FileRow:hover {
     background-color: #000;
     color: #A276F8; }
     .FileRow:hover td .Name {
-      text-decoration: none; }
+      text-decoration: none;
+      cursor: pointer; }
   .FileRow.Selected {
     color: #fff;
     background-color: #A276F8;

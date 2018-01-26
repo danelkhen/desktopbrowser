@@ -258,7 +258,6 @@ nav {
 
 .FileRow {
     @include transition(all .3s ease);
-    cursor: pointer;
 
     &:hover {
         background-color: #000;
@@ -267,6 +266,7 @@ nav {
         td {
             .Name {
                 text-decoration: none;
+                cursor:pointer;
             }  
         }
 
