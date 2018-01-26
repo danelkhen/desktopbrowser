@@ -1,33 +1,77 @@
 import * as mongodb from 'mongodb';
+import { MongoClient } from 'mongodb';
 import * as child_process from "child_process";
 import * as path from "path";
 import * as fs from "fs";
 import * as C from "contracts"
+
+//import assert = require('assert');
+
+// Connection URL
+const url = 'mongodb://localhost:27017';
+
+// Database Name
+const dbName = 'myproject';
+
+
+
+
 
 let server: mongodb.Server;
 let mdb: mongodb.Db;
 export let db: Db;
 main();
 
-async function startMongoDbServer(): Promise<mongodb.Server> {
-    let dir = path.join(__dirname, "../data");
-    if (!fs.existsSync(dir))
-        fs.mkdirSync(dir);
+export function exec(cmd: string, opts?: { name?: string, prefix?: string }): Promise<any> {
+    if (opts == null)
+        opts = {};
+    let { name, prefix } = opts;
+    name = name || "";
+    prefix = prefix || (name + "\t");
+    return new Promise((resolve, reject) => {
+        console.log(cmd);
+        let p = child_process.exec(cmd);
+        p.stdout.on("data", t => console.log(prefix, String(t).trim()));
+        p.stderr.on("data", t => console.log(prefix, String(t).trim()));
+        p.on("close", resolve);
+    });
+}
 
-    let proc = child_process.spawn("mongod", ["--smallfiles", "--nojournal", "--dbpath", dir], { stdio: "inherit" });
-    await setTimeout2(1000);
-    let server = new mongodb.Server('localhost', 27017, { /*auto_reconnect: true*/ });
-    return server;
+
+function startMongoDbServer() {
+    let proc = exec("\"C:\\Program Files\\MongoDB\\Server\\3.6\\bin\\mongod\"");
+
+    
+    //let dir = path.join(__dirname, "../data");
+    //if (!fs.existsSync(dir))
+    //    fs.mkdirSync(dir);
+
+    //let proc = child_process.spawn("mongod", ["--smallfiles", "--nojournal", "--dbpath", dir], { stdio: "inherit" });
+    //await setTimeout2(1000);
+    //let server = new mongodb.Server('localhost', 27017, { /*auto_reconnect: true*/ });
+    //return server;
 }
 
 async function main(): Promise<any> {
-    server = await startMongoDbServer();
-    mdb = new mongodb.Db('mydb', server, { w: 1 });
-    //await mdb.open();
-    db = new Db();
-    db.connection = mdb;
-    await db.init();
-    //await test();
+    // Use connect method to connect to the server
+    await startMongoDbServer();
+    let client = await MongoClient.connect(url);
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    client.close();
+    return;
+
+    //TODO:
+
+    //server = await startMongoDbServer();
+    //mdb = new mongodb.Db('mydb', server, { w: 1 });
+    ////await mdb.open();
+    //db = new Db();
+    //db.connection = mdb;
+    //await db.init();
+    ////await test();
 }
 
 
@@ -159,3 +203,8 @@ export interface Collection<T> extends mongodb.Collection {
 //        })
 //    })
 //}
+
+
+
+
+

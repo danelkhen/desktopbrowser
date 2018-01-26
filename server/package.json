@@ -24,6 +24,7 @@
     "global-tunnel": "^1.2.0",
     "imdb-api": "^3.1.2",
     "minimatch": "^3.0.3",
+    "mongodb": "^3.0.1",
     "reflect-metadata": "^0.1.12",
     "request-promise": "^4.2.0",
     "request-promise-native": "^1.0.3",
