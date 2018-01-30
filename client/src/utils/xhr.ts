@@ -1,5 +1,3 @@
-import * as XMLHttpRequest from "xhr2"
-
 export function xhr<T>(opts: XhrRequest): Promise<any> {
     return new Promise<any>((resolve, reject) => {
         let url = opts.url;

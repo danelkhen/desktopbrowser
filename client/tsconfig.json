@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [ "es2015", "dom",  "esnext.asynciterable"],
+    "lib": [ "esnext.asynciterable", "es2017", "dom"],
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "removeComments": true,
