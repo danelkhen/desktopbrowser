@@ -36,7 +36,15 @@ export async function* invokeStreaming<T>(func: (server: App) => T): AsyncIterab
     let cmd = `${pc.target.join('.')}.${pc.funcName}(${pc.args.map(t => JSON.stringify(t)).join(",")})`;
     let events = send(cmd);
     for await (let data of events) {
-        if (data == "[") {
+        if (0) { }
+        else if (data.startsWith("ERROR: ")) {
+            let json = data.substr("ERROR ".length);
+            if (json.length > 0) {
+                let x = JSON.parse(json);
+            }
+            throw new Error(data);
+        }
+        else if (data == "[") {
         }
         else if (data.endsWith(",")) {
             let item = JSON.parse(data.substr(0, data.length - 1));
