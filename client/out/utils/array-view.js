@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const event_emitter_1 = require("./event-emitter");
-class ArrayView {
-    constructor(source) {
+var event_emitter_1 = require("./event-emitter");
+var ArrayView = (function () {
+    function ArrayView(source) {
         this.sort = {};
         this.activeSort = [];
         this.targetChanged = new event_emitter_1.EventEmitter();
@@ -11,8 +11,8 @@ class ArrayView {
         this.source = source;
         this.refresh();
     }
-    refresh() {
-        let list = this.source();
+    ArrayView.prototype.refresh = function () {
+        var list = this.source();
         if (list == null) {
             this.target = null;
             return;
@@ -21,37 +21,38 @@ class ArrayView {
         this.applyOrderBy();
         this.applyPaging();
         this.targetChanged.emit();
-    }
-    dumpActiveSort() {
-        return this.activeSort.map(t => t + (this.isOrderedBy(t, true) ? " desc" : "")).join(", ");
-    }
-    isOrderedBy(key, desc) {
+    };
+    ArrayView.prototype.dumpActiveSort = function () {
+        var _this = this;
+        return this.activeSort.map(function (t) { return t + (_this.isOrderedBy(t, true) ? " desc" : ""); }).join(", ");
+    };
+    ArrayView.prototype.isOrderedBy = function (key, desc) {
         if (!this.activeSort.contains(key))
             return false;
         if (desc != null && this.sort[key] != null)
             return this.sort[key].descending == desc;
         return true;
-    }
-    nextPage() {
+    };
+    ArrayView.prototype.nextPage = function () {
         this.pageIndex++;
         this.refresh();
-    }
-    prevPage() {
+    };
+    ArrayView.prototype.prevPage = function () {
         this.pageIndex--;
         this.refresh();
-    }
-    getCreateSort(key) {
-        let def = this.sort[key];
+    };
+    ArrayView.prototype.getCreateSort = function (key) {
+        var def = this.sort[key];
         if (def != null)
             return def;
-        this.sort[key] = def = { selector: t => t[key] };
+        this.sort[key] = def = { selector: function (t) { return t[key]; } };
         return def;
-    }
-    orderBy(key, keepKeys) {
-        let keep = keepKeys || [];
+    };
+    ArrayView.prototype.orderBy = function (key, keepKeys) {
+        var keep = keepKeys || [];
         keep.add(key);
-        let active = this.activeSort.toArray();
-        let def = this.getCreateSort(key);
+        var active = this.activeSort.toArray();
+        var def = this.getCreateSort(key);
         if (active.contains(key)) {
             if (def.descendingFirst) {
                 if (def.descending)
@@ -71,31 +72,32 @@ class ArrayView {
                 def.descending = true;
             active.push(key);
         }
-        active.removeAll(key => !keep.contains(key));
+        active.removeAll(function (key) { return !keep.contains(key); });
         this.activeSort = active;
         this.refresh();
-    }
-    static comparerFunc(x, y) {
-        let x1 = x == null ? x : x.valueOf();
-        let y1 = y == null ? y : y.valueOf();
-        let val;
+    };
+    ArrayView.comparerFunc = function (x, y) {
+        var x1 = x == null ? x : x.valueOf();
+        var y1 = y == null ? y : y.valueOf();
+        var val;
         if (typeof (x1) == "string")
             val = x1.localeCompare(y);
         else
             val = y1 - x1;
         return val;
-    }
-    applyOrderBy() {
+    };
+    ArrayView.prototype.applyOrderBy = function () {
+        var _this = this;
         if (this.activeSort.length == 0)
             return;
-        let defs = this.activeSort.map(key => this.getCreateSort(key));
-        defs.where(t => t.valueComparerFunc == null).forEach(t => t.valueComparerFunc = ArrayView.comparerFunc);
-        let comparerFunc = ComparerHelper.createCombined(defs);
-        let list = this.target.toArray();
+        var defs = this.activeSort.map(function (key) { return _this.getCreateSort(key); });
+        defs.where(function (t) { return t.valueComparerFunc == null; }).forEach(function (t) { return t.valueComparerFunc = ArrayView.comparerFunc; });
+        var comparerFunc = ComparerHelper.createCombined(defs);
+        var list = this.target.toArray();
         list.sort(comparerFunc);
         this.target = list;
-    }
-    applyPaging() {
+    };
+    ArrayView.prototype.applyPaging = function () {
         this.totalPages = Math.ceil(this.target.length / this.pageSize);
         if (this.pageIndex >= this.totalPages)
             this.pageIndex = this.totalPages - 1;
@@ -105,7 +107,8 @@ class ArrayView {
         var until = from + this.pageSize;
         this.targetBeforePaging = this.target;
         this.target = this.target.slice(from, until);
-    }
-}
+    };
+    return ArrayView;
+}());
 exports.ArrayView = ArrayView;
 //# sourceMappingURL=array-view.js.map

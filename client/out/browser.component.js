@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,28 +16,64 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 var __asyncValues = (this && this.__asyncIterator) || function (o) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
     var m = o[Symbol.asyncIterator];
     return m ? m.call(o) : typeof __values === "function" ? __values(o) : o[Symbol.iterator]();
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@angular/core");
-const common_1 = require("@angular/common");
-const service_1 = require("./service");
-const selection_1 = require("./utils/selection");
-const array_view_1 = require("./utils/array-view");
-const router_1 = require("@angular/router");
+var core_1 = require("@angular/core");
+var common_1 = require("@angular/common");
+var service_1 = require("./service");
+var selection_1 = require("./utils/selection");
+var array_view_1 = require("./utils/array-view");
+var router_1 = require("@angular/router");
 require("rxjs/add/operator/map");
-const utils_1 = require("./utils/utils");
-const filename_parser_1 = require("./filename-parser");
-const scanner_1 = require("./scanner");
-const app_1 = require("./app");
-const websocket = require("./websocket");
-const proxy = require("./utils/proxy");
-const utils_2 = require("./utils/utils");
-let BrowserComponent = class BrowserComponent {
-    constructor(route, router, location, server, app) {
+var utils_1 = require("./utils/utils");
+var filename_parser_1 = require("./filename-parser");
+var scanner_1 = require("./scanner");
+var app_1 = require("./app");
+var websocket = require("./websocket");
+var proxy = require("./utils/proxy");
+var utils_2 = require("./utils/utils");
+var BrowserComponent = (function () {
+    function BrowserComponent(route, router, location, server, app) {
+        var _this = this;
         this.route = route;
         this.router = router;
         this.location = location;
@@ -40,22 +84,22 @@ let BrowserComponent = class BrowserComponent {
         this.theme = "dark";
         this.clockText = "";
         this.tbPathText = "";
-        this.quickFindTimer = new Timer(() => this.quickFindTimer_tick());
-        this.TYPE = utils_1.nameof(t => t.type);
-        this.NAME = utils_1.nameof(t => t.Name);
-        this.SIZE = utils_1.nameof(t => t.Size);
-        this.MODIFIED = utils_1.nameof(t => t.Modified);
-        this.EXTENSION = utils_1.nameof(t => t.Extension);
-        this.HAS_INNER_SELECTION = utils_1.nameof(t => t.hasInnerSelection);
+        this.quickFindTimer = new Timer(function () { return _this.quickFindTimer_tick(); });
+        this.TYPE = utils_1.nameof(function (t) { return t.type; });
+        this.NAME = utils_1.nameof(function (t) { return t.Name; });
+        this.SIZE = utils_1.nameof(function (t) { return t.Size; });
+        this.MODIFIED = utils_1.nameof(function (t) { return t.Modified; });
+        this.EXTENSION = utils_1.nameof(function (t) { return t.Extension; });
+        this.HAS_INNER_SELECTION = utils_1.nameof(function (t) { return t.hasInnerSelection; });
         this.columns = [this.TYPE, this.NAME, this.MODIFIED, this.SIZE, this.EXTENSION];
         this.replCmd = "";
         this.replOutput = [];
-        console.log({ route, router, location, server });
+        console.log({ route: route, router: router, location: location, server: server });
         this.Req = {};
         this.Res = { Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null }, File: null, Files: null };
         this.FileSelection = new selection_1.Selection();
-        this.FileSelection.Changed = e => this.FileSelection_Changed(e);
-        this.filesView = new array_view_1.ArrayView(() => this.Res.Files);
+        this.FileSelection.Changed = function (e) { return _this.FileSelection_Changed(e); };
+        this.filesView = new array_view_1.ArrayView(function () { return _this.Res.Files; });
         this.filesView.pageSize = 200;
         window["_browser"] = this;
         window["websocket"] = websocket;
@@ -63,89 +107,103 @@ let BrowserComponent = class BrowserComponent {
         var x = new filename_parser_1.FilenameParser();
         window["filenameParser"] = x;
     }
-    ngOnInit() {
+    BrowserComponent.prototype.ngOnInit = function () {
+        var _this = this;
         document.body.classList.add("db");
         console.log("ngOnOnit");
-        this.location.subscribe(t => console.log("location changed", { location: t }));
-        this.route.params.subscribe(params => {
-            console.log("PARAMS", { params, p: params["p"] });
+        this.location.subscribe(function (t) { return console.log("location changed", { location: t }); });
+        this.route.params.subscribe(function (params) {
+            console.log("PARAMS", { params: params, p: params["p"] });
         });
-        let nameof2 = utils_1.Name.of();
+        var nameof2 = utils_1.Name.of();
         this.filesView.getCreateSort(this.SIZE).descendingFirst = true;
         this.filesView.getCreateSort(this.MODIFIED).descendingFirst = true;
         this.filesView.getCreateSort(this.HAS_INNER_SELECTION).descendingFirst = true;
-        this.filesView.getCreateSort(this.HAS_INNER_SELECTION).selector = t => this.hasInnerSelection(t);
-        this.filesView.getCreateSort(this.TYPE).valueComparerFunc = (x, y) => this.getFileTypeOrder(y) - this.getFileTypeOrder(x);
+        this.filesView.getCreateSort(this.HAS_INNER_SELECTION).selector = function (t) { return _this.hasInnerSelection(t); };
+        this.filesView.getCreateSort(this.TYPE).valueComparerFunc = function (x, y) { return _this.getFileTypeOrder(y) - _this.getFileTypeOrder(x); };
         this.filesView.activeSort = [this.TYPE];
-        this.filesView.targetChanged.on(() => this.FileSelection.AllItems = this.filesView.target);
-        $(window).resize(e => this.recalcHeight());
+        this.filesView.targetChanged.on(function () { return _this.FileSelection.AllItems = _this.filesView.target; });
+        $(window).resize(function (e) { return _this.recalcHeight(); });
         this.recalcHeight();
         console.log("baseDbGetAll");
         this.init();
-    }
-    async init() {
-        this.filesMd = await this.app.getAllFilesMetadata();
-        this.enableThemes();
-        this.Win = window;
-        this.UpdateClock();
-        this.Req = {};
-        $(this.Win).keydown(e => this.Win_keydown(e.originalEvent));
-        $(this.Win).on('keyup keydown', e => { this.isShiftDown = e.shiftKey; });
-        this.Win.addEventListener("mousedown", e => this.toggleDropDown(e));
-        this.route.queryParams.subscribe(t => this.onUrlChanged(t));
-    }
-    onUrlChanged(req) {
+    };
+    BrowserComponent.prototype.init = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = this;
+                        return [4, this.app.getAllFilesMetadata()];
+                    case 1:
+                        _a.filesMd = _b.sent();
+                        this.enableThemes();
+                        this.Win = window;
+                        this.UpdateClock();
+                        this.Req = {};
+                        $(this.Win).keydown(function (e) { return _this.Win_keydown(e.originalEvent); });
+                        $(this.Win).on('keyup keydown', function (e) { _this.isShiftDown = e.shiftKey; });
+                        this.Win.addEventListener("mousedown", function (e) { return _this.toggleDropDown(e); });
+                        this.route.queryParams.subscribe(function (t) { return _this.onUrlChanged(t); });
+                        return [2];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype.onUrlChanged = function (req) {
         console.log("onUrlChanged", req);
         this.LoadReq();
         this.ListFiles();
-    }
-    ngOnChanges(changes) {
+    };
+    BrowserComponent.prototype.ngOnChanges = function (changes) {
         console.log("ngOnChanges", changes);
-    }
-    recalcHeight() {
-        let headerEl = document.querySelector("header");
+    };
+    BrowserComponent.prototype.recalcHeight = function () {
+        var headerEl = document.querySelector("header");
         if (headerEl == null)
             return;
         this.lastHeight = headerEl.offsetHeight;
         console.log("recalcHeight", this.lastHeight);
         $(".fixed-placeholder").css({ height: this.lastHeight + "px" });
-    }
-    enableThemes() {
-        let theme = localStorage.getItem("theme");
+    };
+    BrowserComponent.prototype.enableThemes = function () {
+        var theme = localStorage.getItem("theme");
         if (theme != null && theme != "")
             this.setTheme(theme, false);
-    }
-    toggleDropDown(e) {
+    };
+    BrowserComponent.prototype.toggleDropDown = function (e) {
         if (e.defaultPrevented)
             return;
-        let el = $(e.target);
-        let dropDownEl = el.closest(".dropdown");
-        let isInDropDown = dropDownEl.length > 0;
-        let isInToggleBtn = el.closest(".dropdown-toggle").length > 0;
+        var el = $(e.target);
+        var dropDownEl = el.closest(".dropdown");
+        var isInDropDown = dropDownEl.length > 0;
+        var isInToggleBtn = el.closest(".dropdown-toggle").length > 0;
         if (isInDropDown && !isInToggleBtn)
             return;
         $(".dropdown.show").not(dropDownEl).removeClass("show");
         dropDownEl.toggleClass("show");
-    }
-    toggle(name) {
-        let value = this.Req[name];
-        let newValue = !value;
-        console.log("toggle", { name, value, newValue });
+    };
+    BrowserComponent.prototype.toggle = function (name) {
+        var value = this.Req[name];
+        var newValue = !value;
+        console.log("toggle", { name: name, value: value, newValue: newValue });
         this.Req[name] = newValue;
         this.navigateToReq();
-    }
-    disableSorting() {
+    };
+    BrowserComponent.prototype.disableSorting = function () {
         this.Req.sortBy = null;
         this.Req.sortByDesc = false;
         this.Req.foldersFirst = false;
         this.Req.ByInnerSelection = false;
         this.navigateToReq();
-    }
-    isSortingDisabled() {
+    };
+    BrowserComponent.prototype.isSortingDisabled = function () {
         return this.Req.sortBy == null && !this.Req.foldersFirst && this.Req.ByInnerSelection == null;
-    }
-    orderBy(key) {
-        let def = this.filesView.getCreateSort(key);
+    };
+    BrowserComponent.prototype.orderBy = function (key) {
+        var def = this.filesView.getCreateSort(key);
         if (this.Req.sortBy == key) {
             this.Req.sortByDesc = !this.Req.sortByDesc;
         }
@@ -154,10 +212,10 @@ let BrowserComponent = class BrowserComponent {
             this.Req.sortByDesc = def.descendingFirst;
         }
         this.navigateToReq();
-    }
-    applySort() {
-        let key = this.Req.sortBy;
-        let active = [];
+    };
+    BrowserComponent.prototype.applySort = function () {
+        var key = this.Req.sortBy;
+        var active = [];
         if (this.Req.foldersFirst && key != this.TYPE)
             active.push(this.TYPE);
         if (this.Req.ByInnerSelection && key != this.HAS_INNER_SELECTION)
@@ -168,40 +226,42 @@ let BrowserComponent = class BrowserComponent {
         }
         this.filesView.activeSort = active;
         console.log("sort", this.filesView.dumpActiveSort());
-    }
-    setTheme(theme, remember = true) {
+    };
+    BrowserComponent.prototype.setTheme = function (theme, remember) {
+        if (remember === void 0) { remember = true; }
         if (!remember)
             return;
         localStorage.setItem("theme", theme);
-    }
-    UpdateClock() {
+    };
+    BrowserComponent.prototype.UpdateClock = function () {
+        var _this = this;
         this.clockText = new Date().format("HH:mm\nddd, MMM d");
-        window.setTimeout(() => this.UpdateClock(), 5000);
-    }
-    quickFindTimer_tick() {
+        window.setTimeout(function () { return _this.UpdateClock(); }, 5000);
+    };
+    BrowserComponent.prototype.quickFindTimer_tick = function () {
         this.quickFindText = "";
-    }
-    tbQuickFind_input(e) {
+    };
+    BrowserComponent.prototype.tbQuickFind_input = function (e) {
         this.quickFind();
         this.quickFindTimer.set(2000);
-    }
-    quickFind() {
-        let list = this.filesView.target;
-        let s = this.quickFindText.toLowerCase();
-        let item = list.first(t => t.Name.toLowerCase().contains(s));
+    };
+    BrowserComponent.prototype.quickFind = function () {
+        var list = this.filesView.target;
+        var s = this.quickFindText.toLowerCase();
+        var item = list.first(function (t) { return t.Name.toLowerCase().contains(s); });
         if (item == null)
             return;
         this.FileSelection.SetSelection([item]);
-    }
-    Win_keydown(e) {
+    };
+    BrowserComponent.prototype.Win_keydown = function (e) {
         if (e.defaultPrevented)
             return;
         if ($(e.target).is("input,select"))
             return;
         $("#tbQuickFind").focus();
         this.tbQuickFind_keydown(e);
-    }
-    tbQuickFind_keydown(e) {
+    };
+    BrowserComponent.prototype.tbQuickFind_keydown = function (e) {
         this.FileSelection.KeyDown(e);
         if (e.defaultPrevented)
             return;
@@ -212,60 +272,83 @@ let BrowserComponent = class BrowserComponent {
             e.preventDefault();
             this.Open(this.FileSelection.SelectedItems.last());
         }
-    }
-    OpenInNewWindow(p) {
+    };
+    BrowserComponent.prototype.OpenInNewWindow = function (p) {
         this.Win.open(p, "_blank");
-    }
-    LoadReq() {
-        let x = { p: null };
+    };
+    BrowserComponent.prototype.LoadReq = function () {
+        var x = { p: null };
         QueryString.parse(null, x, null);
-        let req = x.p != null && x.p != "" ? JSON.parse(x.p) : {};
+        var req = x.p != null && x.p != "" ? JSON.parse(x.p) : {};
         this.Req = req;
         this.onPathChanged();
         console.info("LoadReq", this.Req);
-    }
-    async ListFiles() {
-        console.log("ListFiles");
-        let req = this.Req;
-        if (this.Req.FolderSize) {
-            let req2 = Object.assign({}, req);
-            req2.FolderSize = false;
-            await this._ListFiles(req2);
-        }
-        await this._ListFiles(req);
-    }
-    async _ListFiles(req) {
-        let res = await websocket.invoke(t => t.fileService.ListFiles(req));
-        if (res == null)
-            return;
-        this.Res = res;
-        this.onFilesChanged();
-    }
-    GotoPrevSibling() {
+    };
+    BrowserComponent.prototype.ListFiles = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var req, req2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log("ListFiles");
+                        req = this.Req;
+                        if (!this.Req.FolderSize) return [3, 2];
+                        req2 = __assign({}, req);
+                        req2.FolderSize = false;
+                        return [4, this._ListFiles(req2)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [4, this._ListFiles(req)];
+                    case 3:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype._ListFiles = function (req) {
+        return __awaiter(this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, websocket.invoke(function (t) { return t.fileService.ListFiles(req); })];
+                    case 1:
+                        res = _a.sent();
+                        if (res == null)
+                            return [2];
+                        this.Res = res;
+                        this.onFilesChanged();
+                        return [2];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype.GotoPrevSibling = function () {
         this.GotoFolder(this.Res.Relatives.PreviousSibling);
-    }
-    GotoNextSibling() {
+    };
+    BrowserComponent.prototype.GotoNextSibling = function () {
         this.GotoFolder(this.Res.Relatives.NextSibling);
-    }
-    GotoParentDir() {
+    };
+    BrowserComponent.prototype.GotoParentDir = function () {
         this.GotoFolder(this.Res.Relatives.ParentFolder);
-    }
-    GotoFolder(file) {
+    };
+    BrowserComponent.prototype.GotoFolder = function (file) {
         this.GotoPath(file.Path);
-    }
-    GotoPath(path) {
+    };
+    BrowserComponent.prototype.GotoPath = function (path) {
         this.Req.Path = path;
         this.navigateToReq();
-    }
-    GotoPath2(path) {
+    };
+    BrowserComponent.prototype.GotoPath2 = function (path) {
         if (!this.Req.KeepView) {
             this.Req = {};
         }
         this.Req.Path = path;
         this.onPathChanged();
         this.navigateToReq();
-    }
-    Path_LinuxToWin(path) {
+    };
+    BrowserComponent.prototype.Path_LinuxToWin = function (path) {
         if (String.isNullOrEmpty(path))
             return path;
         if (path == "/") {
@@ -284,8 +367,8 @@ let BrowserComponent = class BrowserComponent {
         if (path.endsWith("\\"))
             path = path.removeLast(1);
         return path;
-    }
-    Path_WinToLinux(path) {
+    };
+    BrowserComponent.prototype.Path_WinToLinux = function (path) {
         if (String.isNullOrEmpty(path))
             return path;
         var isNetworkShare = path.startsWith("\\\\");
@@ -300,111 +383,141 @@ let BrowserComponent = class BrowserComponent {
         if (!path.endsWith("/"))
             path += "/";
         return path;
-    }
-    serializeReq(req) {
-        let q = "?p=" + encodeURIComponent(JSON.stringify(this.Req));
+    };
+    BrowserComponent.prototype.serializeReq = function (req) {
+        var q = "?p=" + encodeURIComponent(JSON.stringify(this.Req));
         return q;
-    }
-    navigateToReq() {
+    };
+    BrowserComponent.prototype.navigateToReq = function () {
         console.log("navigateToReq", this.Req);
         this.router.navigate([""], { queryParams: { p: JSON.stringify(this.Req) } });
-    }
-    GetDefaultFileComparer() {
-        return new Array().ItemGetter(t => t.IsFolder).ToComparer();
-    }
-    grdFiles_mousedown(e, file) {
+    };
+    BrowserComponent.prototype.GetDefaultFileComparer = function () {
+        return new Array().ItemGetter(function (t) { return t.IsFolder; }).ToComparer();
+    };
+    BrowserComponent.prototype.grdFiles_mousedown = function (e, file) {
         this.FileSelection.Click(file, e.ctrlKey, e.shiftKey);
-    }
-    grdFiles_click(e, file) {
+    };
+    BrowserComponent.prototype.grdFiles_click = function (e, file) {
         var target = $(e.target);
         if (!target.is("a.Name"))
             return;
         e.preventDefault();
         this.Open(file);
-    }
-    grdFiles_dblclick(e, file) {
+    };
+    BrowserComponent.prototype.grdFiles_dblclick = function (e, file) {
         var target = $(e.target);
         if (file == null)
             return;
         e.preventDefault();
         this.Open(file);
-    }
-    GetFileClass(file) {
-        let map = {
+    };
+    BrowserComponent.prototype.GetFileClass = function (file) {
+        var map = {
             folder: "layers",
             file: "file-empty",
             link: "link",
         };
         var icon = map[file.type];
         return "lnr lnr-" + icon;
-    }
-    onFilesChanged() {
+    };
+    BrowserComponent.prototype.onFilesChanged = function () {
         this.applySort();
         this.filesView.refresh();
         this.FileSelection.AllItems = this.filesView.target;
         this.FileSelection.SelectedItems.clear();
         var selectedFileName = this.GetSelection(this.Res.File.Name);
         if (String.isNotNullOrEmpty(selectedFileName)) {
-            var files = this.FileSelection.AllItems.where(t => t.Name == selectedFileName);
+            var files = this.FileSelection.AllItems.where(function (t) { return t.Name == selectedFileName; });
             this.FileSelection.SetSelection(files);
         }
         this.recalcHeight();
-    }
-    FileSelection_Changed(e) {
+    };
+    BrowserComponent.prototype.FileSelection_Changed = function (e) {
         var file = this.FileSelection.SelectedItems.last();
-        let filename = null;
+        var filename = null;
         if (file != null)
             filename = file.Name;
         this.SaveSelection(this.Res.File.Name, filename);
         this.verifySelectionInView();
-    }
-    async verifySelectionInView() {
-        await utils_2.sleep(10);
-        let el = $('.Selected')[0];
-        if (el == null)
-            return;
-        let container = document.body;
-        let containerHeight = container.clientHeight - 100;
-        let top = el.offsetTop;
-        let bottom = el.offsetTop + el.offsetHeight;
-        let top2 = container.scrollTop;
-        let bottom2 = container.scrollTop + containerHeight;
-        console.log({ top, bottom, top2, bottom2, containerHeight });
-        let finalTop = null;
-        if (top < top2) {
-            finalTop = top;
-        }
-        else if (bottom > bottom2) {
-            let finalBottom = bottom;
-            finalTop = finalBottom - containerHeight;
-        }
-        if (finalTop != null) {
-            console.log("scrolling", top2, finalTop);
-            container.scrollTop = finalTop;
-        }
-    }
-    async DeleteAndRefresh(file) {
-        if (file == null)
-            return;
-        var fileOrFolder = file.IsFolder ? "folder" : "file";
-        if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
-            return;
-        let res = await this.server.Delete({ Path: file.Path });
-        return this.ListFiles();
-    }
-    async TrashAndRefresh(file) {
-        if (file == null)
-            return;
-        var fileOrFolder = file.IsFolder ? "folder" : "file";
-        let res = await this.server.trash({ Path: file.Path });
-        return this.ListFiles();
-    }
-    DeleteOrTrash(file) {
+    };
+    BrowserComponent.prototype.verifySelectionInView = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var el, container, containerHeight, top, bottom, top2, bottom2, finalTop, finalBottom;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, utils_2.sleep(10)];
+                    case 1:
+                        _a.sent();
+                        el = $('.Selected')[0];
+                        if (el == null)
+                            return [2];
+                        container = document.body;
+                        containerHeight = container.clientHeight - 100;
+                        top = el.offsetTop;
+                        bottom = el.offsetTop + el.offsetHeight;
+                        top2 = container.scrollTop;
+                        bottom2 = container.scrollTop + containerHeight;
+                        console.log({ top: top, bottom: bottom, top2: top2, bottom2: bottom2, containerHeight: containerHeight });
+                        finalTop = null;
+                        if (top < top2) {
+                            finalTop = top;
+                        }
+                        else if (bottom > bottom2) {
+                            finalBottom = bottom;
+                            finalTop = finalBottom - containerHeight;
+                        }
+                        if (finalTop != null) {
+                            console.log("scrolling", top2, finalTop);
+                            container.scrollTop = finalTop;
+                        }
+                        return [2];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype.DeleteAndRefresh = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            var fileOrFolder, res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (file == null)
+                            return [2];
+                        fileOrFolder = file.IsFolder ? "folder" : "file";
+                        if (!this.Win.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path))
+                            return [2];
+                        return [4, this.server.Delete({ Path: file.Path })];
+                    case 1:
+                        res = _a.sent();
+                        return [2, this.ListFiles()];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype.TrashAndRefresh = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            var fileOrFolder, res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (file == null)
+                            return [2];
+                        fileOrFolder = file.IsFolder ? "folder" : "file";
+                        return [4, this.server.trash({ Path: file.Path })];
+                    case 1:
+                        res = _a.sent();
+                        return [2, this.ListFiles()];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype.DeleteOrTrash = function (file) {
         if (this.isShiftDown)
             return this.DeleteAndRefresh(file);
         return this.TrashAndRefresh(file);
-    }
-    Open(file) {
+    };
+    BrowserComponent.prototype.Open = function (file) {
         if (file == null)
             return Promise.resolve();
         if (file.IsFolder || file.type == "link") {
@@ -424,42 +537,42 @@ let BrowserComponent = class BrowserComponent {
         }
         if (prompt && !this.Win.confirm("This is an executable file, are you sure you want to run it?"))
             return Promise.resolve();
-        return this.Execute(file).then(res => console.info(res));
-    }
-    Execute(file) {
+        return this.Execute(file).then(function (res) { return console.info(res); });
+    };
+    BrowserComponent.prototype.Execute = function (file) {
         return this.server.Execute({ Path: file.Path });
-    }
-    Explore(file) {
+    };
+    BrowserComponent.prototype.Explore = function (file) {
         return this.server.Explore({ Path: file.Path });
-    }
-    FormatFriendlyDate(value) {
+    };
+    BrowserComponent.prototype.FormatFriendlyDate = function (value) {
         if (value == null)
             return "";
         return value.ToDefaultDate().ToFriendlyRelative2();
-    }
-    FormatFriendlySize(value) {
+    };
+    BrowserComponent.prototype.FormatFriendlySize = function (value) {
         if (value == null)
             return "";
         return value.ToFriendlySize();
-    }
-    getFileNameWithoutExtension(file) {
+    };
+    BrowserComponent.prototype.getFileNameWithoutExtension = function (file) {
         if (file.IsFolder)
             return file.Name;
-        let s = file.Name;
-        let index = s.lastIndexOf(".");
+        var s = file.Name;
+        var index = s.lastIndexOf(".");
         if (index < 0)
             return s;
         s = s.substr(0, index);
         return s;
-    }
-    hasInnerSelection(file) {
+    };
+    BrowserComponent.prototype.hasInnerSelection = function (file) {
         return file != null && file.IsFolder && this.GetSelection(file.Name) != null;
-    }
-    GetRowClass(file, index) {
+    };
+    BrowserComponent.prototype.GetRowClass = function (file, index) {
         var s = "FileRow";
         if (file.IsFolder) {
             s += " IsFolder";
-            let folderHasSelection = this.GetSelection(file.Name) != null;
+            var folderHasSelection = this.GetSelection(file.Name) != null;
             if (folderHasSelection)
                 s += " HasInnerSelection";
         }
@@ -468,24 +581,25 @@ let BrowserComponent = class BrowserComponent {
         if (this.FileSelection.SelectedItems.contains(file))
             s += " Selected";
         return s;
-    }
-    GetSubtitleSearchLink(File) {
+    };
+    BrowserComponent.prototype.GetSubtitleSearchLink = function (File) {
         if (File == null)
             return null;
         var s = this.GetFilenameForSearch(File.Name);
         return "https://www.google.com/search?q=" + encodeURIComponent(s + " eng subscene");
-    }
-    GetGoogleSearchLink(File) {
+    };
+    BrowserComponent.prototype.GetGoogleSearchLink = function (File) {
         if (File == null)
             return null;
         var s = this.GetFilenameForSearch(File.Name);
         return "https://www.google.com/search?q=" + encodeURIComponent(s);
-    }
-    GetFilenameForSearch(s) {
-        var tokens = s.split(/[ \.\-]/).select(t => t.toLowerCase());
-        var ignoreWords = ["xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2"].selectToObject(t => t, t => true);
+    };
+    BrowserComponent.prototype.GetFilenameForSearch = function (s) {
+        var tokens = s.split(/[ \.\-]/).select(function (t) { return t.toLowerCase(); });
+        var ignoreWords = ["xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2"].selectToObject(function (t) { return t; }, function (t) { return true; });
         var list = [];
-        for (var token of tokens) {
+        for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
+            var token = tokens_1[_i];
             if (ignoreWords[token])
                 break;
             if (token.length == 3) {
@@ -501,138 +615,187 @@ let BrowserComponent = class BrowserComponent {
         }
         var s2 = list.join(" ");
         return s2;
-    }
-    TryParse(s) {
+    };
+    BrowserComponent.prototype.TryParse = function (s) {
         var x = parseInt(s);
         if (isNaN(x))
             return null;
         return x;
-    }
-    tmdbLogin() {
+    };
+    BrowserComponent.prototype.tmdbLogin = function () {
         return this.app.tmdb.loginToTmdb();
-    }
-    async getImdbInfo(file) {
-        let info = new filename_parser_1.FilenameParser().parse(file.Name);
-        let isTv = info.season != null;
-        let e = await this.app.tmdb.searchMovies({ query: info.name, year: info.year });
-        this.movie = e.results[0];
-        console.log(this.movie);
-        if (this.movie != null) {
-            let e3 = await this.app.tmdb.movieGetDetails({ movie_id: this.movie.id });
-            console.log({ movie: this.movie, details: e3 });
-        }
-        let e2 = await this.app.tmdb.searchTvShows({ query: info.name, });
-        console.log(e2);
-        let show = e2.results[0];
-        if (show != null) {
-            let e3 = await this.app.tmdb.tvGetDetails({ tv_id: show.id });
-            console.log({ show: show, details: e3 });
-        }
-        let e3 = await this.app.tmdb.searchMulti({ query: info.name, });
-        console.log("multisearch", e3);
-    }
-    getImdbUserId() {
-        let id = this.GetStorageItem("imdbUserId");
+    };
+    BrowserComponent.prototype.getImdbInfo = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            var info, isTv, e, e3_1, e2, show, e3_2, e3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        info = new filename_parser_1.FilenameParser().parse(file.Name);
+                        isTv = info.season != null;
+                        return [4, this.app.tmdb.searchMovies({ query: info.name, year: info.year })];
+                    case 1:
+                        e = _a.sent();
+                        this.movie = e.results[0];
+                        console.log(this.movie);
+                        if (!(this.movie != null)) return [3, 3];
+                        return [4, this.app.tmdb.movieGetDetails({ movie_id: this.movie.id })];
+                    case 2:
+                        e3_1 = _a.sent();
+                        console.log({ movie: this.movie, details: e3_1 });
+                        _a.label = 3;
+                    case 3: return [4, this.app.tmdb.searchTvShows({ query: info.name, })];
+                    case 4:
+                        e2 = _a.sent();
+                        console.log(e2);
+                        show = e2.results[0];
+                        if (!(show != null)) return [3, 6];
+                        return [4, this.app.tmdb.tvGetDetails({ tv_id: show.id })];
+                    case 5:
+                        e3_2 = _a.sent();
+                        console.log({ show: show, details: e3_2 });
+                        _a.label = 6;
+                    case 6: return [4, this.app.tmdb.searchMulti({ query: info.name, })];
+                    case 7:
+                        e3 = _a.sent();
+                        console.log("multisearch", e3);
+                        return [2];
+                }
+            });
+        });
+    };
+    BrowserComponent.prototype.getImdbUserId = function () {
+        var id = this.GetStorageItem("imdbUserId");
         if (Q.isNullOrEmpty(id))
             console.info("set your imdbUserId storage key");
         return id;
-    }
-    setImdbUserId(value) {
+    };
+    BrowserComponent.prototype.setImdbUserId = function (value) {
         return this.SetStorageItem("imdbUserId", value);
-    }
-    onPathChanged() {
+    };
+    BrowserComponent.prototype.onPathChanged = function () {
         this.tbPathText = this.Req.Path;
-    }
-    GetSelection(folder) {
+    };
+    BrowserComponent.prototype.GetSelection = function (folder) {
         var filename = this.GetStorageItem(folder);
         return filename;
-    }
-    SaveSelection(folderName, filename) {
+    };
+    BrowserComponent.prototype.SaveSelection = function (folderName, filename) {
         this.SetBaseDbItem({ key: folderName, selectedFiles: filename == null ? null : [filename] });
-    }
-    GetStorageItem(key) {
-        let x = this.GetBaseDbItem(key);
+    };
+    BrowserComponent.prototype.GetStorageItem = function (key) {
+        var x = this.GetBaseDbItem(key);
         if (x == null || x.selectedFiles == null)
             return null;
         return x.selectedFiles[0];
-    }
-    SetStorageItem(key, value) {
-        return this.SetBaseDbItem({ key, selectedFiles: [value] });
-    }
-    GetBaseDbItem(key) {
-        let x = this.filesMd.first(t => t.key == key);
+    };
+    BrowserComponent.prototype.SetStorageItem = function (key, value) {
+        return this.SetBaseDbItem({ key: key, selectedFiles: [value] });
+    };
+    BrowserComponent.prototype.GetBaseDbItem = function (key) {
+        var x = this.filesMd.first(function (t) { return t.key == key; });
         if (x == null)
             return null;
         return x;
-    }
-    SetBaseDbItem(value) {
+    };
+    BrowserComponent.prototype.SetBaseDbItem = function (value) {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
-            this.filesMd.removeAll(t => t.key == value.key);
+            this.filesMd.removeAll(function (t) { return t.key == value.key; });
             this.app.byFilename.removeById({ id: value.key });
             return;
         }
-        this.filesMd.removeAll(t => t.key == value.key);
+        this.filesMd.removeAll(function (t) { return t.key == value.key; });
         this.filesMd.push(value);
         this.app.byFilename.persist(value);
-    }
-    getHeaderClass(prop) {
+    };
+    BrowserComponent.prototype.getHeaderClass = function (prop) {
         if (this.filesView.isOrderedBy(prop, false))
             return prop + " sorted asc";
         if (this.filesView.isOrderedBy(prop, true))
             return prop + " sorted desc";
         return prop;
-    }
-    frmPath_submit(e) {
+    };
+    BrowserComponent.prototype.frmPath_submit = function (e) {
         this.GotoPath(this.tbPathText);
-    }
-    getFileTypeOrder(type) {
-        let order = ["folder", "link", "file"];
+    };
+    BrowserComponent.prototype.getFileTypeOrder = function (type) {
+        var order = ["folder", "link", "file"];
         order.reverse();
         return order.indexOf(type);
-    }
-    scan() {
-        let scanner = new scanner_1.Scanner();
+    };
+    BrowserComponent.prototype.scan = function () {
+        var scanner = new scanner_1.Scanner();
         scanner.folders = ["c:\\tv"];
         console.log("scan start");
-        scanner.scan().then(e => console.log("scan end", scanner));
-    }
-    async sendReplCmd() {
-        if (this.replCmd == null || this.replCmd == "")
-            return;
-        try {
-            let res = websocket.send(this.replCmd);
-            try {
-                for (var res_1 = __asyncValues(res), res_1_1; res_1_1 = await res_1.next(), !res_1_1.done;) {
-                    let item = await res_1_1.value;
-                    console.log("repl", item);
-                    this.replOutput.push(item);
+        scanner.scan().then(function (e) { return console.log("scan end", scanner); });
+    };
+    BrowserComponent.prototype.sendReplCmd = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var res, res_1, res_1_1, item, e_1_1, err_1, e_1, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (this.replCmd == null || this.replCmd == "")
+                            return [2];
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 15, , 16]);
+                        res = websocket.send(this.replCmd);
+                        _b.label = 2;
+                    case 2:
+                        _b.trys.push([2, 8, 9, 14]);
+                        res_1 = __asyncValues(res);
+                        _b.label = 3;
+                    case 3: return [4, res_1.next()];
+                    case 4:
+                        if (!(res_1_1 = _b.sent(), !res_1_1.done)) return [3, 7];
+                        return [4, res_1_1.value];
+                    case 5:
+                        item = _b.sent();
+                        console.log("repl", item);
+                        this.replOutput.push(item);
+                        _b.label = 6;
+                    case 6: return [3, 3];
+                    case 7: return [3, 14];
+                    case 8:
+                        e_1_1 = _b.sent();
+                        e_1 = { error: e_1_1 };
+                        return [3, 14];
+                    case 9:
+                        _b.trys.push([9, , 12, 13]);
+                        if (!(res_1_1 && !res_1_1.done && (_a = res_1.return))) return [3, 11];
+                        return [4, _a.call(res_1)];
+                    case 10:
+                        _b.sent();
+                        _b.label = 11;
+                    case 11: return [3, 13];
+                    case 12:
+                        if (e_1) throw e_1.error;
+                        return [7];
+                    case 13: return [7];
+                    case 14: return [3, 16];
+                    case 15:
+                        err_1 = _b.sent();
+                        this.replOutput.push(err_1);
+                        return [3, 16];
+                    case 16: return [2];
                 }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (res_1_1 && !res_1_1.done && (_a = res_1.return)) await _a.call(res_1);
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
-        }
-        catch (err) {
-            this.replOutput.push(err);
-        }
-        var e_1, _a;
-    }
-};
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Object)
-], BrowserComponent.prototype, "Req", void 0);
-BrowserComponent = __decorate([
-    core_1.Component({
-        selector: 'my-browser',
-        templateUrl: '/src/browser.component.html',
-        styleUrls: ['_res_/src/browser.component.css'],
-    }),
-    __metadata("design:paramtypes", [router_1.ActivatedRoute, router_1.Router, common_1.Location, service_1.FileService, app_1.App])
-], BrowserComponent);
+            });
+        });
+    };
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Object)
+    ], BrowserComponent.prototype, "Req", void 0);
+    BrowserComponent = __decorate([
+        core_1.Component({
+            selector: 'my-browser',
+            templateUrl: '/src/browser.component.html',
+            styleUrls: ['_res_/src/browser.component.css'],
+        }),
+        __metadata("design:paramtypes", [router_1.ActivatedRoute, router_1.Router, common_1.Location, service_1.FileService, app_1.App])
+    ], BrowserComponent);
+    return BrowserComponent;
+}());
 exports.BrowserComponent = BrowserComponent;
 //# sourceMappingURL=browser.component.js.map

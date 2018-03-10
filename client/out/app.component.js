@@ -9,23 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@angular/core");
-const app_1 = require("./app");
-let AppComponent = class AppComponent {
-    constructor(app) {
+var core_1 = require("@angular/core");
+var app_1 = require("./app");
+var AppComponent = (function () {
+    function AppComponent(app) {
         this.app = app;
         console.log("AppComponent ctor");
     }
-    ngOnInit() {
-        this.app.init().then(e => console.log("app inited"));
-    }
-};
-AppComponent = __decorate([
-    core_1.Component({
-        selector: 'my-app',
-        templateUrl: '/src/app.component.html',
-    }),
-    __metadata("design:paramtypes", [app_1.App])
-], AppComponent);
+    AppComponent.prototype.ngOnInit = function () {
+        this.app.init().then(function (e) { return console.log("app inited"); });
+    };
+    AppComponent = __decorate([
+        core_1.Component({
+            selector: 'my-app',
+            templateUrl: '/src/app.component.html',
+        }),
+        __metadata("design:paramtypes", [app_1.App])
+    ], AppComponent);
+    return AppComponent;
+}());
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=app.component.js.map

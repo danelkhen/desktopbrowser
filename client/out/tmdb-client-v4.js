@@ -1,65 +1,92 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const client_1 = require("./tmdb/v4/client");
-class TmdbClientV4 extends client_1.TmdbV4Client {
-    constructor() {
-        super();
-        this.storage = localStorage;
+var client_1 = require("./tmdb/v4/client");
+var TmdbClientV4 = (function (_super) {
+    __extends(TmdbClientV4, _super);
+    function TmdbClientV4() {
+        var _this = _super.call(this) || this;
+        _this.storage = localStorage;
         console.log("TmdbClient ctor");
-        let base = this.proxy.onInvoke;
-        this.proxy.onInvoke = pc => {
-            if (this.account_id != null) {
-                let prm = pc.args[0];
+        var base = _this.proxy.onInvoke;
+        _this.proxy.onInvoke = function (pc) {
+            if (_this.account_id != null) {
+                var prm = pc.args[0];
                 if (prm == null) {
                     prm = {};
                     pc.args[0] = prm;
                 }
-                if (prm.account_id == null && this.account_id != null)
-                    prm.account_id = this.account_id;
+                if (prm.account_id == null && _this.account_id != null)
+                    prm.account_id = _this.account_id;
             }
             return base(pc);
         };
+        return _this;
     }
-    init() {
+    TmdbClientV4.prototype.init = function () {
         return Promise.resolve();
-    }
-    onLogin() {
+    };
+    TmdbClientV4.prototype.onLogin = function () {
         return Promise.resolve();
-    }
-    get request_token() { return this.storage.tmdb_v4_request_token; }
-    set request_token(value) { this.storage.tmdb_v4_request_token = value; }
-    get access_token() { return this.storage.tmdb_v4_access_token; }
-    set access_token(value) { this.storage.tmdb_v4_access_token = value; }
-    get account_id() { return this.storage.tmdb_v4_account_id; }
-    set account_id(value) { this.storage.tmdb_v4_account_id = value; }
-    loginToTmdb() {
-        return this._loginToTmdb().then(t => this.onLogin());
-    }
-    _loginToTmdb() {
-        return new Promise((resolve, reject) => {
-            window.addEventListener("message", e => {
+    };
+    Object.defineProperty(TmdbClientV4.prototype, "request_token", {
+        get: function () { return this.storage.tmdb_v4_request_token; },
+        set: function (value) { this.storage.tmdb_v4_request_token = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TmdbClientV4.prototype, "access_token", {
+        get: function () { return this.storage.tmdb_v4_access_token; },
+        set: function (value) { this.storage.tmdb_v4_access_token = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TmdbClientV4.prototype, "account_id", {
+        get: function () { return this.storage.tmdb_v4_account_id; },
+        set: function (value) { this.storage.tmdb_v4_account_id = value; },
+        enumerable: true,
+        configurable: true
+    });
+    TmdbClientV4.prototype.loginToTmdb = function () {
+        var _this = this;
+        return this._loginToTmdb().then(function (t) { return _this.onLogin(); });
+    };
+    TmdbClientV4.prototype._loginToTmdb = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            window.addEventListener("message", function (e) {
                 console.log("messsage", e.data, e);
-                this.authCreateAccessToken({ request_token: this.request_token })
-                    .then(e => {
+                _this.authCreateAccessToken({ request_token: _this.request_token })
+                    .then(function (e) {
                     console.log("createAccessToken", e);
                     if (!e.success) {
                         reject();
                         return;
                     }
-                    this.access_token = e.access_token;
-                    this.account_id = e.account_id;
+                    _this.access_token = e.access_token;
+                    _this.account_id = e.account_id;
                     resolve();
                 });
             });
             var l = location;
-            let redirect_to = l.protocol + "//" + l.host + "/tmdb-login.html?v=4&back=1";
-            this.authCreateRequestToken({ body: { redirect_to } }).then(e => {
-                this.request_token = e.request_token;
+            var redirect_to = l.protocol + "//" + l.host + "/tmdb-login.html?v=4&back=1";
+            _this.authCreateRequestToken({ body: { redirect_to: redirect_to } }).then(function (e) {
+                _this.request_token = e.request_token;
                 console.log(e);
-                let win = window.open("/tmdb-login.html?v=4&request_token=" + this.request_token);
+                var win = window.open("/tmdb-login.html?v=4&request_token=" + _this.request_token);
             });
         });
-    }
-}
+    };
+    return TmdbClientV4;
+}(client_1.TmdbV4Client));
 exports.TmdbClientV4 = TmdbClientV4;
 //# sourceMappingURL=tmdb-client-v4.js.map

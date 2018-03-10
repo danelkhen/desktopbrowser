@@ -1,20 +1,33 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const proxy_1 = require("./proxy");
-class ServiceBase extends proxy_1.Proxy {
-    constructor() {
-        super();
-        this.onInvoke = pc => this.Invoke(pc.name, pc.args[0]);
+var proxy_1 = require("./proxy");
+var ServiceBase = (function (_super) {
+    __extends(ServiceBase, _super);
+    function ServiceBase() {
+        var _this = _super.call(this) || this;
+        _this.onInvoke = function (pc) { return _this.Invoke(pc.name, pc.args[0]); };
+        return _this;
     }
-    isQueryStringable(x) {
+    ServiceBase.prototype.isQueryStringable = function (x) {
         return x == null || typeof (x) == "string";
-    }
-    Invoke(action, prms) {
-        let method = "GET";
-        let contentType = null;
-        let data = null;
+    };
+    ServiceBase.prototype.Invoke = function (action, prms) {
+        var _this = this;
+        var method = "GET";
+        var contentType = null;
+        var data = null;
         if (prms != null) {
-            let json = JSON.stringify(prms);
+            var json = JSON.stringify(prms);
             if (json.length > 1000) {
                 method = "POST";
                 contentType = "application/json";
@@ -24,16 +37,17 @@ class ServiceBase extends proxy_1.Proxy {
                 data = { p: json };
             }
         }
-        return new Promise((resolve, reject) => {
+        return new Promise(function (resolve, reject) {
             var xhr = jQuery.ajax({
-                contentType,
-                method,
-                url: this.Url + "/" + action,
+                contentType: contentType,
+                method: method,
+                url: _this.Url + "/" + action,
                 data: data,
-                complete: (a, b) => resolve(a.responseJSON),
+                complete: function (a, b) { return resolve(a.responseJSON); },
             });
         });
-    }
-}
+    };
+    return ServiceBase;
+}(proxy_1.Proxy));
 exports.ServiceBase = ServiceBase;
 //# sourceMappingURL=service-base.js.map

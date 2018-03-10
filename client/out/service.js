@@ -1,66 +1,96 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const service_base_1 = require("./utils/service-base");
-class DbService extends service_base_1.ServiceBase {
-    findOneById(req) { return this.invoke(t => t.findOneById(req)); }
-    find(req) { return this.invoke(t => t.find(req)); }
-    persist(x) { return this.invoke(t => t.persist(x)); }
-    removeById(req) { return this.invoke(t => t.removeById(req)); }
-}
+var service_base_1 = require("./utils/service-base");
+var DbService = (function (_super) {
+    __extends(DbService, _super);
+    function DbService() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DbService.prototype.findOneById = function (req) { return this.invoke(function (t) { return t.findOneById(req); }); };
+    DbService.prototype.find = function (req) { return this.invoke(function (t) { return t.find(req); }); };
+    DbService.prototype.persist = function (x) { return this.invoke(function (t) { return t.persist(x); }); };
+    DbService.prototype.removeById = function (req) { return this.invoke(function (t) { return t.removeById(req); }); };
+    return DbService;
+}(service_base_1.ServiceBase));
 exports.DbService = DbService;
-class ByFilenameService extends DbService {
-    constructor() {
-        super();
-        this.Url = "/api/byFilename";
+var ByFilenameService = (function (_super) {
+    __extends(ByFilenameService, _super);
+    function ByFilenameService() {
+        var _this = _super.call(this) || this;
+        _this.Url = "/api/byFilename";
+        return _this;
     }
-}
+    return ByFilenameService;
+}(DbService));
 exports.ByFilenameService = ByFilenameService;
-class KeyValueService extends service_base_1.ServiceBase {
-    constructor() {
-        super();
-        this.Url = "/api/keyValue";
+var KeyValueService = (function (_super) {
+    __extends(KeyValueService, _super);
+    function KeyValueService() {
+        var _this = _super.call(this) || this;
+        _this.Url = "/api/keyValue";
+        return _this;
     }
-    findOneById(req) { return this.invoke(t => t.findOneById(req)); }
-    persist(obj) { return this.invoke(t => t.persist(obj)); }
-    findAllWithKeyLike(req) { return this.invoke(t => t.findAllWithKeyLike(req)); }
-}
+    KeyValueService.prototype.findOneById = function (req) { return this.invoke(function (t) { return t.findOneById(req); }); };
+    KeyValueService.prototype.persist = function (obj) { return this.invoke(function (t) { return t.persist(obj); }); };
+    KeyValueService.prototype.findAllWithKeyLike = function (req) { return this.invoke(function (t) { return t.findAllWithKeyLike(req); }); };
+    return KeyValueService;
+}(service_base_1.ServiceBase));
 exports.KeyValueService = KeyValueService;
-class FileService extends service_base_1.ServiceBase {
-    constructor() {
-        super();
+var FileService = (function (_super) {
+    __extends(FileService, _super);
+    function FileService() {
+        var _this = _super.call(this) || this;
         console.log("SiteServiceClient ctor");
-        this.Url = "/api/fs";
+        _this.Url = "/api/fs";
+        return _this;
     }
-    ListFiles(req) { return this.invoke(t => t.ListFiles(req)); }
-    GetFiles(req) { return this.invoke(t => t.GetFiles(req)); }
-    GetFileRelatives(path) { return this.invoke(t => t.GetFileRelatives(path)); }
-    GetFile(req) { return this.invoke(t => t.GetFile(req)); }
-    Execute(req) { return this.invoke(t => t.Execute(req)); }
-    Explore(req) { return this.invoke(t => t.Explore(req)); }
-    Delete(req) { return this.invoke(t => t.Delete(req)); }
-    trash(req) { return this.invoke(t => t.trash(req)); }
-    isWindows() { return this.invoke(t => t.isWindows()); }
-    GetHomeFiles() { return this.invoke(t => t.GetHomeFiles()); }
-    clearCache() { return this.invoke(t => t.clearCache()); }
-}
+    FileService.prototype.ListFiles = function (req) { return this.invoke(function (t) { return t.ListFiles(req); }); };
+    FileService.prototype.GetFiles = function (req) { return this.invoke(function (t) { return t.GetFiles(req); }); };
+    FileService.prototype.GetFileRelatives = function (path) { return this.invoke(function (t) { return t.GetFileRelatives(path); }); };
+    FileService.prototype.GetFile = function (req) { return this.invoke(function (t) { return t.GetFile(req); }); };
+    FileService.prototype.Execute = function (req) { return this.invoke(function (t) { return t.Execute(req); }); };
+    FileService.prototype.Explore = function (req) { return this.invoke(function (t) { return t.Explore(req); }); };
+    FileService.prototype.Delete = function (req) { return this.invoke(function (t) { return t.Delete(req); }); };
+    FileService.prototype.trash = function (req) { return this.invoke(function (t) { return t.trash(req); }); };
+    FileService.prototype.isWindows = function () { return this.invoke(function (t) { return t.isWindows(); }); };
+    FileService.prototype.GetHomeFiles = function () { return this.invoke(function (t) { return t.GetHomeFiles(); }); };
+    FileService.prototype.clearCache = function () { return this.invoke(function (t) { return t.clearCache(); }); };
+    return FileService;
+}(service_base_1.ServiceBase));
 exports.FileService = FileService;
-class FsEntryService extends DbService {
-    constructor() {
-        super();
-        this.Url = "/api/fsEntry";
+var FsEntryService = (function (_super) {
+    __extends(FsEntryService, _super);
+    function FsEntryService() {
+        var _this = _super.call(this) || this;
+        _this.Url = "/api/fsEntry";
+        return _this;
     }
-}
+    return FsEntryService;
+}(DbService));
 exports.FsEntryService = FsEntryService;
-class AppService extends service_base_1.ServiceBase {
-    constructor() {
-        super();
-        this.Url = "/api/app";
+var AppService = (function (_super) {
+    __extends(AppService, _super);
+    function AppService() {
+        var _this = _super.call(this) || this;
+        _this.Url = "/api/app";
+        return _this;
     }
-    getConfig() { return this.invoke(t => t.getConfig()); }
-    saveConfig(config) { return this.invoke(t => t.saveConfig(config)); }
-    scanForMedia() { return this.invoke(t => t.scanForMedia()); }
-    scanStatus() { return this.invoke(t => t.scanStatus()); }
-    getMediaFiles(req) { return this.invoke(t => t.getMediaFiles(req)); }
-}
+    AppService.prototype.getConfig = function () { return this.invoke(function (t) { return t.getConfig(); }); };
+    AppService.prototype.saveConfig = function (config) { return this.invoke(function (t) { return t.saveConfig(config); }); };
+    AppService.prototype.scanForMedia = function () { return this.invoke(function (t) { return t.scanForMedia(); }); };
+    AppService.prototype.scanStatus = function () { return this.invoke(function (t) { return t.scanStatus(); }); };
+    AppService.prototype.getMediaFiles = function (req) { return this.invoke(function (t) { return t.getMediaFiles(req); }); };
+    return AppService;
+}(service_base_1.ServiceBase));
 exports.AppService = AppService;
 //# sourceMappingURL=service.js.map

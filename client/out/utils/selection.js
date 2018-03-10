@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class Selection {
-    constructor() {
+var Selection = (function () {
+    function Selection() {
         this.SelectedItems = [];
         this.AllItems = [];
     }
-    Toggle(list, item) {
+    Selection.prototype.Toggle = function (list, item) {
         var index = list.indexOf(item);
         if (index < 0)
             list.push(item);
         else
             list.removeAt(index);
-    }
-    Click(item, ctrl, shift) {
+    };
+    Selection.prototype.Click = function (item, ctrl, shift) {
         var sel = this.SelectedItems.toArray();
         var lastActive = this.SelectedItems.last();
         var anchor = this.SelectedItems.first();
@@ -27,7 +27,7 @@ class Selection {
             var slice = this.AllItems.slice(minIndex, maxIndex + 1);
             sel.clear();
             sel.add(anchor);
-            sel.addRange(slice.where(t => t != anchor));
+            sel.addRange(slice.where(function (t) { return t != anchor; }));
         }
         else {
             sel.clear();
@@ -38,8 +38,8 @@ class Selection {
         var prevSelection = this.SelectedItems;
         this.SelectedItems = sel;
         this.OnChanged({ From: prevSelection, To: this.SelectedItems });
-    }
-    KeyDown(e) {
+    };
+    Selection.prototype.KeyDown = function (e) {
         var keyCode = e.keyCode;
         var ctrl = e.ctrlKey;
         var sel = this.SelectedItems.toArray();
@@ -68,28 +68,29 @@ class Selection {
             this.AddToSelection(sibling);
         else
             this.SetSelection([sibling]);
-    }
-    AddToSelection(item) {
+    };
+    Selection.prototype.AddToSelection = function (item) {
         if (this.SelectedItems.contains(item))
             return;
         var sel = this.SelectedItems.toArray();
         sel.push(item);
         this.SetSelection(sel);
-    }
-    SetSelection(sel) {
+    };
+    Selection.prototype.SetSelection = function (sel) {
         if (sel.itemsEqual(this.SelectedItems) || sel == this.SelectedItems)
             return;
         var prevSelection = this.SelectedItems;
         this.SelectedItems = sel;
         this.OnChanged({ From: prevSelection, To: this.SelectedItems });
-    }
-    OnChanged(e) {
+    };
+    Selection.prototype.OnChanged = function (e) {
         var diff = e.From.diff(e.To);
         e.Added = diff.added;
         e.Removed = diff.removed;
         if (this.Changed != null)
             this.Changed(e);
-    }
-}
+    };
+    return Selection;
+}());
 exports.Selection = Selection;
 //# sourceMappingURL=selection.js.map

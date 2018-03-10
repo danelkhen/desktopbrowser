@@ -1,26 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class FilenameParser {
-    parse(name) {
+var FilenameParser = (function () {
+    function FilenameParser() {
+    }
+    FilenameParser.prototype.parse = function (name) {
+        var _this = this;
         if (name == null || name == "")
             return null;
-        let x = { episode: null, name: null, season: null, tags: [], year: null, filename: name, date: null };
-        let tokens = name.split(/[\. ]/);
+        var x = { episode: null, name: null, season: null, tags: [], year: null, filename: name, date: null };
+        var tokens = name.split(/[\. ]/);
         if (tokens.length == 1)
             return x;
-        let tokens2 = tokens.map(token => this.parseToken(token));
-        let yearToken = tokens2.first(t => t.type == "year");
-        let seToken = tokens2.first(t => t.type == "seasonEpisode");
-        let index = tokens2.findIndex(t => t.type == "tag" && t.braces == null);
-        let nameTokens = tokens2.skip(index).takeWhile(t => t.type == "tag" && t.braces == null);
+        var tokens2 = tokens.map(function (token) { return _this.parseToken(token); });
+        var yearToken = tokens2.first(function (t) { return t.type == "year"; });
+        var seToken = tokens2.first(function (t) { return t.type == "seasonEpisode"; });
+        var index = tokens2.findIndex(function (t) { return t.type == "tag" && t.braces == null; });
+        var nameTokens = tokens2.skip(index).takeWhile(function (t) { return t.type == "tag" && t.braces == null; });
         if (nameTokens.length > 0)
-            x.name = nameTokens.map(t => t.value).join(" ");
+            x.name = nameTokens.map(function (t) { return t.value; }).join(" ");
         if (yearToken != null) {
             x.year = yearToken.value;
-            let uints = tokens2.skip(tokens2.indexOf(yearToken) + 1).takeWhile(t => t.type == "uint");
-            if (uints.length >= 2 && uints.take(2).every(t => t.value <= 31)) {
-                let dateString = `${x.year}-${uints[0].value.toString().padLeft(2, '0')}-${uints[1].value.toString().padLeft(2, '0')}`;
-                let date = Date.tryParseExact(dateString, "yyyy-MM-dd");
+            var uints = tokens2.skip(tokens2.indexOf(yearToken) + 1).takeWhile(function (t) { return t.type == "uint"; });
+            if (uints.length >= 2 && uints.take(2).every(function (t) { return t.value <= 31; })) {
+                var dateString = x.year + "-" + uints[0].value.toString().padLeft(2, '0') + "-" + uints[1].value.toString().padLeft(2, '0');
+                var date = Date.tryParseExact(dateString, "yyyy-MM-dd");
                 if (date != null)
                     x.date = date.format("yyyy-MM-dd");
             }
@@ -29,19 +32,19 @@ class FilenameParser {
             x.season = seToken.value.season;
             x.episode = seToken.value.episode;
         }
-        x.tags = tokens2.where(t => t.type == "tag" && !nameTokens.contains(t)).map(t => t.value);
+        x.tags = tokens2.where(function (t) { return t.type == "tag" && !nameTokens.contains(t); }).map(function (t) { return t.value; });
         return x;
-    }
-    parseToken(token) {
+    };
+    FilenameParser.prototype.parseToken = function (token) {
         if (/^\[.+\]$/.test(token) || /^\(.+\)$/.test(token)) {
-            let s = token.substr(1, token.length - 2);
-            let x = this.parseToken(s);
+            var s = token.substr(1, token.length - 2);
+            var x = this.parseToken(s);
             x.braces = token.substr(0, 1) + token.substr(token.length - 1);
             x.type = x.type;
             return x;
         }
-        let year = this.tryYear(token);
-        let se = this.trySeasonEpisode(token);
+        var year = this.tryYear(token);
+        var se = this.trySeasonEpisode(token);
         if (year != null) {
             return {
                 type: "year",
@@ -56,7 +59,7 @@ class FilenameParser {
                 value: se,
             };
         }
-        let uint = this.tryUInt(token);
+        var uint = this.tryUInt(token);
         if (uint != null) {
             return {
                 type: "uint",
@@ -64,42 +67,44 @@ class FilenameParser {
                 value: uint,
             };
         }
-        let t = {
+        var t = {
             type: "tag",
             text: token,
             value: token,
         };
         return t;
-    }
-    tryUInt(token) {
+    };
+    FilenameParser.prototype.tryUInt = function (token) {
         if (!/^[0-9]+$/.test(token))
             return null;
         return parseInt(token);
-    }
-    tryYear(token) {
+    };
+    FilenameParser.prototype.tryYear = function (token) {
         if (!/[0-9][0-9][0-9][0-9]/.test(token))
             return null;
-        let x = parseInt(token);
+        var x = parseInt(token);
         if (x > 1800 && x < 3000)
             return x;
         return null;
-    }
-    trySeasonEpisode(token) {
+    };
+    FilenameParser.prototype.trySeasonEpisode = function (token) {
         if (token.length > 6)
             return null;
-        let tests = [
+        var tests = [
             /[sS]([0-9][0-9])[eE]([0-9][0-9])+/,
             /[sS]([0-9][0-9])/,
             /([0-9])x([0-9])+/,
         ];
-        for (let test of tests) {
+        for (var _i = 0, tests_1 = tests; _i < tests_1.length; _i++) {
+            var test = tests_1[_i];
             if (test.test(token)) {
-                let list = test.exec(token);
+                var list = test.exec(token);
                 return { season: parseInt(list[1]), episode: parseInt(list[2]) };
             }
         }
         return null;
-    }
-}
+    };
+    return FilenameParser;
+}());
 exports.FilenameParser = FilenameParser;
 //# sourceMappingURL=filename-parser.js.map

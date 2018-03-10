@@ -66,11 +66,14 @@ export function extractInstanceFunctionCall2(func: Function): { target: string[]
 
 
 export function parseFunctionCall(code: string): { target: string[], funcName: string, args: string } {
-    let match = /^([a-zA-Z0-9_\.]+)\((.*)\)$/.exec(code);
+    let match = /^.*return\s*(.*)\;.*$/.exec(code);
+    if (match)
+        code = match[1];
+    match = /^([a-zA-Z0-9_\.]+)\((.*)\)$/.exec(code);
     console.log("extractFunctionCall", code);
     if (match != null)
         console.log("extractFunctionCall", match[0], match[1], match[2]);
-    let target = match[1].split(".");
+    let target = match[1].split(".").slice(1);
     let args = match[2];
     let funcName = target.pop();
     let res = { target, funcName, args };

@@ -1,23 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function xhr(opts) {
-    return new Promise((resolve, reject) => {
-        let url = opts.url;
-        let method = opts.method || "GET";
-        let body = opts.body;
-        let remaining = {};
+    return new Promise(function (resolve, reject) {
+        var url = opts.url;
+        var method = opts.method || "GET";
+        var body = opts.body;
+        var remaining = {};
         if (opts.params != null) {
-            let interpolated = interpolateUrl(url, opts.params);
-            let query = toQueryString(interpolated.remaining);
+            var interpolated = interpolateUrl(url, opts.params);
+            var query = toQueryString(interpolated.remaining);
             url = interpolated.url;
             if (query.length > 0)
                 url += "?" + query;
         }
-        let xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         opts.xhr = xhr;
-        xhr.addEventListener("readystatechange", e => {
+        xhr.addEventListener("readystatechange", function (e) {
             if (xhr.readyState == 4) {
-                let res = null;
+                var res = null;
                 if (xhr.responseText.length > 0)
                     res = JSON.parse(xhr.responseText);
                 if (xhr.status >= 200 && xhr.status < 300)
@@ -29,16 +29,16 @@ function xhr(opts) {
         });
         xhr.open(opts.method || "GET", url);
         if (opts.headers != null) {
-            Object.keys(opts.headers).forEach(key => xhr.setRequestHeader(key, opts.headers[key]));
+            Object.keys(opts.headers).forEach(function (key) { return xhr.setRequestHeader(key, opts.headers[key]); });
         }
         xhr.send(body);
     });
 }
 exports.xhr = xhr;
 function interpolateUrl(url, params) {
-    let remaining = {};
-    Object.keys(params).forEach(key => {
-        let placeholder = "{" + key + "}";
+    var remaining = {};
+    Object.keys(params).forEach(function (key) {
+        var placeholder = "{" + key + "}";
         if (url.indexOf(placeholder) >= 0) {
             url = url.replace(placeholder, encodeURIComponent(params[key]));
         }
@@ -46,11 +46,11 @@ function interpolateUrl(url, params) {
             remaining[key] = params[key];
         }
     });
-    return { url, remaining };
+    return { url: url, remaining: remaining };
 }
 exports.interpolateUrl = interpolateUrl;
 function toQueryString(params) {
-    let query = Object.keys(params).map(key => `${key}=${encodeURIComponent(params[key])}`).join("&");
+    var query = Object.keys(params).map(function (key) { return key + "=" + encodeURIComponent(params[key]); }).join("&");
     return query;
 }
 exports.toQueryString = toQueryString;

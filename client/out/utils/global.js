@@ -1,6 +1,6 @@
-let DefaultDateFormat = "yyyy-MM-dd HH:mm:ss";
+var DefaultDateFormat = "yyyy-MM-dd HH:mm:ss";
 Array.prototype.GetSiblingOrEdge = function (item, offset) {
-    let list = this;
+    var list = this;
     if (offset == null || offset == 0)
         return item;
     var index = list.indexOf(item);
@@ -15,16 +15,16 @@ Array.prototype.GetSiblingOrEdge = function (item, offset) {
 String.prototype.ToDefaultDate = function () {
     return Date.tryParseExact(this, DefaultDateFormat);
 };
-String.isNullOrEmpty = s => s == null || s == "";
-String.isNotNullOrEmpty = s => s != null && s != "";
+String.isNullOrEmpty = function (s) { return s == null || s == ""; };
+String.isNotNullOrEmpty = function (s) { return s != null && s != ""; };
 String.prototype.equalsIgnoreCase = function (s) {
-    let x = this;
-    let xx = x.localeCompare(s, [], { sensitivity: "base" }) == 0;
+    var x = this;
+    var xx = x.localeCompare(s, [], { sensitivity: "base" }) == 0;
     console.log("EIC", this, s, xx);
     return xx;
 };
 String.prototype.removeLast = function (x) {
-    let s = this;
+    var s = this;
     if (x == null)
         x = 1;
     return s.substr(0, s.length - x);
@@ -40,7 +40,7 @@ var Keys;
     Keys[Keys["Down"] = 40] = "Down";
 })(Keys || (Keys = {}));
 Date.prototype.ToFriendlyRelative2 = function (rel) {
-    let dt = this;
+    var dt = this;
     if (rel == null)
         rel = new Date();
     if (dt.year() == rel.year()) {
@@ -55,7 +55,7 @@ Date.prototype.ToFriendlyRelative2 = function (rel) {
     return dt.format("d/M/yy");
 };
 Number.prototype.ToFriendlySize = function () {
-    let bytes = this;
+    var bytes = this;
     var kb = bytes / 1024.0;
     var mb = kb / 1024.0;
     var gb = mb / 1024.0;
@@ -73,8 +73,8 @@ Number.prototype.ToFriendlySize = function () {
     return tb.toFriendlyNumber() + " tb";
 };
 Number.prototype.toFriendlyNumber = function () {
-    let x = this;
-    let s;
+    var x = this;
+    var s;
     if (x == 0)
         return "0";
     if (x > 0 && x < 10)
