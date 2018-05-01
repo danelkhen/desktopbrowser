@@ -21,7 +21,7 @@ export class DbService<T> implements C.DbService<T> {
     db: Db;
     repo: Repository<T>;
     findOneById(req: { id: any, options?: FindOneOptions<T> }): Promise<T | undefined> {
-        return this.repo.findOneById(req.id, req.options);
+        return this.repo.findOne(req.id, req.options);
     }
 
     async find(req: FindManyOptions<T>): Promise<T[]> {
@@ -46,7 +46,7 @@ export class DbService<T> implements C.DbService<T> {
     async persist(obj: T): Promise<T> {
         let id = obj[this.getIdPropName()];
         if (id != null) {
-            let obj2 = await this.repo.findOneById(id)
+            let obj2 = await this.repo.findOne(id)
             if (obj2 == null) {
                 let obj3 = this.repo.create([obj as any])[0];
                 return this.repo.manager.save(obj3);
@@ -58,7 +58,7 @@ export class DbService<T> implements C.DbService<T> {
     }
 
     async removeById(req: { id: any }): Promise<T> {
-        let x = await this.repo.findOneById(req.id)
+        let x = await this.repo.findOne(req.id)
         if (x == null)
             return null;
         return await this.repo.remove(x);
