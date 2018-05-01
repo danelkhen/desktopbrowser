@@ -32,7 +32,7 @@
     "request-promise": "^4.2.0",
     "request-promise-native": "^1.0.3",
     "rimraf": "^2.6.1",
-    "sqlite3": "^3.1.13",
+    "sqlite3": "^4.0.0",
     "trash": "^4.3.0",
     "typeorm": "^0.1.16",
     "ws": "^5.0.0"
