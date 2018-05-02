@@ -170,6 +170,9 @@ class FileService {
         }
         else if (!files && !folders)
             files2 = [];
+        //var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+        //if (searchPattern.IsNullOrEmpty())
+        //    searchPattern = "*";
         else if (recursive) {
             var dir = await io_1.FileSystemInfo.create(path);
             files2 = (await dir.EnumerateFileSystemElementsRecursive()).select(t => this.ToFile(t));

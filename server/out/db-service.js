@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class DbService {
     findOneById(req) {
-        return this.repo.findOneById(req.id, req.options);
+        return this.repo.findOne(req.id, req.options);
     }
     async find(req) {
         console.log("find", req);
@@ -25,7 +25,7 @@ class DbService {
     async persist(obj) {
         let id = obj[this.getIdPropName()];
         if (id != null) {
-            let obj2 = await this.repo.findOneById(id);
+            let obj2 = await this.repo.findOne(id);
             if (obj2 == null) {
                 let obj3 = this.repo.create([obj])[0];
                 return this.repo.manager.save(obj3);
@@ -36,7 +36,7 @@ class DbService {
         return await this.repo.manager.save(obj);
     }
     async removeById(req) {
-        let x = await this.repo.findOneById(req.id);
+        let x = await this.repo.findOne(req.id);
         if (x == null)
             return null;
         return await this.repo.remove(x);
