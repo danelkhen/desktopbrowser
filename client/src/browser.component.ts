@@ -6,8 +6,8 @@ import { Selection, SelectionChangedEventArgs } from "./utils/selection"
 import * as imdb from "../typings2/imdb-rss"
 import { ArrayView } from "./utils/array-view";
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from "rxjs"
-import 'rxjs/add/operator/map';
+//import { Observable } from "rxjs"
+//import 'rxjs/add/operator/map';
 import { Name, NameFunc, nameof } from "./utils/utils"
 import { FilenameParser } from "./filename-parser"
 import { TmdbClient } from "./tmdb-client"

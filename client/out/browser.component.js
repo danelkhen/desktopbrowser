@@ -63,7 +63,6 @@ var service_1 = require("./service");
 var selection_1 = require("./utils/selection");
 var array_view_1 = require("./utils/array-view");
 var router_1 = require("@angular/router");
-require("rxjs/add/operator/map");
 var utils_1 = require("./utils/utils");
 var filename_parser_1 = require("./filename-parser");
 var scanner_1 = require("./scanner");
