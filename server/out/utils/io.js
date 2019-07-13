@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 //import * as fs from "fs"
 const fse = require("fs-extra");
-const diskinfo_1 = require("diskinfo");
+const drivelist = require("drivelist");
 class IoDir {
     static async Exists(s) {
         if (!(await fse.pathExists(s)))
@@ -27,12 +27,24 @@ class IoFile {
 }
 exports.IoFile = IoFile;
 class IoPath {
-    static GetDirectoryName(path2) { return path.dirname(path2); }
-    static Combine(...args) { throw new Error(); }
-    static GetFileName(s) { return path.basename(s); }
-    static GetFullPath(s) { throw new Error(); }
-    static IsPathRooted(s) { return path.isAbsolute(s); }
-    static GetExtension(s) { throw new Error(); }
+    static GetDirectoryName(path2) {
+        return path.dirname(path2);
+    }
+    static Combine(...args) {
+        throw new Error();
+    }
+    static GetFileName(s) {
+        return path.basename(s);
+    }
+    static GetFullPath(s) {
+        throw new Error();
+    }
+    static IsPathRooted(s) {
+        return path.isAbsolute(s);
+    }
+    static GetExtension(s) {
+        throw new Error();
+    }
     static GetPathRoot(s) {
         let max = 1000;
         let i = 0;
@@ -75,8 +87,7 @@ class FileSystemInfo {
             this.LastWriteTime = this.stats.mtime;
             this.isLink = this.stats.isSymbolicLink();
         }
-        catch (e) {
-        }
+        catch (e) { }
         if (this.Name == null || this.Name == "")
             this.Name = this.path; //console.log(path2, this);
     }
@@ -115,30 +126,46 @@ class DriveInfo extends FileSystemInfo {
         this.path = mount + "\\";
         this.Name = mount;
     }
-    static GetDrives() { return this.drives; } // [new DriveInfo("C:")];
-    static GetDrives3() {
-        return this.GetDrives2().then(list => {
-            this.drives = list.map(t => this.toDriveInfo(t));
-            return this.drives;
-        });
+    static GetDrives() {
+        return this.drives;
     }
-    static toDriveInfo(x) {
-        let di = new DriveInfo(x.mounted);
+    static async GetDrives3() {
+        const list = await this.GetDrives4();
+        this.drives = list.map(t => this.toDriveInfo2(t));
+        return this.drives;
+    }
+    // static toDriveInfo(x: DiskInfoItem) {
+    //     let di = new DriveInfo(x.mounted);
+    //     di.IsReady = true;
+    //     di.AvailableFreeSpace = x.available;
+    //     di.Capacity = x.capacity;
+    //     return di;
+    // }
+    static toDriveInfo2(x) {
+        let di = new DriveInfo(x.mountpoints[0].label);
         di.IsReady = true;
-        di.AvailableFreeSpace = x.available;
-        di.Capacity = x.capacity;
+        di.AvailableFreeSpace = x.size; // TODO
+        di.Capacity = x.size;
         return di;
     }
-    static GetDrives2() {
-        return new Promise((resolve, reject) => {
-            diskinfo_1.getDrives((err, list) => {
-                console.log("getDrives", err, list);
-                if (err)
-                    reject(err);
-                else
-                    resolve(list);
-            });
-        });
+    // static GetDrives2(): Promise<DiskInfoItem[]> {
+    //     return new Promise<DiskInfoItem[]>((resolve, reject) => {
+    //         getDrives((err, list) => {
+    //             console.log("getDrives", err, list);
+    //             if (err) reject(err);
+    //             else resolve(list);
+    //         });
+    //     });
+    // }
+    static async GetDrives4() {
+        const drives = await drivelist.list();
+        return drives;
+        // const list:DiskInfoItem[] = []
+        // for(const drive of drives){
+        //     const item:DiskInfoItem = {
+        //         capacity:item.
+        //     }
+        // }
     }
 }
 DriveInfo.drives = [];

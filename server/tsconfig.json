@@ -1,16 +1,15 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2017",
-    "lib": [ "esnext.asynciterable", "es2017" ],
-    "noImplicitAny": false,
-    "sourceMap": false,
-    "newLine": "LF",
-    "rootDir": "src",
-    "outDir": "out",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
-  },
-  "exclude": ["node_modules"]
-  
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2018",
+        "lib": ["esnext.asynciterable", "es2018"],
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "newLine": "LF",
+        "rootDir": "src",
+        "outDir": "out",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    },
+    "exclude": ["node_modules"]
 }

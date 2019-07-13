@@ -1,9 +1,4 @@
 "use strict";
-var __asyncValues = (this && this.__asyncValues) || function (o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator];
-    return m ? m.call(o) : typeof __values === "function" ? __values(o) : o[Symbol.iterator]();
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const ws = require("ws");
 const proxy_1 = require("./utils/proxy");
@@ -31,18 +26,8 @@ function setupWebsockets(server) {
                 else if (isAsyncIterable(res)) {
                     console.log("sending async iterable!!!!!!!!!!!!!!!!!!");
                     ws.send("[");
-                    try {
-                        for (var res_1 = __asyncValues(res), res_1_1; res_1_1 = await res_1.next(), !res_1_1.done;) {
-                            let item = await res_1_1.value;
-                            ws.send(JSON.stringify(item) + ",");
-                        }
-                    }
-                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                    finally {
-                        try {
-                            if (res_1_1 && !res_1_1.done && (_a = res_1.return)) await _a.call(res_1);
-                        }
-                        finally { if (e_1) throw e_1.error; }
+                    for await (let item of res) {
+                        ws.send(JSON.stringify(item) + ",");
                     }
                     ws.send("]");
                 }
@@ -54,7 +39,6 @@ function setupWebsockets(server) {
                 console.log(err);
                 ws.send("ERROR: " + JSON.stringify(err));
             }
-            var e_1, _a;
         });
         ws.on('error', e => console.log('ws.error', e));
     });

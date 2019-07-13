@@ -1,22 +1,20 @@
-﻿import * as path from "path"
+﻿import * as path from "path";
 //import * as fs from "fs"
-import * as fse from "fs-extra"
-import { getDrives, DiskInfoItem } from "diskinfo"
-import { IEnumerable } from "contracts"
-
+import * as fse from "fs-extra";
+// import { getDrives, DiskInfoItem } from "diskinfo";
+import { IEnumerable } from "contracts";
+import * as drivelist from "drivelist";
 
 export class IoDir {
     static async Exists(s: string): Promise<boolean> {
-        if (!(await fse.pathExists(s)))
-            return;
+        if (!(await fse.pathExists(s))) return;
         let stat = await fse.stat(s);
         return stat.isDirectory();
     }
 }
 export class IoFile {
     static async Exists(s: string): Promise<boolean> {
-        if (!(await fse.pathExists(s)))
-            return;
+        if (!(await fse.pathExists(s))) return;
         let stat = await fse.stat(s);
         return stat.isFile();
     }
@@ -26,12 +24,24 @@ export class IoFile {
     }
 }
 export class IoPath {
-    static GetDirectoryName(path2: string): string { return path.dirname(path2); }
-    static Combine(...args: string[]): string { throw new Error(); }
-    static GetFileName(s: string): string { return path.basename(s); }
-    static GetFullPath(s: string): string { throw new Error(); }
-    static IsPathRooted(s: string): boolean { return path.isAbsolute(s); }
-    static GetExtension(s: string): string { throw new Error(); }
+    static GetDirectoryName(path2: string): string {
+        return path.dirname(path2);
+    }
+    static Combine(...args: string[]): string {
+        throw new Error();
+    }
+    static GetFileName(s: string): string {
+        return path.basename(s);
+    }
+    static GetFullPath(s: string): string {
+        throw new Error();
+    }
+    static IsPathRooted(s: string): boolean {
+        return path.isAbsolute(s);
+    }
+    static GetExtension(s: string): string {
+        throw new Error();
+    }
     static GetPathRoot(s: string): string {
         let max = 1000;
         let i = 0;
@@ -40,14 +50,11 @@ export class IoPath {
             i++;
             s2 = path.dirname(s2);
             let s3 = path.dirname(s2);
-            if (s2 == s3)
-                return s2;
-        }
-        while (i < 100);
+            if (s2 == s3) return s2;
+        } while (i < 100);
         return null;
     }
 }
-
 
 export class FileSystemInfo {
     protected constructor(path2: string) {
@@ -60,14 +67,12 @@ export class FileSystemInfo {
         return x;
     }
 
-
     async init() {
         let path2 = this.path;
         this.Attributes = {
             HasFlag: () => false, //TODO:
         };
-        if (path2 == null)
-            return;
+        if (path2 == null) return;
         this.FullName = path.resolve(path2);
         this.Name = path.basename(path2);
         this.Extension = path.extname(path2);
@@ -78,12 +83,8 @@ export class FileSystemInfo {
             this.isDir = this.stats.isDirectory();
             this.LastWriteTime = this.stats.mtime;
             this.isLink = this.stats.isSymbolicLink();
-        }
-        catch (e) {
-        }
-        if (this.Name == null || this.Name == "")
-            this.Name = this.path; //console.log(path2, this);
-
+        } catch (e) {}
+        if (this.Name == null || this.Name == "") this.Name = this.path; //console.log(path2, this);
     }
     stats: fse.Stats;
     path: string;
@@ -124,7 +125,6 @@ export class FileSystemInfo {
         }
         return list2;
     }
-
 }
 export class DriveInfo extends FileSystemInfo {
     constructor(mount: string) {
@@ -133,37 +133,52 @@ export class DriveInfo extends FileSystemInfo {
         this.Name = mount;
     }
     static drives: DriveInfo[] = [];
-    static GetDrives(): DriveInfo[] { return this.drives; }// [new DriveInfo("C:")];
-    static GetDrives3(): Promise<DriveInfo[]> {
-        return this.GetDrives2().then(list => {
-            this.drives = list.map(t => this.toDriveInfo(t));
-            return this.drives;
-        });
+    static GetDrives(): DriveInfo[] {
+        return this.drives;
     }
-    static toDriveInfo(x: DiskInfoItem) {
-        let di = new DriveInfo(x.mounted);
+    static async GetDrives3(): Promise<DriveInfo[]> {
+        const list = await this.GetDrives4();
+        this.drives = list.map(t => this.toDriveInfo2(t));
+        return this.drives;
+    }
+    // static toDriveInfo(x: DiskInfoItem) {
+    //     let di = new DriveInfo(x.mounted);
+    //     di.IsReady = true;
+    //     di.AvailableFreeSpace = x.available;
+    //     di.Capacity = x.capacity;
+    //     return di;
+    // }
+    static toDriveInfo2(x: drivelist.Drive) {
+        let di = new DriveInfo(x.mountpoints[0].label);
         di.IsReady = true;
-        di.AvailableFreeSpace = x.available;
-        di.Capacity = x.capacity;
+        di.AvailableFreeSpace = x.size; // TODO
+        di.Capacity = x.size;
         return di;
     }
-    static GetDrives2(): Promise<DiskInfoItem[]> {
-        return new Promise<DiskInfoItem[]>((resolve, reject) => {
-            getDrives((err, list) => {
-                console.log("getDrives", err, list);
-                if (err)
-                    reject(err);
-                else
-                    resolve(list);
-            });
-        });
+    // static GetDrives2(): Promise<DiskInfoItem[]> {
+    //     return new Promise<DiskInfoItem[]>((resolve, reject) => {
+    //         getDrives((err, list) => {
+    //             console.log("getDrives", err, list);
+    //             if (err) reject(err);
+    //             else resolve(list);
+    //         });
+    //     });
+    // }
+    static async GetDrives4(): Promise<drivelist.Drive[]> {
+        const drives = await drivelist.list();
+        return drives;
+        // const list:DiskInfoItem[] = []
+        // for(const drive of drives){
+        //     const item:DiskInfoItem = {
+        //         capacity:item.
+        //     }
+
+        // }
     }
     IsReady: boolean;
     AvailableFreeSpace: number | string; /*in mac a string returns */
     Capacity: number;
-
 }
-
 
 export enum FileAttributes {
     Hidden,

@@ -1,16 +1,4 @@
 "use strict";
-var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
-var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);  }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_info_1 = require("./utils/path-info");
 const config_1 = require("./config");
@@ -40,17 +28,15 @@ class FileService2 {
         }
         return res;
     }
-    GetFiles(req) {
-        return __asyncGenerator(this, arguments, function* GetFiles_1() {
-            if (req.HideFiles && req.HideFolders)
-                return;
-            let files = this.GetFileAndOrFolders({ path: req.Path, searchPattern: req.SearchPattern, recursive: req.IsRecursive, files: !req.HideFiles, folders: !req.HideFolders });
-            let files2 = queryable_1.toQueryable(files);
-            files2 = this.ApplyRequest(files2, req);
-            files2 = this.ApplyPaging(files2, req);
-            files2 = this.ApplyCaching(files2);
-            return files2.source;
-        });
+    async *GetFiles(req) {
+        if (req.HideFiles && req.HideFolders)
+            return;
+        let files = this.GetFileAndOrFolders({ path: req.Path, searchPattern: req.SearchPattern, recursive: req.IsRecursive, files: !req.HideFiles, folders: !req.HideFolders });
+        let files2 = queryable_1.toQueryable(files);
+        files2 = this.ApplyRequest(files2, req);
+        files2 = this.ApplyPaging(files2, req);
+        files2 = this.ApplyCaching(files2);
+        return files2.source;
     }
     ApplyCaching(files) {
         return files; //TODO: new CachedEnumerable<File>(files);
@@ -156,46 +142,44 @@ class FileService2 {
         //    files = await this.CalculateFoldersSize(files);
         return files;
     }
-    GetFileAndOrFolders(req) {
-        return __asyncGenerator(this, arguments, function* GetFileAndOrFolders_1() {
-            let { path, searchPattern, recursive, files, folders } = req;
-            //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
-            var isFiltered = false;
-            let files2;
-            if (String.isNullOrEmpty(path) && !this.isWindows())
-                path = "/";
-            if (String.isNullOrEmpty(path)) {
-                files2 = this.GetHomeFiles();
-            }
-            else if (!files && !folders)
-                files2 = [];
-            //var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            //if (searchPattern.IsNullOrEmpty())
-            //    searchPattern = "*";
-            else if (recursive) {
-                var dir = yield __await(io_1.FileSystemInfo.create(path));
-                files2 = (yield __await(dir.EnumerateFileSystemElementsRecursive())).select(t => this.ToFile(t));
-            }
-            else {
-                var dir = yield __await(io_1.FileSystemInfo.create(path));
-                if (files && !folders)
-                    files2 = (yield __await(dir.EnumerateFiles())).select(t => this.ToFile(t));
-                else if (folders && !files)
-                    files2 = (yield __await(dir.EnumerateDirectories())).select(t => this.ToFile(t));
-                else if (folders && files)
-                    files2 = (yield __await(dir.GetFileSystemInfos())).select(t => this.ToFile(t));
-                else
-                    throw new Error();
-                isFiltered = true;
-            }
-            if (!isFiltered) {
-                if (!files)
-                    files2 = files2.where(t => t.IsFolder);
-                else if (!folders)
-                    files2 = files2.where(t => !t.IsFolder);
-            }
-            return files2;
-        });
+    async *GetFileAndOrFolders(req) {
+        let { path, searchPattern, recursive, files, folders } = req;
+        //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
+        var isFiltered = false;
+        let files2;
+        if (String.isNullOrEmpty(path) && !this.isWindows())
+            path = "/";
+        if (String.isNullOrEmpty(path)) {
+            files2 = this.GetHomeFiles();
+        }
+        else if (!files && !folders)
+            files2 = [];
+        //var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+        //if (searchPattern.IsNullOrEmpty())
+        //    searchPattern = "*";
+        else if (recursive) {
+            var dir = await io_1.FileSystemInfo.create(path);
+            files2 = (await dir.EnumerateFileSystemElementsRecursive()).select(t => this.ToFile(t));
+        }
+        else {
+            var dir = await io_1.FileSystemInfo.create(path);
+            if (files && !folders)
+                files2 = (await dir.EnumerateFiles()).select(t => this.ToFile(t));
+            else if (folders && !files)
+                files2 = (await dir.EnumerateDirectories()).select(t => this.ToFile(t));
+            else if (folders && files)
+                files2 = (await dir.GetFileSystemInfos()).select(t => this.ToFile(t));
+            else
+                throw new Error();
+            isFiltered = true;
+        }
+        if (!isFiltered) {
+            if (!files)
+                files2 = files2.where(t => t.IsFolder);
+            else if (!folders)
+                files2 = files2.where(t => !t.IsFolder);
+        }
+        return files2;
     }
     isWindows() {
         return os.platform() == "win32";
