@@ -3,8 +3,6 @@
 //import {Parse} from "./utils/parse"
 //import * as C from "contracts"
 
-
-
 ////export class SiteRequest implements C.SiteRequest {
 ////    //constructor(cfg: SiteRequest) {
 ////    //    Object.keys(cfg).forEach(key => this[key] = cfg[key]);
@@ -191,10 +189,6 @@
 ////    Take?: number;
 ////}
 
-
-
-
-
 //export class SortRequest implements C.SortRequest {
 //    constructor(cfg?: SortRequest) {
 //        this.Columns = [];
@@ -227,7 +221,6 @@
 //    }
 //}
 
-
 //export class SortColumn implements C.SortColumn {
 //    constructor(cfg: SortColumn) {
 //        Object.keys(cfg).forEach(key => this[key] = cfg[key]);
@@ -240,9 +233,6 @@
 //    }
 //}
 
-
 ////export interface PathRequest {
 ////    Path: string;
 ////}
-
-

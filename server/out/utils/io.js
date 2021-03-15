@@ -1,9 +1,29 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
+exports.FileAttributes = exports.DriveInfo = exports.FileSystemInfo = exports.IoPath = exports.IoFile = exports.IoDir = void 0;
+const path = __importStar(require("path"));
 //import * as fs from "fs"
-const fse = require("fs-extra");
-const drivelist = require("drivelist");
+const fse = __importStar(require("fs-extra"));
+const getDrives_1 = require("./getDrives");
 class IoDir {
     static async Exists(s) {
         if (!(await fse.pathExists(s)))
@@ -62,6 +82,11 @@ class IoPath {
 exports.IoPath = IoPath;
 class FileSystemInfo {
     constructor(path2) {
+        this.stats = undefined;
+        this.isLink = undefined;
+        this.isFile = undefined;
+        this.isDir = undefined;
+        this.Name = undefined;
         this.path = path2;
     }
     static async create(path2) {
@@ -72,7 +97,7 @@ class FileSystemInfo {
     async init() {
         let path2 = this.path;
         this.Attributes = {
-            HasFlag: () => false,
+            HasFlag: () => false, //TODO:
         };
         if (path2 == null)
             return;
@@ -123,6 +148,9 @@ exports.FileSystemInfo = FileSystemInfo;
 class DriveInfo extends FileSystemInfo {
     constructor(mount) {
         super(null);
+        this.IsReady = undefined;
+        this.AvailableFreeSpace = undefined; /*in mac a string returns */
+        this.Capacity = undefined;
         this.path = mount + "\\";
         this.Name = mount;
     }
@@ -130,46 +158,23 @@ class DriveInfo extends FileSystemInfo {
         return this.drives;
     }
     static async GetDrives3() {
-        const list = await this.GetDrives4();
-        this.drives = list.map(t => this.toDriveInfo2(t));
+        const list = await this.GetDrives2();
+        this.drives = list.map(t => this.toDriveInfo(t));
         return this.drives;
     }
-    // static toDriveInfo(x: DiskInfoItem) {
-    //     let di = new DriveInfo(x.mounted);
-    //     di.IsReady = true;
-    //     di.AvailableFreeSpace = x.available;
-    //     di.Capacity = x.capacity;
-    //     return di;
-    // }
-    static toDriveInfo2(x) {
-        let di = new DriveInfo(x.mountpoints[0].label);
+    static toDriveInfo(x) {
+        let di = new DriveInfo(x.mounted);
         di.IsReady = true;
-        di.AvailableFreeSpace = x.size; // TODO
-        di.Capacity = x.size;
+        di.AvailableFreeSpace = x.available;
+        di.Capacity = x.capacity;
         return di;
     }
-    // static GetDrives2(): Promise<DiskInfoItem[]> {
-    //     return new Promise<DiskInfoItem[]>((resolve, reject) => {
-    //         getDrives((err, list) => {
-    //             console.log("getDrives", err, list);
-    //             if (err) reject(err);
-    //             else resolve(list);
-    //         });
-    //     });
-    // }
-    static async GetDrives4() {
-        const drives = await drivelist.list();
-        return drives;
-        // const list:DiskInfoItem[] = []
-        // for(const drive of drives){
-        //     const item:DiskInfoItem = {
-        //         capacity:item.
-        //     }
-        // }
+    static async GetDrives2() {
+        return await getDrives_1.getDrives();
     }
 }
-DriveInfo.drives = [];
 exports.DriveInfo = DriveInfo;
+DriveInfo.drives = [];
 var FileAttributes;
 (function (FileAttributes) {
     FileAttributes[FileAttributes["Hidden"] = 0] = "Hidden";

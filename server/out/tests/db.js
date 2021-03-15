@@ -1,3 +1,4 @@
+"use strict";
 //import "./global"
 //import "../lib/corex/corex"
 //import * as fs from "fs";
@@ -9,7 +10,7 @@
 //    }
 //    filename: string;
 //    db: dirty.Dirty<T>;
-//    init(): Promise<any> {
+//    init(): Promise<void> {
 //        let dir = path.dirname(this.filename);
 //        if (!fs.existsSync(dir))
 //            fs.mkdirSync(dir);
@@ -32,10 +33,10 @@
 //    get(key: string): T {
 //        return this.db.get(key);
 //    }
-//    set(key: string, value: T): Promise<any> {
+//    set(key: string, value: T): Promise<void> {
 //        return new Promise((resolve, reject) => this.db.set(key, value, resolve));
 //    }
-//    delete(key: string): Promise<any> {
+//    delete(key: string): Promise<void> {
 //        return new Promise((resolve, reject) => this.db.rm(key, resolve));
 //    }
 //}

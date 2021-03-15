@@ -9,10 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Photo = void 0;
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("typeorm");
 let Photo = class Photo {
+    constructor() {
+        this.id = undefined;
+        this.name = undefined;
+        this.description = undefined;
+        this.fileName = undefined;
+        this.views = undefined;
+        this.isPublished = undefined;
+    }
 };
 __decorate([
     typeorm_2.PrimaryGeneratedColumn(),
@@ -20,7 +29,7 @@ __decorate([
 ], Photo.prototype, "id", void 0);
 __decorate([
     typeorm_2.Column({
-        length: 500
+        length: 500,
     }),
     __metadata("design:type", String)
 ], Photo.prototype, "name", void 0);
@@ -54,11 +63,11 @@ typeorm_1.createConnection({
     database: "test.sqlite",
     //storage: "test.sqlite",
     //},
-    entities: [
-        Photo
-    ],
+    entities: [Photo],
     synchronize: true,
-}).then(connection => {
+    //autoSchemaSync: true,
+})
+    .then(connection => {
     let photo = new Photo();
     photo.name = "Me and Bears";
     photo.description = "I am near polar bears";
@@ -73,4 +82,5 @@ typeorm_1.createConnection({
     //            console.log("All photos from the db: ", savedPhotos);
     //        });
     //    });
-}).catch(error => console.log(error));
+})
+    .catch(error => console.log(error));

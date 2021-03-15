@@ -1,30 +1,29 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
+import "reflect-metadata"
+import { createConnection } from "typeorm"
 
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
 export class Photo {
-
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number = undefined!
 
     @Column({
-        length: 500
+        length: 500,
     })
-    name: string;
+    name: string = undefined!
 
     @Column("text")
-    description: string;
+    description: string = undefined!
 
     @Column()
-    fileName: string;
+    fileName: string = undefined!
 
     @Column("int")
-    views: number;
+    views: number = undefined!
 
     @Column()
-    isPublished: boolean;
+    isPublished: boolean = undefined!
 }
 
 createConnection({
@@ -38,29 +37,25 @@ createConnection({
 
     //storage: "test.sqlite",
     //},
-    entities: [
-        Photo
-    ],
+    entities: [Photo],
     synchronize: true,
     //autoSchemaSync: true,
-}).then(connection => {
+})
+    .then(connection => {
+        let photo = new Photo()
+        photo.name = "Me and Bears"
+        photo.description = "I am near polar bears"
+        photo.fileName = "photo-with-bears.jpg"
+        photo.views = 1
+        photo.isPublished = true
 
-    let photo = new Photo();
-    photo.name = "Me and Bears";
-    photo.description = "I am near polar bears";
-    photo.fileName = "photo-with-bears.jpg";
-    photo.views = 1;
-    photo.isPublished = true;
-
-    //connection.entityManager
-    //    .persist(photo)
-    //    .then(photo => {
-    //        console.log("Photo has been saved");
-    //        connection.entityManager.find(Photo).then(savedPhotos => {
-    //            console.log("All photos from the db: ", savedPhotos);
-    //        });
-    //    });
-
-
-
-}).catch(error => console.log(error));
+        //connection.entityManager
+        //    .persist(photo)
+        //    .then(photo => {
+        //        console.log("Photo has been saved");
+        //        connection.entityManager.find(Photo).then(savedPhotos => {
+        //            console.log("All photos from the db: ", savedPhotos);
+        //        });
+        //    });
+    })
+    .catch(error => console.log(error))

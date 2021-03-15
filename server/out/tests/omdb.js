@@ -1,3 +1,4 @@
+"use strict";
 //import * as rp from "request-promise-native"
 //export const OMDB_API_URL = "https://www.omdbapi.com/";
 //import { ByTitleOrId, ByTitleOrIdResponse, BySearch, SearchResponse, } from "omdb-contracts"

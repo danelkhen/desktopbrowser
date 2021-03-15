@@ -1,3 +1,4 @@
+"use strict";
 //import { File, FileRelativesInfo, ListFilesRequest, } from "contracts"
 //import * as express from "express";
 //import {Parse} from "./utils/parse"

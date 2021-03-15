@@ -1,3 +1,4 @@
+"use strict";
 //import * as path from "path"
 //export class HttpContext {
 //    static Current: HttpContext = new HttpContext();

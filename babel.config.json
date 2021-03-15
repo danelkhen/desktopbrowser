@@ -1,0 +1,13 @@
+{
+    "presets": [
+        "@babel/react",
+        "@babel/typescript",
+        [
+            "linaria/babel",
+            {
+                "displayName": true
+            }
+        ]
+    ],
+    "plugins": ["@babel/plugin-proposal-export-default-from"]
+}

@@ -1,1 +1,1 @@
-require("./server/out/run");
+require("./server/out/run")

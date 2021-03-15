@@ -1,20 +1,27 @@
 {
     "compilerOptions": {
+        "target": "es2019",
         "module": "commonjs",
         "moduleResolution": "node",
+        "jsx": "react",
+        "sourceMap": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "removeComments": false,
-        "target": "es2017",
-        "noImplicitAny": false,
-        "sourceMap": false,
-        "outDir": "out",
+        "lib": ["esnext.asynciterable", "es2019", "dom"],
+        "strict": true,
+        "removeComments": true,
+        "esModuleInterop": true,
         "newLine": "LF",
+        "declaration": true,
+        "declarationMap": true,
         "rootDir": "src",
-        "declaration": false
+        "outDir": "out",
+        "composite": true,
+        "baseUrl": "./",
+        "paths": {
+            "shared": ["../shared/src"]
+        }
     },
-    "exclude": [
-        "node_modules",
-        "out"
-    ]
+    "include": ["src/**/*"],
+    "references": [{ "path": "../shared" }]
 }

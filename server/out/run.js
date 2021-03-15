@@ -1,7 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const process = require("process");
-const child_process = require("child_process");
+exports.main = exports.docs = exports.help = exports.exec = exports.compileWatch = exports.loadtest = exports.serverPm2Restart = exports.serverPm2Stop = exports.serverPm2Start = exports.serverWatch = exports.serverDebug = exports.server = exports.compile = exports.tsc = exports.projects = void 0;
+const process = __importStar(require("process"));
+const child_process = __importStar(require("child_process"));
 exports.projects = ["server", "client"];
 async function tsc() {
     for (let project of exports.projects)
@@ -14,41 +34,42 @@ async function compile() {
     //await tmplc();
 }
 exports.compile = compile;
-async function server() { await exec("node server/out/server"); }
+async function server() {
+    await exec("node server/out/server");
+}
 exports.server = server;
-async function serverDebug() { await exec("node --inspect server/out/server"); }
+async function serverDebug() {
+    await exec("node --inspect server/out/server");
+}
 exports.serverDebug = serverDebug;
-async function serverWatch() { await exec("nodemon server/out/server.js -w server/out"); }
+async function serverWatch() {
+    await exec("nodemon server/out/server.js -w server/out");
+}
 exports.serverWatch = serverWatch;
-async function serverPm2Start() { await exec("pm2 start server/out/server.js --name desktopbrowser"); }
+async function serverPm2Start() {
+    await exec("pm2 start server/out/server.js --name desktopbrowser");
+}
 exports.serverPm2Start = serverPm2Start;
-async function serverPm2Stop() { await exec("pm2 stop server/out/server.js"); }
+async function serverPm2Stop() {
+    await exec("pm2 stop server/out/server.js");
+}
 exports.serverPm2Stop = serverPm2Stop;
-async function serverPm2Restart() { await exec("pm2 restart server/out/server.js"); }
+async function serverPm2Restart() {
+    await exec("pm2 restart server/out/server.js");
+}
 exports.serverPm2Restart = serverPm2Restart;
-async function loadtest() { await exec(`loadtest -c 500 -t 10 --rps 500 "https://opencode.be/sleep?ms=1000"`); }
+async function loadtest() {
+    await exec(`loadtest -c 500 -t 10 --rps 500 "https://opencode.be/sleep?ms=1000"`);
+}
 exports.loadtest = loadtest;
-async function sass() {
-    await exec(`node-sass --linefeed lf --output-style nested client/scss/ --output client/css/`);
-    await exec(`node-sass --linefeed lf --output-style nested client/src/ --output client/src/`);
-}
-exports.sass = sass;
-async function sassWatch() {
-    await Promise.all([
-        exec(`node-sass --watch --linefeed lf --output-style nested client/scss/ --output client/css/`),
-        exec(`node-sass --watch --linefeed lf --output-style nested client/src/ --output client/src/`),
-    ]);
-}
-exports.sassWatch = sassWatch;
-//export async function compileSassWatch() { await exec(`sass --watch client/scss/main.scss:client/css/main.css client/src/media.component.scss:client/src/media.component.css --unix-newlines --sourcemap=none`); }
-function compileWatch() {
+async function compileWatch() {
     let promises = [];
-    for (let project of exports.projects)
+    for (let project of exports.projects) {
         promises.push(exec(`tsc -w -p ${project}`, { name: project }));
-    promises.push(exec(`node-sass --watch --linefeed lf --output-style nested client/scss/ --output client/css/`), exec(`node-sass --watch --linefeed lf --output-style nested client/src/ --output client/src/`));
+    }
     //promises.push(exec(`watch-run -i -p src/editor/index.less,src/editor/index2.less node run lessc`));
     //promises.push(exec(`watch-run -i -p src/editor/*.html node run tmplc`));
-    return Promise.all(promises);
+    await Promise.all(promises);
 }
 exports.compileWatch = compileWatch;
 function exec(cmd, opts) {
@@ -56,7 +77,7 @@ function exec(cmd, opts) {
         opts = {};
     let { name, prefix } = opts;
     name = name || "";
-    prefix = prefix || (name + "\t");
+    prefix = prefix || name + "\t";
     return new Promise((resolve, reject) => {
         console.log(cmd);
         let p = child_process.exec(cmd);
@@ -77,7 +98,6 @@ async function docs() {
 }
 exports.docs = docs;
 let actions = {
-    "sass-w": sassWatch,
     "compile-w": compileWatch,
     "server-d": serverDebug,
     "server-w": serverWatch,

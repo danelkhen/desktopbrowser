@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqlite3_1 = require("sqlite3");
 sqlite3_1.verbose();
-let db = new sqlite3_1.Database(':memory:');
+let db = new sqlite3_1.Database(":memory:");
 db.serialize(() => {
     db.run("CREATE TABLE lorem (info TEXT)");
     var stmt = db.prepare("INSERT INTO lorem VALUES (?)");

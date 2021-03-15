@@ -1,20 +1,28 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [ "esnext.asynciterable", "es2017", "dom"],
-    "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "removeComments": true,
-    "outDir": "out",
-    "newLine": "LF",
-    "rootDir": "src"
-  },
-    "exclude": [
-        "node_modules"
-    ]
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "downlevelIteration": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": false,
+        "jsx": "react-jsxdev",
+        "sourceMap": true,
+        "baseUrl": "./",
+        "paths": {
+            "tmdb": ["../tmdb/src"],
+            "shared": ["../shared/src"]
+        },
+        "outDir": "out"
+    },
+    "include": ["src/**/*", "typings/**/*"]
+    // "references": [{ "path": "../tmdb" }, { "path": "../shared" }]
 }

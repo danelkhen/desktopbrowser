@@ -1,6 +1,6 @@
 .vs/
 node_modules/
-.sass-cache/
+out/
 npm-debug.log
 .DS_Store
 *.map
@@ -9,3 +9,4 @@ base.db.bak
 db.sqlite
 db.sqlite-journal
 config.json
+tsconfig.tsbuildinfo
