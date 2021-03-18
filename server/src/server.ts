@@ -12,7 +12,6 @@ import { Db } from "./db"
 
 async function main() {
     const db = await Db.create()
-
     const app = new App(db)
 
     console.log("os", JSON.stringify(os.platform()))

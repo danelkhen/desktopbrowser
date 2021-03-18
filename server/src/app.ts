@@ -1,5 +1,5 @@
-﻿import * as C from "contracts"
-import { Config } from "contracts"
+﻿import type * as C from "contracts"
+import type { Config } from "contracts"
 import { promises as Fs } from "fs"
 import fse from "fs-extra"
 import * as Path from "path"
@@ -88,9 +88,9 @@ export class App implements C.App {
             let tmdbKeys = Array.from(new Set(hasTmdbKeys.map(t => t.md.tmdbKey)))
             let cachePrefix = "tmdb|details|"
             let cacheKeys = tmdbKeys.map(t => cachePrefix + t)
-            let cachedMediaDetails = (await this.keyValueService.dbService.repo.findByIds(cacheKeys)) as C.KeyValue<
-                Tmdb.MediaDetails
-            >[]
+            let cachedMediaDetails = (await this.keyValueService.dbService.repo.findByIds(
+                cacheKeys
+            )) as C.KeyValue<Tmdb.MediaDetails>[]
             for (let media of cachedMediaDetails) {
                 let tmdbKey = media.key.substr(cachePrefix.length)
                 hasTmdbKeys.filter(t => t.md.tmdbKey == tmdbKey).forEach(t => (t.tmdb = media.value))
@@ -118,9 +118,9 @@ export class App implements C.App {
             let tmdbKeys = Array.from(new Set(hasTmdbKeys.map(t => t.md.tmdbKey)))
             let cachePrefix = "tmdb|details|"
             let cacheKeys = tmdbKeys.map(t => cachePrefix + t)
-            let cachedMediaDetails = (await this.keyValueService.dbService.repo.findByIds(cacheKeys)) as C.KeyValue<
-                Tmdb.MediaDetails
-            >[]
+            let cachedMediaDetails = (await this.keyValueService.dbService.repo.findByIds(
+                cacheKeys
+            )) as C.KeyValue<Tmdb.MediaDetails>[]
             for (let media of cachedMediaDetails) {
                 let tmdbKey = media.key.substr(cachePrefix.length)
                 hasTmdbKeys.filter(t => t.md.tmdbKey == tmdbKey).forEach(t => (t.tmdb = media.value))

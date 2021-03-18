@@ -15,9 +15,11 @@
         "baseUrl": "./",
         "paths": {
             "tmdb": ["../tmdb/src"],
-            "shared": ["../shared/src"]
+            "shared": ["../shared/src"],
+            "contracts": ["src/contracts.d.ts"],
+            "diskinfo": ["typings/diskinfo.d.ts"]
         }
     },
-    "include": ["src/**/*", "typings/**/*"],
+    "include": ["src/**/*.ts", "typings/**/*"],
     "references": [{ "path": "../tmdb" }, { "path": "../shared" }]
 }

@@ -2,7 +2,7 @@
 //import * as fs from "fs"
 import * as fse from "fs-extra"
 import { IEnumerable } from "contracts"
-import { DiskInfoItem } from "diskinfo"
+import type { DiskInfoItem } from "diskinfo"
 import { getDrives } from "./getDrives"
 
 export class IoDir {
