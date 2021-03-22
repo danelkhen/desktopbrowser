@@ -1,15 +1,15 @@
 {
-    "name": "desktopbrowser-private",
+    "name": "desktopbrowser",
     "version": "1.0.0",
     "main": "index.js",
-    "repository": "git@github.com:danelkhen/desktopbrowser-private.git",
+    "repository": "git@github.com:danelkhen/desktopbrowser.git",
     "author": "Dan-el Khen <danelkhen@gmail.com>",
     "license": "MIT",
     "scripts": {
         "dev": "npx concurrently \"npx --cwd server tsc -b -w --preserveWatchOutput\" \"npx --cwd client dev\" \"npx delay 4 && npx server\"",
         "server": "npx nodemon server/out/server.js -w server --delay 2",
         "build": "npx --cwd server && npx --cwd server tsc && npx --cwd client && npx --cwd client tsc",
-        "start": "node server/out/server"
+        "start": "ts-node server/src/server.ts"
     },
     "dependencies": {
         "@babel/plugin-proposal-export-default-from": "^7.8.3",

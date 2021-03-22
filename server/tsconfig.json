@@ -12,12 +12,12 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,
+        "noEmit": true,
         "baseUrl": "./",
         "paths": {
             "tmdb": ["../tmdb/src"],
             "shared": ["../shared/src"],
-            "contracts": ["src/contracts.d.ts"],
-            "diskinfo": ["typings/diskinfo.d.ts"]
+            "contracts": ["src/contracts.d.ts"]
         }
     },
     "include": ["src/**/*.ts", "typings/**/*"],

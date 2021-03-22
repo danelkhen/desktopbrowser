@@ -26,6 +26,7 @@
         "minimatch": "^3.0.3",
         "module-alias": "^2.2.2",
         "moment": "^2.24.0",
+        "node-disk-info": "^1.1.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "sqlite3": "^5.0.2",

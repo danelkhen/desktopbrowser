@@ -36,9 +36,10 @@ module.exports = (env, argv) => {
                                 ? {
                                       compilerOptions: {
                                           jsx: "react-jsx",
+                                          noEmit: false,
                                       },
                                   }
-                                : {},
+                                : { compilerOptions: { noEmit: false } },
                         },
                         { loader: "linaria/loader", options: { displayName: true } },
                     ],

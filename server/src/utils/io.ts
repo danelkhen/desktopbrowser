@@ -1,9 +1,8 @@
-﻿import * as path from "path"
+﻿import { IEnumerable } from "contracts"
 //import * as fs from "fs"
 import * as fse from "fs-extra"
-import { IEnumerable } from "contracts"
-import type { DiskInfoItem } from "diskinfo"
-import { getDrives } from "./getDrives"
+import * as path from "path"
+import { DriveInfoItem, getDrives } from "./getDrives"
 
 export class IoDir {
     static async Exists(s: string): Promise<boolean | undefined> {
@@ -141,19 +140,19 @@ export class DriveInfo extends FileSystemInfo {
         this.drives = list.map(t => this.toDriveInfo(t))
         return this.drives
     }
-    static toDriveInfo(x: DiskInfoItem) {
+    static toDriveInfo(x: DriveInfoItem) {
         let di = new DriveInfo(x.mounted)
         di.IsReady = true
         di.AvailableFreeSpace = x.available
         di.Capacity = x.capacity
         return di
     }
-    static async GetDrives2(): Promise<DiskInfoItem[]> {
+    static async GetDrives2(): Promise<DriveInfoItem[]> {
         return await getDrives()
     }
     IsReady: boolean = undefined!
     AvailableFreeSpace: number | string = undefined! /*in mac a string returns */
-    Capacity: number = undefined!
+    Capacity: string = undefined!
 }
 
 export enum FileAttributes {
