@@ -11,10 +11,8 @@
         "outDir": "out",
         "newLine": "LF",
         "rootDir": "src",
-        "declaration": false
+        "declaration": false,
+        "noEmit": true
     },
-    "exclude": [
-        "node_modules",
-        "out"
-    ]
+    "exclude": ["node_modules", "out"]
 }

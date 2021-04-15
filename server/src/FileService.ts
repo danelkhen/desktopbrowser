@@ -17,6 +17,7 @@ import { dateToDefaultString } from "./utils"
 import { FileAttributes, FileSystemInfo, IoDir, IoFile, DriveInfo } from "./utils/io"
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"
+import open from "open"
 
 function isWindows() {
     return os.platform() == "win32"
@@ -107,9 +108,9 @@ export class FileService implements C.FileService {
         return null!
     }
 
-    public Execute(req: PathRequest): void {
+    public async Execute(req: PathRequest) {
         var filename = req.Path
-        let process = child_process.exec(this.quote(filename))
+        const p = await open(filename)
     }
 
     public Explore(req: PathRequest): void {
