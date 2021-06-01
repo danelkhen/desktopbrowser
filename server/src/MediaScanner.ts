@@ -2,7 +2,7 @@ import { FileScanner, FileEvent } from "./utils/FileScanner"
 import { Db, FsEntry } from "./db"
 import * as Path from "path"
 import { App } from "./App"
-import * as C from "contracts"
+import * as C from "../../shared/src/contracts"
 import { dateToDefaultString } from "./utils"
 import moment = require("moment")
 

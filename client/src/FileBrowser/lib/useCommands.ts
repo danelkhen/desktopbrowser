@@ -1,5 +1,5 @@
-import * as C from "contracts"
-import { File } from "contracts"
+import * as C from "../../../../shared/src/contracts"
+import { File } from "../../../../shared/src/contracts"
 import { useMemo } from "react"
 import { Scanner } from "../../utils/Scanner"
 import { Columns } from "../Columns"

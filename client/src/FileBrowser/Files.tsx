@@ -1,4 +1,4 @@
-import C from "contracts"
+import * as C from "../../../shared/src/contracts"
 import React from "react"
 import { Columns, Column } from "./Columns"
 import { Grid } from "./Grid/Grid"

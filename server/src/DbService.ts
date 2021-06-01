@@ -1,4 +1,4 @@
-﻿import * as C from "contracts"
+﻿import * as C from "../../shared/src/contracts"
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm"
 import { Db } from "./db"
 

@@ -1,5 +1,5 @@
 import cx from "classnames"
-import * as C from "contracts"
+import * as C from "../../../shared/src/contracts"
 import React from "react"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"

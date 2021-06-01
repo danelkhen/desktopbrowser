@@ -1,24 +1,16 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2017",
+        "target": "es2019",
         "moduleResolution": "node",
-        "lib": ["esnext.asynciterable", "es2017"],
+        "lib": ["esnext.asynciterable", "es2019", "DOM"],
         "sourceMap": false,
         "newLine": "LF",
-        "rootDir": "src",
         "outDir": "out",
         "strict": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "esModuleInterop": true,
-        "baseUrl": "./",
-        "paths": {
-            "tmdb": ["../tmdb/src"],
-            "shared": ["../shared/src"],
-            "contracts": ["src/contracts.d.ts"]
-        }
+        "esModuleInterop": true
     },
-    "include": ["src/**/*.ts", "typings/**/*"],
-    "references": [{ "path": "../tmdb" }, { "path": "../shared" }]
+    "include": ["src/**/*.ts", "typings/**/*"]
 }

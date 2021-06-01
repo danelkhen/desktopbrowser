@@ -1,4 +1,4 @@
-// import C from "contracts"
+// import C from "../../shared/src/contracts"
 // import React, { ReactElement } from "react"
 // import { ArrayView } from "../utils/ArrayView"
 // import { FileColumnKeys, FileColumnsConfig } from "../FileBrowser/Helper"

@@ -1,4 +1,4 @@
-import { removeLast } from "shared"
+import { removeLast } from "../../../shared/src"
 
 // interface StringConstructor {
 //     isNullOrEmpty(s: string): boolean

@@ -1,11 +1,11 @@
-import { FilenameParsedInfo } from "contracts"
+import { FilenameParsedInfo } from "../../../shared/src/contracts"
 import moment from "moment"
-import { takeWhile } from "shared"
+import { takeWhile } from "../../../shared/src"
 
 export class FilenameParser {
     parse(name: string): FilenameParsedInfo | null {
         if (name == null || name == "") return null
-        let x: FilenameParsedInfo = ({
+        let x: FilenameParsedInfo = {
             episode: null,
             name: null,
             season: null,
@@ -13,7 +13,7 @@ export class FilenameParser {
             year: null,
             filename: name,
             date: null,
-        } as unknown) as FilenameParsedInfo
+        } as unknown as FilenameParsedInfo
         let tokens = name.split(/[\. ]/)
         if (tokens.length == 1) return x
         let tokens2 = tokens.map(token => this.parseToken(token))
@@ -26,9 +26,9 @@ export class FilenameParser {
             x.year = yearToken.value
             let uints = tokens2.slice(tokens2.indexOf(yearToken) + 1)[takeWhile](t => t.type == "uint")
             if (uints.length >= 2 && uints.slice(0, 2).every(t => t.value <= 31)) {
-                let dateString = `${x.year}-${uints[0].value
+                let dateString = `${x.year}-${uints[0].value.toString().padLeft(2, "0")}-${uints[1].value
                     .toString()
-                    .padLeft(2, "0")}-${uints[1].value.toString().padLeft(2, "0")}`
+                    .padLeft(2, "0")}`
                 let date = moment(dateString, "yyyy-MM-dd")
                 if (date?.isValid()) x.date = date.format("yyyy-MM-dd")
             }

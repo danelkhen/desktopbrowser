@@ -1,15 +1,16 @@
-﻿import type * as C from "contracts"
-import type { Config } from "contracts"
+﻿import type * as C from "../../shared/src/contracts"
+import type { Config } from "../../shared/src/contracts"
 import { promises as Fs } from "fs"
 import fse from "fs-extra"
 import * as Path from "path"
-import { TmdbApiV3 as Tmdb } from "tmdb"
+import { TmdbApiV3 as Tmdb } from "../../tmdb/src"
 import { ByFilename, Db, FsEntry } from "./db"
 import { DbService } from "./DbService"
 import { FileService } from "./FileService"
 import { KeyValueService } from "./KeyValueService"
 import { MediaScanner } from "./MediaScanner"
-import { sleep } from "shared"
+import { sleep } from "../../shared/src"
+import { rootDir } from "./rootDir"
 
 export class App implements C.App {
     constructor(public db: Db) {
@@ -28,7 +29,7 @@ export class App implements C.App {
     fsEntryService: FsEntryService = undefined!
 
     async getConfig(): Promise<Config> {
-        let root = Path.join(__dirname, "../../")
+        let root = rootDir
         let file = "config.json"
         let path = Path.join(root, file)
         let exists = await fse.pathExists(path)
@@ -39,7 +40,7 @@ export class App implements C.App {
         return config
     }
     async saveConfig(config: Config): Promise<void> {
-        let root = Path.join(__dirname, "../../")
+        let root = rootDir
         let file = "config.json"
         let path = Path.join(root, file)
         let json = JSON.stringify(config, null, "    ")

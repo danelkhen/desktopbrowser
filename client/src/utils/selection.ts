@@ -1,5 +1,5 @@
 ﻿import { Keys } from "../utils/Keys"
-import { itemsAre } from "shared"
+import { itemsAre } from "../../../shared/src"
 
 export class Selection<T> {
     constructor(public readonly AllItems: T[], public readonly SelectedItems: T[]) {}

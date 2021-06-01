@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../../shared/src/contracts"
 import { useMemo } from "react"
 import { Columns, Column } from "../Columns"
 import { SortConfig, IsDescending } from "./useSorting"

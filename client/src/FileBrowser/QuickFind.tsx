@@ -1,7 +1,7 @@
 import cx from "classnames"
-import * as C from "contracts"
+import * as C from "../../../shared/src/contracts"
 import React, { useRef, useState } from "react"
-import { sleep } from "shared"
+import { sleep } from "../../../shared/src"
 
 export function QuickFind({ allFiles, onFindFiles }: QuickFindProps) {
     const [value, setValue] = useState("")

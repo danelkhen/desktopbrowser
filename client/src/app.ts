@@ -1,5 +1,5 @@
-import * as C from "contracts"
-import { ByFilename, Config, File, FsEntry } from "contracts"
+import * as C from "../../shared/src/contracts"
+import { ByFilename, Config, File, FsEntry } from "../../shared/src/contracts"
 import { TmdbApp } from "./TmdbApp"
 import { getProxies, Proxies } from "./utils/DbService"
 import { FilenameParser } from "./utils/FilenameParser"

@@ -1,7 +1,7 @@
-import * as C from "contracts"
-import { File } from "contracts"
+import * as C from "../../../shared/src/contracts"
+import { File } from "../../../shared/src/contracts"
 import { App } from "../App"
-import { desc, orderBy, sleep, ReusePromiseIfStillRunning, groupBy } from "shared"
+import { desc, orderBy, sleep, ReusePromiseIfStillRunning, groupBy } from "../../../shared/src"
 
 export class MediaComponentHelper {
     constructor(public app: App) {

@@ -1,5 +1,5 @@
 ﻿import * as child_process from "child_process"
-import * as C from "contracts"
+import * as C from "../../shared/src/contracts"
 import {
     File,
     FileRelativesInfo,
@@ -8,10 +8,10 @@ import {
     ListFilesRequest,
     ListFilesResponse,
     PathRequest,
-} from "contracts"
+} from "../../shared/src/contracts"
 import * as os from "os"
 import rimraf from "rimraf"
-import { equalsIgnoreCase } from "shared"
+import { equalsIgnoreCase } from "../../shared/src"
 import trash from "trash"
 import { dateToDefaultString } from "./utils"
 import { FileAttributes, FileSystemInfo, IoDir, IoFile, DriveInfo } from "./utils/io"

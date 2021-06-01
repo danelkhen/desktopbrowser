@@ -1,4 +1,4 @@
-import C from "contracts"
+import * as C from "../../../shared/src/contracts"
 import { cx } from "linaria"
 import React, { useCallback } from "react"
 import { Selection } from "../utils/Selection"

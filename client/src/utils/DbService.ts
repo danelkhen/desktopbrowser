@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../shared/src/contracts"
 import { getWebSocketInvoker } from "../utils/webSocket"
 import { Invoker } from "./Proxy"
 import { getHttpInvoker } from "./ServiceBase"
@@ -51,7 +51,7 @@ function wsProxyFor<T>(url: string, impl: (ws: Invoker<T>) => T) {
 
 export function proxyForFileService() {
     const impl: (http: Invoker<C.FileService>) => C.FileService = http =>
-        (({
+        ({
             ListFiles: req => http("ListFiles", [req]),
             // ListFilesWebSocket: req => ws("ListFiles", [req]),
             GetFiles: req => http("GetFiles", [req]),
@@ -63,7 +63,7 @@ export function proxyForFileService() {
             trash: req => http("trash", [req]),
             isWindows: () => http("isWindows"),
             clearCache: () => http("clearCache"),
-        } as Partial<C.FileService>) as C.FileService) // TODO:
+        } as Partial<C.FileService> as C.FileService) // TODO:
 
     return {
         http: httpProxyFor<C.FileService>("/api/fs", impl),
@@ -79,12 +79,12 @@ export function proxyForAppService() {
     return httpProxyFor<C.App>(
         "/api/app",
         http =>
-            (({
+            ({
                 getConfig: () => http("getConfig"),
                 saveConfig: config => http("saveConfig", [config]),
                 scanForMedia: () => http("scanForMedia"),
                 scanStatus: () => http("scanStatus"),
                 getMediaFiles: req => http("getMediaFiles", [req]),
-            } as Partial<C.App>) as C.App) // TODO:
+            } as Partial<C.App> as C.App) // TODO:
     )
 }

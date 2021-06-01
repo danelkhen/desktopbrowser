@@ -1,4 +1,4 @@
-import { remove } from "shared"
+import { remove } from "../../../shared/src"
 
 export class EventEmitter<T> {
     listeners: EventListener<T>[] = []

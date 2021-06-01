@@ -1,5 +1,5 @@
-import { minus, tryParseInt } from "shared"
-import { TmdbApiV3, TmdbClientV3 } from "tmdb"
+import { minus, tryParseInt } from "../../../shared/src"
+import { TmdbApiV3, TmdbClientV3 } from "../../../tmdb/src"
 
 type AccountDetails = TmdbApiV3.AccountDetails
 type AccountGetDetailsRequest = TmdbApiV3.AccountGetDetailsRequest

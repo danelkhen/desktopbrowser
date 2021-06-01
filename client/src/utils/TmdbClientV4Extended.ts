@@ -1,4 +1,4 @@
-import { TmdbClientV4 } from "tmdb"
+import { TmdbClientV4 } from "../../../tmdb/src"
 
 export class TmdbClientV4Extended extends TmdbClientV4 {
     constructor() {

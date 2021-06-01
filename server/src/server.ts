@@ -1,4 +1,3 @@
-import "module-alias/register"
 import bodyParser from "body-parser"
 import express, { RequestHandler } from "express"
 import proxy from "express-http-proxy"
@@ -9,6 +8,7 @@ import { App } from "./App"
 import { DriveInfo } from "./utils/io"
 import { setupWebsockets } from "./websocket"
 import { Db } from "./db"
+import { rootDir } from "./rootDir"
 
 async function main() {
     const db = await Db.create()
@@ -28,16 +28,16 @@ async function main() {
 
     const exp = express()
     exp.use(bodyParser.json())
-    exp.use("/", express.static(path.join(__dirname, "../../client/dist")))
-    exp.use("/img", express.static(path.join(__dirname, "../../client/img")))
-    exp.use("/tmdb", express.static(path.join(__dirname, "../../tmdb")))
-    exp.use("/shared", express.static(path.join(__dirname, "../../shared")))
+    exp.use("/", express.static(path.join(rootDir, "../client/dist")))
+    exp.use("/img", express.static(path.join(rootDir, "../client/img")))
+    exp.use("/tmdb", express.static(path.join(rootDir, "../tmdb")))
+    exp.use("/shared", express.static(path.join(rootDir, "../shared")))
     exp.use("/tmdb_proxy", proxy("api.themoviedb.org", {}))
 
     exp.use("/api/:service/:action", handleServiceRequest(services))
 
     exp.get(["/", "/test", "/media", "/media2"], (req: express.Request, res: express.Response) => {
-        res.sendFile(path.join(__dirname, "../../client/dist/index.html"))
+        res.sendFile(path.join(rootDir, "../client/dist/index.html"))
     })
 
     const server = http.createServer(exp)

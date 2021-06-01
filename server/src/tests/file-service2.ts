@@ -1,5 +1,5 @@
 ﻿// import * as child_process from "child_process"
-// import * as C from "contracts"
+// import * as C from "../../shared/src/contracts"
 // import {
 //     File,
 //     FileRelativesInfo,
@@ -8,7 +8,7 @@
 //     ListFilesRequest,
 //     ListFilesResponse,
 //     PathRequest,
-// } from "contracts"
+// } from "../../shared/src/contracts"
 // import * as os from "os"
 // import rimraf from "rimraf"
 // import trash from "trash"

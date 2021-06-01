@@ -1,5 +1,5 @@
-import * as C from "contracts"
-import { toDefaultDate, toFriendlyRelative2, removeLast } from "shared"
+import * as C from "../../../shared/src/contracts"
+import { toDefaultDate, toFriendlyRelative2, removeLast } from "../../../shared/src"
 
 export function TryParse(s: string): number | null {
     const x = parseInt(s)

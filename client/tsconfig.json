@@ -17,13 +17,7 @@
         "jsx": "react-jsxdev",
         "noEmit": true,
         "sourceMap": true,
-        "baseUrl": "./",
-        "paths": {
-            "tmdb": ["../tmdb/src"],
-            "shared": ["../shared/src"]
-        },
         "outDir": "out"
     },
     "include": ["src/**/*", "typings/**/*"]
-    // "references": [{ "path": "../tmdb" }, { "path": "../shared" }]
 }

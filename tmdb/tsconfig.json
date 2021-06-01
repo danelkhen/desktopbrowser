@@ -14,14 +14,7 @@
         "newLine": "LF",
         "declaration": true,
         "declarationMap": true,
-        "rootDir": "src",
-        "outDir": "out",
-        "composite": true,
-        "baseUrl": "./",
-        "paths": {
-            "shared": ["../shared/src"]
-        }
+        "outDir": "out"
     },
-    "include": ["src/**/*"],
-    "references": [{ "path": "../shared" }]
+    "include": ["src/**/*"]
 }

@@ -1,4 +1,4 @@
-﻿import { removeLast } from "shared"
+﻿import { removeLast } from "../../../shared/src"
 import { IoFile, IoDir, IoPath, FileSystemInfo } from "./io"
 
 export class PathInfo {

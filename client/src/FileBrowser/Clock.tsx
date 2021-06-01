@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { sleep } from "shared"
+import { sleep } from "../../../shared/src"
 import moment from "moment"
 import { useForceUpdate } from "../utils/useForceUpdate"
 

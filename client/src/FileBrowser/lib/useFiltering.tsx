@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../../shared/src/contracts"
 import { useMemo } from "react"
 
 export function useFiltering(search: string, list: C.File[]) {

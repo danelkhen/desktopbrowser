@@ -1,5 +1,5 @@
 import React from "react"
-import { TmdbApiV3 } from "tmdb"
+import { TmdbApiV3 } from "../../../tmdb/src"
 type TmdbMovie = TmdbApiV3.TmdbMovie
 
 function Movie(movie: TmdbMovie) {

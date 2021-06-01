@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../../shared/src/contracts"
 import { useMemo, useState } from "react"
 import { App } from "../../App"
 import { FilenameParser } from "../../utils/FilenameParser"

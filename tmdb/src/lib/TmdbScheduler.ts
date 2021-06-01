@@ -1,6 +1,6 @@
 import { RateLimit } from "./tmdb-v3"
 import { ProxyCall, Invoker } from "./utils/Proxy"
-import { sleep } from "shared"
+import { sleep } from "../../../shared/src"
 
 export class TmdbScheduler<T> {
     constructor(public owner: SchedulerOwner<T>) {}

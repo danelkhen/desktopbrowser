@@ -1,5 +1,5 @@
 import React from "react"
-import { entries, itemsAre } from "shared"
+import { entries, itemsAre } from "../../../shared/src"
 
 export interface ActiveRoute {
     params: { [key: string]: string }

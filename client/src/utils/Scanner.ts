@@ -1,5 +1,5 @@
-﻿import * as C from "contracts"
-import { TmdbApiV3 } from "tmdb"
+﻿import * as C from "../../../shared/src/contracts"
+import { TmdbApiV3 } from "../../../tmdb/src"
 import { App } from "../App"
 import { FilenameParser } from "./FilenameParser"
 import moment from "moment"
@@ -33,7 +33,7 @@ export class Scanner {
                 console.log("tmdbId already exists, skipping", { file, md })
                 continue
             }
-            let mf: C.MediaFile = ({ file, md, type: null, parsed: null, fsEntry: null } as unknown) as C.MediaFile
+            let mf: C.MediaFile = { file, md, type: null, parsed: null, fsEntry: null } as unknown as C.MediaFile
             try {
                 await this.analyze(mf)
             } catch (e2) {

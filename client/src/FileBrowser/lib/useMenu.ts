@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../../shared/src/contracts"
 import { useCallback, useMemo } from "react"
 import { Column, Columns } from "../Columns"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
@@ -131,11 +131,10 @@ export function useMenu({
                 })),
             [setReq]
         ),
-        useCallback(() => !req.sortBy && !req.foldersFirst && req.ByInnerSelection == null, [
-            req.ByInnerSelection,
-            req.foldersFirst,
-            req.sortBy,
-        ])
+        useCallback(
+            () => !req.sortBy && !req.foldersFirst && req.ByInnerSelection == null,
+            [req.ByInnerSelection, req.foldersFirst, req.sortBy]
+        )
     )
 
     const Folders = useReqToggle("HideFolders")

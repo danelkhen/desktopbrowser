@@ -1,12 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "rootDir": "src",
-    "outDir": "out",
-    "newLine": "LF",
-    "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false
-  }
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "outDir": "out",
+        "newLine": "LF",
+        "strict": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false
+    }
 }

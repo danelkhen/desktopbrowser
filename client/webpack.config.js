@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
 
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".json"],
-            plugins: [new TsconfigPathsPlugin({})],
+            // plugins: [new TsconfigPathsPlugin({})],
         },
 
         module: {

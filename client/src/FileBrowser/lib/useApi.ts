@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../../shared/src/contracts"
 import { useCallback, useMemo } from "react"
 import { App } from "../../App"
 import { Column, Columns } from "../Columns"

@@ -1,5 +1,3 @@
-/// <reference path="../../server/src/contracts.d.ts" />
-
 import "./index.css"
 import "./utils/global"
 import { App } from "./App"

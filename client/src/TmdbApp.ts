@@ -1,9 +1,9 @@
-import * as C from "contracts"
+import * as C from "../../shared/src/contracts"
 import { TmdbClientV4Extended } from "./utils/TmdbClientV4Extended"
 import { TmdbClientV3Extended } from "./utils/TmdbClientV3Extended"
 import { App } from "./App"
-import { plus } from "shared"
-import { TmdbApiV3 } from "tmdb"
+import { plus } from "../../shared/src"
+import { TmdbApiV3 } from "../../tmdb/src"
 type MediaDetails = TmdbApiV3.MediaDetails
 
 export class TmdbApp {

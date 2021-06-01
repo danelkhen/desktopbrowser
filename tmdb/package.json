@@ -5,5 +5,8 @@
     "license": "MIT",
     "dependencies": {
         "moment": "^2.24.0"
+    },
+    "devDependencies": {
+        "typescript": "^4.3.2"
     }
 }

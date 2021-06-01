@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../shared/src/contracts"
 import * as path from "path"
 import "reflect-metadata"
 import {
@@ -13,6 +13,7 @@ import {
     PrimaryColumn,
     Repository,
 } from "typeorm"
+import { rootDir } from "./rootDir"
 
 @Entity()
 export class ByFilename implements C.ByFilename {
@@ -50,7 +51,7 @@ export class Db {
     static async create(): Promise<Db> {
         const connectionOptions: ConnectionOptions = {
             type: "sqlite",
-            database: path.join(__dirname, "../../db.sqlite"),
+            database: path.join(rootDir, "../db.sqlite"),
             subscribers: [EverythingSubscriber],
             entities: [ByFilename, KeyValue, FsEntry],
             synchronize: true,

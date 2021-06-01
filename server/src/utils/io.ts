@@ -1,4 +1,4 @@
-﻿import { IEnumerable } from "contracts"
+﻿import { IEnumerable } from "../../../shared/src/contracts"
 //import * as fs from "fs"
 import * as fse from "fs-extra"
 import * as path from "path"

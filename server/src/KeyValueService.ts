@@ -1,5 +1,5 @@
-﻿import * as C from "contracts"
-import { HasKey } from "contracts"
+﻿import * as C from "../../shared/src/contracts"
+import { HasKey } from "../../shared/src/contracts"
 import { FindOneOptions } from "typeorm"
 import { Db, KeyValue } from "./db"
 import { DbService } from "./DbService"
@@ -32,10 +32,7 @@ export class KeyValueService implements C.KeyValueService {
         return res!
     }
     findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> {
-        return this.dbService.repo
-            .createQueryBuilder("kv")
-            .where("kv.key like :x", { x: req.like })
-            .getMany() //.then(list => list.map(t => this.fromKeyValue<T>(t)));
+        return this.dbService.repo.createQueryBuilder("kv").where("kv.key like :x", { x: req.like }).getMany() //.then(list => list.map(t => this.fromKeyValue<T>(t)));
     }
 
     // copyOverwrite<T>(src: T, target: T): T {

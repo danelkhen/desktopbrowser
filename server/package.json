@@ -2,7 +2,7 @@
     "name": "server",
     "version": "0.0.5",
     "description": "",
-    "main": "out/server.js",
+    "main": "out/server/src/server.js",
     "author": "Dan-el Khen",
     "license": "MIT",
     "scripts": {
@@ -32,13 +32,10 @@
         "sqlite3": "^5.0.2",
         "trash": "^7.1.1",
         "ts-node": "^9.1.1",
-        "typeorm": "^0.2.15",
+        "typeorm": "^0.2.33",
         "typescript": "^4.2.3",
         "ws": "^7.4.4"
     },
-    "_moduleDirectories": [
-        "../"
-    ],
     "optionalDependencies": {
         "diskinfo": "^0.0.3"
     },

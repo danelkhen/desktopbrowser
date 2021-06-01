@@ -1,7 +1,7 @@
-﻿//import { File, FileRelativesInfo, ListFilesRequest, } from "contracts"
+﻿//import { File, FileRelativesInfo, ListFilesRequest, } from "../../shared/src/contracts"
 //import * as express from "express";
 //import {Parse} from "./utils/parse"
-//import * as C from "contracts"
+//import * as C from "../../shared/src/contracts"
 
 ////export class SiteRequest implements C.SiteRequest {
 ////    //constructor(cfg: SiteRequest) {

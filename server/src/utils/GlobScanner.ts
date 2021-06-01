@@ -3,6 +3,7 @@ import { promises as Fs } from "fs"
 import Minimatch from "minimatch"
 import { FileScanner, normalizePath } from "./FileScanner"
 import fse from "fs-extra"
+import { rootDir } from "../rootDir"
 
 export class GlobScanner {
     patterns: string[] = []
@@ -59,7 +60,7 @@ async function listFiles(dir: string, cfg?: ListFilesOptions): Promise<string[]>
 }
 
 async function test() {
-    let files = await listFiles(Path.join(__dirname, "../../../"), { useGitIgnoreFile: true })
+    let files = await listFiles(Path.join(rootDir, "../"), { useGitIgnoreFile: true })
     files.forEach(t => console.log(t))
 }
 

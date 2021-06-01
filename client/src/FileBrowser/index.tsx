@@ -1,4 +1,4 @@
-import * as C from "contracts"
+import * as C from "../../../shared/src/contracts"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { App } from "../App"
 import { AddressBar } from "./AddressBar"
@@ -67,9 +67,10 @@ export function FileBrowser({ app }: { app: App }) {
     const { GotoPath } = api
     const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
 
-    const hasInnerSelection = useCallback((file: C.File) => fileMetadata.getSavedSelectedFile(file.Name) != null, [
-        fileMetadata,
-    ])
+    const hasInnerSelection = useCallback(
+        (file: C.File) => fileMetadata.getSavedSelectedFile(file.Name) != null,
+        [fileMetadata]
+    )
 
     if (!ready) return null
 

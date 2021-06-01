@@ -1,5 +1,5 @@
 // import * as child_process from "child_process"
-// import * as C from "contracts"
+// import * as C from "../../shared/src/contracts"
 // import * as mongodb from "mongodb"
 // import { MongoClient } from "mongodb"
 
