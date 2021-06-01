@@ -6,8 +6,7 @@
     "author": "Dan-el Khen",
     "license": "MIT",
     "scripts": {
-        "start": "ts-node src/server.ts",
-        "dev": "ts-node-dev src/server.ts"
+        "start": "node ."
     },
     "dependencies": {
         "@types/body-parser": "^1.16.8",

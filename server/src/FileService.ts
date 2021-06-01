@@ -100,7 +100,7 @@ export class FileService implements C.FileService {
         var path = req.Path
         if (!path) return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
         var absPath = new PathInfo(path).ToAbsolute()
-        if (absPath.IsFile) {
+        if (await absPath.IsFile) {
             return this.ToFile(await FileSystemInfo.create(absPath.Value))
         } else if ((await absPath.IsDirectory) || absPath.IsRoot) {
             return this.ToFile(await FileSystemInfo.create(absPath.Value))

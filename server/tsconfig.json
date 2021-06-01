@@ -12,7 +12,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,
-        "noEmit": true,
         "baseUrl": "./",
         "paths": {
             "tmdb": ["../tmdb/src"],
