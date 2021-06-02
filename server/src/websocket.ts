@@ -7,7 +7,7 @@ import { App } from "./App"
 
 export function setupWebsockets(server: http.Server | https.Server, app: App) {
     console.log("setupWebsockets")
-    const wss = new ws.Server({ server })
+    const wss = new ws.Server({ path: "/api", server })
 
     wss.on("connection", (ws, req) => {
         console.log("wss.onconnection", req.url)

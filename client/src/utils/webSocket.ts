@@ -8,7 +8,7 @@ main()
 export function main() {
     let url = location.href.replace(/^https|http/, "ws")
     url = url.replace(/\?.*$/, "")
-    webSocket = new ReconnectingWebSocket(url, ["protocolOne", "protocolTwo"])
+    webSocket = new ReconnectingWebSocket(url + "api", ["protocolOne", "protocolTwo"])
     // webSocket.open()
     // webSocket.addEventListener("message", e => {
     //     // console.log(e.data);

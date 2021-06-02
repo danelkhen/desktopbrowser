@@ -1,7 +1,7 @@
 {
     "name": "desktopbrowser",
     "version": "1.0.0",
-    "main": "server/out/server/index.js",
+    "main": "server/out/server/src/server.js",
     "repository": "git@github.com:danelkhen/desktopbrowser.git",
     "author": "Dan-el Khen <danelkhen@gmail.com>",
     "license": "MIT",

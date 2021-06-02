@@ -13,6 +13,15 @@ module.exports = (env, argv) => {
             filename: "[name].js",
             path: __dirname + "/dist",
         },
+        devServer: {
+            transportMode: "ws",
+            proxy: {
+                "/api": {
+                    target: "http://localhost:7777",
+                    ws: true,
+                },
+            },
+        },
 
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".json"],
