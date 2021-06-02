@@ -6,10 +6,9 @@
     "author": "Dan-el Khen <danelkhen@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "dev": "npx concurrently \"npx --cwd server tsc -w --preserveWatchOutput\" \"npx --cwd client dev\" \"npx delay 4 && npx server\"",
-        "server": "npx nodemon server/out/server.js -w server --delay 2",
-        "build": "npx --cwd server && npx --cwd server tsc && npx --cwd client && npx --cwd client tsc",
-        "start": "ts-node server/src/server.ts"
+        "dev": "npx concurrently --names \"server,server,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd server; npx nodemon .\" \"cd client; npx webpack serve\"",
+        "build": "cd server; npx tsc && cd ../client; npx webpack --mode production",
+        "start": "node ."
     },
     "dependencies": {
         "@babel/plugin-proposal-export-default-from": "^7.8.3",
