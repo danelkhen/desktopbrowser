@@ -13,7 +13,7 @@ import {
     PrimaryColumn,
     Repository,
 } from "typeorm"
-import { rootDir } from "./rootDir"
+import { dataDir, rootDir } from "./rootDir"
 
 @Entity()
 export class ByFilename implements C.ByFilename {
@@ -49,9 +49,11 @@ export class KeyValue {
 export class Db {
     constructor(public connection: Connection) {}
     static async create(): Promise<Db> {
+        const database = path.join(dataDir, "db.sqlite")
+        console.log("db dir", database)
         const connectionOptions: ConnectionOptions = {
             type: "sqlite",
-            database: path.join(rootDir, "../db.sqlite"),
+            database,
             subscribers: [EverythingSubscriber],
             entities: [ByFilename, KeyValue, FsEntry],
             synchronize: true,

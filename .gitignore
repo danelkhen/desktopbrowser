@@ -1,6 +1,7 @@
 .vs/
 node_modules/
 out/
+dist/
 npm-debug.log
 .DS_Store
 *.map
@@ -10,3 +11,5 @@ db.sqlite
 db.sqlite-journal
 config.json
 tsconfig.tsbuildinfo
+desktopbrowser-win.exe
+desktopbrowser-macos

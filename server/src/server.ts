@@ -9,6 +9,7 @@ import { DriveInfo } from "./utils/io"
 import { setupWebsockets } from "./websocket"
 import { Db } from "./db"
 import { rootDir } from "./rootDir"
+import "sqlite3"
 
 async function main() {
     const db = await Db.create()

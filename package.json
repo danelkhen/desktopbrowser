@@ -2,12 +2,14 @@
     "name": "desktopbrowser",
     "version": "1.0.0",
     "main": "server/out/server/src/server.js",
+    "bin": "server/out/server/src/server.js",
     "repository": "git@github.com:danelkhen/desktopbrowser.git",
     "author": "Dan-el Khen <danelkhen@gmail.com>",
     "license": "MIT",
     "scripts": {
         "dev": "npx concurrently --names \"server,server,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd server; npx nodemon .\" \"cd client; npx webpack serve\"",
         "build": "cd server; npx tsc && cd ../client; npx webpack --mode production",
+        "pkg": "ln -s ../../.bin node_modules/pkg/node_modules/.bin; ./server/node_modules/.bin/node-pre-gyp install --directory=./server/node_modules/sqlite3 --target_platform=darwin --target_arch=x64; ./server/node_modules/.bin/node-pre-gyp install --directory=./server/node_modules/sqlite3 --target_platform=win32  --target_arch=x64; pkg .",
         "start": "node ."
     },
     "dependencies": {
@@ -21,6 +23,8 @@
         "eslint-plugin-react-hooks": "^4.2.0",
         "linaria": "^2.1.0",
         "nodemon": "^2.0.2",
+        "pkg": "^5.2.1",
+        "prebuild-install": "^6.0.1",
         "prettier": "^2.2.1",
         "typescript": "^4.2.3",
         "webpack-cli": "^4.5.0"
@@ -32,5 +36,16 @@
         "@babel/preset-typescript": "^7.9.0",
         "eslint-plugin-prettier": "^3.1.2",
         "eslint-plugin-react": "^7.17.0"
+    },
+    "pkg": {
+        "scripts": [
+            "server/out/**/*.js",
+            "server/node_modules/sqlite3/**/*.{node,js}"
+        ],
+        "assets": "client/dist/**/*",
+        "targets": [
+            "node14-win-x64",
+            "node14-macos-x64"
+        ]
     }
 }
