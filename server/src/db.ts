@@ -13,7 +13,7 @@ import {
     PrimaryColumn,
     Repository,
 } from "typeorm"
-import { dataDir, rootDir } from "./rootDir"
+import { dataDir } from "./rootDir"
 
 @Entity()
 export class ByFilename implements C.ByFilename {
