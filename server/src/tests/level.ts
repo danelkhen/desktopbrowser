@@ -8,11 +8,14 @@ async function main() {
     const list = await db.byFilename.find()
     for (const file of list) {
         const { key, ...rest } = file
+        const rest2 = rest as any
         const key2 = `files/${key}`
-        for (const prop of Object.keys(rest)) {
+        for (const prop of Object.keys(rest2)) {
+            if (rest2[prop] == null) {
+                delete rest2[prop]
+            }
         }
+        db2.put(key2, rest2)
     }
-    // console.log(x)
-    await db2.del("key")
 }
 main()
