@@ -1,8 +1,7 @@
 {
     "name": "desktopbrowser",
     "version": "1.0.0",
-    "main": "server/out/server/src/server.js",
-    "bin": "server/out/server/src/server.js",
+    "main": "app/dist/app/src/app.js",
     "repository": "git@github.com:danelkhen/desktopbrowser.git",
     "author": "Dan-el Khen <danelkhen@gmail.com>",
     "license": "MIT",
@@ -10,8 +9,10 @@
         "dev": "npx concurrently --names \"server,server,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd server; npx nodemon .\" \"cd client; npx webpack serve\"",
         "build": "cd server; npx tsc && cd ../client; npx webpack --mode production",
         "pkg": "ln -s ../../.bin node_modules/pkg/node_modules/.bin; ./server/node_modules/.bin/node-pre-gyp install --directory=./server/node_modules/sqlite3 --target_platform=darwin --target_arch=x64; ./server/node_modules/.bin/node-pre-gyp install --directory=./server/node_modules/sqlite3 --target_platform=win32  --target_arch=x64; pkg .",
-        "start": "node .",
-        "app": "electron app/dist/app/src/app.js"
+        "start": "electron-forge start",
+        "app": "electron app/dist/app/src/app.js",
+        "package": "electron-forge package",
+        "make": "electron-forge make"
     },
     "dependencies": {
         "@babel/plugin-proposal-export-default-from": "^7.8.3",
@@ -20,6 +21,7 @@
         "body-parser": "^1.19.0",
         "concurrently": "^6.0.0",
         "delay-cli": "^1.1.0",
+        "electron-squirrel-startup": "^1.0.0",
         "eslint": "^7.21.0",
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-react-hooks": "^4.2.0",
@@ -47,6 +49,11 @@
         "@babel/preset-env": "^7.9.5",
         "@babel/preset-react": "^7.9.4",
         "@babel/preset-typescript": "^7.9.0",
+        "@electron-forge/cli": "^6.0.0-beta.57",
+        "@electron-forge/maker-deb": "^6.0.0-beta.57",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
+        "@electron-forge/maker-zip": "^6.0.0-beta.57",
         "electron": "^13.1.1",
         "eslint-plugin-prettier": "^3.1.2",
         "eslint-plugin-react": "^7.17.0"
@@ -64,5 +71,32 @@
             "node14-win-x64",
             "node14-macos-x64"
         ]
+    },
+    "config": {
+        "forge": {
+            "packagerConfig": {},
+            "makers": [
+                {
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "name": "desktopbrowser"
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-zip",
+                    "platforms": [
+                        "darwin"
+                    ]
+                },
+                {
+                    "name": "@electron-forge/maker-deb",
+                    "config": {}
+                },
+                {
+                    "name": "@electron-forge/maker-rpm",
+                    "config": {}
+                }
+            ]
+        }
     }
 }

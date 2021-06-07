@@ -11,7 +11,7 @@ app.dock.hide()
 // Wait until the app is ready
 app.once("ready", async () => {
     // Create a new tray
-    tray = new Tray(path.join("app/assets/electron-icon.png"))
+    tray = new Tray("app/assets/clapperboard-16x16.png")
     tray.on("right-click", toggleWindow)
     tray.on("double-click", toggleWindow)
     tray.on("click", function (event) {
