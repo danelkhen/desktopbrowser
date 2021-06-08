@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 import { Db } from "./db"
-import { LevelDb } from "./levelDb_"
+import { LevelDb } from "./LevelDb"
 import { dataDir } from "./rootDir"
 console.log(dataDir)
 const database2 = path.join(dataDir, "db.level")
