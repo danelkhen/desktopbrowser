@@ -29,16 +29,16 @@ export async function main() {
 
     const exp = express()
     exp.use(bodyParser.json())
-    exp.use("/", express.static(path.join(rootDir, "../client/dist")))
-    exp.use("/img", express.static(path.join(rootDir, "../client/img")))
-    exp.use("/tmdb", express.static(path.join(rootDir, "../tmdb")))
-    exp.use("/shared", express.static(path.join(rootDir, "../shared")))
+    exp.use("/", express.static(path.join(rootDir, "client/dist")))
+    exp.use("/img", express.static(path.join(rootDir, "client/img")))
+    exp.use("/tmdb", express.static(path.join(rootDir, "tmdb")))
+    exp.use("/shared", express.static(path.join(rootDir, "shared")))
     exp.use("/tmdb_proxy", proxy("api.themoviedb.org", {}))
 
     exp.use("/api/:service/:action", handleServiceRequest(services))
 
     exp.get(["/", "/test", "/media", "/media2"], (req: express.Request, res: express.Response) => {
-        res.sendFile(path.join(rootDir, "../client/dist/index.html"))
+        res.sendFile(path.join(rootDir, "client/dist/index.html"))
     })
 
     const server = http.createServer(exp)
