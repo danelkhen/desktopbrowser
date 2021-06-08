@@ -11,13 +11,14 @@ import { KeyValueService } from "./KeyValueService"
 import { MediaScanner } from "./MediaScanner"
 import { sleep } from "../../shared/src"
 import { rootDir } from "./rootDir"
+import { LevelDb } from "./LevelDb"
 
 export class App implements C.App {
-    constructor(public db: Db) {
+    constructor(public db: Db, public levelDb: LevelDb) {
         this.byFilenameService = new DbService<ByFilename>(this.db, this.db.byFilename)
         this.keyValueService = new KeyValueService(this.db)
         this.fsEntryService = new FsEntryService(this.db, this.db.fsEntries)
-        this.fileService = new FileService()
+        this.fileService = new FileService(levelDb)
         this.mediaScanner = new MediaScanner()
         this.mediaScanner.app = this
     }
@@ -57,30 +58,17 @@ export class App implements C.App {
     }
 
     async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
-        //let files = await this.fsEntryService.find(req.find);
-        //let mfs: C.MediaFile[] = files.map(t => <C.MediaFile>{ fsEntry: t });
-        //let byKey = new Map<string, C.MediaFile>();
-        //mfs.forEach(t => byKey.set(t.fsEntry.basename, t));
-        //let keys = Array.from(files.keys());
-        //let mds = await this.db.byFilename.findByIds(keys);
-        //mds.forEach(md => {
-        //    let mf = byKey.get(md.key);
-        //    mf.md = md;
-        //});
-        //req.find.options.alias = "t";
-        //let q = this.db.fsEntries.createFindQueryBuilder(req.find.conditions, req.find.options);
-
-        let q = this.db.fsEntries
-            .createQueryBuilder("t")
-            .leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key")
-        if (req!.notScannedOnly) {
-            q = q.where("md.scanned is null")
-        }
-        q = q
-            .orderBy("t.mtime", "DESC")
-            .offset(req!.firstResult || 0)
-            .limit(req!.maxResults || 100)
-        let x = await q.getMany()
+        // let q = this.db.fsEntries
+        //     .createQueryBuilder("t")
+        //     .leftJoinAndMapOne("t.md", ByFilename, "md", "t.basename=md.key")
+        // if (req!.notScannedOnly) {
+        //     q = q.where("md.scanned is null")
+        // }
+        // q = q
+        //     .orderBy("t.mtime", "DESC")
+        //     .offset(req!.firstResult || 0)
+        //     .limit(req!.maxResults || 100)
+        let x: FsEntry[] = [] // await q.getMany()
         let mfs = x.map(t => (({ fsEntry: t, md: (t as any).md, type: null, parsed: null } as unknown) as C.MediaFile))
         x.forEach(t => delete (t as any).md)
 

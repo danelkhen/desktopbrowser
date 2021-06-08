@@ -26,13 +26,13 @@ export function useFileMetadata(): FileMetadata {
         async function setFileMetadata(value: C.ByFilename) {
             if (value.selectedFiles == null || value.selectedFiles.length == 0) {
                 setFilesMd(filesMd?.filter(t => t.key != value.key) ?? [])
-                app.byFilename.removeById({ id: value.key })
+                app.fileService.http.deleteFileMetadata({ key: value.key })
                 return
             }
             const x = filesMd?.filter(t => t.key != value.key) ?? []
             x.push(value)
             setFilesMd(x)
-            await app.byFilename.persist(value)
+            await app.fileService.http.saveFileMetadata(value)
         }
 
         const x: FileMetadata = {

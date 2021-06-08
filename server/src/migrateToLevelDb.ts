@@ -6,7 +6,7 @@ import { dataDir } from "./rootDir"
 console.log(dataDir)
 const database2 = path.join(dataDir, "db.level")
 
-export async function migrateToLevelDB() {
+export async function migrateToLevelDb() {
     const database = path.join(dataDir, "db.sqlite")
     if ((await pathExists(database)) && !(await pathExists(database2))) {
         const db2 = new LevelDb(database2)

@@ -3,7 +3,7 @@ import log from "electron-log"
 import path from "path"
 import { main } from "../../server/src/main"
 import { dataDir, rootDir } from "../../server/src/rootDir"
-import { migrateToLevelDB } from "../../server/src/migrateToLevelDb"
+import { migrateToLevelDb } from "../../server/src/migrateToLevelDb"
 
 Object.assign(console, log.functions)
 
@@ -32,7 +32,7 @@ async function main2() {
 
         app.dock.hide()
 
-        await migrateToLevelDB()
+        await migrateToLevelDb()
 
         // Create a new tray
         tray = new Tray(path.join(rootDir, "app/assets/clapperboard-16x16.png"))

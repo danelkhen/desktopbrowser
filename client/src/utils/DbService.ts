@@ -52,6 +52,9 @@ function wsProxyFor<T>(url: string, impl: (ws: Invoker<T>) => T) {
 export function proxyForFileService() {
     const impl: (http: Invoker<C.FileService>) => C.FileService = http =>
         ({
+            saveFileMetadata: req => http("saveFileMetadata", [req]),
+            deleteFileMetadata: req => http("deleteFileMetadata", [req]),
+            getAllFilesMetadata: () => http("getAllFilesMetadata", []),
             ListFiles: req => http("ListFiles", [req]),
             // ListFilesWebSocket: req => ws("ListFiles", [req]),
             GetFiles: req => http("GetFiles", [req]),

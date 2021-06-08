@@ -8,12 +8,14 @@ import { App } from "./App"
 import { DriveInfo } from "./utils/io"
 import { setupWebsockets } from "./websocket"
 import { Db } from "./db"
-import { rootDir } from "./rootDir"
+import { dataDir, rootDir } from "./rootDir"
 import { handleServiceRequest } from "./handleServiceRequest"
+import { LevelDb } from "./LevelDb"
 
 export async function main() {
-    const db = await Db.create()
-    const app = new App(db)
+    const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
+    // await Db.create()
+    const app = new App(db, new LevelDb(path.join(dataDir, "db.level")))
 
     console.log("os", JSON.stringify(os.platform()))
     process.on("uncaughtException", e => console.log("uncaughtException", e))

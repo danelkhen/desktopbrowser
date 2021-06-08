@@ -18,12 +18,24 @@ import { FileAttributes, FileSystemInfo, IoDir, IoFile, DriveInfo } from "./util
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"
 import open from "open"
+import { LevelDb } from "./LevelDb"
+import { Db } from "./db"
 
 function isWindows() {
     return os.platform() == "win32"
 }
 export class FileService implements C.FileService {
+    constructor(public db: LevelDb) {}
     baseDbFilename: string = undefined!
+    async getAllFilesMetadata() {
+        return this.db.getAll("files")
+    }
+    async saveFileMetadata(req: C.ByFilename) {
+        this.db.set({ ...req, collection: "files" })
+    }
+    async deleteFileMetadata({ key }: { key: string }) {
+        this.db.del({ key, collection: "files" })
+    }
 
     async ListFiles(req: ListFilesRequest): Promise<ListFilesResponse> {
         //if (req.Path == null) {

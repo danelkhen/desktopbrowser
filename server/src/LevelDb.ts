@@ -1,15 +1,12 @@
-import { Db } from "./db"
 import level, { LevelDB } from "level"
-import { dataDir } from "./rootDir"
 import path from "path"
-import fs from "fs/promises"
 import { ByFilename } from "../../shared/src/contracts"
+import { dataDir } from "./rootDir"
 
 console.log(dataDir)
 const database2 = path.join(dataDir, "db.level")
-const db2 = level(database2, { valueEncoding: "json" })
 
-interface LevelDbEntity {
+export interface LevelDbEntity {
     collection: string
     key: string
 }
@@ -19,7 +16,7 @@ export class LevelDb {
         this.db = level(database2, { valueEncoding: "json" })
     }
     async getAll<T extends LevelDbEntity>(collection: string): Promise<T[]> {
-        const stream = db2.createReadStream({
+        const stream = this.db.createReadStream({
             gt: `${collection}/`,
             lt: `${collection}0`,
         }) as AsyncIterable<{ key: string; value: ByFilename }>
@@ -32,6 +29,12 @@ export class LevelDb {
     }
     async set<T extends LevelDbEntity>(obj: T): Promise<void> {
         const { collection, key, ...rest } = obj
-        await db2.put(`${collection}/${key}`, rest)
+        await this.db.put(`${collection}/${key}`, rest)
+    }
+    async del(obj: LevelDbEntity): Promise<void> {
+        const { collection, key } = obj
+        await this.db.del(`${collection}/${key}`)
     }
 }
+
+// new LevelDb(database2).getAll("files").then(t => console.log(t))

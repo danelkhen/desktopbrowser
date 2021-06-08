@@ -84,7 +84,8 @@ export class App {
     }
 
     async getAllFilesMetadata(): Promise<ByFilename[]> {
-        return this.byFilename.find({})
+        return await this.fileService.http.getAllFilesMetadata()
+        // return this.byFilename.find({})
     }
 
     async getFileMetadata(file: File | string): Promise<ByFilename> {

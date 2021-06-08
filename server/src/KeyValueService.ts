@@ -31,8 +31,8 @@ export class KeyValueService implements C.KeyValueService {
         const res = await this.dbService.findOneById(req)
         return res!
     }
-    findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> {
-        return this.dbService.repo.createQueryBuilder("kv").where("kv.key like :x", { x: req.like }).getMany() //.then(list => list.map(t => this.fromKeyValue<T>(t)));
+    async findAllWithKeyLike<T>(req: { like: string }): Promise<C.KeyValue<T>[]> {
+        return [] // this.dbService.repo.createQueryBuilder("kv").where("kv.key like :x", { x: req.like }).getMany() //.then(list => list.map(t => this.fromKeyValue<T>(t)));
     }
 
     // copyOverwrite<T>(src: T, target: T): T {
