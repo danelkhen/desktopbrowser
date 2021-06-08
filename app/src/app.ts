@@ -1,24 +1,16 @@
-import electron, { app, BrowserWindow, ipcMain, shell, Tray } from "electron"
+import { app, BrowserWindow, ipcMain, shell, Tray } from "electron"
+import log from "electron-log"
 import path from "path"
 import { main } from "../../server/src/main"
-import url from "url"
-import { App } from "../../server/src/App"
-import { setDataDir, setRootDir } from "../../server/src/rootDir"
-import log from "electron-log"
+import { dataDir, rootDir } from "../../server/src/rootDir"
 
-console.log = log.log
+Object.assign(console, log.functions)
 
 let myWindow: BrowserWindow = null!
 let tray: Tray = null!
 
-app.dock.hide()
-
-const rootDir = app.getAppPath() // path.join(__dirname, "../../../../")
-const dataDir = app.getPath("userData")
-log.info({ rootDir, dataDir })
+log.info(rootDir, dataDir)
 log.info("appPath", app.getAppPath())
-setRootDir(rootDir)
-setDataDir(dataDir)
 
 async function main2() {
     const gotTheLock = app.requestSingleInstanceLock()
@@ -36,6 +28,8 @@ async function main2() {
 
         // Create myWindow, load the rest of the app, etc...
         await app.whenReady()
+        app.dock.hide()
+
         // Create a new tray
         tray = new Tray(path.join(rootDir, "app/assets/clapperboard-16x16.png"))
         tray.on("right-click", toggleWindow)
@@ -57,7 +51,6 @@ async function main2() {
                 contextIsolation: false,
             },
         })
-        // require("electron").shell.openExternal("http://localhost:7777")
 
         const url2 = path.resolve(path.join(rootDir, "app/assets/index.html"))
         console.log(url2)
@@ -125,7 +118,7 @@ ipcMain.handle("main", async (e, name, ...args) => {
             app.quit()
         },
     }
-    const res = await (x as any)[name](...args)
+    const res = await (x as any)?.[name](...args)
     return res
 })
 

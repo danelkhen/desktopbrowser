@@ -15,7 +15,18 @@ async function main() {
                 delete rest2[prop]
             }
         }
-        db2.put(key2, rest2)
+        console.log(key2)
+        await db2.put(key2, rest2)
     }
 }
-main()
+async function main2() {
+    await db2.del("giles/ggg")
+
+    // console.log(await db2.get("files/Bless.the.Harts.S02E22.1080p.WEB.H264-CAKES[rarbg]"))
+    // const x = db2.iterator({ gte: "files/", lte: "files/" })
+    for await (const item of db2.createReadStream({ gt: "files/", lt: "files0" })) {
+        console.log(item as any)
+    }
+}
+// main()
+main2()

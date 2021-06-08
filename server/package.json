@@ -20,6 +20,7 @@
         "@types/ws": "^7.4.0",
         "body-parser": "^1.18.3",
         "dirty": "^1.1.0",
+        "electron": "^13.1.1",
         "express": "^4.16.4",
         "express-http-proxy": "^1.5.1",
         "fs-extra": "^9.1.0",
