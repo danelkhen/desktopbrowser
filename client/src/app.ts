@@ -26,9 +26,6 @@ export class App {
     get fileService() {
         return this.proxies.fileService
     }
-    get appService() {
-        return this.proxies.appService
-    }
 
     constructor() {
         console.log("App ctor", this)

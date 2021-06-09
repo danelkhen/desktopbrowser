@@ -283,11 +283,11 @@ export class MediaComponentHelper {
 
     scanStatus: C.MediaScannerStatus | undefined
     async scan() {
-        this.scanStatus = await this.app.app.appService.scanForMedia()
+        this.scanStatus = await this.app.appService.scanForMedia()
         await sleep(3000)
         this.getAvailableMedia({ force: true })
         while (this.scanStatus != null && this.scanStatus.finished == null) {
-            this.scanStatus = await this.app.app.appService.scanStatus()
+            this.scanStatus = await this.app.appService.scanStatus()
             await sleep(3000)
         }
     }

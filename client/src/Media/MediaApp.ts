@@ -52,12 +52,12 @@ export class MediaApp {
     }
 
     async initConfig(): Promise<void> {
-        let config = await this.app.appService.getConfig()
+        let config = await this.appService.getConfig()
         this.config = config || {}
         if (this.config.folders == null) this.config.folders = []
     }
     async saveConfig() {
-        this.config && (await this.app.appService.saveConfig(this.config))
+        this.config && (await this.appService.saveConfig(this.config))
     }
 
     config: Config | undefined
@@ -77,7 +77,7 @@ export class MediaApp {
     }
 
     async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
-        let x = await this.app.appService.getMediaFiles(req)
+        let x = await this.appService.getMediaFiles(req)
         x.forEach(t => {
             if (t.md == null) {
                 t.md = { key: t.fsEntry.basename }
@@ -85,5 +85,9 @@ export class MediaApp {
             this.parseFilename(t)
         })
         return x
+    }
+
+    get appService() {
+        return this.app.proxies.appService
     }
 }
