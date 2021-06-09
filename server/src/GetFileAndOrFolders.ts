@@ -4,7 +4,7 @@ import { calculateFoldersSize } from "./calculateFoldersSize"
 import { isWindows } from "./FileService"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { dateToDefaultString } from "./utils"
-import { FsInfo } from "./utils/FileInfo"
+import { FsInfo } from "./utils/FsInfo"
 import { DriveInfo } from "./utils/io"
 
 export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {

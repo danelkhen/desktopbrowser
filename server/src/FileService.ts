@@ -14,7 +14,7 @@ import {
     rimraf2,
     ToFile,
 } from "./GetFileAndOrFolders"
-import { FsInfo } from "./utils/FileInfo"
+import { FsInfo } from "./utils/FsInfo"
 import { IoDir, IoFile } from "./utils/io"
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"

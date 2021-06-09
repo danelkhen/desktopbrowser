@@ -1,7 +1,7 @@
 ﻿import * as fse from "fs-extra"
 import * as path from "path"
 import { DriveInfoItem, getDrives } from "./getDrives"
-import { FsInfo } from "./FileInfo"
+import { FsInfo } from "./FsInfo"
 
 export class IoDir {
     static async Exists(s: string): Promise<boolean | undefined> {
