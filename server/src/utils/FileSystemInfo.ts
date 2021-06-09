@@ -37,29 +37,29 @@ export namespace FileSystemInfo2 {
         }
         return list
     }
-}
 
-export async function createFileSystemInfo2(path2: string): Promise<FileSystemInfo2> {
-    if (path2 == null) return {} as any // TODO:
-    const FullName = path.resolve(path2)
-    const Name = path.basename(path2)
-    const Extension = path.extname(path2)
-    const x: FileSystemInfo2 = {
-        path: path2,
-        FullName,
-        Name,
-        Extension,
+    export async function createFileSystemInfo2(path2: string): Promise<FileSystemInfo2> {
+        if (path2 == null) return {} as any // TODO:
+        const FullName = path.resolve(path2)
+        const Name = path.basename(path2)
+        const Extension = path.extname(path2)
+        const x: FileSystemInfo2 = {
+            path: path2,
+            FullName,
+            Name,
+            Extension,
+        }
+        try {
+            x.stats = await fse.lstatSync(path2)
+            x.Length = x.stats.size
+            x.isFile = x.stats.isFile()
+            x.isDir = x.stats.isDirectory()
+            x.LastWriteTime = x.stats.mtime
+            x.isLink = x.stats.isSymbolicLink()
+        } catch (e) {}
+        if (x.Name == null || x.Name == "") {
+            x.Name = path2 //console.log(path2, this);
+        }
+        return x
     }
-    try {
-        x.stats = await fse.lstatSync(path2)
-        x.Length = x.stats.size
-        x.isFile = x.stats.isFile()
-        x.isDir = x.stats.isDirectory()
-        x.LastWriteTime = x.stats.mtime
-        x.isLink = x.stats.isSymbolicLink()
-    } catch (e) {}
-    if (x.Name == null || x.Name == "") {
-        x.Name = path2 //console.log(path2, this);
-    }
-    return x
 }

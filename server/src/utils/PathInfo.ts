@@ -1,6 +1,6 @@
 ﻿import { removeLast } from "../../../shared/src"
+import { FileSystemInfo2 } from "./FileSystemInfo"
 import { IoFile, IoDir, IoPath } from "./io"
-import { createFileSystemInfo2 } from "./FileSystemInfo"
 
 export class PathInfo {
     Value: string
@@ -32,7 +32,7 @@ export class PathInfo {
     }
     async ToAbsoluteExact(): Promise<PathInfo> {
         if (this.IsEmpty) return this
-        return new PathInfo((await createFileSystemInfo2(this.Value)).FullName!)
+        return new PathInfo((await FileSystemInfo2.createFileSystemInfo2(this.Value)).FullName!)
     }
 
     toString(): string {
