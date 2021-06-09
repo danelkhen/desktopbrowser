@@ -34,7 +34,7 @@ export function CalculateFolderSize(path: string): Promise<number> {
 export async function CalculateFolderSizeNoCache(path: string): Promise<number> {
     var size = 0
     try {
-        var list = await (await FileSystemInfo.create(path)).GetFileSystemInfos()
+        var list = await (await FileSystemInfo.create(path)).getChildren()
         for (let item of list) {
             if (item.isFile) size += item.Length!
             else if (item.isDir) size += await CalculateFolderSize(item.FullName!)

@@ -83,7 +83,9 @@ export class FileSystemInfo {
             this.LastWriteTime = this.stats.mtime
             this.isLink = this.stats.isSymbolicLink()
         } catch (e) {}
-        if (this.Name == null || this.Name == "") this.Name = this.path //console.log(path2, this);
+        if (this.Name == null || this.Name == "") {
+            this.Name = this.path //console.log(path2, this);
+        }
     }
     stats: fse.Stats = undefined!
     path: string
@@ -97,26 +99,26 @@ export class FileSystemInfo {
     Length?: number
     Extension?: string
 
-    async EnumerateFiles(): Promise<IEnumerable<FileSystemInfo>> {
-        return (await this.GetFileSystemInfos()).filter(t => t.isFile)
+    async getFiles(): Promise<IEnumerable<FileSystemInfo>> {
+        return (await this.getChildren()).filter(t => t.isFile)
     }
-    async EnumerateDirectories(): Promise<IEnumerable<FileSystemInfo>> {
-        return (await this.GetFileSystemInfos()).filter(t => t.isDir)
+    async getDirs(): Promise<IEnumerable<FileSystemInfo>> {
+        return (await this.getChildren()).filter(t => t.isDir)
     }
-    async EnumerateFileSystemElementsRecursive(): Promise<IEnumerable<FileSystemInfo>> {
-        let list = await this.GetFileSystemInfos()
+    async getDescendants(): Promise<IEnumerable<FileSystemInfo>> {
+        let list = await this.getChildren()
         let i = 0
         while (i < list.length) {
             let file = list[i]
             if (file.isDir) {
-                let list2 = await file.GetFileSystemInfos()
+                let list2 = await file.getChildren()
                 list.push(...list2)
             }
             i++
         }
         return list
     }
-    async GetFileSystemInfos(): Promise<FileSystemInfo[]> {
+    async getChildren(): Promise<FileSystemInfo[]> {
         let list = await fse.readdir(this.path)
         let list2: FileSystemInfo[] = []
         for (let t of list) {
