@@ -2,6 +2,7 @@ import { App } from "../App"
 import { TmdbApp } from "../TmdbApp"
 import { Scanner } from "../utils/Scanner"
 import * as C from "../../../shared/src/contracts"
+import { Config } from "../../../shared/src/contracts"
 
 export class MediaApp {
     constructor(public app: App) {}
@@ -9,12 +10,13 @@ export class MediaApp {
     static current: MediaApp
 
     async init() {
+        await this.initConfig()
         await this.tmdbApp.init()
     }
     createScanner(): Scanner {
         let scanner = new Scanner()
         scanner.app = this
-        scanner.folders = (this.app.config?.folders ?? []).map(t => t.path)
+        scanner.folders = (this.config?.folders ?? []).map(t => t.path)
         return scanner
     }
 
@@ -43,6 +45,25 @@ export class MediaApp {
             }
             req.firstResult! += req.maxResults!
             await this.analyze(mfs)
+        }
+    }
+
+    async initConfig(): Promise<void> {
+        let config = await this.app.appService.getConfig()
+        this.config = config || {}
+        if (this.config.folders == null) this.config.folders = []
+    }
+    async saveConfig() {
+        this.config && (await this.app.appService.saveConfig(this.config))
+    }
+
+    config: Config | undefined
+
+    async findFile(name: string): Promise<C.File | undefined> {
+        for (let folder of this.config?.folders ?? []) {
+            let res = await this.app.fileService.ws.ListFiles({ Path: folder.path, IsRecursive: true })
+            let file = res.Files?.find(t => t.Name == name)
+            if (file) return file
         }
     }
 }

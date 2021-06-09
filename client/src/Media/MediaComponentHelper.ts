@@ -219,7 +219,7 @@ export class MediaComponentHelper {
             if (mf.md.lastKnownPath != null)
                 file = await this.app.app.fileService.http.GetFile({ Path: mf.md.lastKnownPath })
             if (!file) {
-                file = await this.app.app.findFile(mf.md.key)
+                file = await this.app.findFile(mf.md.key)
             }
             if (file == null) return
             path = file.Path ?? null
@@ -242,7 +242,7 @@ export class MediaComponentHelper {
     }
 
     addConfigFolder() {
-        this.app.app.config?.folders?.push({ path: "" })
+        this.app.config?.folders?.push({ path: "" })
     }
 
     async tvAiringToday() {

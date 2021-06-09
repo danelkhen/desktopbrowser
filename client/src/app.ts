@@ -22,10 +22,8 @@ export class App {
     static current: App
     static async init() {
         if (App.current) return App.current
-        const app = new App()
-        App.current = app
-        await app.init()
-        return app
+        App.current = new App()
+        return App.current
     }
 
     get fileService() {
@@ -50,31 +48,6 @@ export class App {
         this.proxies = getProxies()
     }
 
-    async init() {
-        await this.initConfig()
-    }
-
-    async initConfig(): Promise<void> {
-        let config = await this.appService.getConfig()
-        this.config = config || {}
-        if (this.config.folders == null) this.config.folders = []
-    }
-    async saveConfig() {
-        this.config && (await this.appService.saveConfig(this.config))
-    }
-
-    config: Config | undefined
-
-    async scan(): Promise<void> {
-        let x = await this.appService.scanForMedia()
-        console.log(x)
-        //let scanner = this.createScanner();
-        //console.log("scan started", scanner);
-        //await scanner.scan();
-        //console.log("scan completed", scanner);
-        //return scanner;
-    }
-
     async getAllFilesMetadata(): Promise<ByFilename[]> {
         return await this.fileService.http.getAllFilesMetadata()
         // return this.byFilename.find({})
@@ -86,14 +59,6 @@ export class App {
         let x = await this.byFilename.findOneById({ id: name })
         if (x == null) x = { key: name }
         return x
-    }
-
-    async findFile(name: string): Promise<File | undefined> {
-        for (let folder of this.config?.folders ?? []) {
-            let res = await this.fileService.ws.ListFiles({ Path: folder.path, IsRecursive: true })
-            let file = res.Files?.find(t => t.Name == name)
-            if (file) return file
-        }
     }
 
     fsEntryToMediaFile(x: FsEntry): C.MediaFile {

@@ -70,16 +70,16 @@ export function Media2Component() {
                     <button onClick={e => tvOnTheAir()}>on the air</button>
                 </section>
 
-                {app.app.config && (
+                {app.config && (
                     <section>
                         <h3>Folders</h3>
                         <button onClick={e => addConfigFolder()}>+</button>
-                        {app.app.config.folders?.map(folder => (
+                        {app.config.folders?.map(folder => (
                             <div>
                                 <input value="folder.path" />
                             </div>
                         ))}
-                        <button onClick={e => app.app.saveConfig()}>save</button>
+                        <button onClick={e => app.saveConfig()}>save</button>
                     </section>
                 )}
                 <section>

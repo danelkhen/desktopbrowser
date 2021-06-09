@@ -226,16 +226,16 @@ export function MediaComponent() {
                 </div>
             )}
             <div style={{ color: "white" }}>
-                {app.app.config && (
+                {app.config && (
                     <div>
                         <h3>Folders</h3>
-                        {app.app.config.folders?.map(folder => (
+                        {app.config.folders?.map(folder => (
                             <div>
                                 <input value={folder.path} />
                             </div>
                         ))}
                         <button onClick={e => addConfigFolder()}>+</button>
-                        <button onClick={e => app.app.saveConfig()}>save</button>
+                        <button onClick={e => app.saveConfig()}>save</button>
                         <button onClick={e => scan()}>scan</button>
                         <button onClick={e => reAnalyze()}>re-analyze</button>
                         <label>
