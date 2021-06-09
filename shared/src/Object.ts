@@ -6,6 +6,6 @@ declare global {
     }
 }
 
-Object.prototype[entries] = function<T>(this: { [s: string]: T }): [string, T][] {
+Object.prototype[entries] = function <T>(this: { [s: string]: T }): [string, T][] {
     return Object.entries(this)
 }

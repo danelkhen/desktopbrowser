@@ -8,13 +8,13 @@ declare global {
         [intersect](y: Set<T>): Set<T>
     }
 }
-Set.prototype[minus] = function<T>(this: Set<T>, y: Set<T>): Set<T> {
+Set.prototype[minus] = function <T>(this: Set<T>, y: Set<T>): Set<T> {
     return setMinus(this, y)
 }
-Set.prototype[plus] = function<T>(this: Set<T>, y: Set<T>): Set<T> {
+Set.prototype[plus] = function <T>(this: Set<T>, y: Set<T>): Set<T> {
     return setPlus(this, y)
 }
-Set.prototype[intersect] = function<T>(this: Set<T>, y: Set<T>): Set<T> {
+Set.prototype[intersect] = function <T>(this: Set<T>, y: Set<T>): Set<T> {
     return setIntersect(this, y)
 }
 function setMinus<T>(x: Set<T>, y: Set<T>): Set<T> {

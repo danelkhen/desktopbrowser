@@ -14,20 +14,20 @@ declare global {
     }
 }
 
-Array.prototype[takeWhile] = function<T>(this: Array<T>, pred: (item: T, index?: number) => boolean): T[] {
+Array.prototype[takeWhile] = function <T>(this: Array<T>, pred: (item: T, index?: number) => boolean): T[] {
     return arrayTakeWhile(this, pred)
 }
-Array.prototype[remove] = function<T>(this: Array<T>, item: T): void {
+Array.prototype[remove] = function <T>(this: Array<T>, item: T): void {
     return arrayRemove(this, item)
 }
-Array.prototype[itemsAre] = function<T>(this: Array<T>, y: T[]): boolean {
+Array.prototype[itemsAre] = function <T>(this: Array<T>, y: T[]): boolean {
     return arrayItemsEqual(this, y)
 }
-Array.prototype[groupBy] = function<T, K>(this: Array<T>, keySelector: (item: T) => K): T[][] {
+Array.prototype[groupBy] = function <T, K>(this: Array<T>, keySelector: (item: T) => K): T[][] {
     return arrayGroupBy(this, keySelector)
 }
 Object.defineProperty(Array.prototype, last, {
-    get: function<T>(this: Array<T>): T | undefined {
+    get: function <T>(this: Array<T>): T | undefined {
         const length = this.length
         return length ? this[this.length - 1] : undefined
     },

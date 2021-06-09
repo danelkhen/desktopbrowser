@@ -10,7 +10,7 @@ export function tryParseInt(s: string | null | undefined): number | null {
 
 export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => Promise<T> {
     let promise: Promise<T> | null = null
-    return function(this: any) {
+    return function (this: any) {
         console.log("promiseReuseIfStillRunning", { this: this })
         if (promise != null) return promise
         promise = action.call(this).then((t: any) => {
@@ -23,7 +23,7 @@ export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => P
 
 /** Will wrap the function and cause it to be reused if it's still running, use for long running async operations that should never run in parallel */
 export function ReusePromiseIfStillRunning(): MethodDecorator {
-    return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
         let originalFuncKey = "_" + String(propertyKey) + "_original"
         let promiseKey = "_" + String(propertyKey) + "_promise"
         target[originalFuncKey] = descriptor.value
@@ -45,7 +45,7 @@ return this.${promiseKey};
 
 /** Will wrap the function and cause it to run only once, regardless of how many times it was called, use for things like init() */
 export function ReusePromise(): MethodDecorator {
-    return function(target: any, propertyKey: string | Symbol, descriptor: PropertyDescriptor) {
+    return function (target: any, propertyKey: string | Symbol, descriptor: PropertyDescriptor) {
         let originalFuncKey = "_" + String(propertyKey) + "_original"
         let promiseKey = "_" + String(propertyKey) + "_promise"
         target[originalFuncKey] = descriptor.value

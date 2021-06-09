@@ -8,7 +8,7 @@ declare global {
     }
 }
 
-Array.prototype[orderBy] = function<T>(this: Array<T>, ...selectors: OrderBy<T, any>[]): T[] {
+Array.prototype[orderBy] = function <T>(this: Array<T>, ...selectors: OrderBy<T, any>[]): T[] {
     return arrayOrderBy(this, ...selectors)
 }
 
