@@ -9,18 +9,7 @@ export function createFileService(db: LevelDb): C.FileService {
         .filter(t => typeof obj[t] == "function")
         .forEach(t => (obj[t] = obj[t].bind(x)))
 
-    const {
-        ListFiles,
-        GetFiles,
-        GetFileRelatives,
-        GetFile,
-        Execute,
-        Explore,
-        Delete,
-        trash,
-        ApplyRequest,
-        isWindows,
-    } = x
+    const { ListFiles, GetFiles, GetFileRelatives, GetFile, Execute, Explore, Delete, trash } = x
     return {
         async getAllFilesMetadata() {
             return db.getAll("files")

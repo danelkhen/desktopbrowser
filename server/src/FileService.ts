@@ -226,9 +226,6 @@ export class FileService
         return files2
     }
 
-    async isWindows() {
-        return os.platform() == "win32"
-    }
     async GetHomeFiles(): Promise<File[]> {
         const list = await DriveInfo.GetDrives3()
         return list.map(t => /*new File*/ ({
