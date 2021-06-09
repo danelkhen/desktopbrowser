@@ -19,7 +19,7 @@ export namespace FileInfo {
         let list = await fse.readdir(path2)
         let list2: FileInfo[] = []
         for (let t of list) {
-            list2.push(await createFileSystemInfo2(path.join(path2, t)))
+            list2.push(await create(path.join(path2, t)))
         }
         return list2
     }
@@ -38,8 +38,10 @@ export namespace FileInfo {
         return list
     }
 
-    export async function createFileSystemInfo2(path2: string): Promise<FileInfo> {
-        if (path2 == null) return {} as any // TODO:
+    export async function create(path2: string): Promise<FileInfo> {
+        if (path2 == null) {
+            return {} as any // TODO:
+        }
         const FullName = path.resolve(path2)
         const Name = path.basename(path2)
         const Extension = path.extname(path2)
@@ -58,7 +60,7 @@ export namespace FileInfo {
             x.isLink = x.stats.isSymbolicLink()
         } catch (e) {}
         if (x.Name == null || x.Name == "") {
-            x.Name = path2 //console.log(path2, this);
+            x.Name = path2
         }
         return x
     }

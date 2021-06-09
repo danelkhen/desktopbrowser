@@ -110,9 +110,9 @@ export class FileService
         if (!path) return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
         const absPath = new PathInfo(path).ToAbsolute()
         if (await absPath.IsFile) {
-            return this.ToFile(await FileInfo.createFileSystemInfo2(absPath.Value))
+            return this.ToFile(await FileInfo.create(absPath.Value))
         } else if ((await absPath.IsDirectory) || absPath.IsRoot) {
-            return this.ToFile(await FileInfo.createFileSystemInfo2(absPath.Value))
+            return this.ToFile(await FileInfo.create(absPath.Value))
         }
         return null!
     }
@@ -203,10 +203,10 @@ export class FileService
         //if (searchPattern.IsNullOrEmpty())
         //    searchPattern = "*";
         else if (recursive) {
-            const dir = await FileInfo.createFileSystemInfo2(path)
+            const dir = await FileInfo.create(path)
             files2 = (await FileInfo.getDescendants(dir.path)).map(t => this.ToFile(t))
         } else {
-            const dir = await FileInfo.createFileSystemInfo2(path)
+            const dir = await FileInfo.create(path)
             const children = await FileInfo.getChildren(dir.path)
             if (files && !folders) {
                 files2 = children.filter(t => t.isFile).map(t => this.ToFile(t))

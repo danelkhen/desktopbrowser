@@ -32,7 +32,7 @@ export class PathInfo {
     }
     async ToAbsoluteExact(): Promise<PathInfo> {
         if (this.IsEmpty) return this
-        return new PathInfo((await FileInfo.createFileSystemInfo2(this.Value)).FullName!)
+        return new PathInfo((await FileInfo.create(this.Value)).FullName!)
     }
 
     toString(): string {
