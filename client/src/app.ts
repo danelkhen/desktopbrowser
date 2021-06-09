@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import * as C from "../../shared/src/contracts"
 import { ByFilename, File, FsEntry } from "../../shared/src/contracts"
 import { getProxies, Proxies } from "./utils/DbService"
-import { FilenameParser } from "./utils/FilenameParser"
 
 export function useApp() {
     const [app, setApp] = useState<App | null>(null)
@@ -26,12 +25,6 @@ export class App {
 
     get fileService() {
         return this.proxies.fileService
-    }
-    get keyValue() {
-        return this.proxies.keyValue
-    }
-    get fsEntryService() {
-        return this.proxies.fsEntryService
     }
     get appService() {
         return this.proxies.appService
