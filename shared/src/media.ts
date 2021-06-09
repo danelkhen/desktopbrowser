@@ -4,7 +4,7 @@ import { ByFilename, FileService } from "./contracts"
 export { FindManyOptions, FindOneOptions }
 import { File } from "./contracts"
 
-export interface App {
+export interface MediaApp {
     getConfig(): Promise<Config>
     saveConfig(config: Config): Promise<void>
     scanForMedia(): Promise<MediaScannerStatus>

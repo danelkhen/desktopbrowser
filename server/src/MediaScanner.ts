@@ -1,6 +1,6 @@
 import * as Path from "path"
 import * as M from "../../shared/src/media"
-import { App } from "./App"
+import { MediaApp } from "./media/App"
 import { FsEntry } from "./db"
 import { dateToDefaultString } from "./utils"
 import { FileEvent, FileScanner } from "./utils/FileScanner"
@@ -30,7 +30,7 @@ export class MediaScanner {
         return x
     }
     scanner: FileScanner = undefined!
-    app: App = undefined!
+    app: MediaApp = undefined!
 
     isRunning(): boolean {
         return this.status != null && this.status.started != null && this.status.finished == null

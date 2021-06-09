@@ -9,7 +9,7 @@ export interface Proxies {
         http: C.FileService
         ws: C.FileService
     }
-    appService: M.App
+    appService: M.MediaApp
 }
 export function getProxies(): Proxies {
     return {
@@ -72,7 +72,7 @@ export function proxyForFsEntryService() {
 }
 
 export function proxyForAppService() {
-    return httpProxyFor<M.App>(
+    return httpProxyFor<M.MediaApp>(
         "/api/app",
         http =>
             ({
@@ -81,6 +81,6 @@ export function proxyForAppService() {
                 scanForMedia: () => http("scanForMedia"),
                 scanStatus: () => http("scanStatus"),
                 getMediaFiles: req => http("getMediaFiles", [req]),
-            } as M.App)
+            } as M.MediaApp)
     )
 }

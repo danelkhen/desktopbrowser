@@ -3,9 +3,9 @@ import * as https from "https"
 import * as ws from "ws"
 import { objectTryGet } from "./utils"
 import { extractFunctionCall } from "./utils/ProxyCall"
-import { App } from "./App"
+import { MediaApp } from "./media/App"
 
-export function setupWebsockets(server: http.Server | https.Server, app: App) {
+export function setupWebsockets(server: http.Server | https.Server, app: MediaApp) {
     console.log("setupWebsockets")
     const wss = new ws.Server({ path: "/api", server })
 

@@ -1,15 +1,15 @@
 ﻿import { promises as Fs } from "fs"
 import fse from "fs-extra"
 import * as Path from "path"
-import type * as M from "../../shared/src/media"
-import { TmdbApiV3 as Tmdb } from "../../tmdb/src"
-import { ByFilename, Db, FsEntry } from "./db"
-import { DbService } from "./DbService"
-import { KeyValueService } from "./KeyValueService"
-import { MediaScanner } from "./MediaScanner"
-import { rootDir } from "./rootDir"
+import type * as M from "../../../shared/src/media"
+import { TmdbApiV3 as Tmdb } from "../../../tmdb/src"
+import { ByFilename, Db, FsEntry } from "../db"
+import { DbService } from "../DbService"
+import { KeyValueService } from "../KeyValueService"
+import { MediaScanner } from "../MediaScanner"
+import { rootDir } from "../rootDir"
 
-export class App implements M.App {
+export class MediaApp implements M.MediaApp {
     constructor(public db: Db) {
         this.byFilenameService = new DbService<ByFilename>(this.db, this.db.byFilename)
         this.keyValueService = new KeyValueService(this.db)
