@@ -1,9 +1,9 @@
-import * as C from "../../../../shared/src/contracts"
 import { useCallback, useMemo } from "react"
+import * as C from "../../../../shared/src/contracts"
 import { Column, Columns } from "../Columns"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 import { Api } from "./useApi"
-import { Commands, useCommands } from "./useCommands"
+import { useCommands } from "./useCommands"
 import { SetRequest } from "./useReq"
 
 interface MenuItem {

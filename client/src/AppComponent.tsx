@@ -13,7 +13,7 @@ export function AppComponent() {
             <div>
                 <Switch>
                     <Route path="/" exact>
-                        <FileBrowser app={app} />
+                        <FileBrowser />
                     </Route>
                     <Route path="/media">
                         <MediaComponent />

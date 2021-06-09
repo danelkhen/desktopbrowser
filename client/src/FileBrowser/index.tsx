@@ -21,7 +21,7 @@ import { Pallete } from "./Pallete"
 import { QuickFind } from "./QuickFind"
 import { Repl } from "./Repl"
 
-export function FileBrowser({ app }: { app: App }) {
+export function FileBrowser() {
     console.log("FileBrowser render")
 
     const fileMetadata = useFileMetadata()

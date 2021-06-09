@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from "react"
 import { App } from "../../App"
 
 export function useFileMetadata(): FileMetadata {
-    const [filesMd, setFilesMd] = useState<C.FileInfo[]>()
+    const [filesMd, setFilesMd] = useState<{ [key: string]: C.FileInfo } | undefined>()
 
     const fileMetadata = useMemo(() => {
         const app = App.current
@@ -18,20 +18,19 @@ export function useFileMetadata(): FileMetadata {
         }
 
         function getFileMetadata(key: string): C.FileInfo | null {
-            const x = filesMd?.find(t => t.key == key)
+            const x = filesMd?.[key]
             if (!x) return null
             return x
         }
 
         async function setFileMetadata(value: C.FileInfo) {
             if (value.selectedFiles == null || value.selectedFiles.length == 0) {
-                setFilesMd(filesMd?.filter(t => t.key != value.key) ?? [])
+                const { [value.key]: removed, ...rest } = filesMd ?? {}
+                setFilesMd(rest)
                 app.fileService.http.deleteFileMetadata({ key: value.key })
                 return
             }
-            const x = filesMd?.filter(t => t.key != value.key) ?? []
-            x.push(value)
-            setFilesMd(x)
+            setFilesMd({ ...filesMd, [value.key]: value })
             await app.fileService.http.saveFileMetadata(value)
         }
 
@@ -41,7 +40,6 @@ export function useFileMetadata(): FileMetadata {
             getSavedSelectedFile,
             saveSelectedFile,
             filesMd,
-            setFilesMd,
         }
         return x
     }, [filesMd])
@@ -49,7 +47,9 @@ export function useFileMetadata(): FileMetadata {
     useEffect(() => {
         ;(async () => {
             const x = await App.current.getAllFilesMetadata()
-            setFilesMd(x)
+            const obj: { [key: string]: C.FileInfo } = {}
+            x.map(t => (obj[t.key] = t))
+            setFilesMd(obj)
         })()
     }, [])
     return fileMetadata
@@ -60,6 +60,5 @@ export interface FileMetadata {
     getFileMetadata: (key: string) => C.FileInfo | null
     getSavedSelectedFile: (folder: string) => string | null
     saveSelectedFile: (folderName: string, filename: string) => Promise<void>
-    filesMd: C.FileInfo[] | undefined
-    setFilesMd(filesMd: C.FileInfo[]): void
+    filesMd: { [key: string]: C.FileInfo } | undefined
 }

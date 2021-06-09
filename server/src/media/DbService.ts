@@ -49,7 +49,3 @@ export class DbService<T> implements M.DbService<T> {
         return await this.repo.remove(x)
     }
 }
-
-function getUserHome() {
-    return process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"]
-}
