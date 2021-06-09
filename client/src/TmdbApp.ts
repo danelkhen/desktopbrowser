@@ -1,9 +1,9 @@
 import * as C from "../../shared/src/media"
-import { TmdbClientV4Extended } from "./utils/TmdbClientV4Extended"
-import { TmdbClientV3Extended } from "./utils/TmdbClientV3Extended"
 import { plus } from "../../shared/src"
 import { TmdbApiV3 } from "../../tmdb/src"
 import { MediaApp } from "./Media/MediaApp"
+import { TmdbClientV3Extended } from "./Media/TmdbClientV3Extended"
+import { TmdbClientV4Extended } from "./Media/TmdbClientV4Extended"
 type MediaDetails = TmdbApiV3.MediaDetails
 
 export class TmdbApp {
