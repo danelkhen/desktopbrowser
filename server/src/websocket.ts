@@ -1,11 +1,12 @@
 import * as http from "http"
 import * as https from "https"
 import * as ws from "ws"
+import { FileService } from "../../shared/src/contracts"
 import { MediaApp } from "../../shared/src/media"
 import { objectTryGet } from "./utils"
 import { extractFunctionCall } from "./utils/ProxyCall"
 
-export function setupWebsockets(server: http.Server | https.Server, app: MediaApp) {
+export function setupWebsockets(server: http.Server | https.Server, app: { fileService: FileService }) {
     console.log("setupWebsockets")
     const wss = new ws.Server({ path: "/api", server })
 

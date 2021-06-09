@@ -48,7 +48,7 @@ export async function main() {
     })
 
     const server = http.createServer(exp)
-    setupWebsockets(server, app)
+    setupWebsockets(server, { fileService })
 
     await new Promise<void>(resolve => server.listen(7777, resolve))
 

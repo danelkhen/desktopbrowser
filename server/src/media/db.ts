@@ -15,7 +15,7 @@ import {
 } from "typeorm"
 
 @Entity({ name: "by_filename" })
-export class ByFilename implements C.FileInfo {
+export class ByFilename {
     @PrimaryColumn() key: string = undefined!
     @Column("simple-array", { nullable: true }) selectedFiles: string[] = undefined!
     @Column("varchar", { nullable: true }) @Index() tmdbKey: string = undefined!
