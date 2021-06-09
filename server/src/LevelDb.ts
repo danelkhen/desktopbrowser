@@ -1,10 +1,5 @@
 import level, { LevelDB } from "level"
-import path from "path"
 import { FileInfo } from "../../shared/src/contracts"
-import { dataDir } from "./rootDir"
-
-console.log(dataDir)
-const database2 = path.join(dataDir, "db.level")
 
 export interface LevelDbEntity {
     collection: string
@@ -13,7 +8,7 @@ export interface LevelDbEntity {
 export class LevelDb {
     db: LevelDB
     constructor(public dbPath: string) {
-        this.db = level(database2, { valueEncoding: "json" })
+        this.db = level(dbPath, { valueEncoding: "json" })
     }
     async getAll<T extends LevelDbEntity>(collection: string): Promise<T[]> {
         const stream = this.db.createReadStream({
