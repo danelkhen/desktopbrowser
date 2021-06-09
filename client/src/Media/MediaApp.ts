@@ -1,5 +1,5 @@
 import { App } from "../App"
-import { TmdbApp } from "../TmdbApp"
+import { TmdbApp } from "./TmdbApp"
 import { Scanner } from "./Scanner"
 import * as C from "../../../shared/src/contracts"
 import * as M from "../../../shared/src/media"
