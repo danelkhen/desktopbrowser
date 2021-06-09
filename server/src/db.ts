@@ -1,6 +1,5 @@
 import * as C from "../../shared/src/contracts"
 import * as M from "../../shared/src/media"
-import * as path from "path"
 import "reflect-metadata"
 import {
     Column,
@@ -14,7 +13,6 @@ import {
     PrimaryColumn,
     Repository,
 } from "typeorm"
-import { dataDir } from "./rootDir"
 
 @Entity()
 export class ByFilename implements C.ByFilename {

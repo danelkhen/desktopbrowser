@@ -1,8 +1,7 @@
-import { IEnumerable } from "../../../shared/src/contracts"
 import * as fse from "fs-extra"
 import * as path from "path"
 
-export interface FileInfo {
+export interface FsInfo {
     stats?: fse.Stats
     path: string
     isLink?: boolean
@@ -14,17 +13,17 @@ export interface FileInfo {
     Length?: number
     Extension?: string
 }
-export namespace FileInfo {
-    export async function getChildren(path2: string): Promise<FileInfo[]> {
+export namespace FsInfo {
+    export async function getChildren(path2: string): Promise<FsInfo[]> {
         let list = await fse.readdir(path2)
-        let list2: FileInfo[] = []
+        let list2: FsInfo[] = []
         for (let t of list) {
             list2.push(await create(path.join(path2, t)))
         }
         return list2
     }
 
-    export async function getDescendants(path2: string): Promise<IEnumerable<FileInfo>> {
+    export async function getDescendants(path2: string): Promise<FsInfo[]> {
         let list = await getChildren(path2)
         let i = 0
         while (i < list.length) {
@@ -38,14 +37,14 @@ export namespace FileInfo {
         return list
     }
 
-    export async function create(path2: string): Promise<FileInfo> {
+    export async function create(path2: string): Promise<FsInfo> {
         if (path2 == null) {
             return {} as any // TODO:
         }
         const FullName = path.resolve(path2)
         const Name = path.basename(path2)
         const Extension = path.extname(path2)
-        const x: FileInfo = {
+        const x: FsInfo = {
             path: path2,
             FullName,
             Name,

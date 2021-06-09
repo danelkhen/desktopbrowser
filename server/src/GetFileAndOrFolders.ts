@@ -4,7 +4,7 @@ import { calculateFoldersSize } from "./calculateFoldersSize"
 import { isWindows } from "./FileService"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { dateToDefaultString } from "./utils"
-import { FileInfo } from "./utils/FileInfo"
+import { FsInfo } from "./utils/FileInfo"
 import { DriveInfo } from "./utils/io"
 
 export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
@@ -20,11 +20,11 @@ export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promis
     //if (searchPattern.IsNullOrEmpty())
     //    searchPattern = "*";
     else if (recursive) {
-        const dir = await FileInfo.create(path)
-        files2 = (await FileInfo.getDescendants(dir.path)).map(t => ToFile(t))
+        const dir = await FsInfo.create(path)
+        files2 = (await FsInfo.getDescendants(dir.path)).map(t => ToFile(t))
     } else {
-        const dir = await FileInfo.create(path)
-        const children = await FileInfo.getChildren(dir.path)
+        const dir = await FsInfo.create(path)
+        const children = await FsInfo.getChildren(dir.path)
         if (files && !folders) {
             files2 = children.filter(t => t.isFile).map(t => ToFile(t))
         } else if (folders && !files) {
@@ -85,7 +85,7 @@ export function OrderBy<TSource, TKey>(
     }
 }
 
-export function ToFile(file: FileInfo): File {
+export function ToFile(file: FsInfo): File {
     const file2: File = {
         type: undefined,
         Name: file.Name,
