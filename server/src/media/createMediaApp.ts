@@ -10,7 +10,6 @@ import { MediaScanner } from "../MediaScanner"
 import { rootDir } from "../rootDir"
 
 export function createMediaApp(db: Db) {
-    const byFilenameService = new DbService<ByFilename>(db, db.byFilename)
     const keyValueService = new KeyValueService(db)
     const mediaScanner = new MediaScanner()
 
