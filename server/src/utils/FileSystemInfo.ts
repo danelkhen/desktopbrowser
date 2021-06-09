@@ -2,75 +2,68 @@ import { IEnumerable } from "../../../shared/src/contracts"
 import * as fse from "fs-extra"
 import * as path from "path"
 
-export class FileSystemInfo {
-    protected constructor(path: string) {
-        this.path = path
-    }
-
-    static async create(path: string): Promise<FileSystemInfo> {
-        let x = new FileSystemInfo(path)
-        await x.init()
-        return x
-    }
-
-    async init() {
-        let path2 = this.path
-        this.Attributes = {
-            HasFlag: () => false, //TODO:
-        }
-        if (path2 == null) return
-        this.FullName = path.resolve(path2)
-        this.Name = path.basename(path2)
-        this.Extension = path.extname(path2)
-        try {
-            this.stats = await fse.lstatSync(path2)
-            this.Length = this.stats.size
-            this.isFile = this.stats.isFile()
-            this.isDir = this.stats.isDirectory()
-            this.LastWriteTime = this.stats.mtime
-            this.isLink = this.stats.isSymbolicLink()
-        } catch (e) {}
-        if (this.Name == null || this.Name == "") {
-            this.Name = this.path //console.log(path2, this);
-        }
-    }
-    stats: fse.Stats = undefined!
+export interface FileSystemInfo2 {
+    stats?: fse.Stats
     path: string
-    isLink: boolean = undefined!
-    isFile: boolean = undefined!
-    isDir: boolean = undefined!
-    Name: string = undefined!
+    isLink?: boolean
+    isFile?: boolean
+    isDir?: boolean
+    Name: string
     LastWriteTime?: Date
     Attributes?: { HasFlag: Function }
     FullName?: string
     Length?: number
     Extension?: string
+}
+export namespace FileSystemInfo2 {
+    export async function getChildren(path2: string): Promise<FileSystemInfo2[]> {
+        let list = await fse.readdir(path2)
+        let list2: FileSystemInfo2[] = []
+        for (let t of list) {
+            list2.push(await createFileSystemInfo2(path.join(path2, t)))
+        }
+        return list2
+    }
 
-    async getFiles(): Promise<IEnumerable<FileSystemInfo>> {
-        return (await this.getChildren()).filter(t => t.isFile)
-    }
-    async getDirs(): Promise<IEnumerable<FileSystemInfo>> {
-        return (await this.getChildren()).filter(t => t.isDir)
-    }
-    async getDescendants(): Promise<IEnumerable<FileSystemInfo>> {
-        let list = await this.getChildren()
+    export async function getDescendants(path2: string): Promise<IEnumerable<FileSystemInfo2>> {
+        let list = await getChildren(path2)
         let i = 0
         while (i < list.length) {
             let file = list[i]
             if (file.isDir) {
-                let list2 = await file.getChildren()
+                let list2 = await getChildren(file.path)
                 list.push(...list2)
             }
             i++
         }
         return list
     }
-    async getChildren(): Promise<FileSystemInfo[]> {
-        let list = await fse.readdir(this.path)
-        let list2: FileSystemInfo[] = []
-        for (let t of list) {
-            list2.push(await FileSystemInfo.create(path.join(this.path, t)))
-        }
-        return list2
+}
+
+export async function createFileSystemInfo2(path2: string): Promise<FileSystemInfo2> {
+    if (path2 == null) return {} as any // TODO:
+    const FullName = path.resolve(path2)
+    const Name = path.basename(path2)
+    const Extension = path.extname(path2)
+    const x: FileSystemInfo2 = {
+        path: path2,
+        FullName,
+        Name,
+        Extension,
+        Attributes: {
+            HasFlag: () => false, //TODO:
+        },
     }
+    try {
+        x.stats = await fse.lstatSync(path2)
+        x.Length = x.stats.size
+        x.isFile = x.stats.isFile()
+        x.isDir = x.stats.isDirectory()
+        x.LastWriteTime = x.stats.mtime
+        x.isLink = x.stats.isSymbolicLink()
+    } catch (e) {}
+    if (x.Name == null || x.Name == "") {
+        x.Name = path2 //console.log(path2, this);
+    }
+    return x
 }

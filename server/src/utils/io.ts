@@ -1,8 +1,7 @@
-﻿//import * as fs from "fs"
-import * as fse from "fs-extra"
+﻿import * as fse from "fs-extra"
 import * as path from "path"
 import { DriveInfoItem, getDrives } from "./getDrives"
-import { FileSystemInfo } from "./FileSystemInfo"
+import { FileSystemInfo2 } from "./FileSystemInfo"
 
 export class IoDir {
     static async Exists(s: string): Promise<boolean | undefined> {
@@ -55,23 +54,30 @@ export class IoPath {
     }
 }
 
-export class DriveInfo extends FileSystemInfo {
-    constructor(mount: string) {
-        super(null!)
-        this.path = mount + "\\"
-        this.Name = mount
+export interface DriveInfo2 extends FileSystemInfo2 {
+    IsReady: boolean
+    /** in mac a string returns */
+    AvailableFreeSpace: number | string
+    Capacity: string
+}
+export class DriveInfo {
+    static create(mount: string): DriveInfo2 {
+        return {
+            path: mount + "\\",
+            Name: mount,
+        } as any // TODO:
     }
-    static drives: DriveInfo[] = []
-    static GetDrives(): DriveInfo[] {
+    static drives: DriveInfo2[] = []
+    static GetDrives(): DriveInfo2[] {
         return this.drives
     }
-    static async GetDrives3(): Promise<DriveInfo[]> {
+    static async GetDrives3(): Promise<DriveInfo2[]> {
         const list = await this.GetDrives2()
         this.drives = list.map(t => this.toDriveInfo(t))
         return this.drives
     }
     static toDriveInfo(x: DriveInfoItem) {
-        let di = new DriveInfo(x.mounted)
+        let di = DriveInfo.create(x.mounted)
         di.IsReady = true
         di.AvailableFreeSpace = x.available
         di.Capacity = x.capacity

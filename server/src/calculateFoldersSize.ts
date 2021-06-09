@@ -1,6 +1,6 @@
 import { File, IEnumerable } from "../../shared/src/contracts"
 import { Stopwatch } from "./GetFileAndFoldersRequest"
-import { FileSystemInfo } from "./utils/FileSystemInfo"
+import { createFileSystemInfo2, FileSystemInfo2 } from "./utils/FileSystemInfo"
 
 let cache = {} as { [key: string]: Promise<any> }
 
@@ -34,7 +34,7 @@ export function CalculateFolderSize(path: string): Promise<number> {
 export async function CalculateFolderSizeNoCache(path: string): Promise<number> {
     var size = 0
     try {
-        var list = await (await FileSystemInfo.create(path)).getChildren()
+        var list = await FileSystemInfo2.getChildren(path)
         for (let item of list) {
             if (item.isFile) size += item.Length!
             else if (item.isDir) size += await CalculateFolderSize(item.FullName!)
