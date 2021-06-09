@@ -51,7 +51,6 @@ export function proxyForFileService() {
             deleteFileMetadata: req => http("deleteFileMetadata", [req]),
             getAllFilesMetadata: () => http("getAllFilesMetadata", []),
             ListFiles: req => http("ListFiles", [req]),
-            // ListFilesWebSocket: req => ws("ListFiles", [req]),
             GetFiles: req => http("GetFiles", [req]),
             GetFileRelatives: path => http("GetFileRelatives", [path]),
             GetFile: req => http("GetFile", [req]),
@@ -59,8 +58,7 @@ export function proxyForFileService() {
             Explore: req => http("Explore", [req]),
             Delete: req => http("Delete", [req]),
             trash: req => http("trash", [req]),
-            // clearCache: () => http("clearCache"),
-        } as Partial<C.FileService> as C.FileService) // TODO:
+        } as C.FileService)
 
     return {
         http: httpProxyFor<C.FileService>("/api/fs", impl),
@@ -82,6 +80,6 @@ export function proxyForAppService() {
                 scanForMedia: () => http("scanForMedia"),
                 scanStatus: () => http("scanStatus"),
                 getMediaFiles: req => http("getMediaFiles", [req]),
-            } as Partial<C.App> as C.App) // TODO:
+            } as C.App)
     )
 }
