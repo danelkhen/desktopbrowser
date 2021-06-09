@@ -261,7 +261,7 @@ export class FileService
             IsFolder: !!file.isDir,
             Modified: file.LastWriteTime != null ? dateToDefaultString(file.LastWriteTime) : undefined,
             Size: file.isFile ? file.Length : undefined,
-            IsHidden: file?.Attributes?.HasFlag(FileAttributes.Hidden),
+            IsHidden: false, // TODO:
             Extension: file?.Extension,
         }
         if (file.isDir) file2.type = "folder"

@@ -10,7 +10,6 @@ export interface FileSystemInfo2 {
     isDir?: boolean
     Name: string
     LastWriteTime?: Date
-    Attributes?: { HasFlag: Function }
     FullName?: string
     Length?: number
     Extension?: string
@@ -50,9 +49,6 @@ export async function createFileSystemInfo2(path2: string): Promise<FileSystemIn
         FullName,
         Name,
         Extension,
-        Attributes: {
-            HasFlag: () => false, //TODO:
-        },
     }
     try {
         x.stats = await fse.lstatSync(path2)
