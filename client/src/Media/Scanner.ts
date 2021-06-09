@@ -1,9 +1,9 @@
 ﻿import * as C from "../../../shared/src/contracts"
 import { TmdbApiV3 } from "../../../tmdb/src"
 import { App } from "../App"
-import { FilenameParser } from "./FilenameParser"
+import { FilenameParser } from "../utils/FilenameParser"
 import moment from "moment"
-import { MediaApp } from "../Media/MediaApp"
+import { MediaApp } from "./MediaApp"
 
 type Response = TmdbApiV3.Response
 type TmdbMedia = TmdbApiV3.TmdbMedia

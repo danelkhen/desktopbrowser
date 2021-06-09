@@ -1,11 +1,9 @@
+import { useMemo } from "react"
 import * as C from "../../../../shared/src/contracts"
 import { File } from "../../../../shared/src/contracts"
-import { useMemo } from "react"
-import { Scanner } from "../../utils/Scanner"
+import { App } from "../../App"
 import { Columns } from "../Columns"
 import { ColumnsConfig } from "../Grid/Grid"
-import { App } from "../../App"
-import { MediaApp } from "../../Media/MediaApp"
 
 export type FileColumnsConfig = ColumnsConfig<C.File, Columns>
 

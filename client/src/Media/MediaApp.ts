@@ -1,8 +1,9 @@
 import { App } from "../App"
 import { TmdbApp } from "../TmdbApp"
-import { Scanner } from "../utils/Scanner"
+import { Scanner } from "./Scanner"
 import * as C from "../../../shared/src/contracts"
 import { Config } from "../../../shared/src/contracts"
+import { FilenameParser } from "../utils/FilenameParser"
 
 export class MediaApp {
     constructor(public app: App) {}
@@ -38,7 +39,7 @@ export class MediaApp {
         console.log("STARTED scanAllFsEntries")
         let req: C.GetMediaFilesRequest = { firstResult: 0, maxResults: 500, notScannedOnly: true }
         while (true) {
-            let mfs = await this.app.getMediaFiles(req)
+            let mfs = await this.getMediaFiles(req)
             if (mfs.length == 0) {
                 console.log("Finished scanAllFsEntries")
                 return
@@ -65,5 +66,22 @@ export class MediaApp {
             let file = res.Files?.find(t => t.Name == name)
             if (file) return file
         }
+    }
+
+    parseFilename(mf: C.MediaFile) {
+        if (mf.parsed != null) return
+        if (mf.fsEntry == null) return
+        mf.parsed = new FilenameParser().parse(mf.fsEntry.basename)
+    }
+
+    async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
+        let x = await this.app.appService.getMediaFiles(req)
+        x.forEach(t => {
+            if (t.md == null) {
+                t.md = { key: t.fsEntry.basename }
+            }
+            this.parseFilename(t)
+        })
+        return x
     }
 }

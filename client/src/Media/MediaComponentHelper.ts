@@ -178,7 +178,7 @@ export class MediaComponentHelper {
         this.allMovies = []
         this.onAllMoviesChanged()
         while (!this.noMoreMoviesOnServer) {
-            let moreMovies = await this.app.app.getMediaFiles({ firstResult: this.allMovies.length, maxResults: 500 })
+            let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length, maxResults: 500 })
             if (moreMovies.length == 0) {
                 this.noMoreMoviesOnServer = true
                 break

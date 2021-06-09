@@ -3,7 +3,7 @@ import cx from "classnames"
 import { MediaComponentHelper } from "./MediaComponentHelper"
 import { App } from "../App"
 import { MediaApp } from "./MediaApp"
-import { Scanner } from "../utils/Scanner"
+import { Scanner } from "./Scanner"
 
 export function MediaComponent() {
     const [version, setVersion] = useState(0)
