@@ -1,7 +1,6 @@
 import * as Path from "path"
 import * as M from "../../shared/src/media"
-import { MediaApp } from "./media/App"
-import { FsEntry } from "./db"
+import { Db, FsEntry } from "./db"
 import { dateToDefaultString } from "./utils"
 import { FileEvent, FileScanner } from "./utils/FileScanner"
 import moment = require("moment")
@@ -30,7 +29,7 @@ export class MediaScanner {
         return x
     }
     scanner: FileScanner = undefined!
-    app: MediaApp = undefined!
+    app: M.MediaApp = undefined!
 
     isRunning(): boolean {
         return this.status != null && this.status.started != null && this.status.finished == null
@@ -44,7 +43,7 @@ export class MediaScanner {
         if (config == null || config.folders == null || config.folders.length == 0) return
         this.status.started = new Date()
 
-        let db = this.app.db
+        let db: Db = null!
         let scanner = new FileScanner()
         scanner.prioritizeRecentlyModified = true
         this.scanner = scanner

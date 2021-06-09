@@ -3,11 +3,11 @@ import proxy from "express-http-proxy"
 import http from "http"
 import os from "os"
 import path from "path"
-import { MediaApp } from "./media/App"
 import { createFileService } from "./createFileService"
 import { Db } from "./db"
 import { handleServiceRequest } from "./handleServiceRequest"
 import { LevelDb } from "./LevelDb"
+import { createMediaApp } from "./media/App"
 import { migrateToLevelDb } from "./migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
 import { setupWebsockets } from "./websocket"
@@ -27,7 +27,7 @@ export async function main() {
     const levelDb = new LevelDb(database2)
     const fileService = createFileService(levelDb)
 
-    const app = new MediaApp(db)
+    const app = createMediaApp(db)
     const services = {
         fs: fileService,
         app: app,

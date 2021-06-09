@@ -1,9 +1,9 @@
 import * as http from "http"
 import * as https from "https"
 import * as ws from "ws"
+import { MediaApp } from "../../shared/src/media"
 import { objectTryGet } from "./utils"
 import { extractFunctionCall } from "./utils/ProxyCall"
-import { MediaApp } from "./media/App"
 
 export function setupWebsockets(server: http.Server | https.Server, app: MediaApp) {
     console.log("setupWebsockets")
