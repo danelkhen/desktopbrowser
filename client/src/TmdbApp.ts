@@ -20,7 +20,7 @@ export class TmdbApp {
     tmdb: TmdbClientV3Extended
     tmdbV4: TmdbClientV4Extended
     get keyValue() {
-        return this.app.app.proxies.keyValue
+        return this.app.keyValue
     }
 
     async init() {

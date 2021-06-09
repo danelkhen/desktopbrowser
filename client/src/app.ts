@@ -15,7 +15,7 @@ export function useApp() {
     return app
 }
 export class App {
-    proxies: Proxies
+    private proxies: Proxies
     static current: App
     static async init() {
         if (App.current) return App.current

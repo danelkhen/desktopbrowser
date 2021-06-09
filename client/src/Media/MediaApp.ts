@@ -4,6 +4,7 @@ import { Scanner } from "./Scanner"
 import * as C from "../../../shared/src/contracts"
 import { Config } from "../../../shared/src/contracts"
 import { FilenameParser } from "../utils/FilenameParser"
+import { proxyForAppService, proxyForKeyValueService } from "../utils/DbService"
 
 export class MediaApp {
     constructor(public app: App) {}
@@ -87,7 +88,6 @@ export class MediaApp {
         return x
     }
 
-    get appService() {
-        return this.app.proxies.appService
-    }
+    keyValue = proxyForKeyValueService()
+    appService = proxyForAppService()
 }

@@ -8,13 +8,11 @@ export interface Proxies {
         http: C.FileService
         ws: C.FileService
     }
-    keyValue: C.KeyValueService
     appService: C.App
 }
 export function getProxies(): Proxies {
     return {
         fileService: proxyForFileService(),
-        keyValue: proxyForKeyValueService(),
         appService: proxyForAppService(),
     }
 }
