@@ -1,9 +1,9 @@
 import * as C from "../../shared/src/contracts"
+import { createFileService2 } from "./FileService"
 import { LevelDb } from "./LevelDb"
-import { FileService } from "./FileService"
 
 export function createFileService(db: LevelDb): C.FileService {
-    const x = new FileService()
+    const x = createFileService2()
     const obj = x as any
     Object.keys(x.constructor.prototype)
         .filter(t => typeof obj[t] == "function")
