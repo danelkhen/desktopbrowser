@@ -26,7 +26,7 @@ export function proxyForDbService<T>(url: string) {
     }))
 }
 export function proxyForByFilenameService() {
-    return proxyForDbService<C.ByFilename>("/api/byFilename")
+    return proxyForDbService<C.FileInfo>("/api/byFilename")
 }
 export function proxyForKeyValueService() {
     return httpProxyFor<M.KeyValueService>("/api/keyValue", http => ({

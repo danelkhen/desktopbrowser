@@ -6,7 +6,7 @@ export interface HasKey {
     key: string
 }
 
-export interface ByFilename {
+export interface FileInfo {
     key: string
     selectedFiles?: string[]
     tmdbKey?: string
@@ -17,10 +17,10 @@ export interface ByFilename {
 }
 
 export interface FileService {
-    saveFileMetadata(md: ByFilename): Promise<void>
+    saveFileMetadata(md: FileInfo): Promise<void>
     deleteFileMetadata(req: { key: string }): Promise<void>
-    getAllFilesMetadata(): Promise<ByFilename[]>
-    getFileMetadata(req: { key: string }): Promise<ByFilename>
+    getAllFilesMetadata(): Promise<FileInfo[]>
+    getFileMetadata(req: { key: string }): Promise<FileInfo>
     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
     GetFiles(req: ListFilesRequest): Promise<File[]>
     GetFileRelatives(path: string): Promise<FileRelativesInfo>

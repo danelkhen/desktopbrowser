@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import * as M from "../../shared/src/media"
-import { ByFilename, File } from "../../shared/src/contracts"
+import { FileInfo, File } from "../../shared/src/contracts"
 import { FsEntry } from "../../shared/src/media"
 import { proxyForFileService } from "./utils/DbService"
 
@@ -30,11 +30,11 @@ export class App {
 
     fileService = proxyForFileService()
 
-    async getAllFilesMetadata(): Promise<ByFilename[]> {
+    async getAllFilesMetadata(): Promise<FileInfo[]> {
         return await this.fileService.http.getAllFilesMetadata()
     }
 
-    async getFileMetadata(file: File | string): Promise<ByFilename> {
+    async getFileMetadata(file: File | string): Promise<FileInfo> {
         let name = file as string
         if (file instanceof File) name = (file as File).Name
         let x = await this.fileService.http.getFileMetadata({ key: name })

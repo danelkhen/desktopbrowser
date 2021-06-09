@@ -3,7 +3,6 @@ import log from "electron-log"
 import path from "path"
 import { main } from "../../server/src/main"
 import { dataDir, rootDir } from "../../server/src/rootDir"
-import { migrateToLevelDb } from "../../server/src/migrateToLevelDb"
 
 Object.assign(console, log.functions)
 

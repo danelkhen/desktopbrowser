@@ -1,6 +1,6 @@
 import { FindManyOptions, FindOneOptions } from "typeorm"
 import { TmdbApiV3 as tmdb } from "../../tmdb/src"
-import { ByFilename, FileService } from "./contracts"
+import { FileInfo, FileService } from "./contracts"
 export { FindManyOptions, FindOneOptions }
 import { File } from "./contracts"
 
@@ -47,7 +47,7 @@ export interface GetMediaFilesRequest {
 }
 
 export interface MediaFile {
-    md: ByFilename
+    md: FileInfo
     file?: File
     tmdb?: tmdb.MediaDetails | null
     tmdbBasic?: tmdb.TmdbMedia

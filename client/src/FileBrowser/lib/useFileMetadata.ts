@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from "react"
 import { App } from "../../App"
 
 export function useFileMetadata(): FileMetadata {
-    const [filesMd, setFilesMd] = useState<C.ByFilename[]>()
+    const [filesMd, setFilesMd] = useState<C.FileInfo[]>()
 
     const fileMetadata = useMemo(() => {
         const app = App.current
@@ -17,13 +17,13 @@ export function useFileMetadata(): FileMetadata {
             return x.selectedFiles[0]
         }
 
-        function getFileMetadata(key: string): C.ByFilename | null {
+        function getFileMetadata(key: string): C.FileInfo | null {
             const x = filesMd?.find(t => t.key == key)
             if (!x) return null
             return x
         }
 
-        async function setFileMetadata(value: C.ByFilename) {
+        async function setFileMetadata(value: C.FileInfo) {
             if (value.selectedFiles == null || value.selectedFiles.length == 0) {
                 setFilesMd(filesMd?.filter(t => t.key != value.key) ?? [])
                 app.fileService.http.deleteFileMetadata({ key: value.key })
@@ -56,10 +56,10 @@ export function useFileMetadata(): FileMetadata {
 }
 
 export interface FileMetadata {
-    setFileMetadata: (value: C.ByFilename) => Promise<void>
-    getFileMetadata: (key: string) => C.ByFilename | null
+    setFileMetadata: (value: C.FileInfo) => Promise<void>
+    getFileMetadata: (key: string) => C.FileInfo | null
     getSavedSelectedFile: (folder: string) => string | null
     saveSelectedFile: (folderName: string, filename: string) => Promise<void>
-    filesMd: C.ByFilename[] | undefined
-    setFilesMd(filesMd: C.ByFilename[]): void
+    filesMd: C.FileInfo[] | undefined
+    setFilesMd(filesMd: C.FileInfo[]): void
 }

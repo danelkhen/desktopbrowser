@@ -14,8 +14,8 @@ import {
     Repository,
 } from "typeorm"
 
-@Entity()
-export class ByFilename implements C.ByFilename {
+@Entity({ name: "by_filename" })
+export class ByFilename implements C.FileInfo {
     @PrimaryColumn() key: string = undefined!
     @Column("simple-array", { nullable: true }) selectedFiles: string[] = undefined!
     @Column("varchar", { nullable: true }) @Index() tmdbKey: string = undefined!

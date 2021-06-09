@@ -1,6 +1,6 @@
 import level, { LevelDB } from "level"
 import path from "path"
-import { ByFilename } from "../../shared/src/contracts"
+import { FileInfo } from "../../shared/src/contracts"
 import { dataDir } from "./rootDir"
 
 console.log(dataDir)
@@ -19,7 +19,7 @@ export class LevelDb {
         const stream = this.db.createReadStream({
             gt: `${collection}/`,
             lt: `${collection}0`,
-        }) as AsyncIterable<{ key: string; value: ByFilename }>
+        }) as AsyncIterable<{ key: string; value: FileInfo }>
         const list: T[] = []
         for await (const item of stream) {
             const obj = { ...item.value, collection, key: item.key.replace(`${collection}/`, "") }
