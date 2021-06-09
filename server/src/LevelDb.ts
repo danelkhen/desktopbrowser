@@ -41,6 +41,10 @@ export class LevelDb {
 
 export class LevelDbCollection<T extends LevelDbEntity> {
     constructor(public db: LevelDb, public collection: string) {}
+    async getAllByKeys(keys: string[]): Promise<T[]> {
+        const collection = this.collection
+        return await Promise.all(keys.map(key => this.db.get<T>({ collection, key })))
+    }
     async getAll(): Promise<T[]> {
         return await this.db.getAll(this.collection)
     }

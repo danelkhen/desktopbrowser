@@ -35,8 +35,9 @@ export interface MediaScannerStatus {
     dir: { path: string; mtime: string }
 }
 
-export interface KeyValue<T> {
+export interface KeyValue<T = any> {
     key: string
+    collection: string
     value: T
 }
 

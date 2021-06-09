@@ -8,9 +8,10 @@ import { DbService } from "./DbService"
 import { KeyValueService } from "./KeyValueService"
 import { MediaScanner } from "./MediaScanner"
 import { rootDir } from "../rootDir"
+import { LevelDbCollection } from "../LevelDb"
 
-export function createMediaApp(db: Db) {
-    const keyValueService = new KeyValueService(db)
+export function createMediaApp(db: Db, keyValueCollection: LevelDbCollection<M.KeyValue>) {
+    const keyValueService = new KeyValueService(keyValueCollection)
     const mediaScanner = new MediaScanner()
 
     const x: M.MediaApp = {
@@ -55,7 +56,7 @@ export function createMediaApp(db: Db) {
             //     .limit(req!.maxResults || 100)
             let x: FsEntry[] = [] // await q.getMany()
             let mfs = x.map(
-                t => (({ fsEntry: t, md: (t as any).md, type: null, parsed: null } as unknown) as M.MediaFile)
+                t => ({ fsEntry: t, md: (t as any).md, type: null, parsed: null } as unknown as M.MediaFile)
             )
             x.forEach(t => delete (t as any).md)
 
@@ -64,7 +65,7 @@ export function createMediaApp(db: Db) {
                 let tmdbKeys = Array.from(new Set(hasTmdbKeys.map(t => t.md.tmdbKey)))
                 let cachePrefix = "tmdb|details|"
                 let cacheKeys = tmdbKeys.map(t => cachePrefix + t)
-                let cachedMediaDetails = (await keyValueService.dbService.repo.findByIds(
+                let cachedMediaDetails = (await keyValueService.dbService.repo.getAllByKeys(
                     cacheKeys
                 )) as M.KeyValue<Tmdb.MediaDetails>[]
                 for (let media of cachedMediaDetails) {
@@ -78,35 +79,35 @@ export function createMediaApp(db: Db) {
     return x
 }
 
-async function getMediaFiles2(req?: M.GetMediaFilesRequest): Promise<M.MediaFile[]> {
-    const db: Db = null!
-    const keyValueService: KeyValueService = null!
-    let fsEntries = await db.fsEntries.find({ take: req!.maxResults, skip: req!.firstResult })
-    let mds = await db.byFilename.find()
-    let mdMap = new Map<string, ByFilename>()
-    mds.forEach(md => mdMap.set(md.key, md))
+// async function getMediaFiles2(req?: M.GetMediaFilesRequest): Promise<M.MediaFile[]> {
+//     const db: Db = null!
+//     const keyValueService: KeyValueService = null!
+//     let fsEntries = await db.fsEntries.find({ take: req!.maxResults, skip: req!.firstResult })
+//     let mds = await db.byFilename.find()
+//     let mdMap = new Map<string, ByFilename>()
+//     mds.forEach(md => mdMap.set(md.key, md))
 
-    let mfs: M.MediaFile[] = fsEntries.map(
-        fsEntry =>
-            (({
-                fsEntry: fsEntry,
-                md: mdMap.get(fsEntry.basename),
-                type: null,
-                parsed: null,
-            } as unknown) as M.MediaFile)
-    )
-    let hasTmdbKeys = mfs.filter(t => t.md != null && t.md.tmdbKey != null)
-    if (hasTmdbKeys.length > 0) {
-        let tmdbKeys = Array.from(new Set(hasTmdbKeys.map(t => t.md.tmdbKey)))
-        let cachePrefix = "tmdb|details|"
-        let cacheKeys = tmdbKeys.map(t => cachePrefix + t)
-        let cachedMediaDetails = (await keyValueService.dbService.repo.findByIds(
-            cacheKeys
-        )) as M.KeyValue<Tmdb.MediaDetails>[]
-        for (let media of cachedMediaDetails) {
-            let tmdbKey = media.key.substr(cachePrefix.length)
-            hasTmdbKeys.filter(t => t.md.tmdbKey == tmdbKey).forEach(t => (t.tmdb = media.value))
-        }
-    }
-    return mfs
-}
+//     let mfs: M.MediaFile[] = fsEntries.map(
+//         fsEntry =>
+//             ({
+//                 fsEntry: fsEntry,
+//                 md: mdMap.get(fsEntry.basename),
+//                 type: null,
+//                 parsed: null,
+//             } as unknown as M.MediaFile)
+//     )
+//     let hasTmdbKeys = mfs.filter(t => t.md != null && t.md.tmdbKey != null)
+//     if (hasTmdbKeys.length > 0) {
+//         let tmdbKeys = Array.from(new Set(hasTmdbKeys.map(t => t.md.tmdbKey)))
+//         let cachePrefix = "tmdb|details|"
+//         let cacheKeys = tmdbKeys.map(t => cachePrefix + t)
+//         let cachedMediaDetails = (await keyValueService.dbService.repo.findByIds(
+//             cacheKeys
+//         )) as M.KeyValue<Tmdb.MediaDetails>[]
+//         for (let media of cachedMediaDetails) {
+//             let tmdbKey = media.key.substr(cachePrefix.length)
+//             hasTmdbKeys.filter(t => t.md.tmdbKey == tmdbKey).forEach(t => (t.tmdb = media.value))
+//         }
+//     }
+//     return mfs
+// }

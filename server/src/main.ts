@@ -6,11 +6,12 @@ import path from "path"
 import { createFileService } from "./createFileService"
 import { Db } from "./media/db"
 import { handleServiceRequest } from "./handleServiceRequest"
-import { AppDb, LevelDb } from "./LevelDb"
+import { AppDb, LevelDb, LevelDbCollection } from "./LevelDb"
 import { createMediaApp } from "./media/createMediaApp"
 import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
 import { setupWebsockets } from "./websocket"
+import type * as M from "../../shared/src/media"
 
 export async function main() {
     console.log(dataDir)
@@ -27,7 +28,8 @@ export async function main() {
     const fileService = createFileService(appDb)
 
     const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
-    const app = createMediaApp(db)
+    const keyValueCollection = new LevelDbCollection<M.KeyValue>(levelDb, "keyValue")
+    const app = createMediaApp(db, keyValueCollection)
     const services = {
         fs: fileService,
         app: app,

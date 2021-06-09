@@ -111,7 +111,7 @@ export class TmdbApp {
         let x = await this.keyValue.findOneById<MediaDetails>({ id: cacheKey })
         if (x != null && x.value != null) return x.value
         let x2 = await this.tmdb.getMovieOrTvByTypeAndId(tmdbKey)
-        this.keyValue.persist({ key: cacheKey, value: x2 })
+        this.keyValue.persist({ key: cacheKey, value: x2, collection: "" })
         return x2
     }
     async loadTmdbMediaDetails(mfs: C.MediaFile[]): Promise<C.MediaFile[]> {
@@ -127,6 +127,7 @@ export class TmdbApp {
         await this.keyValue.persist<TmdbRatingsPage>({
             key: "tmdb_" + name + "_" + media_type + "_page_" + page,
             value: { ids: ids },
+            collection: "",
         })
     }
 }

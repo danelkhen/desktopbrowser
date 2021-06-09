@@ -1,14 +1,15 @@
-﻿import * as C from "../../../shared/src/media"
-import { FindOneOptions } from "typeorm"
-import { Db, KeyValue } from "./db"
+﻿import { FindOneOptions } from "typeorm"
+import * as C from "../../../shared/src/media"
+import { LevelDbCollection } from "../LevelDb"
+import { KeyValue } from "./db"
 import { DbService } from "./DbService"
 
 export class KeyValueService implements C.KeyValueService {
-    constructor(public db: Db) {
-        this.dbService = new DbService<KeyValue>(db, db.keyValue)
+    constructor(public db: LevelDbCollection<C.KeyValue>) {
+        this.dbService = new DbService<C.KeyValue>(db)
     }
 
-    dbService: DbService<KeyValue>
+    dbService: DbService<C.KeyValue>
 
     toKeyValue<T extends C.HasKey>(obj: T): KeyValue {
         let key = obj.key
@@ -38,11 +39,13 @@ export class KeyValueService implements C.KeyValueService {
     //     return Q.copy(src, target, { overwrite: true });
     // }
     async persist<T>(obj: C.KeyValue<T>): Promise<C.KeyValue<T>> {
-        let obj2 = await this.findOneById({ id: obj.key })
-        if (obj2 != null) obj2 = { ...obj2, ...obj }
-        //this.copyOverwrite(obj.value, obj2.value);
-        else obj2 = obj
-        //let kv = this.toKeyValue(obj2);
-        return this.dbService.repo.manager.save(obj2 as any) //.then(t => this.fromKeyValue<T>(t));
+        throw new Error("not implemented")
+
+        // let obj2 = await this.findOneById({ id: obj.key })
+        // if (obj2 != null) obj2 = { ...obj2, ...obj }
+        // //this.copyOverwrite(obj.value, obj2.value);
+        // else obj2 = obj
+        // //let kv = this.toKeyValue(obj2);
+        // return this.dbService.repo.manager.save(obj2 as any) //.then(t => this.fromKeyValue<T>(t));
     }
 }

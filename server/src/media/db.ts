@@ -1,5 +1,3 @@
-import * as C from "../../../shared/src/contracts"
-import * as M from "../../../shared/src/media"
 import "reflect-metadata"
 import {
     Column,
@@ -7,12 +5,11 @@ import {
     ConnectionOptions,
     createConnection,
     Entity,
-    EntitySubscriberInterface,
-    EventSubscriber,
     Index,
     PrimaryColumn,
     Repository,
 } from "typeorm"
+import * as M from "../../../shared/src/media"
 
 @Entity({ name: "by_filename" })
 export class ByFilename {
@@ -52,7 +49,7 @@ export class Db {
         const connectionOptions: ConnectionOptions = {
             type: "sqlite",
             database,
-            subscribers: [EverythingSubscriber],
+            // subscribers: [EverythingSubscriber],
             entities: [ByFilename, KeyValue, FsEntry],
             synchronize: true,
             //logging: {  logQueries: false, }
@@ -76,38 +73,38 @@ export class Db {
     }
 }
 
-@EventSubscriber()
-export class EverythingSubscriber implements EntitySubscriberInterface<any> {
-    //function test() {
-    //    let db = new Db();
-    //    db.init().then(() => {
-    //        db.keyValue.findOneById("ggg").then(t=>console.log(t));
-    //        //let x = new KeyValue();
-    //        //x.key = "ggg";
-    //        //x.value = {a:"b",c:"d"};
-    //        //db.keyValue.persist(x).then(() => console.log("Done"));
-    //    });
-    //}
-    //test();
-    //beforeInsert(event: InsertEvent<any>) {
-    //    console.log(`BEFORE ENTITY INSERTED: `, event.entity);
-    //}
-    //beforeUpdate(event: UpdateEvent<any>) {
-    //    console.log(`BEFORE ENTITY UPDATED: `, event.entity);
-    //}
-    //beforeRemove(event: RemoveEvent<any>) {
-    //    console.log(`BEFORE ENTITY WITH ID ${event.entityId} REMOVED: `, event.entity);
-    //}
-    //afterInsert(event: InsertEvent<any>) {
-    //    console.log(`AFTER ENTITY INSERTED: `, event.entity.key);
-    //}
-    //afterUpdate(event: UpdateEvent<any>) {
-    //    console.log(`AFTER ENTITY UPDATED: `, event.entity.key);
-    //}
-    //afterRemove(event: RemoveEvent<any>) {
-    //    console.log(`AFTER ENTITY WITH ID ${event.entityId} REMOVED: `, event.entity.key);
-    //}
-    //afterLoad(entity: any) {
-    //    console.log(`AFTER ENTITY LOADED: `, entity.key);
-    //}
-}
+// @EventSubscriber()
+// export class EverythingSubscriber implements EntitySubscriberInterface<any> {
+//     //function test() {
+//     //    let db = new Db();
+//     //    db.init().then(() => {
+//     //        db.keyValue.findOneById("ggg").then(t=>console.log(t));
+//     //        //let x = new KeyValue();
+//     //        //x.key = "ggg";
+//     //        //x.value = {a:"b",c:"d"};
+//     //        //db.keyValue.persist(x).then(() => console.log("Done"));
+//     //    });
+//     //}
+//     //test();
+//     //beforeInsert(event: InsertEvent<any>) {
+//     //    console.log(`BEFORE ENTITY INSERTED: `, event.entity);
+//     //}
+//     //beforeUpdate(event: UpdateEvent<any>) {
+//     //    console.log(`BEFORE ENTITY UPDATED: `, event.entity);
+//     //}
+//     //beforeRemove(event: RemoveEvent<any>) {
+//     //    console.log(`BEFORE ENTITY WITH ID ${event.entityId} REMOVED: `, event.entity);
+//     //}
+//     //afterInsert(event: InsertEvent<any>) {
+//     //    console.log(`AFTER ENTITY INSERTED: `, event.entity.key);
+//     //}
+//     //afterUpdate(event: UpdateEvent<any>) {
+//     //    console.log(`AFTER ENTITY UPDATED: `, event.entity.key);
+//     //}
+//     //afterRemove(event: RemoveEvent<any>) {
+//     //    console.log(`AFTER ENTITY WITH ID ${event.entityId} REMOVED: `, event.entity.key);
+//     //}
+//     //afterLoad(entity: any) {
+//     //    console.log(`AFTER ENTITY LOADED: `, entity.key);
+//     //}
+// }
