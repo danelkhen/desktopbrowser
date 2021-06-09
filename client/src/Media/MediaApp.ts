@@ -23,8 +23,10 @@ export class MediaApp {
 
     async markAsWatched(mf: C.MediaFile): Promise<void> {
         mf.md.watched = true
-        if (mf.md.tmdbKey != null) await this.tmdbApp.tmdb.markAsWatched(mf.md.tmdbKey)
-        await this.app.byFilename.persist(mf.md)
+        if (mf.md.tmdbKey != null) {
+            await this.tmdbApp.tmdb.markAsWatched(mf.md.tmdbKey)
+        }
+        await this.app.fileService.http.saveFileMetadata(mf.md)
     }
 
     async analyze(mfs: C.MediaFile[], opts?: { force?: boolean }): Promise<void> {

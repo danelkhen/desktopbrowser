@@ -35,6 +35,11 @@ export class LevelDb {
         const { collection, key } = obj
         await this.db.del(`${collection}/${key}`)
     }
+    async get<T>(obj: LevelDbEntity): Promise<T> {
+        const { collection, key } = obj
+        const res = await this.db.get(`${collection}/${key}`)
+        return res
+    }
 }
 
 // new LevelDb(database2).getAll("files").then(t => console.log(t))

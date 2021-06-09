@@ -56,6 +56,7 @@ export interface FileService {
     saveFileMetadata(md: ByFilename): Promise<void>
     deleteFileMetadata(req: { key: string }): Promise<void>
     getAllFilesMetadata(): Promise<ByFilename[]>
+    getFileMetadata(req: { key: string }): Promise<ByFilename>
     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
     GetFiles(req: ListFilesRequest): Promise<File[]>
     GetFileRelatives(path: string): Promise<FileRelativesInfo>

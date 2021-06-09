@@ -27,9 +27,6 @@ export class App {
     get fileService() {
         return this.proxies.fileService
     }
-    get byFilename() {
-        return this.proxies.byFilename
-    }
     get keyValue() {
         return this.proxies.keyValue
     }
@@ -54,7 +51,7 @@ export class App {
     async getFileMetadata(file: File | string): Promise<ByFilename> {
         let name = file as string
         if (file instanceof File) name = (file as File).Name
-        let x = await this.byFilename.findOneById({ id: name })
+        let x = await this.fileService.http.getFileMetadata({ key: name })
         if (x == null) x = { key: name }
         return x
     }

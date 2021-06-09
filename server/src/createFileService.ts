@@ -4,6 +4,9 @@ import { ListFiles, GetFiles, GetFileRelatives, GetFile, Execute, Explore, Delet
 
 export function createFileService(db: LevelDb): C.FileService {
     return {
+        async getFileMetadata({ key }) {
+            return db.get({ collection: "files", key })
+        },
         async getAllFilesMetadata() {
             return db.getAll("files")
         },

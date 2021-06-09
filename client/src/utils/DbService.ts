@@ -8,7 +8,6 @@ export interface Proxies {
         http: C.FileService
         ws: C.FileService
     }
-    byFilename: C.DbService<C.ByFilename>
     keyValue: C.KeyValueService
     fsEntryService: C.DbService<C.FsEntry>
     appService: C.App
@@ -16,7 +15,6 @@ export interface Proxies {
 export function getProxies(): Proxies {
     return {
         fileService: proxyForFileService(),
-        byFilename: proxyForByFilenameService(),
         keyValue: proxyForKeyValueService(),
         fsEntryService: proxyForFsEntryService(),
         appService: proxyForAppService(),
@@ -53,6 +51,7 @@ export function proxyForFileService() {
     const impl: (http: Invoker<C.FileService>) => C.FileService = http =>
         ({
             saveFileMetadata: req => http("saveFileMetadata", [req]),
+            getFileMetadata: req => http("getFileMetadata", [req]),
             deleteFileMetadata: req => http("deleteFileMetadata", [req]),
             getAllFilesMetadata: () => http("getAllFilesMetadata", []),
             ListFiles: req => http("ListFiles", [req]),

@@ -51,7 +51,7 @@ export class Scanner {
         if (mf.md.scanned != null && mf.md.scanned != "" && (opts == null || !opts.force)) return
         mf.md.scanned = moment().format("YYYY-MM-DD HH:mm:ss")
         await this._analyze(mf)
-        this.app?.app.byFilename.persist(mf.md)
+        this.app?.app.fileService.http.saveFileMetadata(mf.md)
     }
     async _analyze(mf: C.MediaFile): Promise<void> {
         let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name)
