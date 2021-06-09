@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import * as M from "../../shared/src/media"
 import { FileInfo, File } from "../../shared/src/contracts"
 import { FsEntry } from "../../shared/src/media"
-import { proxyForFileService } from "./utils/proxyForFileService"
+import { proxyForFileService } from "./FileBrowser/lib/proxyForFileService"
 
 export function useApp() {
     const [app, setApp] = useState<App | null>(null)
