@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import * as C from "../../shared/src/contracts"
 import { ByFilename, File, FsEntry } from "../../shared/src/contracts"
-import { getProxies, Proxies } from "./utils/DbService"
+import { proxyForFileService } from "./utils/DbService"
 
 export function useApp() {
     const [app, setApp] = useState<App | null>(null)
@@ -15,7 +15,6 @@ export function useApp() {
     return app
 }
 export class App {
-    private proxies: Proxies
     static current: App
     static async init() {
         if (App.current) return App.current
@@ -23,19 +22,15 @@ export class App {
         return App.current
     }
 
-    get fileService() {
-        return this.proxies.fileService
-    }
-
     constructor() {
         console.log("App ctor", this)
         ;(window as any)["_app"] = this
-        this.proxies = getProxies()
     }
+
+    fileService = proxyForFileService()
 
     async getAllFilesMetadata(): Promise<ByFilename[]> {
         return await this.fileService.http.getAllFilesMetadata()
-        // return this.byFilename.find({})
     }
 
     async getFileMetadata(file: File | string): Promise<ByFilename> {
