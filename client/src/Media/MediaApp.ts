@@ -2,7 +2,7 @@ import { App } from "../App"
 import { TmdbApp } from "../TmdbApp"
 import { Scanner } from "./Scanner"
 import * as C from "../../../shared/src/contracts"
-import { Config } from "../../../shared/src/contracts"
+import * as M from "../../../shared/src/media"
 import { FilenameParser } from "../utils/FilenameParser"
 import { proxyForAppService, proxyForKeyValueService } from "../utils/DbService"
 
@@ -22,7 +22,7 @@ export class MediaApp {
         return scanner
     }
 
-    async markAsWatched(mf: C.MediaFile): Promise<void> {
+    async markAsWatched(mf: M.MediaFile): Promise<void> {
         mf.md.watched = true
         if (mf.md.tmdbKey != null) {
             await this.tmdbApp.tmdb.markAsWatched(mf.md.tmdbKey)
@@ -30,7 +30,7 @@ export class MediaApp {
         await this.app.fileService.http.saveFileMetadata(mf.md)
     }
 
-    async analyze(mfs: C.MediaFile[], opts?: { force?: boolean }): Promise<void> {
+    async analyze(mfs: M.MediaFile[], opts?: { force?: boolean }): Promise<void> {
         for (let mf of mfs) {
             if (mf.tmdb != null && (opts == null || !opts.force)) continue
             await this.createScanner().analyze(mf, opts)
@@ -40,7 +40,7 @@ export class MediaApp {
     //TODO: @ReusePromiseIfStillRunning()
     async scanAllFsEntries(): Promise<void> {
         console.log("STARTED scanAllFsEntries")
-        let req: C.GetMediaFilesRequest = { firstResult: 0, maxResults: 500, notScannedOnly: true }
+        let req: M.GetMediaFilesRequest = { firstResult: 0, maxResults: 500, notScannedOnly: true }
         while (true) {
             let mfs = await this.getMediaFiles(req)
             if (mfs.length == 0) {
@@ -61,7 +61,7 @@ export class MediaApp {
         this.config && (await this.appService.saveConfig(this.config))
     }
 
-    config: Config | undefined
+    config: M.Config | undefined
 
     async findFile(name: string): Promise<C.File | undefined> {
         for (let folder of this.config?.folders ?? []) {
@@ -71,13 +71,13 @@ export class MediaApp {
         }
     }
 
-    parseFilename(mf: C.MediaFile) {
+    parseFilename(mf: M.MediaFile) {
         if (mf.parsed != null) return
         if (mf.fsEntry == null) return
         mf.parsed = new FilenameParser().parse(mf.fsEntry.basename)
     }
 
-    async getMediaFiles(req?: C.GetMediaFilesRequest): Promise<C.MediaFile[]> {
+    async getMediaFiles(req?: M.GetMediaFilesRequest): Promise<M.MediaFile[]> {
         let x = await this.appService.getMediaFiles(req)
         x.forEach(t => {
             if (t.md == null) {

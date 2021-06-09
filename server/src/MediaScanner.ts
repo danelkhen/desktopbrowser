@@ -1,9 +1,9 @@
-import { FileScanner, FileEvent } from "./utils/FileScanner"
-import { Db, FsEntry } from "./db"
 import * as Path from "path"
+import * as M from "../../shared/src/media"
 import { App } from "./App"
-import * as C from "../../shared/src/contracts"
+import { FsEntry } from "./db"
 import { dateToDefaultString } from "./utils"
+import { FileEvent, FileScanner } from "./utils/FileScanner"
 import moment = require("moment")
 
 const FILE_TYPES = ["File", "Directory", "BlockDevice", "CharacterDevice", "SymbolicLink", "FIFO", "Socket"]
@@ -85,7 +85,7 @@ export class MediaScanner {
     //        return;
     //    setTimeout(() => this.status(), 1000);
     //}
-    status: C.MediaScannerStatus = {
+    status: M.MediaScannerStatus = {
         scanned: 0,
         saved: 0,
         stack: 0,

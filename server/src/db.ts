@@ -1,4 +1,5 @@
 import * as C from "../../shared/src/contracts"
+import * as M from "../../shared/src/media"
 import * as path from "path"
 import "reflect-metadata"
 import {
@@ -28,7 +29,7 @@ export class ByFilename implements C.ByFilename {
 }
 
 @Entity()
-export class FsEntry implements C.FsEntry {
+export class FsEntry implements M.FsEntry {
     @PrimaryColumn() key: string = undefined!
     @Column("varchar", { nullable: true }) @Index() basename: string = undefined!
     @Column("varchar", { nullable: true }) dirname: string = undefined!

@@ -1,4 +1,5 @@
 import * as C from "../../../shared/src/contracts"
+import * as M from "../../../shared/src/media"
 import { getWebSocketInvoker } from "../utils/webSocket"
 import { Invoker } from "./Proxy"
 import { getHttpInvoker } from "./ServiceBase"
@@ -8,7 +9,7 @@ export interface Proxies {
         http: C.FileService
         ws: C.FileService
     }
-    appService: C.App
+    appService: M.App
 }
 export function getProxies(): Proxies {
     return {
@@ -17,7 +18,7 @@ export function getProxies(): Proxies {
     }
 }
 export function proxyForDbService<T>(url: string) {
-    return httpProxyFor<C.DbService<T>>(url, http => ({
+    return httpProxyFor<M.DbService<T>>(url, http => ({
         findOneById: req => http("findOneById", [req]) as Promise<any>,
         persist: obj => http("persist", [obj]) as Promise<any>,
         find: req => http("find", [req]) as Promise<any>,
@@ -28,7 +29,7 @@ export function proxyForByFilenameService() {
     return proxyForDbService<C.ByFilename>("/api/byFilename")
 }
 export function proxyForKeyValueService() {
-    return httpProxyFor<C.KeyValueService>("/api/keyValue", http => ({
+    return httpProxyFor<M.KeyValueService>("/api/keyValue", http => ({
         findOneById: req => http("findOneById", [req]) as Promise<any>,
         persist: obj => http("persist", [obj]) as Promise<any>,
         findAllWithKeyLike: req => http("findAllWithKeyLike", [req]) as Promise<any>,
@@ -67,11 +68,11 @@ export function proxyForFileService() {
 }
 
 export function proxyForFsEntryService() {
-    return proxyForDbService<C.FsEntry>("/api/fsEntry")
+    return proxyForDbService<M.FsEntry>("/api/fsEntry")
 }
 
 export function proxyForAppService() {
-    return httpProxyFor<C.App>(
+    return httpProxyFor<M.App>(
         "/api/app",
         http =>
             ({
@@ -80,6 +81,6 @@ export function proxyForAppService() {
                 scanForMedia: () => http("scanForMedia"),
                 scanStatus: () => http("scanStatus"),
                 getMediaFiles: req => http("getMediaFiles", [req]),
-            } as C.App)
+            } as M.App)
     )
 }

@@ -1,8 +1,8 @@
-﻿import * as C from "../../shared/src/contracts"
+﻿import * as M from "../../shared/src/media"
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm"
 import { Db } from "./db"
 
-export class DbService<T> implements C.DbService<T> {
+export class DbService<T> implements M.DbService<T> {
     constructor(public db: Db, public repo: Repository<T>) {}
 
     // db: Db = undefined!

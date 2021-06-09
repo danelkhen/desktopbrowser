@@ -1,4 +1,4 @@
-﻿import * as C from "../../../shared/src/contracts"
+﻿import * as M from "../../../shared/src/media"
 import { TmdbApiV3 } from "../../../tmdb/src"
 import { App } from "../App"
 import { FilenameParser } from "../utils/FilenameParser"
@@ -10,7 +10,7 @@ type TmdbMedia = TmdbApiV3.TmdbMedia
 export class Scanner {
     folders: string[] | undefined
     app: MediaApp | undefined
-    results: C.MediaFile[] | undefined
+    results: M.MediaFile[] | undefined
     errors: any[] = []
 
     videoExts = [".mkv", ".avi", ".ts", ".mpeg", ".mp4", ".mpg"]
@@ -34,7 +34,7 @@ export class Scanner {
                 console.log("tmdbId already exists, skipping", { file, md })
                 continue
             }
-            let mf: C.MediaFile = { file, md, type: null, parsed: null, fsEntry: null } as unknown as C.MediaFile
+            let mf: M.MediaFile = { file, md, type: null, parsed: null, fsEntry: null } as unknown as M.MediaFile
             try {
                 await this.analyze(mf)
             } catch (e2) {
@@ -47,13 +47,13 @@ export class Scanner {
         }
     }
 
-    async analyze(mf: C.MediaFile, opts?: { force?: boolean }): Promise<void> {
+    async analyze(mf: M.MediaFile, opts?: { force?: boolean }): Promise<void> {
         if (mf.md.scanned != null && mf.md.scanned != "" && (opts == null || !opts.force)) return
         mf.md.scanned = moment().format("YYYY-MM-DD HH:mm:ss")
         await this._analyze(mf)
         this.app?.app.fileService.http.saveFileMetadata(mf.md)
     }
-    async _analyze(mf: C.MediaFile): Promise<void> {
+    async _analyze(mf: M.MediaFile): Promise<void> {
         let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name)
         if (!filename) return
         let path = (mf.fsEntry && mf.fsEntry.key) || (mf.file && mf.file.Path)

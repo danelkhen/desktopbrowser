@@ -1,4 +1,4 @@
-import { FilenameParsedInfo } from "../../../shared/src/contracts"
+import { FilenameParsedInfo } from "../../../shared/src/media"
 import moment from "moment"
 import { takeWhile } from "../../../shared/src"
 

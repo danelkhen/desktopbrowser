@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import * as C from "../../shared/src/contracts"
-import { ByFilename, File, FsEntry } from "../../shared/src/contracts"
+import * as M from "../../shared/src/media"
+import { ByFilename, File } from "../../shared/src/contracts"
+import { FsEntry } from "../../shared/src/media"
 import { proxyForFileService } from "./utils/DbService"
 
 export function useApp() {
@@ -41,7 +42,7 @@ export class App {
         return x
     }
 
-    fsEntryToMediaFile(x: FsEntry): C.MediaFile {
-        return { fsEntry: x } as C.MediaFile
+    fsEntryToMediaFile(x: FsEntry): M.MediaFile {
+        return { fsEntry: x } as M.MediaFile
     }
 }

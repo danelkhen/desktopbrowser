@@ -48,7 +48,7 @@ export async function main() {
     const server = http.createServer(exp)
     setupWebsockets(server, app)
 
-    await new Promise<void>((resolve, reject) => server.listen(7777, resolve))
+    await new Promise<void>(resolve => server.listen(7777, resolve))
 
     console.log("server started: http://localhost:7777")
 }

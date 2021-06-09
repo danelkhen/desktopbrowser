@@ -1,4 +1,4 @@
-import * as C from "../../../shared/src/contracts"
+import * as M from "../../../shared/src/media"
 import { File } from "../../../shared/src/contracts"
 import { App } from "../App"
 import { desc, orderBy, sleep, ReusePromiseIfStillRunning, groupBy } from "../../../shared/src"
@@ -25,10 +25,10 @@ export class MediaComponentHelper {
         search: null,
         sortBy: "fsEntry.mtime desc",
     }
-    allMovies: C.MediaFile[] | undefined
-    movies: C.MediaFile[] | undefined
-    filteredMovies: C.MediaFile[] | undefined
-    selectedMovie: C.MediaFile | null = null
+    allMovies: M.MediaFile[] | undefined
+    movies: M.MediaFile[] | undefined
+    filteredMovies: M.MediaFile[] | undefined
+    selectedMovie: M.MediaFile | null = null
     onChanged: (() => void) | undefined
 
     async ngOnInit() {
@@ -48,7 +48,7 @@ export class MediaComponentHelper {
         list = this.applyFilterSortBy(list)
         this.filteredMovies = list
     }
-    applyFilterSortBy(list: C.MediaFile[]): C.MediaFile[] {
+    applyFilterSortBy(list: M.MediaFile[]): M.MediaFile[] {
         let list2 = list
         if (this.filter.sortBy == null) return list2
         let tokens = this.filter.sortBy.split(" ")
@@ -64,13 +64,13 @@ export class MediaComponentHelper {
         return list2
     }
 
-    getType(mf: C.MediaFile): string | null {
+    getType(mf: M.MediaFile): string | null {
         if (mf.type != null) return mf.type
         if (mf.tmdb != null && mf.tmdb.media_type != null) return mf.tmdb.media_type
         if (mf.parsed != null && mf.parsed.episode != null) return "tv"
         return null
     }
-    applyFilterType(list: C.MediaFile[]): C.MediaFile[] {
+    applyFilterType(list: M.MediaFile[]): M.MediaFile[] {
         if (this.filter.type == null) return list
 
         return list.filter(t => {
@@ -79,10 +79,10 @@ export class MediaComponentHelper {
         })
     }
 
-    getSimilarKey(mf: C.MediaFile): string {
+    getSimilarKey(mf: M.MediaFile): string {
         return (mf.md && mf.md.tmdbKey) || (mf.parsed && mf.parsed.name) || (mf.fsEntry && mf.fsEntry.basename)
     }
-    applyFilterGroupSimilar(list: C.MediaFile[]): C.MediaFile[] {
+    applyFilterGroupSimilar(list: M.MediaFile[]): M.MediaFile[] {
         if (!this.filter.groupSimilar) return list
         return list[groupBy](t => this.getSimilarKey(t)).map(group => {
             let list2 = group[orderBy](t => t.md && t.md.episodeKey)
@@ -90,7 +90,7 @@ export class MediaComponentHelper {
             return best || list2[0]
         })
     }
-    applyFilterSearch(list: C.MediaFile[]): C.MediaFile[] {
+    applyFilterSearch(list: M.MediaFile[]): M.MediaFile[] {
         if (this.filter.search == null || this.filter.search == "" || this.filter.search.trim() == "") return list
         let tokens = this.filter.search.split(" ").map(t => t.trim().toLowerCase())
 
@@ -102,10 +102,10 @@ export class MediaComponentHelper {
             return x
         })
     }
-    isWatched(mf: C.MediaFile): boolean {
+    isWatched(mf: M.MediaFile): boolean {
         return (mf.md != null && mf.md.watched) || false
     }
-    applyFilterWatched(list: C.MediaFile[]): C.MediaFile[] {
+    applyFilterWatched(list: M.MediaFile[]): M.MediaFile[] {
         if (this.filter.watched == null) return list
         return list.filter(t => this.filter.watched == this.isWatched(t))
     }
@@ -120,7 +120,7 @@ export class MediaComponentHelper {
         await this.getAvailableMedia()
     }
 
-    movie_click(movie: C.MediaFile) {
+    movie_click(movie: M.MediaFile) {
         this.selectedMovie = movie
         console.log("movie_click", this.selectedMovie)
     }
@@ -132,7 +132,7 @@ export class MediaComponentHelper {
     async getPopularMovies() {
         if (this.movies != null && this.movies.length > 0) return
         let e = await this.app.tmdbApp.tmdb.movieGetPopular({ language: "en" })
-        this.movies = e.results?.map(t => <C.MediaFile>{ md: {}, tmdb: t })
+        this.movies = e.results?.map(t => <M.MediaFile>{ md: {}, tmdb: t })
         console.log(this.movies)
     }
     pageSize = 20
@@ -197,7 +197,7 @@ export class MediaComponentHelper {
         console.log({ allMovies: this.allMovies, movies: this.movies, filtered: this.filteredMovies })
     }
 
-    getName(mf: C.MediaFile): string {
+    getName(mf: M.MediaFile): string {
         let name = ""
         if (mf.tmdb != null) name = mf.tmdb.name || mf.tmdb.title
         //else if (mf.parsed != null)
@@ -207,10 +207,10 @@ export class MediaComponentHelper {
         return name
     }
 
-    canPlay(mf: C.MediaFile): boolean {
+    canPlay(mf: M.MediaFile): boolean {
         return true
     }
-    async play(mf: C.MediaFile): Promise<void> {
+    async play(mf: M.MediaFile): Promise<void> {
         if (mf == null) return
         let path: string | null = null
         if (path == null && mf.fsEntry != null) path = mf.fsEntry.key
@@ -236,7 +236,7 @@ export class MediaComponentHelper {
         //console.log(await this.app.tmdbV4.invoke(t => t.accountGetCreatedLists({})));
     }
 
-    markAsWatched(mf: C.MediaFile) {
+    markAsWatched(mf: M.MediaFile) {
         return this.app.markAsWatched(mf)
         //return this.app.tmdb.markAsWatched(media.id);
     }
@@ -281,7 +281,7 @@ export class MediaComponentHelper {
         )
     }
 
-    scanStatus: C.MediaScannerStatus | undefined
+    scanStatus: M.MediaScannerStatus | undefined
     async scan() {
         this.scanStatus = await this.app.appService.scanForMedia()
         await sleep(3000)

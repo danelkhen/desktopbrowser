@@ -1,4 +1,4 @@
-import * as C from "../../shared/src/contracts"
+import * as C from "../../shared/src/media"
 import { TmdbClientV4Extended } from "./utils/TmdbClientV4Extended"
 import { TmdbClientV3Extended } from "./utils/TmdbClientV3Extended"
 import { App } from "./App"
