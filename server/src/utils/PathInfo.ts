@@ -1,5 +1,5 @@
 ﻿import { removeLast } from "../../../shared/src"
-import { FileInfo } from "./FileSystemInfo"
+import { FileInfo } from "./FileInfo"
 import { IoFile, IoDir, IoPath } from "./io"
 
 export class PathInfo {
