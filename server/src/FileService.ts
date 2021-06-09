@@ -29,7 +29,6 @@ function isWindows() {
 
 export class FileService
     implements Omit<C.FileService, "getAllFilesMetadata" | "saveFileMetadata" | "deleteFileMetadata"> {
-    constructor(public db: LevelDb) {}
     baseDbFilename: string = undefined!
 
     async ListFiles(req: ListFilesRequest): Promise<ListFilesResponse> {

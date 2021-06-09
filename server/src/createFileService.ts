@@ -3,7 +3,7 @@ import { LevelDb } from "./LevelDb"
 import { FileService } from "./FileService"
 
 export function createFileService(db: LevelDb): C.FileService {
-    const x = new FileService(db)
+    const x = new FileService()
     const obj = x as any
     Object.keys(x.constructor.prototype)
         .filter(t => typeof obj[t] == "function")
