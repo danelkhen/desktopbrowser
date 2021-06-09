@@ -8,9 +8,7 @@
     "scripts": {
         "dev": "npx concurrently --names \"server,server,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd server; npx nodemon .\" \"cd client; npx webpack serve\"",
         "build": "cd server; npx tsc && cd ../client; npx webpack --mode production",
-        "pkg": "ln -s ../../.bin node_modules/pkg/node_modules/.bin; ./server/node_modules/.bin/node-pre-gyp install --directory=./server/node_modules/sqlite3 --target_platform=darwin --target_arch=x64; ./server/node_modules/.bin/node-pre-gyp install --directory=./server/node_modules/sqlite3 --target_platform=win32  --target_arch=x64; pkg .",
         "start": "electron-forge start",
-        "app": "electron app/dist/app/src/app.js",
         "package": "electron-forge package",
         "make": "electron-forge make"
     },
@@ -62,23 +60,14 @@
         "eslint-plugin-prettier": "^3.1.2",
         "eslint-plugin-react": "^7.17.0"
     },
-    "pkg": {
-        "scripts": [
-            "server/out/**/*.js",
-            "server/node_modules/sqlite3/**/*.{node,js}"
-        ],
-        "assets": [
-            "client/dist/**/*",
-            "client/img/**/*"
-        ],
-        "targets": [
-            "node14-win-x64",
-            "node14-macos-x64"
-        ]
-    },
     "config": {
         "forge": {
-            "packagerConfig": {},
+            "packagerConfig": {
+                "ignore": [
+                    "tmdb-gen",
+                    "scripts"
+                ]
+            },
             "makers": [
                 {
                     "name": "@electron-forge/maker-squirrel",

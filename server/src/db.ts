@@ -48,8 +48,7 @@ export class KeyValue {
 
 export class Db {
     constructor(public connection: Connection) {}
-    static async create(): Promise<Db> {
-        const database = path.join(dataDir, "db.sqlite")
+    static async create(database: string): Promise<Db> {
         console.log("db dir", database)
         const connectionOptions: ConnectionOptions = {
             type: "sqlite",

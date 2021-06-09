@@ -198,7 +198,7 @@ export class FileService implements C.FileService {
         let files2: IEnumerable<File>
         if (!path && !isWindows()) path = "/"
         if (!path) {
-            files2 = this.GetHomeFiles()
+            files2 = await this.GetHomeFiles()
         } else if (!files && !folders) files2 = []
         //var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         //if (searchPattern.IsNullOrEmpty())
@@ -224,8 +224,9 @@ export class FileService implements C.FileService {
     async isWindows() {
         return os.platform() == "win32"
     }
-    GetHomeFiles(): File[] {
-        return DriveInfo.GetDrives().map(t => /*new File*/ ({
+    async GetHomeFiles(): Promise<File[]> {
+        const list = await DriveInfo.GetDrives3()
+        return list.map(t => /*new File*/ ({
             IsFolder: true,
             Name: t.Name,
             Path: t.Name,

@@ -3,14 +3,11 @@ import path from "path"
 import { Db } from "./db"
 import { LevelDb } from "./LevelDb"
 import { dataDir } from "./rootDir"
-console.log(dataDir)
-const database2 = path.join(dataDir, "db.level")
 
-export async function migrateToLevelDb() {
-    const database = path.join(dataDir, "db.sqlite")
+export async function migrateToLevelDb(database: string, database2: string) {
     if ((await pathExists(database)) && !(await pathExists(database2))) {
         const db2 = new LevelDb(database2)
-        const db = await Db.create()
+        const db = await Db.create(database)
         const list = await db.byFilename.find()
         for (const file of list) {
             const rest = { ...file, collection: "files" }

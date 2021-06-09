@@ -32,8 +32,6 @@ async function main2() {
 
         app.dock.hide()
 
-        await migrateToLevelDb()
-
         // Create a new tray
         tray = new Tray(path.join(rootDir, "app/assets/clapperboard-16x16.png"))
         tray.on("right-click", toggleWindow)

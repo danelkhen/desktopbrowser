@@ -37,9 +37,6 @@
         "typescript": "^4.2.3",
         "ws": "^7.4.4"
     },
-    "optionalDependencies": {
-        "diskinfo": "^0.0.3"
-    },
     "devDependencies": {
         "@tsconfig/node14": "^1.0.0",
         "@types/jest": "^26.0.23",
