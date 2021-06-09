@@ -1,5 +1,5 @@
 import { FileService } from "../../../shared/src/contracts"
-import { getHttpInvoker } from "./ServiceBase"
+import { getHttpInvoker } from "./getHttpInvoker"
 import { getWebSocketInvoker } from "./webSocket"
 
 export function proxyForFileService() {

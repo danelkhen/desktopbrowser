@@ -1,5 +1,5 @@
 import { Invoker } from "./Proxy"
-import { getHttpInvoker } from "./ServiceBase"
+import { getHttpInvoker } from "./getHttpInvoker"
 
 export function httpProxyFor<T>(url: string, impl: (http: Invoker<T>) => T) {
     const http = getHttpInvoker<T>(url)
