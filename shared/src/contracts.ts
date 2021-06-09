@@ -56,8 +56,6 @@ export interface FileService {
     saveFileMetadata(md: ByFilename): Promise<void>
     deleteFileMetadata(req: { key: string }): Promise<void>
     getAllFilesMetadata(): Promise<ByFilename[]>
-    //init();
-    //migrateToSqlite();
     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
     GetFiles(req: ListFilesRequest): Promise<File[]>
     GetFileRelatives(path: string): Promise<FileRelativesInfo>
@@ -68,7 +66,6 @@ export interface FileService {
     trash(req: PathRequest): Promise<void>
     ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>
     isWindows(): Promise<boolean>
-    // GetHomeFiles(): File[]
     CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>
     CalculateFolderSize(path: string): Promise<number>
     CalculateFolderSizeNoCache(path: string): Promise<number>

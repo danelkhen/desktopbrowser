@@ -20,6 +20,7 @@ import { PathInfo } from "./utils/PathInfo"
 import open from "open"
 import { LevelDb } from "./LevelDb"
 import { Db } from "./db"
+import { GetFileAndFoldersRequest, Stopwatch } from "./GetFileAndFoldersRequest"
 
 function isWindows() {
     return os.platform() == "win32"
@@ -370,18 +371,4 @@ export class FileService implements C.FileService {
     async clearCache() {
         this.cache = {}
     }
-}
-
-export class Stopwatch {
-    Start() {}
-    Stop() {}
-    ElapsedMilliseconds: number = undefined!
-}
-
-export interface GetFileAndFoldersRequest {
-    path: string
-    searchPattern?: string
-    recursive?: boolean
-    files?: boolean
-    folders?: boolean
 }
