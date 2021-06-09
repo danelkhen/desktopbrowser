@@ -1,6 +1,6 @@
 import fs from "fs/promises"
-import { LevelDb } from "./LevelDb"
-import { Db } from "./media/db"
+import { LevelDb } from "../LevelDb"
+import { Db } from "./db"
 
 export async function migrateToLevelDb(database: string, database2: string) {
     if ((await pathExists(database)) && !(await pathExists(database2))) {

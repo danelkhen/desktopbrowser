@@ -8,7 +8,7 @@ import { Db } from "./media/db"
 import { handleServiceRequest } from "./handleServiceRequest"
 import { LevelDb } from "./LevelDb"
 import { createMediaApp } from "./media/createMediaApp"
-import { migrateToLevelDb } from "./migrateToLevelDb"
+import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
 import { setupWebsockets } from "./websocket"
 
