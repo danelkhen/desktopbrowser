@@ -1,23 +1,21 @@
-﻿import type * as C from "../../shared/src/contracts"
-import type { Config } from "../../shared/src/contracts"
-import { promises as Fs } from "fs"
+﻿import { promises as Fs } from "fs"
 import fse from "fs-extra"
 import * as Path from "path"
+import type * as C from "../../shared/src/contracts"
+import type { Config } from "../../shared/src/contracts"
 import { TmdbApiV3 as Tmdb } from "../../tmdb/src"
+import { createFileService } from "./createFileService"
 import { ByFilename, Db, FsEntry } from "./db"
 import { DbService } from "./DbService"
 import { KeyValueService } from "./KeyValueService"
-import { MediaScanner } from "./MediaScanner"
-import { sleep } from "../../shared/src"
-import { rootDir } from "./rootDir"
 import { LevelDb } from "./LevelDb"
-import { createFileService } from "./createFileService"
+import { MediaScanner } from "./MediaScanner"
+import { rootDir } from "./rootDir"
 
 export class App implements C.App {
     constructor(public db: Db, public levelDb: LevelDb) {
         this.byFilenameService = new DbService<ByFilename>(this.db, this.db.byFilename)
         this.keyValueService = new KeyValueService(this.db)
-        this.fsEntryService = new FsEntryService(this.db, this.db.fsEntries)
         this.fileService = createFileService(levelDb)
         this.mediaScanner = new MediaScanner()
         this.mediaScanner.app = this
@@ -27,7 +25,6 @@ export class App implements C.App {
     keyValueService: KeyValueService = undefined!
     byFilenameService: DbService<ByFilename> = undefined!
     mediaScanner: MediaScanner = undefined!
-    fsEntryService: FsEntryService = undefined!
 
     async getConfig(): Promise<Config> {
         let root = rootDir
@@ -117,18 +114,4 @@ export class App implements C.App {
         }
         return mfs
     }
-
-    *testIterable() {
-        for (let i = 0; i < 10; i++) yield i
-    }
-    async *testAsyncIterable() {
-        for (let i = 0; i < 10; i++) {
-            await sleep(1000)
-            yield i
-        }
-    }
 }
-
-export class FsEntryService extends DbService<FsEntry> implements C.FsEntryService {}
-
-//export let app = new App()

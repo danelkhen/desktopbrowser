@@ -50,8 +50,6 @@ export interface FsEntry {
     ctime: string
 }
 
-export interface FsEntryService extends DbService<FsEntry> {}
-
 export interface FileService {
     saveFileMetadata(md: ByFilename): Promise<void>
     deleteFileMetadata(req: { key: string }): Promise<void>
@@ -65,30 +63,7 @@ export interface FileService {
     Explore(req: PathRequest): void
     Delete(req: PathRequest): Promise<void>
     trash(req: PathRequest): Promise<void>
-    // ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>
-    // isWindows(): Promise<boolean>
-    // CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>
-    // CalculateFolderSize(path: string): Promise<number>
-    // CalculateFolderSizeNoCache(path: string): Promise<number>
-    // clearCache(): Promise<void>
 }
-
-// export interface FileService2 {
-//     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
-//     GetFiles(req: ListFilesRequest): AsyncIterableIterator<File>
-//     GetFileRelatives(path: string): Promise<FileRelativesInfo>
-//     GetFile(req: PathRequest): Promise<File>
-//     Execute(req: PathRequest): void
-//     Explore(req: PathRequest): void
-//     Delete(req: PathRequest): Promise<void>
-//     trash(req: PathRequest): Promise<void>
-//     isWindows(): boolean
-//     GetHomeFiles(): File[]
-//     CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>
-//     CalculateFolderSize(path: string): Promise<number>
-//     CalculateFolderSizeNoCache(path: string): Promise<number>
-//     clearCache(): void
-// }
 
 export interface ListFilesRequest {
     sortBy?: string
@@ -186,14 +161,11 @@ export interface App {
     scanStatus(): Promise<MediaScannerStatus>
     getMediaFiles(req?: GetMediaFilesRequest): Promise<MediaFile[]>
     fileService: FileService
-    // fileService2: FileService2
     keyValueService: KeyValueService
-    fsEntryService: FsEntryService
 }
 export interface GetMediaFilesRequest {
     firstResult?: number
     maxResults?: number
-    //find?: FindRequest;
     notScannedOnly?: boolean
 }
 

@@ -28,7 +28,6 @@ export async function main() {
         fs: app.fileService,
         byFilename: app.byFilenameService,
         keyValue: app.keyValueService,
-        fsEntry: app.fsEntryService,
         app: app,
     }
 
