@@ -4,7 +4,7 @@ import { Scanner } from "./Scanner"
 import * as C from "../../../shared/src/contracts"
 import * as M from "../../../shared/src/media"
 import { FilenameParser } from "../utils/FilenameParser"
-import { proxyForAppService, proxyForKeyValueService } from "../utils/DbService"
+import { proxyForAppService, proxyForKeyValueService } from "./proxies"
 
 export class MediaApp {
     constructor(public app: App) {}
