@@ -12,7 +12,7 @@ export function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
         args: null,
     }
     let fake: any = {}
-    fake[res.name] = function() {
+    fake[res.name] = function () {
         res.args = Array.from(arguments)
     }
     func(fake)

@@ -15,8 +15,6 @@ import { setupWebsockets } from "./websocket"
 export async function main() {
     console.log(dataDir)
 
-    const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
-
     console.log("os", JSON.stringify(os.platform()))
     process.on("uncaughtException", e => console.log("uncaughtException", e))
 
@@ -27,6 +25,7 @@ export async function main() {
     const levelDb = new LevelDb(database2)
     const fileService = createFileService(levelDb)
 
+    const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
     const app = createMediaApp(db)
     const services = {
         fs: fileService,

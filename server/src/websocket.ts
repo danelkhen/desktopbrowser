@@ -2,11 +2,10 @@ import * as http from "http"
 import * as https from "https"
 import * as ws from "ws"
 import { FileService } from "../../shared/src/contracts"
-import { MediaApp } from "../../shared/src/media"
 import { objectTryGet } from "./utils"
 import { extractFunctionCall } from "./utils/ProxyCall"
 
-export function setupWebsockets(server: http.Server | https.Server, app: { fileService: FileService }) {
+export function setupWebsockets(server: http.Server | https.Server, services: { fileService: FileService }) {
     console.log("setupWebsockets")
     const wss = new ws.Server({ path: "/api", server })
 
@@ -17,7 +16,7 @@ export function setupWebsockets(server: http.Server | https.Server, app: { fileS
                 let data = String(message)
                 console.log("ws.message received: %s", message)
                 let pc = extractFunctionCall(data)
-                let target = objectTryGet(app, pc.target)
+                let target = objectTryGet(services, pc.target)
                 let res = await target[pc.funcName](...pc.args)
                 if (isIterable(res)) {
                     console.log("sending iterable!!!!!!!!!!!!!!!!")
@@ -45,11 +44,11 @@ export function setupWebsockets(server: http.Server | https.Server, app: { fileS
     })
 }
 
-function isIterable(obj: any) {
+function isIterable(obj: any): obj is Iterable<unknown> {
     if (obj == null) return false
     return typeof obj[Symbol.iterator] === "function"
 }
-function isAsyncIterable(obj: any) {
+function isAsyncIterable(obj: any): obj is AsyncIterable<unknown> {
     if (obj == null) return false
     return typeof obj[Symbol.asyncIterator] === "function"
 }
