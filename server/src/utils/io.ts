@@ -1,7 +1,7 @@
 ﻿import * as fse from "fs-extra"
 import * as path from "path"
 import { DriveInfoItem, getDrives } from "./getDrives"
-import { FileSystemInfo2 } from "./FileSystemInfo"
+import { FileInfo } from "./FileSystemInfo"
 
 export class IoDir {
     static async Exists(s: string): Promise<boolean | undefined> {
@@ -54,7 +54,7 @@ export class IoPath {
     }
 }
 
-export interface DriveInfo2 extends FileSystemInfo2 {
+export interface DriveInfo2 extends FileInfo {
     IsReady: boolean
     /** in mac a string returns */
     AvailableFreeSpace: number | string

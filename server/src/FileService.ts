@@ -18,7 +18,7 @@ import { calculateFoldersSize } from "./calculateFoldersSize"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { LevelDb } from "./LevelDb"
 import { dateToDefaultString } from "./utils"
-import { FileSystemInfo2 } from "./utils/FileSystemInfo"
+import { FileInfo } from "./utils/FileSystemInfo"
 import { DriveInfo, FileAttributes, IoDir, IoFile } from "./utils/io"
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"
@@ -110,9 +110,9 @@ export class FileService
         if (!path) return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
         const absPath = new PathInfo(path).ToAbsolute()
         if (await absPath.IsFile) {
-            return this.ToFile(await FileSystemInfo2.createFileSystemInfo2(absPath.Value))
+            return this.ToFile(await FileInfo.createFileSystemInfo2(absPath.Value))
         } else if ((await absPath.IsDirectory) || absPath.IsRoot) {
-            return this.ToFile(await FileSystemInfo2.createFileSystemInfo2(absPath.Value))
+            return this.ToFile(await FileInfo.createFileSystemInfo2(absPath.Value))
         }
         return null!
     }
@@ -203,11 +203,11 @@ export class FileService
         //if (searchPattern.IsNullOrEmpty())
         //    searchPattern = "*";
         else if (recursive) {
-            const dir = await FileSystemInfo2.createFileSystemInfo2(path)
-            files2 = (await FileSystemInfo2.getDescendants(dir.path)).map(t => this.ToFile(t))
+            const dir = await FileInfo.createFileSystemInfo2(path)
+            files2 = (await FileInfo.getDescendants(dir.path)).map(t => this.ToFile(t))
         } else {
-            const dir = await FileSystemInfo2.createFileSystemInfo2(path)
-            const children = await FileSystemInfo2.getChildren(dir.path)
+            const dir = await FileInfo.createFileSystemInfo2(path)
+            const children = await FileInfo.getChildren(dir.path)
             if (files && !folders) {
                 files2 = children.filter(t => t.isFile).map(t => this.ToFile(t))
             } else if (folders && !files) {
@@ -254,7 +254,7 @@ export class FileService
         }
     }
 
-    ToFile(file: FileSystemInfo2): File {
+    ToFile(file: FileInfo): File {
         const file2: File = {
             type: undefined,
             Name: file.Name,
