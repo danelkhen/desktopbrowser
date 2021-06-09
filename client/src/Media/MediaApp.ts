@@ -81,7 +81,7 @@ export class MediaApp {
         let x = await this.appService.getMediaFiles(req)
         x.forEach(t => {
             if (t.md == null) {
-                t.md = { key: t.fsEntry.basename }
+                t.md = { key: t.fsEntry.basename, collection: "" }
             }
             this.parseFilename(t)
         })

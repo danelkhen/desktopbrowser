@@ -1,13 +1,9 @@
 import { FindManyOptions, FindOneOptions } from "typeorm"
-import { TmdbApiV3 as tmdb } from "../../tmdb/src"
 export { FindManyOptions, FindOneOptions }
-
-export interface HasKey {
-    key: string
-}
 
 export interface FileInfo {
     key: string
+    collection: string
     selectedFiles?: string[]
     tmdbKey?: string
     episodeKey?: string

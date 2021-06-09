@@ -1,20 +1,20 @@
 import * as C from "../../shared/src/contracts"
-import { LevelDb } from "./LevelDb"
+import { AppDb, LevelDb } from "./LevelDb"
 import { ListFiles, GetFiles, GetFileRelatives, GetFile, Execute, Explore, Delete, trash } from "./FileService"
 
-export function createFileService(db: LevelDb): C.FileService {
+export function createFileService(db: AppDb): C.FileService {
     return {
         async getFileMetadata({ key }) {
-            return db.get({ collection: "files", key })
+            return db.files.get(key)
         },
         async getAllFilesMetadata() {
-            return db.getAll("files")
+            return db.files.getAll()
         },
         async saveFileMetadata(req) {
-            db.set({ ...req, collection: "files" })
+            db.files.set(req)
         },
         async deleteFileMetadata({ key }) {
-            db.del({ key, collection: "files" })
+            db.files.del(key)
         },
         ListFiles,
         GetFiles,

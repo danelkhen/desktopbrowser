@@ -38,7 +38,9 @@ export class App {
         let name = file as string
         if (file instanceof File) name = (file as File).Name
         let x = await this.fileService.getFileMetadata({ key: name })
-        if (x == null) x = { key: name }
+        if (x == null) {
+            x = { key: name, collection: "" }
+        }
         return x
     }
 

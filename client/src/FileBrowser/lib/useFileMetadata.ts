@@ -8,7 +8,7 @@ export function useFileMetadata(): FileMetadata {
     const fileMetadata = useMemo(() => {
         const app = App.current
         async function saveSelectedFile(folderName: string, filename: string) {
-            await setFileMetadata({ key: folderName, selectedFiles: filename ? [filename] : undefined })
+            await setFileMetadata({ key: folderName, selectedFiles: filename ? [filename] : undefined, collection: "" })
         }
 
         function getSavedSelectedFile(folder: string): string | null {

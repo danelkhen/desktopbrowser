@@ -38,3 +38,26 @@ export class LevelDb {
         return res
     }
 }
+
+export class LevelDbCollection<T extends LevelDbEntity> {
+    constructor(public db: LevelDb, public collection: string) {}
+    async getAll(): Promise<T[]> {
+        return await this.db.getAll(this.collection)
+    }
+    async set(obj: T): Promise<void> {
+        await this.db.set({ ...obj, collection: this.collection })
+    }
+    async del(key: string): Promise<void> {
+        await this.db.del({ key, collection: this.collection })
+    }
+    async get(key: string): Promise<T> {
+        return await this.db.get({ key, collection: this.collection })
+    }
+}
+
+export class AppDb {
+    files: LevelDbCollection<FileInfo>
+    constructor(public db: LevelDb) {
+        this.files = new LevelDbCollection<FileInfo>(this.db, "files")
+    }
+}

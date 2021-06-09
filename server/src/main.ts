@@ -6,7 +6,7 @@ import path from "path"
 import { createFileService } from "./createFileService"
 import { Db } from "./media/db"
 import { handleServiceRequest } from "./handleServiceRequest"
-import { LevelDb } from "./LevelDb"
+import { AppDb, LevelDb } from "./LevelDb"
 import { createMediaApp } from "./media/createMediaApp"
 import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
@@ -23,7 +23,8 @@ export async function main() {
 
     await migrateToLevelDb(database, database2)
     const levelDb = new LevelDb(database2)
-    const fileService = createFileService(levelDb)
+    const appDb = new AppDb(levelDb)
+    const fileService = createFileService(appDb)
 
     const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
     const app = createMediaApp(db)

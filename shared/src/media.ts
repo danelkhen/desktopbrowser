@@ -83,3 +83,7 @@ export interface FsEntry {
     mtime: string
     ctime: string
 }
+
+export interface HasKey {
+    key: string
+}

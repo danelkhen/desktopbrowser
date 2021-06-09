@@ -1,5 +1,4 @@
 ﻿import * as C from "../../../shared/src/media"
-import { HasKey } from "../../../shared/src/contracts"
 import { FindOneOptions } from "typeorm"
 import { Db, KeyValue } from "./db"
 import { DbService } from "./DbService"
@@ -11,7 +10,7 @@ export class KeyValueService implements C.KeyValueService {
 
     dbService: DbService<KeyValue>
 
-    toKeyValue<T extends HasKey>(obj: T): KeyValue {
+    toKeyValue<T extends C.HasKey>(obj: T): KeyValue {
         let key = obj.key
         let value: any = {}
         Object.assign(value, obj)
@@ -21,7 +20,7 @@ export class KeyValueService implements C.KeyValueService {
         x.value = value
         return x
     }
-    fromKeyValue<T extends HasKey>(kv: KeyValue): T {
+    fromKeyValue<T extends C.HasKey>(kv: KeyValue): T {
         if (kv == null) return null!
         let obj: T = kv.value
         obj.key = kv.key
