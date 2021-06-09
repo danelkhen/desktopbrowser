@@ -10,8 +10,6 @@ export interface App {
     scanForMedia(): Promise<MediaScannerStatus>
     scanStatus(): Promise<MediaScannerStatus>
     getMediaFiles(req?: GetMediaFilesRequest): Promise<MediaFile[]>
-    fileService: FileService
-    keyValueService: KeyValueService
 }
 
 export interface Config {

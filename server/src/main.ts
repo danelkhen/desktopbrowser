@@ -4,6 +4,7 @@ import http from "http"
 import os from "os"
 import path from "path"
 import { App } from "./App"
+import { createFileService } from "./createFileService"
 import { Db } from "./db"
 import { handleServiceRequest } from "./handleServiceRequest"
 import { LevelDb } from "./LevelDb"
@@ -23,11 +24,12 @@ export async function main() {
     const database2 = path.join(dataDir, "db.level")
 
     await migrateToLevelDb(database, database2)
-    const app = new App(db, new LevelDb(database2))
+    const levelDb = new LevelDb(database2)
+    const fileService = createFileService(levelDb)
+
+    const app = new App(db)
     const services = {
-        fs: app.fileService,
-        byFilename: app.byFilenameService,
-        keyValue: app.keyValueService,
+        fs: fileService,
         app: app,
     }
 

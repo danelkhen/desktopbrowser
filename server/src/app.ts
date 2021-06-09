@@ -1,27 +1,22 @@
 ﻿import { promises as Fs } from "fs"
 import fse from "fs-extra"
 import * as Path from "path"
-import type * as C from "../../shared/src/contracts"
 import type * as M from "../../shared/src/media"
 import { TmdbApiV3 as Tmdb } from "../../tmdb/src"
-import { createFileService } from "./createFileService"
 import { ByFilename, Db, FsEntry } from "./db"
 import { DbService } from "./DbService"
 import { KeyValueService } from "./KeyValueService"
-import { LevelDb } from "./LevelDb"
 import { MediaScanner } from "./MediaScanner"
 import { rootDir } from "./rootDir"
 
 export class App implements M.App {
-    constructor(public db: Db, public levelDb: LevelDb) {
+    constructor(public db: Db) {
         this.byFilenameService = new DbService<ByFilename>(this.db, this.db.byFilename)
         this.keyValueService = new KeyValueService(this.db)
-        this.fileService = createFileService(levelDb)
         this.mediaScanner = new MediaScanner()
         this.mediaScanner.app = this
     }
 
-    fileService: C.FileService = undefined!
     keyValueService: KeyValueService = undefined!
     byFilenameService: DbService<ByFilename> = undefined!
     mediaScanner: MediaScanner = undefined!
