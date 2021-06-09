@@ -66,10 +66,10 @@ export interface FileService {
     trash(req: PathRequest): Promise<void>
     ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>
     isWindows(): Promise<boolean>
-    CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>
-    CalculateFolderSize(path: string): Promise<number>
-    CalculateFolderSizeNoCache(path: string): Promise<number>
-    clearCache(): Promise<void>
+    // CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>
+    // CalculateFolderSize(path: string): Promise<number>
+    // CalculateFolderSizeNoCache(path: string): Promise<number>
+    // clearCache(): Promise<void>
 }
 
 // export interface FileService2 {

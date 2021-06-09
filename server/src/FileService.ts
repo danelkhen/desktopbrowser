@@ -21,22 +21,16 @@ import open from "open"
 import { LevelDb } from "./LevelDb"
 import { Db } from "./db"
 import { GetFileAndFoldersRequest, Stopwatch } from "./GetFileAndFoldersRequest"
+import { calculateFoldersSize } from "./calculateFoldersSize"
 
 function isWindows() {
     return os.platform() == "win32"
 }
-export class FileService implements C.FileService {
+
+export class FileService
+    implements Omit<C.FileService, "getAllFilesMetadata" | "saveFileMetadata" | "deleteFileMetadata"> {
     constructor(public db: LevelDb) {}
     baseDbFilename: string = undefined!
-    async getAllFilesMetadata() {
-        return this.db.getAll("files")
-    }
-    async saveFileMetadata(req: C.ByFilename) {
-        this.db.set({ ...req, collection: "files" })
-    }
-    async deleteFileMetadata({ key }: { key: string }) {
-        this.db.del({ key, collection: "files" })
-    }
 
     async ListFiles(req: ListFilesRequest): Promise<ListFilesResponse> {
         //if (req.Path == null) {
@@ -180,7 +174,7 @@ export class FileService implements C.FileService {
                 else if (t.Name == "Extension") files = this.OrderBy(files, x => x.Extension, t.Descending!)
                 else if (t.Name == "Size") {
                     if (req.FolderSize && !req.HideFolders) {
-                        files = await this.CalculateFoldersSize(files)
+                        files = await calculateFoldersSize(files)
                         calculatedFolderSize = true
                     }
                     files = this.OrderBy(files, x => x.Size, t.Descending!)
@@ -188,7 +182,7 @@ export class FileService implements C.FileService {
                 if (t.Descending) files.reverse()
             } //);
         }
-        if (!calculatedFolderSize && req.FolderSize && !req.HideFolders) files = await this.CalculateFoldersSize(files)
+        if (!calculatedFolderSize && req.FolderSize && !req.HideFolders) files = await calculateFoldersSize(files)
         return files
     }
 
@@ -235,33 +229,6 @@ export class FileService implements C.FileService {
         }))
     }
 
-    async CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>> {
-        let list: File[] = []
-        for (let file of folders) {
-            try {
-                //console.log("CalculateFoldersSize", file);
-                if (file.IsFolder) file.Size = await this.CalculateFolderSize(file.Path!)
-            } catch (e) {}
-            list.push(file)
-        }
-        return list
-        ////console.log("CalculateFoldersSize", folders.length);
-        //let x = await folders.map(file => {
-        //    try {
-        //        //console.log("CalculateFoldersSize", file);
-        //        if (file.IsFolder)
-        //            file.Size = await this.CalculateFolderSize(file.Path);
-        //    }
-        //    catch (e) {
-        //    }
-        //    return file;
-        //});
-        //return x;
-    }
-    CalculateFolderSize(path: string): Promise<number> {
-        return this.CacheMethod(`CalculateFolderSize(${path})`, 100, 100, () => this.CalculateFolderSizeNoCache(path))
-    }
-
     OrderBy<TSource, TKey>(
         source: IEnumerable<TSource>,
         keySelector: (source: TSource) => TKey,
@@ -275,21 +242,6 @@ export class FileService implements C.FileService {
             if (desc) return source.OrderByDescending!(keySelector)
             return source.OrderBy!(keySelector)
         }
-    }
-
-    async CalculateFolderSizeNoCache(path: string): Promise<number> {
-        var size = 0
-        try {
-            var list = await (await FileSystemInfo.create(path)).GetFileSystemInfos()
-            for (let item of list) {
-                if (item.isFile) size += item.Length!
-                else if (item.isDir) size += await this.CalculateFolderSize(item.FullName!)
-            }
-        } catch (e) {
-            console.log("CalculateFolderSizeNoCache catch", path, e)
-        }
-        //console.log("CalculateFolderSizeNoCache", path, size);
-        return size
     }
 
     // GetConfig(): SiteConfiguration {
@@ -330,45 +282,4 @@ export class FileService implements C.FileService {
     //     config.HomePage.Files.push(file)
     //     config.Save()
     // }
-
-    //TODO: [DllImport("user32.dll")]
-    /* static extern */ SetForegroundWindow(hWnd: any /*IntPtr*/): boolean {
-        return false
-    }
-
-    cache: { [key: string]: Promise<any> } = {}
-    /// <summary>
-    /// Executes the specified Func[R] with cache
-    /// </summary>
-    /// <typeparam name="R"></typeparam>
-    /// <param name="cacheKey"></param>
-    /// <param name="method"></param>
-    /// <returns></returns>
-    CacheMethod<R>(
-        cacheKey: string,
-        expirationInSeconds: number,
-        methodMinTimeInMs: number,
-        method: () => Promise<R>
-    ): Promise<R> {
-        if (expirationInSeconds <= 0) return method()
-        let cache = this.cache
-        var cacheValue = cache[cacheKey]
-        if (cacheValue !== undefined) {
-            return <Promise<R>>cacheValue
-        }
-        var stopper = new Stopwatch()
-        stopper.Start()
-        var x = method()
-        stopper.Stop()
-        if (methodMinTimeInMs <= 0 || stopper.ElapsedMilliseconds > methodMinTimeInMs) {
-            cacheValue = x
-            cache[cacheKey] = cacheValue
-            setTimeout(() => this.clearCache(), 60 * 1000)
-        }
-        return x
-    }
-
-    async clearCache() {
-        this.cache = {}
-    }
 }

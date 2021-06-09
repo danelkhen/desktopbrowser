@@ -12,18 +12,19 @@ import { MediaScanner } from "./MediaScanner"
 import { sleep } from "../../shared/src"
 import { rootDir } from "./rootDir"
 import { LevelDb } from "./LevelDb"
+import { createFileService } from "./createFileService"
 
 export class App implements C.App {
     constructor(public db: Db, public levelDb: LevelDb) {
         this.byFilenameService = new DbService<ByFilename>(this.db, this.db.byFilename)
         this.keyValueService = new KeyValueService(this.db)
         this.fsEntryService = new FsEntryService(this.db, this.db.fsEntries)
-        this.fileService = new FileService(levelDb)
+        this.fileService = createFileService(levelDb)
         this.mediaScanner = new MediaScanner()
         this.mediaScanner.app = this
     }
 
-    fileService: FileService = undefined!
+    fileService: C.FileService = undefined!
     keyValueService: KeyValueService = undefined!
     byFilenameService: DbService<ByFilename> = undefined!
     mediaScanner: MediaScanner = undefined!

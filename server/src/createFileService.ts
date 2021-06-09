@@ -10,9 +10,6 @@ export function createFileService(db: LevelDb): C.FileService {
         .forEach(t => (obj[t] = obj[t].bind(x)))
 
     const {
-        saveFileMetadata,
-        deleteFileMetadata,
-        getAllFilesMetadata,
         ListFiles,
         GetFiles,
         GetFileRelatives,
@@ -23,15 +20,17 @@ export function createFileService(db: LevelDb): C.FileService {
         trash,
         ApplyRequest,
         isWindows,
-        CalculateFoldersSize,
-        CalculateFolderSize,
-        CalculateFolderSizeNoCache,
-        clearCache,
     } = x
     return {
-        saveFileMetadata,
-        deleteFileMetadata,
-        getAllFilesMetadata,
+        async getAllFilesMetadata() {
+            return db.getAll("files")
+        },
+        async saveFileMetadata(req) {
+            db.set({ ...req, collection: "files" })
+        },
+        async deleteFileMetadata({ key }) {
+            db.del({ key, collection: "files" })
+        },
         ListFiles,
         GetFiles,
         GetFileRelatives,
@@ -42,9 +41,5 @@ export function createFileService(db: LevelDb): C.FileService {
         trash,
         ApplyRequest,
         isWindows,
-        CalculateFoldersSize,
-        CalculateFolderSize,
-        CalculateFolderSizeNoCache,
-        clearCache,
     }
 }
