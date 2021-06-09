@@ -6,9 +6,13 @@ let webSocket: ReconnectingWebSocket
 
 main()
 export function main() {
-    let url = location.href.replace(/^https|http/, "ws")
-    url = url.replace(/\?.*$/, "")
-    webSocket = new ReconnectingWebSocket(url + "api", ["protocolOne", "protocolTwo"])
+    const url = new URL(location.href)
+    url.search = ""
+    url.protocol = "ws:"
+    url.pathname = "/api"
+    // let url = location.href.replace(/^https|http/, "ws")
+    // url = url.replace(/\?.*$/, "")
+    webSocket = new ReconnectingWebSocket(url.toString(), ["protocolOne", "protocolTwo"])
     // webSocket.open()
     // webSocket.addEventListener("message", e => {
     //     // console.log(e.data);

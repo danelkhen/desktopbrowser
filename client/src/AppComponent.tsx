@@ -11,18 +11,10 @@ export function AppComponent() {
     return (
         <BrowserRouter>
             <div>
-                {/* <nav style={{ color: "white" }}>
-                    <Link to="/">Home</Link>
-                    <Link to="/media">Media</Link>
-                    <Link to="/media2">Media2</Link>
-                </nav> */}
                 <Switch>
                     <Route path="/" exact>
                         <FileBrowser app={app} />
                     </Route>
-                    {/* <Route path="/test">
-                        <TestGrid3 />
-                    </Route> */}
                     <Route path="/media">
                         <MediaComponent />
                     </Route>
