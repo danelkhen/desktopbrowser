@@ -24,7 +24,7 @@ export class Scanner {
     }
     async scanDir(dir: string): Promise<void> {
         if (!this.app || !this.results) return
-        let res = await this.app.app.fileService.ws.ListFiles({ Path: dir, IsRecursive: true })
+        let res = await this.app.app.fileService.ListFiles({ Path: dir, IsRecursive: true })
         if (!res?.Files) return
         let videoFiles = res.Files.filter(t => this.isVideoFile(t.Name))
         for (let file of videoFiles) {
@@ -51,7 +51,7 @@ export class Scanner {
         if (mf.md.scanned != null && mf.md.scanned != "" && (opts == null || !opts.force)) return
         mf.md.scanned = moment().format("YYYY-MM-DD HH:mm:ss")
         await this._analyze(mf)
-        this.app?.app.fileService.http.saveFileMetadata(mf.md)
+        this.app?.app.fileService.saveFileMetadata(mf.md)
     }
     async _analyze(mf: M.MediaFile): Promise<void> {
         let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name)

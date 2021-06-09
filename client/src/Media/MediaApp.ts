@@ -27,7 +27,7 @@ export class MediaApp {
         if (mf.md.tmdbKey != null) {
             await this.tmdbApp.tmdb.markAsWatched(mf.md.tmdbKey)
         }
-        await this.app.fileService.http.saveFileMetadata(mf.md)
+        await this.app.fileService.saveFileMetadata(mf.md)
     }
 
     async analyze(mfs: M.MediaFile[], opts?: { force?: boolean }): Promise<void> {
@@ -65,7 +65,7 @@ export class MediaApp {
 
     async findFile(name: string): Promise<C.File | undefined> {
         for (let folder of this.config?.folders ?? []) {
-            let res = await this.app.fileService.ws.ListFiles({ Path: folder.path, IsRecursive: true })
+            let res = await this.app.fileService.ListFiles({ Path: folder.path, IsRecursive: true })
             let file = res.Files?.find(t => t.Name == name)
             if (file) return file
         }

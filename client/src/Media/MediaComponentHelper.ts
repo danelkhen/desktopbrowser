@@ -217,7 +217,7 @@ export class MediaComponentHelper {
         if (path == null && mf.md != null) {
             let file: File | undefined
             if (mf.md.lastKnownPath != null)
-                file = await this.app.app.fileService.http.GetFile({ Path: mf.md.lastKnownPath })
+                file = await this.app.app.fileService.GetFile({ Path: mf.md.lastKnownPath })
             if (!file) {
                 file = await this.app.findFile(mf.md.key)
             }
@@ -225,7 +225,7 @@ export class MediaComponentHelper {
             path = file.Path ?? null
         }
         if (path == null) return
-        await this.app.app.fileService.http.Execute({ Path: path })
+        await this.app.app.fileService.Execute({ Path: path })
     }
 
     tmdbV4Login() {

@@ -31,13 +31,13 @@ export class App {
     fileService = proxyForFileService()
 
     async getAllFilesMetadata(): Promise<FileInfo[]> {
-        return await this.fileService.http.getAllFilesMetadata()
+        return await this.fileService.getAllFilesMetadata()
     }
 
     async getFileMetadata(file: File | string): Promise<FileInfo> {
         let name = file as string
         if (file instanceof File) name = (file as File).Name
-        let x = await this.fileService.http.getFileMetadata({ key: name })
+        let x = await this.fileService.getFileMetadata({ key: name })
         if (x == null) x = { key: name }
         return x
     }

@@ -16,13 +16,13 @@ export function useCommands(reloadFiles: () => Promise<void>): Commands {
             if (!file.Path) return
             const fileOrFolder = file.IsFolder ? "folder" : "file"
             if (!window.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path)) return
-            await server.http.Delete({ Path: file.Path })
+            await server.Delete({ Path: file.Path })
             await reloadFiles()
         }
 
         async function TrashAndRefresh(file: File): Promise<void> {
             if (!file.Path) return
-            await server.http.trash({ Path: file.Path })
+            await server.trash({ Path: file.Path })
             await reloadFiles()
         }
 
@@ -36,7 +36,7 @@ export function useCommands(reloadFiles: () => Promise<void>): Commands {
 
         async function explore(file: C.File): Promise<void> {
             if (!file?.Path) return
-            await server.http.Explore({ Path: file.Path })
+            await server.Explore({ Path: file.Path })
         }
 
         const x: Commands = { explore, deleteOrTrash }

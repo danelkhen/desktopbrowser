@@ -27,11 +27,11 @@ export function useFileMetadata(): FileMetadata {
             if (value.selectedFiles == null || value.selectedFiles.length == 0) {
                 const { [value.key]: removed, ...rest } = filesMd ?? {}
                 setFilesMd(rest)
-                app.fileService.http.deleteFileMetadata({ key: value.key })
+                app.fileService.deleteFileMetadata({ key: value.key })
                 return
             }
             setFilesMd({ ...filesMd, [value.key]: value })
-            await app.fileService.http.saveFileMetadata(value)
+            await app.fileService.saveFileMetadata(value)
         }
 
         const x: FileMetadata = {

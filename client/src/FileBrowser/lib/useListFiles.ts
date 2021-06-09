@@ -7,7 +7,7 @@ export function useListFiles(req: C.ListFilesRequest) {
         Relatives: {},
     })
     const fetchFiles = useCallback(async (req: C.ListFilesRequest) => {
-        const res = await App.current.fileService.ws.ListFiles(req)
+        const res = await App.current.fileService.ListFiles(req)
         setRes(res)
     }, [])
     const reloadFiles = useCallback(async () => {
