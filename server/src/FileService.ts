@@ -19,7 +19,7 @@ import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { LevelDb } from "./LevelDb"
 import { dateToDefaultString } from "./utils"
 import { FileInfo } from "./utils/FileInfo"
-import { DriveInfo, FileAttributes, IoDir, IoFile } from "./utils/io"
+import { DriveInfo, IoDir, IoFile } from "./utils/io"
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"
 
@@ -264,9 +264,13 @@ export class FileService
             IsHidden: false, // TODO:
             Extension: file?.Extension,
         }
-        if (file.isDir) file2.type = "folder"
-        else if (file.isFile) file2.type = "file"
-        else if (file.isLink) file2.type = "link"
+        if (file.isDir) {
+            file2.type = "folder"
+        } else if (file.isFile) {
+            file2.type = "file"
+        } else if (file.isLink) {
+            file2.type = "link"
+        }
         try {
             file2.Path = file.FullName
         } catch (e) {}

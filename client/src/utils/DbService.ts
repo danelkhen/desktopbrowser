@@ -64,7 +64,6 @@ export function proxyForFileService() {
             Explore: req => http("Explore", [req]),
             Delete: req => http("Delete", [req]),
             trash: req => http("trash", [req]),
-            isWindows: () => http("isWindows"),
             // clearCache: () => http("clearCache"),
         } as Partial<C.FileService> as C.FileService) // TODO:
 

@@ -64,8 +64,8 @@ export interface FileService {
     Explore(req: PathRequest): void
     Delete(req: PathRequest): Promise<void>
     trash(req: PathRequest): Promise<void>
-    ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>
-    isWindows(): Promise<boolean>
+    // ApplyRequest(files: IEnumerable<File>, req: ListFilesRequest): Promise<IEnumerable<File>>
+    // isWindows(): Promise<boolean>
     // CalculateFoldersSize(folders: File[]): Promise<IEnumerable<File>>
     // CalculateFolderSize(path: string): Promise<number>
     // CalculateFolderSizeNoCache(path: string): Promise<number>

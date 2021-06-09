@@ -39,7 +39,5 @@ export function createFileService(db: LevelDb): C.FileService {
         Explore,
         Delete,
         trash,
-        ApplyRequest,
-        isWindows,
     }
 }
