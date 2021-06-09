@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react"
 import cx from "classnames"
 import { MediaComponentHelper } from "./MediaComponentHelper"
 import { App } from "../App"
+import { MediaApp } from "./MediaApp"
+import { Scanner } from "../utils/Scanner"
 
 export function MediaComponent() {
     const [version, setVersion] = useState(0)
     const [helper, _] = useState(() => {
-        const x = new MediaComponentHelper(App.current)
+        const x = new MediaComponentHelper(new MediaApp(App.current))
         ;(async () => {
             await x.ngOnInit()
         })()
@@ -31,7 +33,6 @@ export function MediaComponent() {
         markAsWatched,
         app,
         addConfigFolder,
-        scan,
         reAnalyze,
         pageSize,
         filteredMovies,
@@ -49,8 +50,18 @@ export function MediaComponent() {
         play,
     } = helper
 
+    async function scan() {
+        const scanner = new Scanner()
+        scanner.folders = ["c:\\tv"]
+        console.log("scan start")
+        await scanner.scan()
+        console.log("scan end", scanner)
+    }
+
     return (
         <>
+            <button onClick={() => MediaApp.current.tmdbApp.tmdb.loginToTmdb()}>Login to Tmdb</button>
+            <button onClick={() => scan()}>Scan</button>
             {selectedMovie != null && (
                 <div>
                     <div
@@ -215,16 +226,16 @@ export function MediaComponent() {
                 </div>
             )}
             <div style={{ color: "white" }}>
-                {app.config && (
+                {app.app.config && (
                     <div>
                         <h3>Folders</h3>
-                        {app.config.folders?.map(folder => (
+                        {app.app.config.folders?.map(folder => (
                             <div>
                                 <input value={folder.path} />
                             </div>
                         ))}
                         <button onClick={e => addConfigFolder()}>+</button>
-                        <button onClick={e => app.saveConfig()}>save</button>
+                        <button onClick={e => app.app.saveConfig()}>save</button>
                         <button onClick={e => scan()}>scan</button>
                         <button onClick={e => reAnalyze()}>re-analyze</button>
                         <label>

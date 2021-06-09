@@ -1,8 +1,8 @@
 import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { FileBrowser } from "./FileBrowser/index"
-import { MediaComponent } from "./utils/MediaComponent"
 import { useApp } from "./App"
+import { MediaComponent } from "./Media/MediaComponent"
 
 export function AppComponent() {
     const app = useApp()

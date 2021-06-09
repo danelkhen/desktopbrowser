@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react"
 import cx from "classnames"
 import { MediaComponentHelper } from "./MediaComponentHelper"
 import { App } from "../App"
+import { MediaApp } from "./MediaApp"
 
 export function Media2Component() {
     const [version, setVersion] = useState(0)
     const [helper, _] = useState(() => {
-        const x = new MediaComponentHelper(App.current)
+        const x = new MediaComponentHelper(new MediaApp(App.current))
         ;(async () => {
             await x.ngOnInit()
         })()
@@ -69,16 +70,16 @@ export function Media2Component() {
                     <button onClick={e => tvOnTheAir()}>on the air</button>
                 </section>
 
-                {app.config && (
+                {app.app.config && (
                     <section>
                         <h3>Folders</h3>
                         <button onClick={e => addConfigFolder()}>+</button>
-                        {app.config.folders?.map(folder => (
+                        {app.app.config.folders?.map(folder => (
                             <div>
                                 <input value="folder.path" />
                             </div>
                         ))}
-                        <button onClick={e => app.saveConfig()}>save</button>
+                        <button onClick={e => app.app.saveConfig()}>save</button>
                     </section>
                 )}
                 <section>

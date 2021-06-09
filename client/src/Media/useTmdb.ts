@@ -1,8 +1,9 @@
-import * as C from "../../../../shared/src/contracts"
+import * as C from "../../../shared/src/contracts"
 import { useMemo, useState } from "react"
-import { App } from "../../App"
-import { FilenameParser } from "../../utils/FilenameParser"
-import { TmdbApiV3 } from "../../../../tmdb/src"
+import { App } from "../App"
+import { FilenameParser } from "../utils/FilenameParser"
+import { TmdbApiV3 } from "../../../tmdb/src"
+import { MediaApp } from "./MediaApp"
 
 type TmdbMovie = TmdbApiV3.TmdbMovie
 
@@ -10,7 +11,7 @@ export function useTmdb() {
     const [movie, setMovie] = useState<TmdbMovie>()
     return useMemo(() => {
         async function getTmdbInfo(file: C.File) {
-            const app = App.current
+            const app = MediaApp.current
             const info = new FilenameParser().parse(file.Name)
             if (!info) return
             // const isTv = info.season != null

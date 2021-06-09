@@ -3,12 +3,13 @@ import { TmdbApiV3 } from "../../../tmdb/src"
 import { App } from "../App"
 import { FilenameParser } from "./FilenameParser"
 import moment from "moment"
+import { MediaApp } from "../Media/MediaApp"
 
 type Response = TmdbApiV3.Response
 type TmdbMedia = TmdbApiV3.TmdbMedia
 export class Scanner {
     folders: string[] | undefined
-    app: App | undefined
+    app: MediaApp | undefined
     results: C.MediaFile[] | undefined
     errors: any[] = []
 
@@ -23,11 +24,11 @@ export class Scanner {
     }
     async scanDir(dir: string): Promise<void> {
         if (!this.app || !this.results) return
-        let res = await this.app.fileService.ws.ListFiles({ Path: dir, IsRecursive: true })
+        let res = await this.app.app.fileService.ws.ListFiles({ Path: dir, IsRecursive: true })
         if (!res?.Files) return
         let videoFiles = res.Files.filter(t => this.isVideoFile(t.Name))
         for (let file of videoFiles) {
-            let md = await this.app.getFileMetadata(file)
+            let md = await this.app.app.getFileMetadata(file)
             //md.modified = file.Modified;
             if (md != null && md.tmdbKey != null) {
                 console.log("tmdbId already exists, skipping", { file, md })
@@ -50,7 +51,7 @@ export class Scanner {
         if (mf.md.scanned != null && mf.md.scanned != "" && (opts == null || !opts.force)) return
         mf.md.scanned = moment().format("YYYY-MM-DD HH:mm:ss")
         await this._analyze(mf)
-        this.app?.byFilename.persist(mf.md)
+        this.app?.app.byFilename.persist(mf.md)
     }
     async _analyze(mf: C.MediaFile): Promise<void> {
         let filename = (mf.fsEntry && mf.fsEntry.basename) || (mf.file && mf.file.Name)

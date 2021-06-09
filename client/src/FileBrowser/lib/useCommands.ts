@@ -5,6 +5,7 @@ import { Scanner } from "../../utils/Scanner"
 import { Columns } from "../Columns"
 import { ColumnsConfig } from "../Grid/Grid"
 import { App } from "../../App"
+import { MediaApp } from "../../Media/MediaApp"
 
 export type FileColumnsConfig = ColumnsConfig<C.File, Columns>
 
@@ -40,19 +41,7 @@ export function useCommands(reloadFiles: () => Promise<void>): Commands {
             await server.http.Explore({ Path: file.Path })
         }
 
-        async function tmdbLogin() {
-            await app.tmdbApp.tmdb.loginToTmdb()
-        }
-
-        async function scan() {
-            const scanner = new Scanner()
-            scanner.folders = ["c:\\tv"]
-            console.log("scan start")
-            await scanner.scan()
-            console.log("scan end", scanner)
-        }
-
-        const x: Commands = { explore, deleteOrTrash, tmdbLogin, scan }
+        const x: Commands = { explore, deleteOrTrash }
         return x
     }, [reloadFiles])
 }
@@ -60,6 +49,4 @@ export function useCommands(reloadFiles: () => Promise<void>): Commands {
 export interface Commands {
     explore: (file: C.File) => Promise<void>
     deleteOrTrash: (file: C.File, isShiftDown: boolean) => Promise<void>
-    tmdbLogin: () => Promise<void>
-    scan: () => Promise<void>
 }

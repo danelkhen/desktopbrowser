@@ -4,10 +4,11 @@ import { TmdbClientV3Extended } from "./utils/TmdbClientV3Extended"
 import { App } from "./App"
 import { plus } from "../../shared/src"
 import { TmdbApiV3 } from "../../tmdb/src"
+import { MediaApp } from "./Media/MediaApp"
 type MediaDetails = TmdbApiV3.MediaDetails
 
 export class TmdbApp {
-    constructor(public app: App) {
+    constructor(public app: MediaApp) {
         this.tmdb = new TmdbClientV3Extended()
         this.tmdb.base_url = "/tmdb_proxy/3"
         this.tmdb.api_key = "16a856dff4d1db46782e6132610ddb32"
@@ -19,7 +20,7 @@ export class TmdbApp {
     tmdb: TmdbClientV3Extended
     tmdbV4: TmdbClientV4Extended
     get keyValue() {
-        return this.app.proxies.keyValue
+        return this.app.app.proxies.keyValue
     }
 
     async init() {

@@ -19,7 +19,6 @@ export function useApp() {
 }
 export class App {
     proxies: Proxies
-    tmdbApp = new TmdbApp(this)
     static current: App
     static async init() {
         if (App.current) return App.current
@@ -53,7 +52,6 @@ export class App {
 
     async init() {
         await this.initConfig()
-        await this.tmdbApp.init()
     }
 
     async initConfig(): Promise<void> {
@@ -66,12 +64,6 @@ export class App {
     }
 
     config: Config | undefined
-    createScanner(): Scanner {
-        let scanner = new Scanner()
-        scanner.app = this
-        scanner.folders = (this.config?.folders ?? []).map(t => t.path)
-        return scanner
-    }
 
     async scan(): Promise<void> {
         let x = await this.appService.scanForMedia()
@@ -96,25 +88,12 @@ export class App {
         return x
     }
 
-    async analyze(mfs: C.MediaFile[], opts?: { force?: boolean }): Promise<void> {
-        for (let mf of mfs) {
-            if (mf.tmdb != null && (opts == null || !opts.force)) continue
-            await this.createScanner().analyze(mf, opts)
-        }
-    }
-
     async findFile(name: string): Promise<File | undefined> {
         for (let folder of this.config?.folders ?? []) {
             let res = await this.fileService.ws.ListFiles({ Path: folder.path, IsRecursive: true })
             let file = res.Files?.find(t => t.Name == name)
             if (file) return file
         }
-    }
-
-    async markAsWatched(mf: C.MediaFile): Promise<void> {
-        mf.md.watched = true
-        if (mf.md.tmdbKey != null) await this.tmdbApp.tmdb.markAsWatched(mf.md.tmdbKey)
-        await this.byFilename.persist(mf.md)
     }
 
     fsEntryToMediaFile(x: FsEntry): C.MediaFile {
@@ -139,20 +118,5 @@ export class App {
 
     async getLatestFsEntries(): Promise<FsEntry[]> {
         return await this.fsEntryService.find({ order: { mtime: "DESC" } }) //maxResults: 1000
-    }
-
-    //TODO: @ReusePromiseIfStillRunning()
-    async scanAllFsEntries(): Promise<void> {
-        console.log("STARTED scanAllFsEntries")
-        let req: C.GetMediaFilesRequest = { firstResult: 0, maxResults: 500, notScannedOnly: true }
-        while (true) {
-            let mfs = await this.getMediaFiles(req)
-            if (mfs.length == 0) {
-                console.log("Finished scanAllFsEntries")
-                return
-            }
-            req.firstResult! += req.maxResults!
-            await this.analyze(mfs)
-        }
     }
 }

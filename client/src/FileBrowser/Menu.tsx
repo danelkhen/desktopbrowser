@@ -65,8 +65,6 @@ export function Menu({
         Explore,
         Delete,
         Imdb,
-        TmdbLogin,
-        Scan,
         OrderByInnerSelection,
         Files,
         Folders,
@@ -118,8 +116,6 @@ export function Menu({
                         className={classes.Delete}
                     />
                     <Button action={Imdb.action} isActive={Imdb.isActive} label="Imdb" className={classes.Imdb} />
-                    <Button action={TmdbLogin.action} isActive={TmdbLogin.isActive} label="TmdbLogin" />
-                    <Button action={Scan.action} isActive={Scan.isActive} label="Scan" />
                     <Dropdown>
                         <button className={cx(button, Sort)}>Sort</button>
                         <div className="menu">

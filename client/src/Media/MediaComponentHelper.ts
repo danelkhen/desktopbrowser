@@ -2,9 +2,10 @@ import * as C from "../../../shared/src/contracts"
 import { File } from "../../../shared/src/contracts"
 import { App } from "../App"
 import { desc, orderBy, sleep, ReusePromiseIfStillRunning, groupBy } from "../../../shared/src"
+import { MediaApp } from "./MediaApp"
 
 export class MediaComponentHelper {
-    constructor(public app: App) {
+    constructor(public app: MediaApp) {
         const keys = Object.getOwnPropertyNames(this.constructor.prototype)
         const _this = this as any
         for (const key of keys) {
@@ -177,7 +178,7 @@ export class MediaComponentHelper {
         this.allMovies = []
         this.onAllMoviesChanged()
         while (!this.noMoreMoviesOnServer) {
-            let moreMovies = await this.app.getMediaFiles({ firstResult: this.allMovies.length, maxResults: 500 })
+            let moreMovies = await this.app.app.getMediaFiles({ firstResult: this.allMovies.length, maxResults: 500 })
             if (moreMovies.length == 0) {
                 this.noMoreMoviesOnServer = true
                 break
@@ -216,15 +217,15 @@ export class MediaComponentHelper {
         if (path == null && mf.md != null) {
             let file: File | undefined
             if (mf.md.lastKnownPath != null)
-                file = await this.app.fileService.http.GetFile({ Path: mf.md.lastKnownPath })
+                file = await this.app.app.fileService.http.GetFile({ Path: mf.md.lastKnownPath })
             if (!file) {
-                file = await this.app.findFile(mf.md.key)
+                file = await this.app.app.findFile(mf.md.key)
             }
             if (file == null) return
             path = file.Path ?? null
         }
         if (path == null) return
-        await this.app.fileService.http.Execute({ Path: path })
+        await this.app.app.fileService.http.Execute({ Path: path })
     }
 
     tmdbV4Login() {
@@ -241,7 +242,7 @@ export class MediaComponentHelper {
     }
 
     addConfigFolder() {
-        this.app.config?.folders?.push({ path: "" })
+        this.app.app.config?.folders?.push({ path: "" })
     }
 
     async tvAiringToday() {
@@ -282,11 +283,11 @@ export class MediaComponentHelper {
 
     scanStatus: C.MediaScannerStatus | undefined
     async scan() {
-        this.scanStatus = await this.app.appService.scanForMedia()
+        this.scanStatus = await this.app.app.appService.scanForMedia()
         await sleep(3000)
         this.getAvailableMedia({ force: true })
         while (this.scanStatus != null && this.scanStatus.finished == null) {
-            this.scanStatus = await this.app.appService.scanStatus()
+            this.scanStatus = await this.app.app.appService.scanStatus()
             await sleep(3000)
         }
     }

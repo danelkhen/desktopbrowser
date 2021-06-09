@@ -19,8 +19,6 @@ export interface MenuItems {
     Explore: MenuItem
     Imdb: MenuItem
     Delete: MenuItem
-    TmdbLogin: MenuItem
-    Scan: MenuItem
     OrderByInnerSelection: MenuItem
     FolderSize: MenuItem
     foldersFirst: MenuItem
@@ -85,7 +83,7 @@ export function useMenu({
     const gotoPath = useAction(gotoPath2)
 
     const currentFolder = res?.File
-    const { deleteOrTrash, tmdbLogin, scan, explore } = commands
+    const { deleteOrTrash, explore } = commands
 
     const google = useAction(
         useCallback(() => currentFolder && openInNewWindow(GetGoogleSearchLink(currentFolder)), [currentFolder])
@@ -107,8 +105,6 @@ export function useMenu({
             [deleteOrTrash, selectedFile]
         )
     )
-    const TmdbLogin = useAction(useCallback(() => tmdbLogin(), [tmdbLogin]))
-    const Scan = useAction(useCallback(() => () => scan(), [scan]))
     const OrderByInnerSelection = useMemo<MenuItem>(
         () => ({
             action: () => orderBy(Columns.hasInnerSelection),
@@ -155,8 +151,6 @@ export function useMenu({
             Explore,
             Imdb,
             Delete,
-            TmdbLogin,
-            Scan,
             OrderByInnerSelection,
             FolderSize,
             foldersFirst,
@@ -181,8 +175,6 @@ export function useMenu({
             Keep,
             OrderByInnerSelection,
             Recursive,
-            Scan,
-            TmdbLogin,
             disableSorting,
             foldersFirst,
             google,
