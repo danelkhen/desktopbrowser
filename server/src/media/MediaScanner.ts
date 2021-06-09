@@ -1,8 +1,8 @@
 import * as Path from "path"
-import * as M from "../../shared/src/media"
+import * as M from "../../../shared/src/media"
 import { Db, FsEntry } from "./db"
-import { dateToDefaultString } from "./utils"
-import { FileEvent, FileScanner } from "./utils/FileScanner"
+import { dateToDefaultString } from "../utils"
+import { FileEvent, FileScanner } from "../utils/FileScanner"
 import moment = require("moment")
 
 const FILE_TYPES = ["File", "Directory", "BlockDevice", "CharacterDevice", "SymbolicLink", "FIFO", "Socket"]

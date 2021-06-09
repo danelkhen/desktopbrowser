@@ -1,6 +1,6 @@
 import fs from "fs/promises"
 import path from "path"
-import { Db } from "./db"
+import { Db } from "./media/db"
 import { LevelDb } from "./LevelDb"
 import { dataDir } from "./rootDir"
 

@@ -1,5 +1,5 @@
-import * as C from "../../shared/src/contracts"
-import * as M from "../../shared/src/media"
+import * as C from "../../../shared/src/contracts"
+import * as M from "../../../shared/src/media"
 import "reflect-metadata"
 import {
     Column,

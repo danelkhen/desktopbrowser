@@ -1,5 +1,5 @@
-﻿import * as C from "../../shared/src/media"
-import { HasKey } from "../../shared/src/contracts"
+﻿import * as C from "../../../shared/src/media"
+import { HasKey } from "../../../shared/src/contracts"
 import { FindOneOptions } from "typeorm"
 import { Db, KeyValue } from "./db"
 import { DbService } from "./DbService"

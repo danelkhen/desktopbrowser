@@ -1,4 +1,4 @@
-﻿import * as M from "../../shared/src/media"
+﻿import * as M from "../../../shared/src/media"
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm"
 import { Db } from "./db"
 
