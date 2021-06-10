@@ -14,8 +14,8 @@ import {
     rimraf2,
     ToFile,
 } from "./GetFileAndOrFolders"
-import { FsInfo } from "./utils/FsInfo"
-import { IoDir, IoFile } from "./utils/io"
+import { IoFile } from "./utils/FsInfo"
+import { IoDir } from "./utils/io"
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"
 
@@ -91,9 +91,9 @@ export const GetFile: C.FileService["GetFile"] = async req => {
     if (!path) return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
     const absPath = new PathInfo(path).ToAbsolute()
     if (await absPath.IsFile) {
-        return ToFile(await FsInfo.create(absPath.Value))
+        return ToFile(await IoFile.create(absPath.Value))
     } else if ((await absPath.IsDirectory) || absPath.IsRoot) {
-        return ToFile(await FsInfo.create(absPath.Value))
+        return ToFile(await IoFile.create(absPath.Value))
     }
     return null!
 }

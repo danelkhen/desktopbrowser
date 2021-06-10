@@ -1,46 +1,35 @@
 ﻿import * as fse from "fs-extra"
 import * as path from "path"
 import { DriveInfoItem, getDrives } from "./getDrives"
-import { FsInfo } from "./FsInfo"
+import { IoFile } from "./FsInfo"
 
-export class IoDir {
-    static async Exists(s: string): Promise<boolean | undefined> {
+export namespace IoDir {
+    export async function Exists(s: string): Promise<boolean | undefined> {
         if (!(await fse.pathExists(s))) return
         let stat = await fse.stat(s)
         return stat.isDirectory()
     }
 }
-export class IoFile {
-    static async Exists(s: string): Promise<boolean | undefined> {
-        if (!(await fse.pathExists(s))) return
-        let stat = await fse.stat(s)
-        return stat.isFile()
-    }
-    static async Delete(s: string): Promise<boolean> {
-        await fse.unlink(s)
-        return true
-    }
-}
-export class IoPath {
-    static GetDirectoryName(path2: string): string {
+export namespace IoPath {
+    export function GetDirectoryName(path2: string): string {
         return path.dirname(path2)
     }
-    static Combine(...args: string[]): string {
+    export function Combine(...args: string[]): string {
         throw new Error()
     }
-    static GetFileName(s: string): string {
+    export function GetFileName(s: string): string {
         return path.basename(s)
     }
-    static GetFullPath(s: string): string {
+    export function GetFullPath(s: string): string {
         throw new Error()
     }
-    static IsPathRooted(s: string): boolean {
+    export function IsPathRooted(s: string): boolean {
         return path.isAbsolute(s)
     }
-    static GetExtension(s: string): string {
+    export function GetExtension(s: string): string {
         throw new Error()
     }
-    static GetPathRoot(s: string): string | null {
+    export function GetPathRoot(s: string): string | null {
         let max = 1000
         let i = 0
         let s2 = path.dirname(s)
@@ -54,41 +43,41 @@ export class IoPath {
     }
 }
 
-export interface DriveInfo2 extends FsInfo {
+export interface IoDrive extends IoFile {
     IsReady: boolean
     /** in mac a string returns */
     AvailableFreeSpace: number | string
     Capacity: string
 }
-export class DriveInfo {
-    static create(mount: string): DriveInfo2 {
+export namespace IoDrive {
+    export function create(mount: string): IoDrive {
         return {
             path: mount + "\\",
             Name: mount,
         } as any // TODO:
     }
-    static drives: DriveInfo2[] = []
-    static GetDrives(): DriveInfo2[] {
-        return this.drives
+    let drives: IoDrive[] = []
+    export function GetDrives(): IoDrive[] {
+        return drives
     }
-    static async GetDrives3(): Promise<DriveInfo2[]> {
-        const list = await this.GetDrives2()
-        this.drives = list.map(t => this.toDriveInfo(t))
-        return this.drives
+    export async function GetDrives3(): Promise<IoDrive[]> {
+        const list = await GetDrives2()
+        drives = list.map(t => toDriveInfo(t))
+        return drives
     }
-    static toDriveInfo(x: DriveInfoItem) {
-        let di = DriveInfo.create(x.mounted)
+    export function toDriveInfo(x: DriveInfoItem) {
+        let di = IoDrive.create(x.mounted)
         di.IsReady = true
         di.AvailableFreeSpace = x.available
         di.Capacity = x.capacity
         return di
     }
-    static async GetDrives2(): Promise<DriveInfoItem[]> {
+    export async function GetDrives2(): Promise<DriveInfoItem[]> {
         return await getDrives()
     }
-    IsReady: boolean = undefined!
-    AvailableFreeSpace: number | string = undefined! /*in mac a string returns */
-    Capacity: string = undefined!
+    // const IsReady: boolean = undefined!
+    // const AvailableFreeSpace: number | string = undefined! /*in mac a string returns */
+    // const Capacity: string = undefined!
 }
 
 export enum FileAttributes {

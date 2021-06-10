@@ -4,8 +4,8 @@ import { calculateFoldersSize } from "./utils/calculateFoldersSize"
 import { isWindows } from "./FileService"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { dateToDefaultString } from "./utils/dateToDefaultString"
-import { FsInfo } from "./utils/FsInfo"
-import { DriveInfo } from "./utils/io"
+import { IoFile } from "./utils/FsInfo"
+import { IoDrive } from "./utils/io"
 
 export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
     let { path, searchPattern, recursive, files, folders } = req
@@ -20,11 +20,11 @@ export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promis
     //if (searchPattern.IsNullOrEmpty())
     //    searchPattern = "*";
     else if (recursive) {
-        const dir = await FsInfo.create(path)
-        files2 = (await FsInfo.getDescendants(dir.path)).map(t => ToFile(t))
+        const dir = await IoFile.create(path)
+        files2 = (await IoFile.getDescendants(dir.path)).map(t => ToFile(t))
     } else {
-        const dir = await FsInfo.create(path)
-        const children = await FsInfo.getChildren(dir.path)
+        const dir = await IoFile.create(path)
+        const children = await IoFile.getChildren(dir.path)
         if (files && !folders) {
             files2 = children.filter(t => t.isFile).map(t => ToFile(t))
         } else if (folders && !files) {
@@ -85,7 +85,7 @@ export function OrderBy<TSource, TKey>(
     }
 }
 
-export function ToFile(file: FsInfo): File {
+export function ToFile(file: IoFile): File {
     const file2: File = {
         type: undefined,
         Name: file.Name,
@@ -132,7 +132,7 @@ export function rimraf2(pattern: string, options: rimraf.Options = {}) {
 }
 
 export async function GetHomeFiles(): Promise<File[]> {
-    const list = await DriveInfo.GetDrives3()
+    const list = await IoDrive.GetDrives3()
     return list.map(t => /*new File*/ ({
         IsFolder: true,
         Name: t.Name,
