@@ -1,6 +1,6 @@
 import { File, IEnumerable } from "../../../shared/src/contracts"
 import { Stopwatch } from "../GetFileAndFoldersRequest"
-import { IoFile } from "./FsInfo"
+import { IoFile } from "./IoFile"
 
 let cache = {} as { [key: string]: Promise<any> }
 
