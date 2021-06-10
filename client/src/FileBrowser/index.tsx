@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import * as C from "../../../shared/src/contracts"
-import { useTmdb } from "../Media/useTmdb"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
@@ -29,7 +28,6 @@ export function FileBrowser() {
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
     const [theme, setTheme] = useState("dark")
-    const { getTmdbInfo } = useTmdb()
     const columns = useColumns({ fileMetadata })
     const { res, reloadFiles } = useListFiles(req)
     const sortingDefaults = useColumnSorting({ fileMetadata })
@@ -87,7 +85,6 @@ export function FileBrowser() {
                         path={path}
                         orderBy={orderBy}
                         setReq={setReq}
-                        getTmdbInfo={getTmdbInfo}
                         api={api}
                         reloadFiles={reloadFiles}
                         gotoPath={gotoPath}

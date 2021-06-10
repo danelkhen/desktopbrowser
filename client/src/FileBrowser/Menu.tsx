@@ -35,7 +35,6 @@ export function Menu({
     path,
     orderBy,
     setReq,
-    getTmdbInfo,
     api,
     prevPage,
     nextPage,
@@ -49,7 +48,6 @@ export function Menu({
     api: Api
     orderBy(x: Column): void
     setReq: SetRequest
-    getTmdbInfo(x: C.File): void
     prevPage(): void
     nextPage(): void
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
@@ -64,7 +62,6 @@ export function Menu({
         subs,
         Explore,
         Delete,
-        Imdb,
         OrderByInnerSelection,
         Files,
         Folders,
@@ -83,7 +80,6 @@ export function Menu({
         path,
         orderBy,
         setReq,
-        getTmdbInfo,
         api,
         reloadFiles,
         gotoPath,
@@ -115,7 +111,6 @@ export function Menu({
                         label="Delete"
                         className={classes.Delete}
                     />
-                    <Button action={Imdb.action} isActive={Imdb.isActive} label="Imdb" className={classes.Imdb} />
                     <Dropdown>
                         <button className={cx(button, Sort)}>Sort</button>
                         <div className="menu">

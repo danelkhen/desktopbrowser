@@ -17,7 +17,6 @@ export interface MenuItems {
     google: MenuItem
     subs: MenuItem
     Explore: MenuItem
-    Imdb: MenuItem
     Delete: MenuItem
     OrderByInnerSelection: MenuItem
     FolderSize: MenuItem
@@ -41,7 +40,6 @@ export function useMenu({
     path,
     orderBy,
     setReq,
-    getTmdbInfo,
     api,
     prevPage,
     nextPage,
@@ -55,7 +53,6 @@ export function useMenu({
     api: Api
     orderBy(x: Column): void
     setReq: SetRequest
-    getTmdbInfo(x: C.File): void
     prevPage(): void
     nextPage(): void
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
@@ -96,7 +93,6 @@ export function useMenu({
         )
     )
     const Explore = useAction(useCallback(() => currentFolder && explore(currentFolder), [explore, currentFolder]))
-    const Imdb = useAction(useCallback(() => currentFolder && getTmdbInfo(currentFolder), [currentFolder, getTmdbInfo]))
 
     const Delete = useAction(
         useCallback(
@@ -149,7 +145,6 @@ export function useMenu({
             google,
             subs,
             Explore,
-            Imdb,
             Delete,
             OrderByInnerSelection,
             FolderSize,
@@ -171,7 +166,6 @@ export function useMenu({
             FolderSize,
             Folders,
             Hidden,
-            Imdb,
             Keep,
             OrderByInnerSelection,
             Recursive,

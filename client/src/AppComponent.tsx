@@ -1,8 +1,7 @@
 import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
-import { FileBrowser } from "./FileBrowser/index"
 import { useApp } from "./App"
-import { MediaComponent } from "./Media/MediaComponent"
+import { FileBrowser } from "./FileBrowser/index"
 
 export function AppComponent() {
     const app = useApp()
@@ -14,12 +13,6 @@ export function AppComponent() {
                 <Switch>
                     <Route path="/" exact>
                         <FileBrowser />
-                    </Route>
-                    <Route path="/media">
-                        <MediaComponent />
-                    </Route>
-                    <Route path="/media2">
-                        <div>MEDIA2</div>
                     </Route>
                 </Switch>
             </div>
