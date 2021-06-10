@@ -132,7 +132,7 @@ export function rimraf2(pattern: string, options: rimraf.Options = {}) {
 }
 
 export async function GetHomeFiles(): Promise<File[]> {
-    const list = await IoDrive.GetDrives3()
+    const list = await IoDrive.getDrives()
     return list.map(t => /*new File*/ ({
         IsFolder: true,
         Name: t.Name,
