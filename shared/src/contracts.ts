@@ -18,7 +18,6 @@ export interface FileService {
     getAllFilesMetadata(): Promise<FileInfo[]>
     getFileMetadata(req: { key: string }): Promise<FileInfo>
     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
-    GetFile(req: PathRequest): Promise<File>
     Execute(req: PathRequest): void
     Explore(req: PathRequest): void
     Delete(req: PathRequest): Promise<void>

@@ -13,7 +13,6 @@ export function proxyForFileService() {
         getFileMetadata: req => http("getFileMetadata", [req]),
         deleteFileMetadata: req => http("deleteFileMetadata", [req]),
         getAllFilesMetadata: () => http("getAllFilesMetadata", []),
-        GetFile: req => http("GetFile", [req]),
         Execute: req => http("Execute", [req]),
         Explore: req => http("Explore", [req]),
         Delete: req => http("Delete", [req]),

@@ -1,8 +1,9 @@
-import * as C from "../../shared/src/contracts"
-import { AppDb } from "./AppDb"
-import { Delete, Execute, Explore, GetFile, ListFiles, trash } from "./FileService"
+import { FileService } from "../../../shared/src/contracts"
+import { ListFiles } from "./ListFiles"
+import { AppDb } from "../AppDb"
+import { Delete, Execute, Explore, trash } from "./api"
 
-export function createFileService(db: AppDb): C.FileService {
+export function createApi(db: AppDb): FileService {
     return {
         async getFileMetadata({ key }) {
             return db.files.get(key)
@@ -17,7 +18,6 @@ export function createFileService(db: AppDb): C.FileService {
             db.files.del(key)
         },
         ListFiles,
-        GetFile,
         Execute,
         Explore,
         Delete,

@@ -3,7 +3,7 @@ import proxy from "express-http-proxy"
 import http from "http"
 import os from "os"
 import path from "path"
-import { createFileService } from "./createFileService"
+import { createApi } from "./api/createApi"
 import { Db } from "./media/db"
 import { handleServiceRequest } from "./utils/handleServiceRequest"
 import { LevelDb, LevelDbCollection } from "./utils/LevelDb"
@@ -25,7 +25,7 @@ export async function main() {
     await migrateToLevelDb(database, database2)
     const levelDb = new LevelDb(database2)
     const appDb = new AppDb(levelDb)
-    const fileService = createFileService(appDb)
+    const fileService = createApi(appDb)
 
     const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
     const keyValueCollection = new LevelDbCollection<M.KeyValue>(levelDb, "keyValue")
