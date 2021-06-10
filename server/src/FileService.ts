@@ -5,15 +5,7 @@ import trash2 from "trash"
 import { equalsIgnoreCase } from "../../shared/src"
 import * as C from "../../shared/src/contracts"
 import { FileRelativesInfo, ListFilesResponse } from "../../shared/src/contracts"
-import {
-    ApplyCaching,
-    ApplyPaging,
-    ApplyRequest,
-    GetFileAndOrFolders,
-    quote,
-    rimraf2,
-    ToFile,
-} from "./GetFileAndOrFolders"
+import { ApplyCaching, ApplyPaging, ApplyRequest, listFiles, quote, rimraf2, ToFile } from "./listFiles"
 import { IoFile } from "./io/IoFile"
 import { IoDir } from "./io/IoDir"
 import { orderBy } from "./utils/orderBy"
@@ -58,7 +50,7 @@ export const GetFiles: C.FileService["GetFiles"] = async req => {
     //    return all;
     //}
     //else {
-    let files = await GetFileAndOrFolders({
+    let files = await listFiles({
         path: req.Path!,
         searchPattern: req.SearchPattern,
         recursive: req.IsRecursive,
@@ -77,7 +69,7 @@ export const GetFileRelatives: C.FileService["GetFileRelatives"] = async path =>
     const pathInfo = new IoPath(path)
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
-    let xxx = await GetFileAndOrFolders({ path: info.ParentFolder.Path!, files: false, folders: true })
+    let xxx = await listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
     const parentFiles = xxx.filter(t => t.IsFolder)[orderBy](t => t.Name)
 
     const index = parentFiles.findIndex(t => t.Name[equalsIgnoreCase](pathInfo.Name))

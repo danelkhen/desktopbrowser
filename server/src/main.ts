@@ -10,7 +10,7 @@ import { LevelDb, LevelDbCollection } from "./utils/LevelDb"
 import { AppDb } from "./AppDb"
 import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
-import { setupWebsockets } from "./websocket"
+import { setupWebsockets } from "./utils/websocket"
 import type * as M from "../../shared/src/media"
 
 export async function main() {

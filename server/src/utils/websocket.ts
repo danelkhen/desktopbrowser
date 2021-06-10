@@ -1,8 +1,8 @@
 import * as http from "http"
 import * as https from "https"
 import * as ws from "ws"
-import { objectTryGet } from "./utils/objectTryGet"
-import { extractFunctionCall } from "./utils/ProxyCall"
+import { objectTryGet } from "./objectTryGet"
+import { extractFunctionCall } from "./ProxyCall"
 
 export function setupWebsockets<T>(server: http.Server | https.Server, services: T) {
     console.log("setupWebsockets")

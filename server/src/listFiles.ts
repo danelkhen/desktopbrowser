@@ -1,13 +1,20 @@
 import rimraf from "rimraf"
 import { File, IEnumerable, IOrderedEnumerable, ListFilesRequest } from "../../shared/src/contracts"
 import { isWindows } from "./FileService"
-import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { DirSizeCache, IoDir } from "./io/IoDir"
 import { IoDrive } from "./io/IoDrive"
 import { IoFile } from "./io/IoFile"
 import { dateToDefaultString } from "./utils/dateToDefaultString"
 
-export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
+export interface ListFilesOptions {
+    path: string
+    searchPattern?: string
+    recursive?: boolean
+    files?: boolean
+    folders?: boolean
+}
+
+export async function listFiles(req: ListFilesOptions): Promise<File[]> {
     let { path, searchPattern, recursive, files, folders } = req
     //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
     let isFiltered = false
