@@ -5,7 +5,7 @@ import { isWindows } from "./FileService"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
 import { dateToDefaultString } from "./utils/dateToDefaultString"
 import { IoFile } from "./utils/IoFile"
-import { IoDrive } from "./utils/io"
+import { IoDrive } from "./utils/IoDrive"
 
 export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
     let { path, searchPattern, recursive, files, folders } = req

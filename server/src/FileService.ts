@@ -15,7 +15,7 @@ import {
     ToFile,
 } from "./GetFileAndOrFolders"
 import { IoFile } from "./utils/IoFile"
-import { IoDir } from "./utils/io"
+import { IoDir } from "./utils/IoDir"
 import { orderBy } from "./utils/orderBy"
 import { PathInfo } from "./utils/PathInfo"
 
