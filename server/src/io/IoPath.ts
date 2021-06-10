@@ -63,7 +63,7 @@ export class IoPath {
     }
     async ToAbsoluteExact(): Promise<IoPath> {
         if (this.IsEmpty) return this
-        return new IoPath((await IoFile.create(this.Value)).FullName!)
+        return new IoPath((await IoFile.get(this.Value)).FullName!)
     }
 
     toString(): string {

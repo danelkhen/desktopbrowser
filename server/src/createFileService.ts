@@ -1,6 +1,6 @@
 import * as C from "../../shared/src/contracts"
 import { AppDb } from "./AppDb"
-import { Delete, Execute, Explore, GetFile, GetFileRelatives, GetFiles, ListFiles, trash } from "./FileService"
+import { Delete, Execute, Explore, GetFile, ListFiles, trash } from "./FileService"
 
 export function createFileService(db: AppDb): C.FileService {
     return {
@@ -17,8 +17,6 @@ export function createFileService(db: AppDb): C.FileService {
             db.files.del(key)
         },
         ListFiles,
-        GetFiles,
-        GetFileRelatives,
         GetFile,
         Execute,
         Explore,

@@ -18,7 +18,7 @@ export namespace IoFile {
         let list = await fse.readdir(path2)
         let list2: IoFile[] = []
         for (let t of list) {
-            list2.push(await create(path.join(path2, t)))
+            list2.push(await get(path.join(path2, t)))
         }
         return list2
     }
@@ -37,7 +37,7 @@ export namespace IoFile {
         return list
     }
 
-    export async function create(path2: string): Promise<IoFile> {
+    export async function get(path2: string): Promise<IoFile> {
         if (path2 == null) {
             return {} as any // TODO:
         }

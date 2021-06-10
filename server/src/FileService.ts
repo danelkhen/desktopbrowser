@@ -3,19 +3,18 @@ import open from "open"
 import * as os from "os"
 import trash2 from "trash"
 import { equalsIgnoreCase } from "../../shared/src"
-import * as C from "../../shared/src/contracts"
-import { FileRelativesInfo, ListFilesResponse } from "../../shared/src/contracts"
-import { ApplyCaching, ApplyPaging, ApplyRequest, listFiles, quote, rimraf2, ToFile } from "./listFiles"
-import { IoFile } from "./io/IoFile"
+import { File, FileRelativesInfo, FileService, ListFilesRequest } from "../../shared/src/contracts"
 import { IoDir } from "./io/IoDir"
-import { orderBy } from "./utils/orderBy"
+import { IoFile } from "./io/IoFile"
 import { IoPath } from "./io/IoPath"
+import { ApplyPaging, ApplyRequest, listFiles, quote, ToFile } from "./listFiles"
+import { orderBy } from "./utils/orderBy"
 
 export function isWindows() {
     return os.platform() == "win32"
 }
 
-export const ListFiles: C.FileService["ListFiles"] = async req => {
+export const ListFiles: FileService["ListFiles"] = async req => {
     //if (req.Path == null) {
     //    return {
     //        Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null },
@@ -26,51 +25,38 @@ export const ListFiles: C.FileService["ListFiles"] = async req => {
     if (req.Path != null && req.Path.endsWith(":")) {
         req.Path += "\\"
     }
-    let res: ListFilesResponse = {
-        Relatives: await GetFileRelatives(req.Path!),
-        File: await GetFile({ Path: req.Path! }),
-        // Files: null,
+    const Relatives = await GetFileRelatives(req.Path!)
+    const File = await GetFile({ Path: req.Path! })
+    let Files: File[] | undefined
+
+    if (File?.IsFolder) {
+        Files = await GetFiles(req)
     }
-    if (res.File!.IsFolder) {
-        res.Files = await GetFiles(req) //.toArray();
-    }
-    return res
+    return { Relatives, File, Files }
 }
 
-export const GetFiles: C.FileService["GetFiles"] = async req => {
-    if (req.HideFiles && req.HideFolders) return []
-    //else if (!req.MixFilesAndFolders && !req.HideFiles && !req.HideFolders && !req.IsRecursive) {
-    //   const folders = GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, false, true);
-    //   const files = GetFileAndOrFolders(req.Path, req.SearchPattern, req.IsRecursive, true, false);
-    //    folders = ApplyRequest(folders, req);
-    //    files = ApplyRequest(files, req);
-    //   const all = folders.concat(files);
-    //    all = ApplyPaging(all, req);
-    //    all = ApplyCaching(all);
-    //    return all;
-    //}
-    //else {
+async function GetFiles(req: ListFilesRequest): Promise<File[]> {
+    if (req.HideFiles && req.HideFolders) {
+        return []
+    }
     let files = await listFiles({
         path: req.Path!,
-        searchPattern: req.SearchPattern,
         recursive: req.IsRecursive,
         files: !req.HideFiles,
         folders: !req.HideFolders,
     })
     files = await ApplyRequest(files, req)
     files = ApplyPaging(files, req)
-    files = ApplyCaching(files)
     return files
-    //}
 }
 
-export const GetFileRelatives: C.FileService["GetFileRelatives"] = async path => {
+async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
     if (!path) return {}
     const pathInfo = new IoPath(path)
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
-    let xxx = await listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
-    const parentFiles = xxx.filter(t => t.IsFolder)[orderBy](t => t.Name)
+    let files = await listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
+    const parentFiles = files.filter(t => t.IsFolder)[orderBy](t => t.Name)
 
     const index = parentFiles.findIndex(t => t.Name[equalsIgnoreCase](pathInfo.Name))
     info.NextSibling = index >= 0 && index + 1 < parentFiles.length ? parentFiles[index + 1] : undefined
@@ -78,29 +64,31 @@ export const GetFileRelatives: C.FileService["GetFileRelatives"] = async path =>
     return info
 }
 
-export const GetFile: C.FileService["GetFile"] = async req => {
+export const GetFile: FileService["GetFile"] = async req => {
     const path = req.Path
-    if (!path) return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
+    if (!path) {
+        return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
+    }
     const absPath = new IoPath(path).ToAbsolute()
     if (await absPath.IsFile) {
-        return ToFile(await IoFile.create(absPath.Value))
+        return ToFile(await IoFile.get(absPath.Value))
     } else if ((await absPath.IsDirectory) || absPath.IsRoot) {
-        return ToFile(await IoFile.create(absPath.Value))
+        return ToFile(await IoFile.get(absPath.Value))
     }
     return null!
 }
 
-export const Execute: C.FileService["Execute"] = async req => {
+export const Execute: FileService["Execute"] = async req => {
     const filename = req.Path
     const p = await open(filename)
 }
 
-export const Explore: C.FileService["Explore"] = async req => {
+export const Explore: FileService["Explore"] = async req => {
     const cmd = os.platform() === "darwin" ? "open" : "explorer"
     child_process.exec(`${cmd} ${quote(req.Path)}`)
 }
 
-export const Delete: C.FileService["Delete"] = async req => {
+export const Delete: FileService["Delete"] = async req => {
     const path = req.Path
     if (await IoFile.Exists(path)) {
         await IoFile.Delete(path)
@@ -112,13 +100,11 @@ export const Delete: C.FileService["Delete"] = async req => {
                 "Delete protection, cannot delete path so short, should be at least depth of 3 levels or more"
             )
         //IoDir.Delete(path, true);
-        await rimraf2(path, { glob: false })
+        await IoDir.del(path)
     }
 }
 
-export const trash: C.FileService["trash"] = async req => {
-    console.log("Trash 1")
-
+export const trash: FileService["trash"] = async req => {
     let path = req.Path
     await trash2([path])
 }

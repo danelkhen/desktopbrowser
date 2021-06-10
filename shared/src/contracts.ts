@@ -18,8 +18,6 @@ export interface FileService {
     getAllFilesMetadata(): Promise<FileInfo[]>
     getFileMetadata(req: { key: string }): Promise<FileInfo>
     ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
-    GetFiles(req: ListFilesRequest): Promise<File[]>
-    GetFileRelatives(path: string): Promise<FileRelativesInfo>
     GetFile(req: PathRequest): Promise<File>
     Execute(req: PathRequest): void
     Explore(req: PathRequest): void
@@ -81,22 +79,12 @@ export interface PathRequest {
     Path: string
 }
 
-export interface IEnumerable<T> extends Array<T> {
-    OrderByDescending?(sel: any): IOrderedEnumerable<T>
-    OrderBy?(sel: any): IOrderedEnumerable<T>
-}
-
-export interface IOrderedEnumerable<T> extends IEnumerable<T> {
-    ThenByDescending?(sel: any): IOrderedEnumerable<T>
-    ThenBy?(sel: any): IOrderedEnumerable<T>
-}
-
 export interface SortRequest {
     Columns: SortColumn[]
 }
 
 export interface SortColumn {
-    Name: string
+    Name: "Name" | "Modified" | "Extension" | "Size"
     Descending?: boolean
 }
 

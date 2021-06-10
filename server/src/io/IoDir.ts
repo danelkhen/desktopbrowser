@@ -1,4 +1,5 @@
 import * as fse from "fs-extra"
+import rimraf from "rimraf"
 import { IoFile } from "./IoFile"
 
 export namespace IoDir {
@@ -28,6 +29,18 @@ export namespace IoDir {
         cache[path] = size
         return size
     }
+    export async function del(path: string) {
+        return await rimrafAsync(path, { glob: false })
+    }
 }
 
 export type DirSizeCache = { [path: string]: number }
+
+export function rimrafAsync(pattern: string, options: rimraf.Options = {}): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        rimraf(pattern, options, err => {
+            if (err) reject(err)
+            else resolve()
+        })
+    })
+}
