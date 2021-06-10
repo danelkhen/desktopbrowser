@@ -3,12 +3,11 @@ import fse from "fs-extra"
 import * as Path from "path"
 import type * as M from "../../../shared/src/media"
 import { TmdbApiV3 as Tmdb } from "../../../tmdb/src"
-import { ByFilename, Db, FsEntry } from "./db"
-import { DbService } from "./DbService"
+import { LevelDbCollection } from "../LevelDb"
+import { rootDir } from "../rootDir"
+import { Db, FsEntry } from "./db"
 import { KeyValueService } from "./KeyValueService"
 import { MediaScanner } from "./MediaScanner"
-import { rootDir } from "../rootDir"
-import { LevelDbCollection } from "../LevelDb"
 
 export function createMediaApp(db: Db, keyValueCollection: LevelDbCollection<M.KeyValue>) {
     const keyValueService = new KeyValueService(keyValueCollection)
