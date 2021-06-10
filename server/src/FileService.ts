@@ -14,10 +14,10 @@ import {
     rimraf2,
     ToFile,
 } from "./GetFileAndOrFolders"
-import { IoFile } from "./utils/IoFile"
-import { IoDir } from "./utils/IoDir"
+import { IoFile } from "./io/IoFile"
+import { IoDir } from "./io/IoDir"
 import { orderBy } from "./utils/orderBy"
-import { PathInfo } from "./utils/PathInfo"
+import { IoPath } from "./io/IoPath"
 
 export function isWindows() {
     return os.platform() == "win32"
@@ -74,7 +74,7 @@ export const GetFiles: C.FileService["GetFiles"] = async req => {
 
 export const GetFileRelatives: C.FileService["GetFileRelatives"] = async path => {
     if (!path) return {}
-    const pathInfo = new PathInfo(path)
+    const pathInfo = new IoPath(path)
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
     let xxx = await GetFileAndOrFolders({ path: info.ParentFolder.Path!, files: false, folders: true })
@@ -89,7 +89,7 @@ export const GetFileRelatives: C.FileService["GetFileRelatives"] = async path =>
 export const GetFile: C.FileService["GetFile"] = async req => {
     const path = req.Path
     if (!path) return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
-    const absPath = new PathInfo(path).ToAbsolute()
+    const absPath = new IoPath(path).ToAbsolute()
     if (await absPath.IsFile) {
         return ToFile(await IoFile.create(absPath.Value))
     } else if ((await absPath.IsDirectory) || absPath.IsRoot) {

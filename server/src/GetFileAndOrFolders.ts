@@ -1,11 +1,11 @@
 import rimraf from "rimraf"
 import { File, IEnumerable, IOrderedEnumerable, ListFilesRequest } from "../../shared/src/contracts"
-import { calculateFoldersSize } from "./utils/calculateFoldersSize"
 import { isWindows } from "./FileService"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
+import { DirSizeCache, IoDir } from "./io/IoDir"
+import { IoDrive } from "./io/IoDrive"
+import { IoFile } from "./io/IoFile"
 import { dateToDefaultString } from "./utils/dateToDefaultString"
-import { IoFile } from "./utils/IoFile"
-import { IoDrive } from "./utils/IoDrive"
 
 export async function GetFileAndOrFolders(req: GetFileAndFoldersRequest): Promise<IEnumerable<File>> {
     let { path, searchPattern, recursive, files, folders } = req
@@ -139,4 +139,30 @@ export async function GetHomeFiles(): Promise<File[]> {
         Path: t.Name,
         Size: t.IsReady ? parseInt(t.AvailableFreeSpace as string) : undefined,
     }))
+}
+
+let dirSizeCacheTime: number | undefined
+let dirSizeCache: DirSizeCache | undefined
+function getDirSizeCache() {
+    const tenMinutes = 10 * 60 * 1000
+    if (dirSizeCache && dirSizeCacheTime && Date.now() - dirSizeCacheTime < tenMinutes) {
+        return dirSizeCache
+    }
+    dirSizeCache = {}
+    dirSizeCacheTime = Date.now()
+    return dirSizeCache
+}
+export async function calculateFoldersSize(folders: File[]): Promise<File[]> {
+    const cache = getDirSizeCache()
+    const list: File[] = []
+    for (const file of folders) {
+        try {
+            //console.log("CalculateFoldersSize", file);
+            if (file.IsFolder) {
+                file.Size = await IoDir.getSize(file.Path!, cache)
+            }
+        } catch (e) {}
+        list.push(file)
+    }
+    return list
 }
