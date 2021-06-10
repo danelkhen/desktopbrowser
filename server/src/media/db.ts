@@ -1,3 +1,4 @@
+import "sqlite3"
 import "reflect-metadata"
 import {
     Column,

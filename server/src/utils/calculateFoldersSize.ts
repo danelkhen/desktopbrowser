@@ -1,6 +1,6 @@
-import { File, IEnumerable } from "../../shared/src/contracts"
-import { Stopwatch } from "./GetFileAndFoldersRequest"
-import { FsInfo } from "./utils/FsInfo"
+import { File, IEnumerable } from "../../../shared/src/contracts"
+import { Stopwatch } from "../GetFileAndFoldersRequest"
+import { FsInfo } from "./FsInfo"
 
 let cache = {} as { [key: string]: Promise<any> }
 
@@ -14,18 +14,6 @@ export async function calculateFoldersSize(folders: File[]): Promise<IEnumerable
         list.push(file)
     }
     return list
-    ////console.log("CalculateFoldersSize", folders.length);
-    //let x = await folders.map(file => {
-    //    try {
-    //        //console.log("CalculateFoldersSize", file);
-    //        if (file.IsFolder)
-    //            file.Size = await this.CalculateFolderSize(file.Path);
-    //    }
-    //    catch (e) {
-    //    }
-    //    return file;
-    //});
-    //return x;
 }
 export function CalculateFolderSize(path: string): Promise<number> {
     return CacheMethod(`CalculateFolderSize(${path})`, 100, 100, () => CalculateFolderSizeNoCache(path))

@@ -1,5 +1,6 @@
 import * as C from "../../shared/src/contracts"
-import { AppDb, LevelDb } from "./LevelDb"
+import { LevelDb } from "./utils/LevelDb"
+import { AppDb } from "./AppDb"
 import { ListFiles, GetFiles, GetFileRelatives, GetFile, Execute, Explore, Delete, trash } from "./FileService"
 
 export function createFileService(db: AppDb): C.FileService {

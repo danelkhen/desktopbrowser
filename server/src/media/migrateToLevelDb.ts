@@ -1,5 +1,5 @@
 import fs from "fs/promises"
-import { LevelDb } from "../LevelDb"
+import { LevelDb } from "../utils/LevelDb"
 import { Db } from "./db"
 
 export async function migrateToLevelDb(database: string, database2: string) {

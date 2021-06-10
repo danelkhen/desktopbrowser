@@ -2,7 +2,7 @@ import * as http from "http"
 import * as https from "https"
 import * as ws from "ws"
 import { FileService } from "../../shared/src/contracts"
-import { objectTryGet } from "./utils"
+import { objectTryGet } from "./utils/objectTryGet"
 import { extractFunctionCall } from "./utils/ProxyCall"
 
 export function setupWebsockets(server: http.Server | https.Server, services: { fileService: FileService }) {

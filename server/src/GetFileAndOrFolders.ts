@@ -1,9 +1,9 @@
 import rimraf from "rimraf"
 import { File, IEnumerable, IOrderedEnumerable, ListFilesRequest } from "../../shared/src/contracts"
-import { calculateFoldersSize } from "./calculateFoldersSize"
+import { calculateFoldersSize } from "./utils/calculateFoldersSize"
 import { isWindows } from "./FileService"
 import { GetFileAndFoldersRequest } from "./GetFileAndFoldersRequest"
-import { dateToDefaultString } from "./utils"
+import { dateToDefaultString } from "./utils/dateToDefaultString"
 import { FsInfo } from "./utils/FsInfo"
 import { DriveInfo } from "./utils/io"
 

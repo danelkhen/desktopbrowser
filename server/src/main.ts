@@ -5,9 +5,9 @@ import os from "os"
 import path from "path"
 import { createFileService } from "./createFileService"
 import { Db } from "./media/db"
-import { handleServiceRequest } from "./handleServiceRequest"
-import { AppDb, LevelDb, LevelDbCollection } from "./LevelDb"
-import { createMediaApp } from "./media/createMediaApp"
+import { handleServiceRequest } from "./utils/handleServiceRequest"
+import { LevelDb, LevelDbCollection } from "./utils/LevelDb"
+import { AppDb } from "./AppDb"
 import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
 import { setupWebsockets } from "./websocket"
@@ -29,10 +29,8 @@ export async function main() {
 
     const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
     const keyValueCollection = new LevelDbCollection<M.KeyValue>(levelDb, "keyValue")
-    const app = createMediaApp(db, keyValueCollection)
     const services = {
         fs: fileService,
-        app: app,
     }
 
     const exp = express()

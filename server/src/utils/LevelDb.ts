@@ -1,5 +1,4 @@
 import level, { LevelDB } from "level"
-import { FileInfo } from "../../shared/src/contracts"
 
 export interface LevelDbEntity {
     collection: string
@@ -14,7 +13,7 @@ export class LevelDb {
         const stream = this.db.createReadStream({
             gt: `${collection}/`,
             lt: `${collection}0`,
-        }) as AsyncIterable<{ key: string; value: FileInfo }>
+        }) as AsyncIterable<{ key: string; value: T }>
         const list: T[] = []
         for await (const item of stream) {
             const obj = { ...item.value, collection, key: item.key.replace(`${collection}/`, "") }
@@ -56,12 +55,5 @@ export class LevelDbCollection<T extends LevelDbEntity> {
     }
     async get(key: string): Promise<T> {
         return await this.db.get({ key, collection: this.collection })
-    }
-}
-
-export class AppDb {
-    files: LevelDbCollection<FileInfo>
-    constructor(public db: LevelDb) {
-        this.files = new LevelDbCollection<FileInfo>(this.db, "files")
     }
 }
