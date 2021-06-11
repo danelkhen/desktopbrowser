@@ -1,6 +1,7 @@
 import React, { ReactElement, ReactNode } from "react"
 import { Meta } from "../Meta"
 import { css, cx } from "linaria"
+import { colors } from "../GlobalStyle"
 
 const grid = css`
     > table {
@@ -10,7 +11,7 @@ const grid = css`
     }
 
     > table > thead > tr {
-        border-bottom: 1px solid var(--bg2);
+        border-bottom: 1px solid ${colors.__bg2};
     }
 
     > table > thead > tr > th {
@@ -24,15 +25,15 @@ const grid = css`
     }
 
     > table > thead > tr > th:hover {
-        background-color: var(--bg2);
+        background-color: ${colors.__bg2};
     }
 
     > table > thead > tr > th.sorted.asc {
-        background-color: var(--bg2);
+        background-color: ${colors.__bg2};
     }
 
     > table > thead > tr > th.sorted.desc {
-        background-color: var(--bg3);
+        background-color: ${colors.__bg3};
     }
 
     > table > tfoot > tr > th {

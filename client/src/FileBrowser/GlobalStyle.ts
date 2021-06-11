@@ -1,4 +1,43 @@
 import { createGlobalStyle } from "styled-components"
+
+const themes = {
+    __light_fg1: "#333",
+    __light_fg2: "#666",
+    __light_fg3: "#999",
+    __light_bg1: "#fff",
+    __light_bg2: "#eee",
+    __light_bg3: "#ccc",
+    __light_bg_sel1: "#8ac8ff" /*#053e70,*/,
+    __light_bg_sel2: "#c8dbea" /*#e5eef5,*/,
+    __light_bg_sel3: "#f9e24e",
+    __light_bg_sel4: "#fbec88",
+    __light_bg_sel5: "#fffbe7",
+    __dark_bg1: "#111",
+    __dark_bg2: "#333",
+    __dark_bg3: "#666",
+    __dark_fg1: "#eee",
+    __dark_fg2: "#ddd",
+    __dark_fg3: "#bbb",
+    __dark_bg_sel1: "#2468a2",
+    __dark_bg_sel2: "#164783",
+    __dark_bg_sel3: "#002552",
+    __dark_bg_sel4: "#5d5517",
+    __dark_bg_sel5: "#423e22",
+} as const
+export const colors = {
+    __fg1: themes.__dark_fg1,
+    __fg2: themes.__dark_fg2,
+    __fg3: themes.__dark_fg3,
+    __bg1: themes.__dark_bg1,
+    __bg2: themes.__dark_bg2,
+    __bg3: themes.__dark_bg3,
+    __bg_sel1: themes.__dark_bg_sel1,
+    __bg_sel2: themes.__dark_bg_sel2,
+    __bg_sel3: themes.__dark_bg_sel3,
+    __bg_sel4: themes.__dark_bg_sel4,
+    __bg_sel5: themes.__dark_bg_sel5,
+} as const
+
 export const GlobalStyle = createGlobalStyle`
 
 @import url("https://fonts.googleapis.com/css?family=Space+Mono");
@@ -14,56 +53,6 @@ export const GlobalStyle = createGlobalStyle`
     src: url("../fonts/FreightTextBold.eot");
 }
 
-:root {
-    /* --theme: "dark"; or 'light'  */
-
-    /* light theme  */
-
-    --light-fg1: #333;
-    /* --light-fg1a: fade(@light-fg1, 30%); */
-    --light-fg2: #666;
-    --light-fg3: #999;
-    --light-bg1: #fff;
-    --light-bg2: #eee;
-    --light-bg3: #ccc;
-    --light-bg-sel1: #8ac8ff; /*#053e70;*/
-    --light-bg-sel2: #c8dbea; /*#e5eef5;*/
-    --light-bg-sel3: #f9e24e;
-    --light-bg-sel4: #fbec88;
-    --light-bg-sel5: #fffbe7;
-
-    /**************/
-
-    /* dark theme */
-
-    --dark-bg1: #111;
-    --dark-bg2: #333;
-    --dark-bg3: #666;
-    --dark-fg1: #eee;
-    /* --dark-fg1a: fade(@dark-fg1, 30%); */
-    --dark-fg2: #ddd;
-    --dark-fg3: #bbb;
-    --dark-bg-sel1: #2468a2;
-    --dark-bg-sel2: #164783;
-    --dark-bg-sel3: #002552;
-    --dark-bg-sel4: #5d5517;
-    --dark-bg-sel5: #423e22;
-
-    /**************/
-
-    --fg1: var(--dark-fg1);
-    /* --fg1a: var(--dark-fg1a)"; */
-    --fg2: var(--dark-fg2);
-    --fg3: var(--dark-fg3);
-    --bg1: var(--dark-bg1);
-    --bg2: var(--dark-bg2);
-    --bg3: var(--dark-bg3);
-    --bg-sel1: var(--dark-bg-sel1);
-    --bg-sel2: var(--dark-bg-sel2);
-    --bg-sel3: var(--dark-bg-sel3);
-    --bg-sel4: var(--dark-bg-sel4);
-    --bg-sel5: var(--dark-bg-sel5);
-}
 body {
     background-color: #060606;
     font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
@@ -72,51 +61,51 @@ body {
     margin: 0;
     padding: 0 0 50px 0;
     cursor: default;
-    color: var(--fg1);
+    color: ${colors.__fg1};
 }
 
 .fg1 {
-    color: var(--fg1);
+    color: ${colors.__fg1};
 }
 
 .fg2 {
-    color: var(--fg2);
+    color: ${colors.__fg2};
 }
 
 .fg3 {
-    color: var(--fg3);
+    color: ${colors.__fg3};
 }
 
 .bg1 {
-    background-color: var(--bg1);
+    background-color: ${colors.__bg1};
 }
 
 .bg2 {
-    background-color: var(--bg2);
+    background-color: ${colors.__bg2};
 }
 
 .bg3 {
-    background-color: var(--bg3);
+    background-color: ${colors.__bg3};
 }
 
 .bg-sel1 {
-    background-color: var(--bg)-sel1;
+    background-color: ${colors.__bg_sel1};
 }
 
 .bg-sel2 {
-    background-color: var(--bg)-sel2;
+    background-color: ${colors.__bg_sel2};
 }
 
 .bg-sel3 {
-    background-color: var(--bg)-sel3;
+    background-color: ${colors.__bg_sel3};
 }
 
 .bg-sel4 {
-    background-color: var(--bg)-sel4;
+    background-color: ${colors.__bg_sel4};
 }
 
 .bg-sel5 {
-    background-color: var(--bg)-sel5;
+    background-color: ${colors.__bg_sel5};
 }
 
 .palette {
@@ -139,14 +128,14 @@ html {
 input,
 select {
     box-sizing: border-box;
-    color: var(--fg1);
-    background-color: var(--bg1);
+    color: ${colors.__fg1};
+    background-color: ${colors.__bg1};
     font-size: inherit;
 }
 
 button {
-    color: var(--fg1);
-    background-color: var(--bg1);
+    color: ${colors.__fg1};
+    background-color: ${colors.__bg1};
     font-size: inherit;
 }
 
@@ -156,7 +145,7 @@ a {
 }
 
 /* .active {
-    background-color: var(--bg2);
+    background-color: ${colors.__bg2};
 } */
 
 header {
@@ -174,7 +163,7 @@ a.Name {
 }
 
 a.Name:hover {
-    border-bottom: 1px solid var(--fg3);
+    border-bottom: 1px solid ${colors.__fg3};
 }
 
 .container-fluid {

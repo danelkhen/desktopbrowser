@@ -1,17 +1,18 @@
 import { css } from "linaria"
+import { colors } from "./GlobalStyle"
 
 export const active = css`
-    background-color: var(--bg2);
+    background-color: ${colors.__bg2};
 `
 
 export const nav = css`
     font-size: 10px;
-    background-color: var(--bg1);
+    background-color: ${colors.__bg1};
     background-color: #181818;
     margin: 0;
     padding: 0;
     display: flex;
-    color: var(--fg2);
+    color: ${colors.__fg2};
     .find {
         display: flex;
     }

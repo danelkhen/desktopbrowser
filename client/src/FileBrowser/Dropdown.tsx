@@ -1,5 +1,6 @@
 import { css, cx } from "linaria"
 import React, { ReactComponentElement, ReactElement, useCallback, useEffect, useState } from "react"
+import { colors } from "./GlobalStyle"
 
 export const dropdown = css`
     display: inline-block;
@@ -7,8 +8,8 @@ export const dropdown = css`
     .menu {
         display: none;
         position: absolute;
-        border: 1px solid var(--bg2);
-        background-color: var(--bg1);
+        border: 1px solid ${colors.__bg2};
+        background-color: ${colors.__bg1};
     }
 
     &.show .menu {
