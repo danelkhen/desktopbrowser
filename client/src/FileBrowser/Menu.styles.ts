@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { MenuButton } from "./MenuButton"
+import { MenuButton, StyledButton } from "./MenuButton"
 
 export const ButtonGroup = styled.div`
     display: flex;
@@ -65,11 +65,11 @@ export const ExploreButton = styled(MenuButton)`
     background: url(../../img/icons/explore.svg) no-repeat 13px 46%;
     padding-left: 40px;
 `
-export const Sort = styled(MenuButton)`
+export const SortButton = styled(StyledButton)`
     background: url(../../img/icons/sort.svg) no-repeat 13px 46%;
     padding-left: 40px;
 `
-export const More = styled(MenuButton)`
+export const MoreButton = styled(StyledButton)`
     background: url(../../img/icons/more.svg) no-repeat 13px 46%;
     padding-left: 40px;
     border-right: none;

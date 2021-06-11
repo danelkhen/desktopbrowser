@@ -67,8 +67,8 @@ async function main2() {
             // })
             const position = getWindowPosition()
             myWindow.setPosition(position.x, position.y, false)
-            myWindow.show()
-            myWindow.focus()
+            // myWindow.show()
+            // myWindow.focus()
         })
 
         // Hide the window when it loses focus

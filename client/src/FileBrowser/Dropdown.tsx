@@ -7,14 +7,10 @@ export const DropdownDiv = styled.div<{ show: boolean }>`
     display: inline-block;
 
     .menu {
-        display: none;
+        display: ${props => (props.show ? "block" : "none")};
         position: absolute;
         border: 1px solid ${colors.__bg2};
         background-color: ${colors.__bg1};
-    }
-
-    &.show .menu {
-        display: block;
     }
 
     .menu button {

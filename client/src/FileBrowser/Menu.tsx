@@ -16,9 +16,9 @@ import {
     GotoParentDir,
     GotoPrevSibling,
     MenuDiv,
-    More,
+    MoreButton,
     Size,
-    Sort,
+    SortButton,
     Subs,
 } from "./Menu.styles"
 import { MenuButton, StyledButton } from "./MenuButton"
@@ -102,7 +102,7 @@ export function Menu({
                 <ButtonGroup>
                     <DeleteButton action={Delete.action} isActive={Delete.isActive} label="Delete" />
                     <Dropdown>
-                        <StyledButton className={cx(Sort)}>Sort</StyledButton>
+                        <SortButton>Sort</SortButton>
                         <div className="menu">
                             <MenuButton
                                 action={OrderByInnerSelection.action}
@@ -122,7 +122,7 @@ export function Menu({
                         </div>
                     </Dropdown>
                     <Dropdown>
-                        <StyledButton className={cx(More)}>More</StyledButton>
+                        <MoreButton>More</MoreButton>
                         <div className="menu">
                             <MenuButton action={Folders.action} isActive={Folders.isActive} label="Hide Folders" />
                             <MenuButton action={Files.action} isActive={Files.isActive} label="Hide Files" />
