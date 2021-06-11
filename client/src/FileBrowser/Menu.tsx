@@ -1,27 +1,27 @@
 import cx from "classnames"
-import * as C from "../../../shared/src/contracts"
 import React from "react"
+import * as C from "../../../shared/src/contracts"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
-import { active } from "./index.styles"
+import { Api } from "./lib/useApi"
 import { MenuItems, useMenu } from "./lib/useMenu"
-import * as classes from "./Menu.styles"
+import { SetRequest } from "./lib/useReq"
 import {
-    button,
-    buttonGroup,
-    buttons,
+    ButtonGroup,
+    ButtonsDiv,
+    DeleteButton,
+    ExploreButton,
     Google,
     GotoNextSibling,
     GotoParentDir,
     GotoPrevSibling,
-    menu,
+    MenuDiv,
     More,
     Size,
     Sort,
     Subs,
 } from "./Menu.styles"
-import { Api } from "./lib/useApi"
-import { SetRequest } from "./lib/useReq"
+import { MenuButton, StyledButton } from "./MenuButton"
 
 export interface MenuProps {
     children: MenuItems
@@ -86,45 +86,35 @@ export function Menu({
     })
 
     return (
-        <div className={menu}>
-            <div className={buttons}>
-                <div className={buttonGroup}>
-                    <Button action={up.action} isActive={up.isActive} label="Up" className={GotoParentDir} />
-                    <Button action={prev.action} isActive={prev.isActive} label="Prev" className={GotoPrevSibling} />
-                    <Button action={next.action} isActive={next.isActive} label="Next" className={GotoNextSibling} />
-                </div>
-                <div className={buttonGroup}>
-                    <Button action={FolderSize.action} isActive={FolderSize.isActive} label="Folder" className={Size} />
-                    <Button action={google.action} isActive={google.isActive} label="Google" className={Google} />
-                    <Button action={subs.action} isActive={subs.isActive} label="Subs" className={Subs} />
-                    <Button
-                        action={Explore.action}
-                        isActive={Explore.isActive}
-                        label="Explore"
-                        className={classes.Explore}
-                    />
-                </div>
-                <div className={buttonGroup}>
-                    <Button
-                        action={Delete.action}
-                        isActive={Delete.isActive}
-                        label="Delete"
-                        className={classes.Delete}
-                    />
+        <MenuDiv>
+            <ButtonsDiv>
+                <ButtonGroup>
+                    <GotoParentDir action={up.action} isActive={up.isActive} label="Up" />
+                    <GotoPrevSibling action={prev.action} isActive={prev.isActive} label="Prev" />
+                    <GotoNextSibling action={next.action} isActive={next.isActive} label="Next" />
+                </ButtonGroup>
+                <ButtonGroup>
+                    <Size action={FolderSize.action} isActive={FolderSize.isActive} label="Folder" />
+                    <Google action={google.action} isActive={google.isActive} label="Google" />
+                    <Subs action={subs.action} isActive={subs.isActive} label="Subs" />
+                    <ExploreButton action={Explore.action} isActive={Explore.isActive} label="Explore" />
+                </ButtonGroup>
+                <ButtonGroup>
+                    <DeleteButton action={Delete.action} isActive={Delete.isActive} label="Delete" />
                     <Dropdown>
-                        <button className={cx(button, Sort)}>Sort</button>
+                        <StyledButton className={cx(Sort)}>Sort</StyledButton>
                         <div className="menu">
-                            <Button
+                            <MenuButton
                                 action={OrderByInnerSelection.action}
                                 isActive={OrderByInnerSelection.isActive}
                                 label="Watched"
                             />
-                            <Button
+                            <MenuButton
                                 action={foldersFirst.action}
                                 isActive={foldersFirst.isActive}
                                 label="Folders first"
                             />
-                            <Button
+                            <MenuButton
                                 action={disableSorting.action}
                                 isActive={disableSorting.isActive}
                                 label="Disable sort"
@@ -132,48 +122,17 @@ export function Menu({
                         </div>
                     </Dropdown>
                     <Dropdown>
-                        <button className={cx(button, More)}>More</button>
+                        <StyledButton className={cx(More)}>More</StyledButton>
                         <div className="menu">
-                            <Button action={Folders.action} isActive={Folders.isActive} label="Hide Folders" />
-                            <Button action={Files.action} isActive={Files.isActive} label="Hide Files" />
-                            <Button action={Recursive.action} isActive={Recursive.isActive} label="Recursive" />
-                            <Button action={Keep.action} isActive={Keep.isActive} label="Keep" />
-                            <Button action={Hidden.action} isActive={Hidden.isActive} label="Hidden" />
+                            <MenuButton action={Folders.action} isActive={Folders.isActive} label="Hide Folders" />
+                            <MenuButton action={Files.action} isActive={Files.isActive} label="Hide Files" />
+                            <MenuButton action={Recursive.action} isActive={Recursive.isActive} label="Recursive" />
+                            <MenuButton action={Keep.action} isActive={Keep.isActive} label="Keep" />
+                            <MenuButton action={Hidden.action} isActive={Hidden.isActive} label="Hidden" />
                         </div>
                     </Dropdown>
-                </div>
-            </div>
-        </div>
+                </ButtonGroup>
+            </ButtonsDiv>
+        </MenuDiv>
     )
 }
-
-function Button({
-    action,
-    isActive,
-    label,
-    className,
-}: {
-    action?(): void
-    isActive?(): boolean
-    label?: string
-    className?: string
-}) {
-    return (
-        <button className={cx(button, className, isActive?.() && active)} onClick={action}>
-            {label}
-        </button>
-    )
-}
-// function Checkbox(mi: MenuItem) {
-//     return (
-//         <label>
-//             <input
-//                 type="checkbox"
-//                 checked={mi.isActive!()}
-//                 onChange={e => mi.setActive!(e.currentTarget.checked)}
-//                 className={mi.className}
-//             />
-//             {mi.label}
-//         </label>
-//     )
-// }

@@ -1,9 +1,10 @@
+import cx from "classnames"
 import React, { ReactElement, ReactNode } from "react"
-import { Meta } from "../Meta"
-import { css, cx } from "linaria"
+import styled from "styled-components"
 import { colors } from "../GlobalStyle"
+import { Meta } from "../Meta"
 
-const grid = css`
+const GridDiv = styled.div`
     > table {
         border-collapse: collapse;
         table-layout: fixed;
@@ -147,7 +148,7 @@ export function Grid<T, K extends {}>({
     const cells = children
 
     return (
-        <div className={cx(grid, className)}>
+        <GridDiv className={className}>
             <table>
                 {head && (
                     <thead>
@@ -190,6 +191,6 @@ export function Grid<T, K extends {}>({
                     </tbody>
                 )}
             </table>
-        </div>
+        </GridDiv>
     )
 }

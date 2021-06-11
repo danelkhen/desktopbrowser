@@ -1,8 +1,9 @@
-import { css, cx } from "linaria"
 import React, { ReactComponentElement, ReactElement, useCallback, useEffect, useState } from "react"
+import styled from "styled-components"
 import { colors } from "./GlobalStyle"
+import cx from "classnames"
 
-export const dropdown = css`
+export const DropdownDiv = styled.div<{ show: boolean }>`
     display: inline-block;
 
     .menu {
@@ -53,10 +54,10 @@ export function Dropdown(props: DropdownProps) {
 
     const updatedToggler = React.cloneElement(toggler, { className: cx(toggler.props.className, "dropdown-toggle") })
     return (
-        <div className={cx(dropdown, show && "show")} onClick={toggle}>
+        <DropdownDiv show={show} onClick={toggle}>
             {updatedToggler}
             {popup}
-        </div>
+        </DropdownDiv>
     )
 }
 

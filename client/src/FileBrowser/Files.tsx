@@ -1,14 +1,14 @@
-import * as C from "../../../shared/src/contracts"
 import React from "react"
-import { Columns, Column } from "./Columns"
+import styled from "styled-components"
+import * as C from "../../../shared/src/contracts"
+import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
+import { fileEmpty, layers, link } from "./lib/Linearicons"
 import { FileColumnsConfig } from "./lib/useCommands"
-import { FormatFriendlyDate, FormatFriendlySize } from "./utils"
-import { css } from "linaria"
-import { layers, fileEmpty, link } from "./lib/Linearicons"
 import { LinearIcon, LinearIconName } from "./LinearIcon"
+import { FormatFriendlyDate, FormatFriendlySize } from "./utils"
 
-const grdFiles = css`
+const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;
 
     > table {
@@ -104,9 +104,8 @@ export function Files(props: FilesProps) {
     } = props
 
     return (
-        <Grid<C.File, Columns>
+        <GrdFiles<C.File, Columns>
             items={files}
-            className={grdFiles}
             titles={{ [Columns.type]: "" }}
             head={head}
             body={body}
@@ -130,6 +129,6 @@ export function Files(props: FilesProps) {
                 Size: file => <span>{FormatFriendlySize(file.Size)}</span>,
                 Extension: file => !file.IsFolder && <span>{file.Extension}</span>,
             }}
-        </Grid>
+        </GrdFiles>
     )
 }

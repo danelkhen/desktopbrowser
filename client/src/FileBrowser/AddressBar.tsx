@@ -1,7 +1,7 @@
 import React from "react"
-import { css } from "linaria"
+import styled from "styled-components"
 
-const addressBar = css`
+const AddressBarDiv = styled.div`
     padding: 0.25em 0.5em;
     font-size: 14px;
     display: flex;
@@ -80,7 +80,7 @@ export function AddressBar({
     totalPages,
 }: AddressBarProps) {
     return (
-        <div className={addressBar}>
+        <AddressBarDiv>
             <form onSubmit={gotoPath}>
                 <input
                     type="text"
@@ -122,6 +122,6 @@ export function AddressBar({
                     <option value="dark">dark</option>
                 </select>
             </div>
-        </div>
+        </AddressBarDiv>
     )
 }

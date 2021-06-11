@@ -1,11 +1,7 @@
-import { css } from "linaria"
+import styled from "styled-components"
 import { colors } from "./GlobalStyle"
 
-export const active = css`
-    background-color: ${colors.__bg2};
-`
-
-export const nav = css`
+export const Nav = styled.nav`
     font-size: 10px;
     background-color: ${colors.__bg1};
     background-color: #181818;

@@ -7,8 +7,8 @@ const themes = {
     __light_bg1: "#fff",
     __light_bg2: "#eee",
     __light_bg3: "#ccc",
-    __light_bg_sel1: "#8ac8ff" /*#053e70,*/,
-    __light_bg_sel2: "#c8dbea" /*#e5eef5,*/,
+    __light_bg_sel1: "#8ac8ff",
+    __light_bg_sel2: "#c8dbea",
     __light_bg_sel3: "#f9e24e",
     __light_bg_sel4: "#fbec88",
     __light_bg_sel5: "#fffbe7",
@@ -210,6 +210,32 @@ a.Name:hover {
 
 .hidden {
     display: none;
+}
+
+
+.FileRow {
+    transition: all 0.3s ease;
+    color: #999;
+    &:hover {
+        background-color: #000;
+        color: #a276f8;
+        td .Name {
+            text-decoration: none;
+            cursor: pointer;
+        }
+    }
+    &.Selected {
+        color: #fff;
+        background-color: #a276f8;
+        transition: all 0.3s ease;
+    }
+
+    &.IsFolder.HasInnerSelection.Selected {
+        color: rgba(238, 238, 238, 0.7);
+    }
+    &.HasInnerSelection {
+        color: rgba(238, 238, 238, 0.3);
+    }
 }
 
 

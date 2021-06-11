@@ -6,6 +6,7 @@ import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
 import { Imdb } from "./Imdb"
 import * as classes from "./index.styles"
+import { Nav } from "./index.styles"
 import { useApi } from "./lib/useApi"
 import { useColumns, useColumnSorting, useReqSorting } from "./lib/useColumns"
 import { useFileMetadata } from "./lib/useFileMetadata"
@@ -76,7 +77,7 @@ export function FileBrowser() {
         <>
             <GlobalStyle />
             <header>
-                <nav className={classes.nav}>
+                <Nav>
                     <Menu
                         selectedFile={selectedFile}
                         isSortedBy={isSortedBy}
@@ -92,7 +93,7 @@ export function FileBrowser() {
                         gotoPath={gotoPath}
                     />
                     <Clock />
-                </nav>
+                </Nav>
                 <AddressBar
                     prevPage={prevPage}
                     nextPage={nextPage}
