@@ -25,9 +25,7 @@
         "open": "^8.2.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
-        "sqlite3": "^5.0.2",
         "trash": "^7.1.1",
-        "typeorm": "^0.2.34",
         "ws": "^7.4.6"
     },
     "devDependencies": {
@@ -61,7 +59,6 @@
         "forge": {
             "packagerConfig": {
                 "ignore": [
-                    "tmdb-gen",
                     "scripts"
                 ]
             },

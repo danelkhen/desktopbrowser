@@ -4,12 +4,10 @@ import http from "http"
 import os from "os"
 import path from "path"
 import { createApi } from "./api/createApi"
-import { Db } from "./media/db"
-import { handleServiceRequest } from "./utils/handleServiceRequest"
-import { LevelDb, LevelDbCollection } from "./utils/LevelDb"
 import { AppDb } from "./AppDb"
-import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
+import { handleServiceRequest } from "./utils/handleServiceRequest"
+import { LevelDb } from "./utils/LevelDb"
 import { setupWebsockets } from "./utils/websocket"
 
 export async function main() {
@@ -21,12 +19,10 @@ export async function main() {
     const database = path.join(dataDir, "db.sqlite")
     const database2 = path.join(dataDir, "db.level")
 
-    await migrateToLevelDb(database, database2)
     const levelDb = new LevelDb(database2)
     const appDb = new AppDb(levelDb)
     const fileService = createApi(appDb)
 
-    const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
     const services = {
         fs: fileService,
     }

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
-import * as M from "../../shared/src/media"
 import { FileInfo, File } from "../../shared/src/contracts"
-import { FsEntry } from "../../shared/src/media"
 import { proxyForFileService } from "./FileBrowser/lib/proxyForFileService"
 
 export function useApp() {
@@ -42,9 +40,5 @@ export class App {
             x = { key: name, collection: "" }
         }
         return x
-    }
-
-    fsEntryToMediaFile(x: FsEntry): M.MediaFile {
-        return { fsEntry: x } as M.MediaFile
     }
 }

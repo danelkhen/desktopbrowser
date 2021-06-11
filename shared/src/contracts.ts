@@ -1,6 +1,3 @@
-import { FindManyOptions, FindOneOptions } from "typeorm"
-export { FindManyOptions, FindOneOptions }
-
 export interface FileInfo {
     key: string
     collection: string
