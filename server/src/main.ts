@@ -11,7 +11,6 @@ import { AppDb } from "./AppDb"
 import { migrateToLevelDb } from "./media/migrateToLevelDb"
 import { dataDir, rootDir } from "./rootDir"
 import { setupWebsockets } from "./utils/websocket"
-import type * as M from "../../shared/src/media"
 
 export async function main() {
     console.log(dataDir)
@@ -28,7 +27,6 @@ export async function main() {
     const fileService = createApi(appDb)
 
     const db: Db = { byFilename: {} as any, fsEntries: {} as any, keyValue: {} as any, connection: {} as any }
-    const keyValueCollection = new LevelDbCollection<M.KeyValue>(levelDb, "keyValue")
     const services = {
         fs: fileService,
     }

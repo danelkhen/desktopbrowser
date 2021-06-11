@@ -10,7 +10,6 @@ import {
     PrimaryColumn,
     Repository,
 } from "typeorm"
-import * as M from "../../../shared/src/media"
 
 @Entity({ name: "by_filename" })
 export class ByFilename {
@@ -25,7 +24,7 @@ export class ByFilename {
 }
 
 @Entity()
-export class FsEntry implements M.FsEntry {
+export class FsEntry {
     @PrimaryColumn() key: string = undefined!
     @Column("varchar", { nullable: true }) @Index() basename: string = undefined!
     @Column("varchar", { nullable: true }) dirname: string = undefined!
@@ -73,39 +72,3 @@ export class Db {
         return this.connection.getRepository(FsEntry)
     }
 }
-
-// @EventSubscriber()
-// export class EverythingSubscriber implements EntitySubscriberInterface<any> {
-//     //function test() {
-//     //    let db = new Db();
-//     //    db.init().then(() => {
-//     //        db.keyValue.findOneById("ggg").then(t=>console.log(t));
-//     //        //let x = new KeyValue();
-//     //        //x.key = "ggg";
-//     //        //x.value = {a:"b",c:"d"};
-//     //        //db.keyValue.persist(x).then(() => console.log("Done"));
-//     //    });
-//     //}
-//     //test();
-//     //beforeInsert(event: InsertEvent<any>) {
-//     //    console.log(`BEFORE ENTITY INSERTED: `, event.entity);
-//     //}
-//     //beforeUpdate(event: UpdateEvent<any>) {
-//     //    console.log(`BEFORE ENTITY UPDATED: `, event.entity);
-//     //}
-//     //beforeRemove(event: RemoveEvent<any>) {
-//     //    console.log(`BEFORE ENTITY WITH ID ${event.entityId} REMOVED: `, event.entity);
-//     //}
-//     //afterInsert(event: InsertEvent<any>) {
-//     //    console.log(`AFTER ENTITY INSERTED: `, event.entity.key);
-//     //}
-//     //afterUpdate(event: UpdateEvent<any>) {
-//     //    console.log(`AFTER ENTITY UPDATED: `, event.entity.key);
-//     //}
-//     //afterRemove(event: RemoveEvent<any>) {
-//     //    console.log(`AFTER ENTITY WITH ID ${event.entityId} REMOVED: `, event.entity.key);
-//     //}
-//     //afterLoad(entity: any) {
-//     //    console.log(`AFTER ENTITY LOADED: `, entity.key);
-//     //}
-// }
