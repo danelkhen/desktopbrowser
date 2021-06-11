@@ -1,10 +1,10 @@
-# typescript-react-linaria
+# typescript-react-styled-components
 
 Stack:
 
 -   TypeScript
 -   React
--   linaria
+-   styled-components
 -   eslint
 -   stylelint
 -   prettier

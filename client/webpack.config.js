@@ -50,7 +50,6 @@ module.exports = (env, argv) => {
                                   }
                                 : { compilerOptions: { noEmit: false } },
                         },
-                        { loader: "linaria/loader", options: { displayName: true } },
                     ],
                 },
                 {

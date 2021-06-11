@@ -1,6 +1,5 @@
 node_modules/
 dist/
-.linaria-cache/
 .vs/
 .DS_Store
 yarn-error.log
