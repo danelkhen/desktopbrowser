@@ -1,4 +1,4 @@
-﻿import { Keys } from "../utils/Keys"
+﻿import { Keys } from "./Keys"
 import { itemsAre } from "../../../shared/src"
 
 export class Selection<T> {
