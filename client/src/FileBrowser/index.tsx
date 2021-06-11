@@ -3,6 +3,7 @@ import * as C from "../../../shared/src/contracts"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
+import { GlobalStyle } from "./GlobalStyle2"
 import { Imdb } from "./Imdb"
 import * as classes from "./index.styles"
 import { useApi } from "./lib/useApi"
@@ -73,6 +74,7 @@ export function FileBrowser() {
 
     return (
         <>
+            <GlobalStyle />
             <header>
                 <nav className={classes.nav}>
                     <Menu

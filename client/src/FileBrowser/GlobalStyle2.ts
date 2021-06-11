@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "styled-components"
+export const GlobalStyle = createGlobalStyle`
+
 @import url("https://fonts.googleapis.com/css?family=Space+Mono");
 @import url("https://fonts.googleapis.com/css?family=PT+Sans:400,700");
 
@@ -220,4 +223,5 @@ a.Name:hover {
     display: none;
 }
 
-/* db } */
+
+`
