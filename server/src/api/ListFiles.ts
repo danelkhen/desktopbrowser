@@ -9,7 +9,7 @@ import { IoDrive } from "../io/IoDrive"
 import { dateToDefaultString } from "../utils/dateToDefaultString"
 import { isWindows } from "../utils/isWindows"
 
-export const ListFiles: FileService["ListFiles"] = async req => {
+export const ListFiles: FileService["listFiles"] = async req => {
     //if (req.Path == null) {
     //    return {
     //        Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null },
@@ -34,7 +34,7 @@ async function GetFiles(req: ListFilesRequest): Promise<File[]> {
     if (req.HideFiles && req.HideFolders) {
         return []
     }
-    let files = await listFiles({
+    let files = await _listFiles({
         path: req.Path!,
         recursive: req.IsRecursive,
         files: !req.HideFiles,
@@ -50,7 +50,7 @@ async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
     const pathInfo = new IoPath(path)
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
-    let files = await listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
+    let files = await _listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
     const parentFiles = files.filter(t => t.IsFolder)[orderBy](t => t.Name)
 
     const index = parentFiles.findIndex(t => t.Name[equalsIgnoreCase](pathInfo.Name))
@@ -80,7 +80,7 @@ export interface ListFilesOptions {
     folders?: boolean
 }
 
-export async function listFiles({ path, recursive, files, folders }: ListFilesOptions): Promise<File[]> {
+export async function _listFiles({ path, recursive, files, folders }: ListFilesOptions): Promise<File[]> {
     //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
     let isFiltered = false
     let files2: File[]

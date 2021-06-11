@@ -17,10 +17,10 @@ export function createApi(db: AppDb): FileService {
         async deleteFileMetadata({ key }) {
             db.files.del(key)
         },
-        ListFiles,
-        Execute,
-        Explore,
-        Delete,
+        listFiles: ListFiles,
+        execute: Execute,
+        explore: Explore,
+        del: Delete,
         trash,
     }
 }

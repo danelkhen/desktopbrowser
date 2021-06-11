@@ -59,7 +59,7 @@ export function useApi({
 
         async function Execute(file: C.File): Promise<void> {
             if (!file.Path) return
-            await App.current.fileService.Execute({ Path: file.Path })
+            await App.current.fileService.execute({ Path: file.Path })
         }
 
         const api: Api = { Execute, GotoFolder, Open, GotoPath, orderBy }

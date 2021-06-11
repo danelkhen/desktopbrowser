@@ -7,17 +7,17 @@ import { quote } from "./ListFiles"
 import { IoDir } from "../io/IoDir"
 import { IoFile } from "../io/IoFile"
 
-export const Execute: FileService["Execute"] = async req => {
+export const Execute: FileService["execute"] = async req => {
     const filename = req.Path
     const p = await open(filename)
 }
 
-export const Explore: FileService["Explore"] = async req => {
+export const Explore: FileService["explore"] = async req => {
     const cmd = os.platform() === "darwin" ? "open" : "explorer"
     child_process.exec(`${cmd} ${quote(req.Path)}`)
 }
 
-export const Delete: FileService["Delete"] = async req => {
+export const Delete: FileService["del"] = async req => {
     const path = req.Path
     if (await IoFile.Exists(path)) {
         await IoFile.Delete(path)

@@ -14,10 +14,10 @@ export interface FileService {
     deleteFileMetadata(req: { key: string }): Promise<void>
     getAllFilesMetadata(): Promise<FileInfo[]>
     getFileMetadata(req: { key: string }): Promise<FileInfo>
-    ListFiles(req: ListFilesRequest): Promise<ListFilesResponse>
-    Execute(req: PathRequest): void
-    Explore(req: PathRequest): void
-    Delete(req: PathRequest): Promise<void>
+    listFiles(req: ListFilesRequest): Promise<ListFilesResponse>
+    execute(req: PathRequest): void
+    explore(req: PathRequest): void
+    del(req: PathRequest): Promise<void>
     trash(req: PathRequest): Promise<void>
 }
 

@@ -7,15 +7,14 @@ export function proxyForFileService() {
     const ws = getWebSocketInvoker<FileService>("fileService")
 
     const proxy: FileService = {
-        ListFiles: req => ws("ListFiles", [req]),
-
+        listFiles: req => ws("listFiles", [req]),
         saveFileMetadata: req => http("saveFileMetadata", [req]),
         getFileMetadata: req => http("getFileMetadata", [req]),
         deleteFileMetadata: req => http("deleteFileMetadata", [req]),
         getAllFilesMetadata: () => http("getAllFilesMetadata", []),
-        Execute: req => http("Execute", [req]),
-        Explore: req => http("Explore", [req]),
-        Delete: req => http("Delete", [req]),
+        execute: req => http("execute", [req]),
+        explore: req => http("explore", [req]),
+        del: req => http("del", [req]),
         trash: req => http("trash", [req]),
     }
 
