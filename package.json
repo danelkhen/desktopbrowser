@@ -59,7 +59,9 @@
         "forge": {
             "packagerConfig": {
                 "ignore": [
-                    "scripts"
+                    "scripts",
+                    "server",
+                    "shared"
                 ]
             },
             "makers": [
