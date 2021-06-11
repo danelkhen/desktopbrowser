@@ -28,3 +28,12 @@ jobs:
             - run: cd app; npx tsc
             - run: cd client; npm run build
             - run: npm run make
+            - run: find out
+            - name: Release
+              uses: softprops/action-gh-release@v1
+              if: startsWith(github.ref, 'refs/tags/')
+              with:
+                  files: |
+                      out/make/zip/darwin/x64/desktopbrowser-darwin-x64-2.0.0.zip
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
