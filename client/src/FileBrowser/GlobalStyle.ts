@@ -40,9 +40,6 @@ export const colors = {
 
 export const GlobalStyle = createGlobalStyle`
 
-@import url("https://fonts.googleapis.com/css?family=Space+Mono");
-@import url("https://fonts.googleapis.com/css?family=PT+Sans:400,700");
-
 @font-face {
     font-family: "FreightSansProBook-Regular";
     src: url("../fonts/FreightSansProBook-Regular.eot");

@@ -4,8 +4,6 @@ import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
-import { Imdb } from "./Imdb"
-import * as classes from "./index.styles"
 import { Nav } from "./index.styles"
 import { useApi } from "./lib/useApi"
 import { useColumns, useColumnSorting, useReqSorting } from "./lib/useColumns"
@@ -17,9 +15,7 @@ import { useReq } from "./lib/useReq"
 import { useSelection } from "./lib/useSelection"
 import { useSorting } from "./lib/useSorting"
 import { Menu } from "./Menu"
-import { Pallete } from "./Pallete"
 import { QuickFind } from "./QuickFind"
-import { Repl } from "./Repl"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
@@ -133,9 +129,6 @@ export function FileBrowser() {
                 orderBy={orderBy}
                 head={false}
             />
-            <Pallete />
-            <Imdb />
-            <Repl />
         </>
     )
 }
