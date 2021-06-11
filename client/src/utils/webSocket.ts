@@ -1,5 +1,5 @@
 import { iterateDomEvent } from "./iterateEvent"
-import { Invoker } from "./Proxy_"
+import { Invoker } from "./Proxy"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
 let webSocket: ReconnectingWebSocket

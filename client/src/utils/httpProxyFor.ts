@@ -1,4 +1,4 @@
-import { Invoker } from "./Proxy_"
+import { Invoker } from "./Proxy"
 import { getHttpInvoker } from "./getHttpInvoker"
 
 export function httpProxyFor<T>(url: string, impl: (http: Invoker<T>) => T) {

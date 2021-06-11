@@ -1,7 +1,7 @@
 import * as C from "../../../shared/src/contracts"
 import cx from "classnames"
 import React, { useCallback } from "react"
-import { Selection } from "../utils/Selection_"
+import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
 import { Column, Columns } from "./Columns"
 import { Files } from "./Files"

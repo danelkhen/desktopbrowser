@@ -1,4 +1,4 @@
-import { Invoker } from "./Proxy_"
+import { Invoker } from "./Proxy"
 
 async function httpInvoke(baseURL: string, action: string, prms?: any): Promise<any> {
     const req: RequestInit = {
