@@ -60,7 +60,10 @@
         "forge": {
             "packagerConfig": {
                 "ignore": [
-                    "\\.github"
+                    "\\.github",
+                    "(?<!dist)/server",
+                    "(?<!dist)/shared",
+                    "scripts"
                 ],
                 "junk": true
             },
