@@ -1,0 +1,41 @@
+name: Node.js CI
+
+on:
+    create:
+        tags:
+            - "*"
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        strategy:
+            matrix:
+                node-version: [14.x]
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - run: npm i -g npm
+            - run: npm install
+            - run: cd shared; npm install
+            - run: cd client; npm install
+            - run: cd server; npm install
+            - run: cd app; npx tsc
+            - run: cd client; npm run build
+            - run: cd client; npm prune --production
+            - run: rd /s /q server
+            - run: rd /s /q scripts
+            - run: rd /s /q shared
+            - run: npm run make
+            - run: dir out /s
+            - name: Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  files: |
+                      out/make/zip/win32/x64/*.zip
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
