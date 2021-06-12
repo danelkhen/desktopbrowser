@@ -31,7 +31,6 @@ jobs:
             - run: rd -r scripts
             - run: rd -r shared
             - run: npm run make
-            - run: dir -r out
             - name: Release
               uses: softprops/action-gh-release@v1
               with:
