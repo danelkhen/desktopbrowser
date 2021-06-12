@@ -7,7 +7,7 @@ on:
 
 jobs:
     build:
-        runs-on: windows-latest
+        runs-on: macos-11
 
         strategy:
             matrix:
@@ -27,15 +27,14 @@ jobs:
             - run: cd app; npx tsc
             - run: cd client; npm run build
             - run: cd client; npm prune --production
-            - run: rd -r server
-            - run: rd -r scripts
-            - run: rd -r shared
+            - run: rm -rf server
+            - run: rm -rf scripts
+            - run: rm -rf shared
             - run: npm run make
-            - run: dir -r out
             - name: Release
               uses: softprops/action-gh-release@v1
               with:
                   files: |
-                      out/make/zip/win32/x64/*.zip
+                      out/make/zip/darwin/x64/*.zip
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
