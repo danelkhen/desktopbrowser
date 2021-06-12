@@ -27,11 +27,11 @@ jobs:
             - run: cd app; npx tsc
             - run: cd client; npm run build
             - run: cd client; npm prune --production
-            - run: rd /s /q server
-            - run: rd /s /q scripts
-            - run: rd /s /q shared
+            - run: rd -r server
+            - run: rd -r scripts
+            - run: rd -r shared
             - run: npm run make
-            - run: dir out /s
+            - run: dir -r out
             - name: Release
               uses: softprops/action-gh-release@v1
               with:
