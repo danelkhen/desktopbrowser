@@ -31,5 +31,6 @@ jobs:
               with:
                   files: |
                       out/make/zip/win32/x64/*.zip
+                      out/make/squirrel.windows/x64/*
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
