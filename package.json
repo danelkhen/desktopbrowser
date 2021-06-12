@@ -1,6 +1,6 @@
 {
     "name": "desktopbrowser",
-    "version": "2.0.9",
+    "version": "2.0.10",
     "main": "app/dist/app/src/app.js",
     "description": "Desktop browser",
     "repository": "git@github.com:danelkhen/desktopbrowser.git",
