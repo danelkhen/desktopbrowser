@@ -35,6 +35,6 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   files: |
-                      out/make/zip/darwin/x64/desktopbrowser-darwin-x64-2.0.0.zip
+                      out/make/zip/darwin/x64/*.zip
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
