@@ -57,13 +57,7 @@
     },
     "config": {
         "forge": {
-            "packagerConfig": {
-                "ignore": [
-                    "scripts",
-                    "server",
-                    "shared"
-                ]
-            },
+            "packagerConfig": {},
             "makers": [
                 {
                     "name": "@electron-forge/maker-squirrel",
