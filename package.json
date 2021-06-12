@@ -57,7 +57,9 @@
     },
     "config": {
         "forge": {
-            "packagerConfig": {},
+            "packagerConfig": {
+                "junk": true
+            },
             "makers": [
                 {
                     "name": "@electron-forge/maker-squirrel",
