@@ -15,21 +15,21 @@ export interface IoFile {
 }
 export namespace IoFile {
     export async function getChildren(path2: string): Promise<IoFile[]> {
-        let list = await fse.readdir(path2)
-        let list2: IoFile[] = []
-        for (let t of list) {
+        const list = await fse.readdir(path2)
+        const list2: IoFile[] = []
+        for (const t of list) {
             list2.push(await get(path.join(path2, t)))
         }
         return list2
     }
 
     export async function getDescendants(path2: string): Promise<IoFile[]> {
-        let list = await getChildren(path2)
+        const list = await getChildren(path2)
         let i = 0
         while (i < list.length) {
-            let file = list[i]
+            const file = list[i]
             if (file.isDir) {
-                let list2 = await getChildren(file.path)
+                const list2 = await getChildren(file.path)
                 list.push(...list2)
             }
             i++
@@ -65,7 +65,7 @@ export namespace IoFile {
     }
     export async function Exists(s: string): Promise<boolean | undefined> {
         if (!(await fse.pathExists(s))) return
-        let stat = await fse.stat(s)
+        const stat = await fse.stat(s)
         return stat.isFile()
     }
     export async function Delete(s: string): Promise<boolean> {

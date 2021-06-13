@@ -50,7 +50,7 @@ async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
     const pathInfo = new IoPath(path)
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
-    let files = await _listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
+    const files = await _listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
     const parentFiles = files.filter(t => t.IsFolder)[orderBy](t => t.Name)
 
     const index = parentFiles.findIndex(t => t.Name[equalsIgnoreCase](pathInfo.Name))

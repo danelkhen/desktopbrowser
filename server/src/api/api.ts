@@ -34,6 +34,6 @@ export const Delete: FileService["del"] = async req => {
 }
 
 export const trash: FileService["trash"] = async req => {
-    let path = req.Path
+    const path = req.Path
     await trash2([path])
 }

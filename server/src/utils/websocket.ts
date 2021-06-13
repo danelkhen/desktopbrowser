@@ -12,22 +12,22 @@ export function setupWebsockets<T>(server: http.Server | https.Server, services:
         console.log("wss.onconnection", req.url)
         ws.on("message", async message => {
             try {
-                let data = String(message)
+                const data = String(message)
                 console.log("ws.message received: %s", message)
-                let pc = extractFunctionCall(data)
-                let target = objectTryGet(services, pc.target)
-                let res = await target[pc.funcName](...pc.args)
+                const pc = extractFunctionCall(data)
+                const target = objectTryGet(services, pc.target)
+                const res = await target[pc.funcName](...pc.args)
                 if (isIterable(res)) {
                     console.log("sending iterable!!!!!!!!!!!!!!!!")
                     ws.send("[")
-                    for (let item of res) {
+                    for (const item of res) {
                         ws.send(JSON.stringify(item) + ",")
                     }
                     ws.send("]")
                 } else if (isAsyncIterable(res)) {
                     console.log("sending async iterable!!!!!!!!!!!!!!!!!!")
                     ws.send("[")
-                    for await (let item of res) {
+                    for await (const item of res) {
                         ws.send(JSON.stringify(item) + ",")
                     }
                     ws.send("]")

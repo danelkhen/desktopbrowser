@@ -3,7 +3,7 @@
     cb: (item: T, index: number) => R
 ): AsyncIterableIterator<R> {
     let index = 0
-    for await (let item of list) {
+    for await (const item of list) {
         yield cb(item, index)
         index++
     }
@@ -14,7 +14,7 @@ export async function* filter<T>(
     cb: (item: T, index: number) => boolean
 ): AsyncIterableIterator<T> {
     let index = 0
-    for await (let item of list) {
+    for await (const item of list) {
         if (cb(item, index)) yield item
         index++
     }
@@ -22,7 +22,7 @@ export async function* filter<T>(
 
 export async function* skip<T>(list: AsyncIterableIterator<T>, count: number): AsyncIterableIterator<T> {
     let index = 0
-    for await (let item of list) {
+    for await (const item of list) {
         if (index >= count) yield item
         index++
     }
@@ -30,7 +30,7 @@ export async function* skip<T>(list: AsyncIterableIterator<T>, count: number): A
 export async function* take<T>(list: AsyncIterableIterator<T>, count: number): AsyncIterableIterator<T> {
     if (count <= 0) return
     let index = 0
-    for await (let item of list) {
+    for await (const item of list) {
         yield item
         index++
         if (index >= count) break
@@ -57,8 +57,8 @@ export class Queryable<T> {
     }
 
     async toArray(): Promise<T[]> {
-        let list: T[] = []
-        for await (let item of this.source) {
+        const list: T[] = []
+        for await (const item of this.source) {
             list.push(item)
         }
         return list

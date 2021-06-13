@@ -28,7 +28,7 @@ export type OrderByAscending<T, K> = {
 export function desc<T, K>(orderBy: OrderBy<T, K>, desc: true): OrderByDescending<T, K>
 export function desc<T, K>(orderBy: OrderBy<T, K>, desc: false): OrderByAscending<T, K>
 export function desc<T, K>(orderBy: OrderBy<T, K>, desc?: boolean): OrderBy<T, K>
-export function desc<T, K>(orderBy: OrderBy<T, K>, desc: boolean = true): OrderBy<T, K> {
+export function desc<T, K>(orderBy: OrderBy<T, K>, desc = true): OrderBy<T, K> {
     orderBy.desc = desc
     return orderBy
 }

@@ -16,7 +16,7 @@ export namespace IoDrive {
         return drives
     }
     function toDriveInfo(x: Drive) {
-        let di: IoDrive = {
+        const di: IoDrive = {
             path: x.mounted + "\\",
             Name: x.mounted,
             IsReady: true,

@@ -23,13 +23,13 @@ export class IoPath {
         throw new Error()
     }
     static GetPathRoot(s: string): string | null {
-        let max = 1000
+        const max = 1000
         let i = 0
         let s2 = path.dirname(s)
         do {
             i++
             s2 = path.dirname(s2)
-            let s3 = path.dirname(s2)
+            const s3 = path.dirname(s2)
             if (s2 == s3) return s2
         } while (i < 100)
         return null
@@ -42,7 +42,7 @@ export class IoPath {
 
     get IsRoot(): boolean {
         if (this.IsEmpty) return false
-        var abs = this.ToAbsolute()
+        const abs = this.ToAbsolute()
         return IoPath.GetPathRoot(abs.Value) == abs.Value
     }
     get IsEmpty(): boolean {
@@ -79,7 +79,7 @@ export class IoPath {
     get ParentPath(): IoPath {
         if (this.IsEmpty) return this
         if (this.IsRoot) return new IoPath("")
-        var x = this.Value
+        let x = this.Value
         if (x.endsWith("\\")) x = x[removeLast](1)
         return new IoPath(IoPath.GetDirectoryName(x))
     }

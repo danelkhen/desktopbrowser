@@ -2,9 +2,9 @@ import { RequestHandler } from "express"
 
 export function handleServiceRequest(services: {}) {
     const x: RequestHandler = async (req, res, next) => {
-        let serviceName = req.params["service"]
-        let action = req.params["action"]
-        let service = (services as any)[serviceName]
+        const serviceName = req.params["service"]
+        const action = req.params["action"]
+        const service = (services as any)[serviceName]
         if (service == null) {
             console.error("No such service by that name:", serviceName)
         }
@@ -15,7 +15,7 @@ export function handleServiceRequest(services: {}) {
         else arg = req.query
         console.log(action, req.params, req.query)
         try {
-            let result = await service[action](arg)
+            const result = await service[action](arg)
             res.json(result ?? null)
         } catch (e) {
             console.log("api action error", e)

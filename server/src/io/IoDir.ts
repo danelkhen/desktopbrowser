@@ -5,7 +5,7 @@ import { IoFile } from "./IoFile"
 export namespace IoDir {
     export async function Exists(s: string): Promise<boolean | undefined> {
         if (!(await fse.pathExists(s))) return
-        let stat = await fse.stat(s)
+        const stat = await fse.stat(s)
         return stat.isDirectory()
     }
     export async function getSize(path: string, cache: DirSizeCache = {}): Promise<number> {
@@ -15,7 +15,7 @@ export namespace IoDir {
         let size = 0
         try {
             const list = await IoFile.getChildren(path)
-            for (let item of list) {
+            for (const item of list) {
                 if (item.isFile) {
                     size += item.Length!
                 } else if (item.isDir) {
