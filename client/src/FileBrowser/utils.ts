@@ -1,6 +1,6 @@
 import * as C from "../../../shared/src/contracts"
 import { toDefaultDate, toFriendlyRelative2, removeLast } from "../../../shared/src"
-import { toFriendlySize } from "../utils/global"
+import { toFriendlySize } from "../utils/toFriendlySize"
 
 export function TryParse(s: string): number | null {
     const x = parseInt(s)

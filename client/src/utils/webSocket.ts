@@ -12,18 +12,7 @@ export function main() {
     url.search = ""
     url.protocol = "ws:"
     url.pathname = "/api"
-    // let url = location.href.replace(/^https|http/, "ws")
-    // url = url.replace(/\?.*$/, "")
     webSocket = new ReconnectingWebSocket(url.toString(), ["protocolOne", "protocolTwo"])
-    // webSocket.open()
-    // webSocket.addEventListener("message", e => {
-    //     // console.log(e.data);
-    // })
-    // Connection opened
-    // webSocket.addEventListener("open", e => {
-    //     console.log("websocket open")
-    //     //socket.send('Hello Server!');
-    // })
 }
 
 //TODO:
