@@ -72,10 +72,3 @@ function arrayRemove<T>(x: T[], item: T) {
     if (index < 0) return
     x.splice(index, 1)
 }
-
-// function arrayDistinctBy<T, V>(list: T[], selector: (obj: T) => V): T[] {
-//     const pairs = list.map(t => [selector(t), t] as [V, T])
-//     const map = new Map<V, T>(pairs)
-//     const list2 = Array.from(map.values())
-//     return list2
-// }
