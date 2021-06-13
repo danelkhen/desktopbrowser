@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { desc, OrderBy, orderBy, comparer, ComparerFunc, SelectorFunc } from "../../../../shared/src"
 import { Meta } from "../Meta"
 import { useMemo } from "react"

@@ -7,7 +7,7 @@ import { AppComponent } from "./AppComponent"
 
 export async function main() {
     await App.init()
-    ReactDOM.render(<AppComponent />, document.querySelector("#root")) as any
+    ReactDOM.render(<AppComponent />, document.querySelector("#root"))
 }
 
 main()

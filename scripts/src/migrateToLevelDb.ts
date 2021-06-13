@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from "fs/promises"
 import { LevelDb } from "../../server/src/utils/LevelDb"
 import { AppDb } from "../../server/src/AppDb"

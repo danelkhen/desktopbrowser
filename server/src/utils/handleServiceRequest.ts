@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from "express"
 
 export function handleServiceRequest(services: {}) {
-    const x: RequestHandler = async (req, res, next) => {
+    const x: RequestHandler = async (req, res) => {
         const serviceName = req.params["service"]
         const action = req.params["action"]
         const service = (services as any)[serviceName]

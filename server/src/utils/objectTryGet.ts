@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function objectTryGet(obj: any, indexers: string[] | string): any {
     if (typeof indexers == "string") indexers = indexers.split(".")
     let value = obj

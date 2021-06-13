@@ -6,7 +6,9 @@ import { dataDir, rootDir } from "./rootDir"
 
 Object.assign(console, log.functions)
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 let myWindow: BrowserWindow = null!
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 let tray: Tray = null!
 
 log.info(rootDir, dataDir)
@@ -18,6 +20,7 @@ async function main2() {
     if (!gotTheLock) {
         app.quit()
     } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         app.on("second-instance", (event, commandLine, workingDirectory) => {
             // Someone tried to run a second instance, we should focus our window.
             if (myWindow) {

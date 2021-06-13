@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as path from "path"
 import { removeLast } from "../../../shared/src"
 import { IoFile } from "./IoFile"
@@ -63,6 +64,7 @@ export class IoPath {
     }
     async ToAbsoluteExact(): Promise<IoPath> {
         if (this.IsEmpty) return this
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return new IoPath((await IoFile.get(this.Value)).FullName!)
     }
 

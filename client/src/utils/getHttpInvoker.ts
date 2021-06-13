@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Invoker } from "./Proxy"
 
 async function httpInvoke(baseURL: string, action: string, prms?: any): Promise<any> {

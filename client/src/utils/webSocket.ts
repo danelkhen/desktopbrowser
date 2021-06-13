@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { iterateDomEvent } from "./iterateEvent"
 import { Invoker } from "./Proxy"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -54,7 +56,7 @@ export async function* invokeStreaming<T>(pc: InvokeInfo): AsyncIterableIterator
         } else if (data.startsWith("ERROR: ")) {
             const json = data.substr("ERROR ".length)
             if (json.length > 0) {
-                const x = JSON.parse(json)
+                // TODO: const x = JSON.parse(json)
             }
             throw new Error(data)
         } else if (data == "[") {

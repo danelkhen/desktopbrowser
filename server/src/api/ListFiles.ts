@@ -1,9 +1,9 @@
-import { equalsIgnoreCase } from "../../../shared/src"
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { equalsIgnoreCase, orderBy } from "../../../shared/src"
 import { File, FileRelativesInfo, FileService, ListFilesRequest, PathRequest } from "../../../shared/src/contracts"
 import { desc } from "../../../shared/src"
 import { IoFile } from "../io/IoFile"
 import { IoPath } from "../io/IoPath"
-import { orderBy } from "../utils/orderBy"
 import { DirSizeCache, IoDir } from "../io/IoDir"
 import { IoDrive } from "../io/IoDrive"
 import { dateToDefaultString } from "../utils/dateToDefaultString"
@@ -131,7 +131,7 @@ export async function ApplyRequest(files: File[], req: ListFilesRequest): Promis
         files = files.filter(t => t.IsFolder)
     }
     if (req.Sort != null && req.Sort.Columns != null) {
-        const sorters = req.Sort.Columns.map(col => desc<File, any>(x => x[col.Name], col.Descending))
+        const sorters = req.Sort.Columns.map(col => desc<File, unknown>(x => x[col.Name], col.Descending))
         files = files[orderBy](...sorters)
     }
     if (req.FolderSize && !req.HideFolders) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import "sqlite3"
 import "reflect-metadata"
 import {
@@ -39,6 +40,7 @@ export class FsEntry {
 @Entity()
 export class KeyValue {
     @PrimaryColumn() key: string = undefined!
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Column("varchar", { nullable: true }) value: any = undefined!
 }
 

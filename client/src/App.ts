@@ -23,6 +23,7 @@ export class App {
 
     constructor() {
         console.log("App ctor", this)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(window as any)["_app"] = this
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as fse from "fs-extra"
 import rimraf from "rimraf"
 import { IoFile } from "./IoFile"
