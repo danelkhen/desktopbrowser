@@ -2,7 +2,7 @@
     "name": "server",
     "version": "0.0.5",
     "description": "",
-    "main": "out/server/src/server.js",
+    "main": "dist/server/src/server.js",
     "author": "Dan-el Khen",
     "license": "MIT",
     "scripts": {

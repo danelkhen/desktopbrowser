@@ -6,7 +6,7 @@
         "lib": ["esnext.asynciterable", "es2019", "DOM"],
         "sourceMap": true,
         "newLine": "LF",
-        "outDir": "out",
+        "outDir": "dist",
         "strict": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

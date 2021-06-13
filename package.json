@@ -1,7 +1,7 @@
 {
     "name": "desktopbrowser",
     "version": "2.0.16",
-    "main": "app/dist/app/src/app.js",
+    "main": "server/dist/server/src/app.js",
     "productName": "Desktop Browser",
     "description": "Desktop Browser",
     "repository": "git@github.com:danelkhen/desktopbrowser.git",

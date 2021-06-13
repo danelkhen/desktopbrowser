@@ -1,8 +1,8 @@
 import { app, BrowserWindow, Tray } from "electron"
 import log from "electron-log"
 import path from "path"
-import { main } from "../../server/src/main"
-import { dataDir, rootDir } from "../../server/src/rootDir"
+import { main } from "./main"
+import { dataDir, rootDir } from "./rootDir"
 
 Object.assign(console, log.functions)
 
@@ -32,7 +32,7 @@ async function main2() {
 
         app.dock.hide()
 
-        tray = new Tray(path.join(rootDir, "app/assets/clapperboard-16x16.png"))
+        tray = new Tray(path.join(rootDir, "client/img/clapperboard-16x16.png"))
         tray.on("right-click", toggleWindow)
         tray.on("double-click", toggleWindow)
         tray.on("click", toggleWindow)
