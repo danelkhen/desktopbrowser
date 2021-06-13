@@ -18,7 +18,7 @@ Set.prototype[intersect] = function <T>(this: Set<T>, y: Set<T>): Set<T> {
     return setIntersect(this, y)
 }
 function setMinus<T>(x: Set<T>, y: Set<T>): Set<T> {
-    let list: T[] = []
+    const list: T[] = []
     x.forEach(t => !y.has(t) && list.push(t))
     return new Set(list)
 }
@@ -26,7 +26,7 @@ function setPlus<T>(x: Set<T>, y: Set<T>): Set<T> {
     return new Set<T>([...Array.from(x), ...Array.from(y)])
 }
 function setIntersect<T>(x: Set<T>, y: Set<T>): Set<T> {
-    let list: T[] = []
+    const list: T[] = []
     x.forEach(t => x.has(t) && y.has(t) && list.push(t))
     return new Set(list)
 }

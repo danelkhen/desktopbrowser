@@ -3,7 +3,7 @@ import { Moment } from "moment"
 
 export function tryParseInt(s: string | null | undefined): number | null {
     if (!s) return null
-    let x = parseInt(s)
+    const x = parseInt(s)
     if (isNaN(x)) return null
     return x
 }
@@ -24,8 +24,8 @@ export function promiseReuseIfStillRunning<T>(action: () => Promise<T>): () => P
 /** Will wrap the function and cause it to be reused if it's still running, use for long running async operations that should never run in parallel */
 export function ReusePromiseIfStillRunning(): MethodDecorator {
     return function (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
-        let originalFuncKey = "_" + String(propertyKey) + "_original"
-        let promiseKey = "_" + String(propertyKey) + "_promise"
+        const originalFuncKey = "_" + String(propertyKey) + "_original"
+        const promiseKey = "_" + String(propertyKey) + "_promise"
         target[originalFuncKey] = descriptor.value
         descriptor.value = new Function(`// generated code
 if (this.${promiseKey} == null) {
@@ -46,8 +46,8 @@ return this.${promiseKey};
 /** Will wrap the function and cause it to run only once, regardless of how many times it was called, use for things like init() */
 export function ReusePromise(): MethodDecorator {
     return function (target: any, propertyKey: string | Symbol, descriptor: PropertyDescriptor) {
-        let originalFuncKey = "_" + String(propertyKey) + "_original"
-        let promiseKey = "_" + String(propertyKey) + "_promise"
+        const originalFuncKey = "_" + String(propertyKey) + "_original"
+        const promiseKey = "_" + String(propertyKey) + "_promise"
         target[originalFuncKey] = descriptor.value
         descriptor.value = new Function(`// generated code
 if (this.${promiseKey} == null)
@@ -80,7 +80,7 @@ export function tryParseExactDate(s: string, format: string): Date | null {
     return x.toDate()
 }
 
-let DefaultDateFormat = "YYYY-MM-DD hh:mm:ss"
+const DefaultDateFormat = "YYYY-MM-DD hh:mm:ss"
 
 export function toDefaultDate(s: string): Date | null {
     return tryParseExactDate(s, DefaultDateFormat)

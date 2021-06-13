@@ -36,7 +36,7 @@ Object.defineProperty(Array.prototype, last, {
 function arrayTakeWhile<T>(list: T[], pred: (item: T, index?: number) => boolean): T[] {
     const took: T[] = []
     list.find(t => {
-        var take = pred(t)
+        const take = pred(t)
         if (take) took.push(t)
         return !take
     })
@@ -74,8 +74,8 @@ function arrayRemove<T>(x: T[], item: T) {
 }
 
 function arrayDistinctBy<T, V>(list: T[], selector: (obj: T) => V): T[] {
-    let pairs = list.map(t => [selector(t), t] as [V, T])
-    let map = new Map<V, T>(pairs)
-    let list2 = Array.from(map.values())
+    const pairs = list.map(t => [selector(t), t] as [V, T])
+    const map = new Map<V, T>(pairs)
+    const list2 = Array.from(map.values())
     return list2
 }
