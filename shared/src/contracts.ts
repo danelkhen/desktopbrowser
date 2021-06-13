@@ -1,14 +1,3 @@
-export interface FileInfo {
-    key: string
-    collection: string
-    selectedFiles?: string[]
-    tmdbKey?: string
-    episodeKey?: string
-    watched?: boolean
-    lastKnownPath?: string
-    scanned?: string
-}
-
 export interface FileService {
     saveFileMetadata(md: FileInfo): Promise<void>
     deleteFileMetadata(req: { key: string }): Promise<void>
@@ -25,6 +14,17 @@ export interface FileService {
     appOpen(): Promise<void>
     appExit(): Promise<void>
     appGetVersion(): Promise<string>
+}
+
+export interface FileInfo {
+    key: string
+    collection: string
+    selectedFiles?: string[]
+    tmdbKey?: string
+    episodeKey?: string
+    watched?: boolean
+    lastKnownPath?: string
+    scanned?: string
 }
 
 export interface ListFilesRequest {
