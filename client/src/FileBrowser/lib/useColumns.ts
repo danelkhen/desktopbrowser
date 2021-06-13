@@ -46,8 +46,8 @@ export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata 
                 Modified: true,
                 hasInnerSelection: true,
             },
-            comparer: {
-                type: (x, y) => getFileTypeOrder(y) - getFileTypeOrder(x),
+            sortGetters: {
+                type: x => (x.type && getFileTypeOrder(x.type)) ?? 0,
             },
             isDescending: {},
             active: [Columns.type],

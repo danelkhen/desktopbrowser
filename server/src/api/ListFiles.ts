@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { equalsIgnoreCase, orderBy } from "../../../shared/src"
+import { equalsIgnoreCase } from "../../../shared/src"
 import { File, FileRelativesInfo, FileService, ListFilesRequest, PathRequest } from "../../../shared/src/contracts"
-import { desc } from "../../../shared/src"
 import { IoFile } from "../io/IoFile"
 import { IoPath } from "../io/IoPath"
 import { DirSizeCache, IoDir } from "../io/IoDir"
 import { IoDrive } from "../io/IoDrive"
 import { dateToDefaultString } from "../utils/dateToDefaultString"
 import { isWindows } from "../utils/isWindows"
+import _ from "lodash"
 
 export const ListFiles: FileService["listFiles"] = async req => {
     //if (req.Path == null) {
@@ -51,7 +51,10 @@ async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
     const files = await _listFiles({ path: info.ParentFolder.Path!, files: false, folders: true })
-    const parentFiles = files.filter(t => t.IsFolder)[orderBy](t => t.Name)
+    const parentFiles = _.orderBy(
+        files.filter(t => t.IsFolder),
+        [t => t.Name]
+    )
 
     const index = parentFiles.findIndex(t => t.Name[equalsIgnoreCase](pathInfo.Name))
     info.NextSibling = index >= 0 && index + 1 < parentFiles.length ? parentFiles[index + 1] : undefined
@@ -131,8 +134,11 @@ export async function ApplyRequest(files: File[], req: ListFilesRequest): Promis
         files = files.filter(t => t.IsFolder)
     }
     if (req.Sort != null && req.Sort.Columns != null) {
-        const sorters = req.Sort.Columns.map(col => desc<File, unknown>(x => x[col.Name], col.Descending))
-        files = files[orderBy](...sorters)
+        files = _.orderBy(
+            files,
+            req.Sort.Columns.map(t => t.Name),
+            req.Sort.Columns.map(t => !!t.Descending)
+        )
     }
     if (req.FolderSize && !req.HideFolders) {
         files = await calculateFoldersSize(files)
