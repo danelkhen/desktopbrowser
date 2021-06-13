@@ -16,7 +16,7 @@ export async function main() {
     console.log("os", JSON.stringify(os.platform()))
     process.on("uncaughtException", e => console.log("uncaughtException", e))
 
-    const database = path.join(dataDir, "db.sqlite")
+    //    const database = path.join(dataDir, "db.sqlite")
     const database2 = path.join(dataDir, "db.level")
 
     const levelDb = new LevelDb(database2)
@@ -37,7 +37,7 @@ export async function main() {
 
     exp.use("/api/:service/:action", handleServiceRequest(services))
 
-    exp.get(["/", "/test", "/media", "/media2"], (req: express.Request, res: express.Response) => {
+    exp.get(["/", "/tray"], (req: express.Request, res: express.Response) => {
         res.sendFile(path.join(rootDir, "client/dist/index.html"))
     })
 

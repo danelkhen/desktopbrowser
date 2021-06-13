@@ -53,6 +53,7 @@ export const GlobalStyle = createGlobalStyle`
 body {
     background-color: #060606;
     font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
     line-height: 1.5;
     font-size: 1em;
     margin: 0;

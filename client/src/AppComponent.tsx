@@ -2,6 +2,7 @@ import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { useApp } from "./App"
 import { FileBrowser } from "./FileBrowser/index"
+import { Tray } from "./Tray/Tray"
 
 export function AppComponent() {
     const app = useApp()
@@ -13,6 +14,9 @@ export function AppComponent() {
                 <Switch>
                     <Route path="/" exact>
                         <FileBrowser />
+                    </Route>
+                    <Route path="/tray" exact>
+                        <Tray />
                     </Route>
                 </Switch>
             </div>

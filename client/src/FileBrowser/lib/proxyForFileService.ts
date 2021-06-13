@@ -16,6 +16,11 @@ export function proxyForFileService() {
         explore: req => http("explore", [req]),
         del: req => http("del", [req]),
         trash: req => http("trash", [req]),
+        appInspect: () => http("appInspect", []),
+        appOpen: () => http("appOpen", []),
+        appExit: () => http("appExit", []),
+        checkForUpdates: () => http("checkForUpdates", []),
+        appGetVersion: () => http("appGetVersion", []),
     }
 
     return proxy

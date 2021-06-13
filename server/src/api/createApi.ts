@@ -2,6 +2,8 @@ import { FileService } from "../../../shared/src/contracts"
 import { ListFiles } from "./ListFiles"
 import { AppDb } from "../AppDb"
 import { Delete, Execute, Explore, trash } from "./api"
+import { app, BrowserWindow, shell } from "electron"
+import { checkForUpdates } from "./checkForUpdates"
 
 export function createApi(db: AppDb): FileService {
     return {
@@ -22,5 +24,22 @@ export function createApi(db: AppDb): FileService {
         explore: Explore,
         del: Delete,
         trash,
+
+        async appInspect() {
+            const win = BrowserWindow.getFocusedWindow()
+            win?.webContents.openDevTools({ mode: "detach" })
+        },
+        appOpen() {
+            return shell.openExternal("http://localhost:7777")
+        },
+        async appExit() {
+            return app.quit()
+        },
+        checkForUpdates() {
+            return checkForUpdates()
+        },
+        async appGetVersion() {
+            return app.getVersion()
+        },
     }
 }

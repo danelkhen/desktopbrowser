@@ -19,6 +19,12 @@ export interface FileService {
     explore(req: PathRequest): void
     del(req: PathRequest): Promise<void>
     trash(req: PathRequest): Promise<void>
+
+    appInspect(): Promise<void>
+    checkForUpdates(): Promise<{ isLatest: boolean; latest: string }>
+    appOpen(): Promise<void>
+    appExit(): Promise<void>
+    appGetVersion(): Promise<string>
 }
 
 export interface ListFilesRequest {
