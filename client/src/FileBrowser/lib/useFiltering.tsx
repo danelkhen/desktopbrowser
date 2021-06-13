@@ -1,7 +1,7 @@
-import * as C from "../../../../shared/src/contracts"
 import { useMemo } from "react"
+import { FsFile } from "../../../../shared/src/contracts"
 
-export function useFiltering(search: string, list: C.File[]) {
+export function useFiltering(search: string, list: FsFile[]) {
     return useMemo(() => {
         if (!search) return list
         const s = search.toLowerCase()

@@ -1,6 +1,6 @@
-import * as C from "../../../shared/src/contracts"
 import cx from "classnames"
 import React, { useCallback } from "react"
+import { FsFile } from "../../../shared/src/contracts"
 import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
 import { Column, Columns } from "./Columns"
@@ -20,20 +20,20 @@ export function Files2({
     files,
     orderBy,
 }: {
-    setSelectedFiles: (v: C.File[]) => void
-    selectedFiles: C.File[]
-    allFiles: C.File[]
-    Open: (file: C.File) => void
-    hasInnerSelection(file: C.File): boolean
+    setSelectedFiles: (v: FsFile[]) => void
+    selectedFiles: FsFile[]
+    allFiles: FsFile[]
+    Open: (file: FsFile) => void
+    hasInnerSelection(file: FsFile): boolean
     isSortedBy: (key: keyof Columns, desc?: boolean | undefined) => boolean
     columns: FileColumnsConfig
     head?: boolean
     body?: boolean
-    files: C.File[]
+    files: FsFile[]
     orderBy: (column: Column) => void
 }) {
     const onItemMouseDown = useCallback(
-        (e: React.MouseEvent, file: C.File) => {
+        (e: React.MouseEvent, file: FsFile) => {
             const selection = new Selection(allFiles, selectedFiles)
             const selectedItems = selection.Click(file, e.ctrlKey, e.shiftKey)
             setSelectedFiles(selectedItems)
@@ -42,7 +42,7 @@ export function Files2({
     )
 
     const onItemClick = useCallback(
-        (e: React.MouseEvent, file: C.File) => {
+        (e: React.MouseEvent, file: FsFile) => {
             // const selection = new Selection(allFiles, selectedFiles)
             const target = e.target as HTMLElement
             if (!target.matches("a.Name")) return
@@ -53,7 +53,7 @@ export function Files2({
     )
 
     const onItemDoubleClick = useCallback(
-        (e: React.MouseEvent, file: C.File) => {
+        (e: React.MouseEvent, file: FsFile) => {
             if (file == null) return
             e.preventDefault()
             Open(file)
@@ -62,7 +62,7 @@ export function Files2({
     )
 
     const GetRowClass = useCallback(
-        (file: C.File): string => {
+        (file: FsFile): string => {
             const { FileRow, IsFolder, HasInnerSelection, Selected, IsFile } = Classes
             const selection = new Selection(allFiles, selectedFiles)
             return cx(

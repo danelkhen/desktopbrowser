@@ -4,11 +4,12 @@ import { App } from "../../App"
 import { Column, Columns } from "../Columns"
 import { SortConfig } from "./useSorting"
 import { SetRequest } from "./useReq"
+import { FsFile } from "../../../../shared/src/contracts"
 
 export interface Api {
-    Execute(file: C.File): Promise<void>
-    GotoFolder(file: C.File): void
-    Open(file: C.File): Promise<void>
+    Execute(file: FsFile): Promise<void>
+    GotoFolder(file: FsFile): void
+    Open(file: FsFile): Promise<void>
     GotoPath(path: string): void
     orderBy(column: Column): void
 }
@@ -19,7 +20,7 @@ export function useApi({
     setReq,
 }: {
     req: C.ListFilesRequest
-    sorting: SortConfig<C.File, Columns>
+    sorting: SortConfig<FsFile, Columns>
     setReq: SetRequest
 }): Api {
     const orderBy = useCallback(
@@ -35,7 +36,7 @@ export function useApi({
     )
 
     const x = useMemo(() => {
-        function GotoFolder(file: C.File): void {
+        function GotoFolder(file: FsFile): void {
             file.Path && GotoPath(file.Path)
         }
 
@@ -43,7 +44,7 @@ export function useApi({
             setReq(req => ({ ...req, Path: path }))
         }
 
-        async function Open(file: C.File): Promise<void> {
+        async function Open(file: FsFile): Promise<void> {
             if (file == null) return
             if (file.IsFolder || file.type == "link") {
                 GotoFolder(file)
@@ -57,7 +58,7 @@ export function useApi({
             console.info(res)
         }
 
-        async function Execute(file: C.File): Promise<void> {
+        async function Execute(file: FsFile): Promise<void> {
             if (!file.Path) return
             await App.current.fileService.execute({ Path: file.Path })
         }

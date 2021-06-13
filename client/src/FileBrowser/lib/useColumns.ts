@@ -4,6 +4,7 @@ import { Columns, Column } from "../Columns"
 import { SortConfig, IsDescending } from "./useSorting"
 import { FileColumnsConfig } from "./useCommands"
 import { FileMetadata } from "./useFileMetadata"
+import { FsFile } from "../../../../shared/src/contracts"
 
 export function useColumns({ fileMetadata }: { fileMetadata: FileMetadata }) {
     const columns = useMemo<FileColumnsConfig>(
@@ -32,7 +33,7 @@ export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata 
             return order.indexOf(type)
         }
 
-        const x: SortConfig<C.File, Columns> = {
+        const x: SortConfig<FsFile, Columns> = {
             getters: {
                 type: t => t.type,
                 Name: t => t.Name,
@@ -58,7 +59,7 @@ export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata 
 }
 
 export function useReqSorting(req: C.ListFilesRequest) {
-    const sorting: Pick<SortConfig<C.File, Columns>, "active" | "isDescending"> = useMemo(() => {
+    const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = useMemo(() => {
         const key = req.sortBy as Column
         const active: Column[] = []
         const isDescending: IsDescending<Columns> = {}

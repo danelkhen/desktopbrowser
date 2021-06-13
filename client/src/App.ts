@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { FileInfo, File } from "../../shared/src/contracts"
+import { FileInfo, FsFile } from "../../shared/src/contracts"
 import { proxyForFileService } from "./FileBrowser/lib/proxyForFileService"
 
 export function useApp() {
@@ -33,9 +33,9 @@ export class App {
         return await this.fileService.getAllFilesMetadata()
     }
 
-    async getFileMetadata(file: File | string): Promise<FileInfo> {
+    async getFileMetadata(file: FsFile | string): Promise<FileInfo> {
         let name = file as string
-        if (file instanceof File) name = (file as File).Name
+        if (file instanceof File) name = (file as FsFile).Name
         let x = await this.fileService.getFileMetadata({ key: name })
         if (x == null) {
             x = { key: name, collection: "" }

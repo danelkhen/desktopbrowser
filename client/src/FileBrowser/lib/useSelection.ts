@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
 import { Selection } from "../../utils/Selection"
 import { FileMetadata } from "./useFileMetadata"
+import { FsFile } from "../../../../shared/src/contracts"
 
 export function useSelection({
     res,
@@ -12,10 +13,10 @@ export function useSelection({
 }: {
     res: C.ListFilesResponse
     fileMetadata: FileMetadata
-    Open: (file: C.File) => void
+    Open: (file: FsFile) => void
     up: () => void
 }) {
-    const [selectedFiles, _setSelectedFiles] = useState<C.File[]>([])
+    const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
     const { getSavedSelectedFile, saveSelectedFile } = fileMetadata
 
     // restore selection
@@ -27,7 +28,7 @@ export function useSelection({
     }, [res, fileMetadata, getSavedSelectedFile])
 
     const setSelectedFiles = useCallback(
-        (v: C.File[]) => {
+        (v: FsFile[]) => {
             const file = v[v.length - 1]
             if (res?.File?.Name) {
                 console.log("saveSelectionAndSetSelectedItems", res.File.Name, file?.Name)
@@ -49,11 +50,12 @@ export function useSelection({
     useEffect(() => {
         function Win_keydown(e: KeyboardEvent): void {
             if (e.defaultPrevented) return
-            const selection = new Selection<C.File>(res?.Files ?? [], selectedFiles)
+            const selection = new Selection<FsFile>(res?.Files ?? [], selectedFiles)
             const selectedFile = selection.selectedItem
             const target = e.target as HTMLElement
             if (target.matches("input:not(#tbQuickFind),select")) return
             ;(document.querySelector("#tbQuickFind") as HTMLElement).focus()
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             setSelectedFiles(selection.KeyDown(e as any))
             if (e.defaultPrevented) return
             if (e.key == "Enter") {

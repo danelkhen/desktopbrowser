@@ -1,7 +1,7 @@
 import cx from "classnames"
-import * as C from "../../../shared/src/contracts"
 import React, { useRef, useState } from "react"
 import { sleep } from "../../../shared/src"
+import { FsFile } from "../../../shared/src/contracts"
 
 export function QuickFind({ allFiles, onFindFiles }: QuickFindProps) {
     const [value, setValue] = useState("")
@@ -41,6 +41,6 @@ export function QuickFind({ allFiles, onFindFiles }: QuickFindProps) {
 }
 
 export interface QuickFindProps {
-    allFiles: C.File[]
-    onFindFiles(files: C.File[]): void
+    allFiles: FsFile[]
+    onFindFiles(files: FsFile[]): void
 }

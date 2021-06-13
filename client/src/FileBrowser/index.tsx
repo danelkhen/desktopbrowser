@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import * as C from "../../../shared/src/contracts"
+import { FsFile } from "../../../shared/src/contracts"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
@@ -63,7 +63,7 @@ export function FileBrowser() {
     const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
 
     const hasInnerSelection = useCallback(
-        (file: C.File) => fileMetadata.getSavedSelectedFile(file.Name) != null,
+        (file: FsFile) => fileMetadata.getSavedSelectedFile(file.Name) != null,
         [fileMetadata]
     )
 

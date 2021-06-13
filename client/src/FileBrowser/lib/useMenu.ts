@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react"
 import * as C from "../../../../shared/src/contracts"
+import { FsFile } from "../../../../shared/src/contracts"
 import { Column, Columns } from "../Columns"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 import { Api } from "./useApi"
@@ -48,7 +49,7 @@ export function useMenu({
     reloadFiles: () => Promise<void>
     req: C.ListFilesRequest
     res: C.ListFilesResponse
-    selectedFile?: C.File
+    selectedFile?: FsFile
     path: string
     api: Api
     orderBy(x: Column): void
@@ -70,7 +71,7 @@ export function useMenu({
 
     const { GotoFolder } = api
     const { ParentFolder, PreviousSibling, NextSibling } = res?.Relatives ?? {}
-    function useGotoFolder(folder: C.File | undefined) {
+    function useGotoFolder(folder: FsFile | undefined) {
         return useAction(useCallback(() => folder && GotoFolder(folder), [folder]))
     }
     const up = useGotoFolder(ParentFolder)

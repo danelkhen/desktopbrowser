@@ -1,6 +1,6 @@
-import cx from "classnames"
 import React from "react"
 import * as C from "../../../shared/src/contracts"
+import { FsFile } from "../../../shared/src/contracts"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
 import { Api } from "./lib/useApi"
@@ -21,7 +21,7 @@ import {
     SortButton,
     Subs,
 } from "./Menu.styles"
-import { MenuButton, StyledButton } from "./MenuButton"
+import { MenuButton } from "./MenuButton"
 
 export interface MenuProps {
     children: MenuItems
@@ -43,7 +43,7 @@ export function Menu({
     reloadFiles: () => Promise<void>
     req: C.ListFilesRequest
     res: C.ListFilesResponse
-    selectedFile?: C.File
+    selectedFile?: FsFile
     path: string
     api: Api
     orderBy(x: Column): void

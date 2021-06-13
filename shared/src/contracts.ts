@@ -55,12 +55,12 @@ export interface ListFilesRequest {
 }
 
 export interface ListFilesResponse {
-    File?: File
-    Files?: File[]
+    File?: FsFile
+    Files?: FsFile[]
     Relatives: FileRelativesInfo
 }
 
-export interface File {
+export interface FsFile {
     IsFolder: boolean
     Name: string
     Path?: string
@@ -72,9 +72,9 @@ export interface File {
 }
 
 export interface FileRelativesInfo {
-    ParentFolder?: File
-    NextSibling?: File
-    PreviousSibling?: File
+    ParentFolder?: FsFile
+    NextSibling?: FsFile
+    PreviousSibling?: FsFile
 }
 
 export interface PathRequest {
@@ -91,7 +91,7 @@ export interface SortColumn {
 }
 
 export interface ListFilesResponse {
-    File?: File
-    Files?: File[]
+    File?: FsFile
+    Files?: FsFile[]
     Relatives: FileRelativesInfo
 }

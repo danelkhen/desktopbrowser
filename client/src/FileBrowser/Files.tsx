@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import * as C from "../../../shared/src/contracts"
+import { FsFile } from "../../../shared/src/contracts"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
 import { fileEmpty, layers, link } from "./lib/Linearicons"
@@ -73,12 +73,12 @@ export interface FilesProps {
     head?: boolean
     body?: boolean
 
-    GetRowClass: (file: C.File) => string
-    onItemClick: (e: React.MouseEvent, file: C.File) => void
-    onItemMouseDown: (e: React.MouseEvent, file: C.File) => void
-    onItemDoubleClick: (e: React.MouseEvent, file: C.File) => void
+    GetRowClass: (file: FsFile) => string
+    onItemClick: (e: React.MouseEvent, file: FsFile) => void
+    onItemMouseDown: (e: React.MouseEvent, file: FsFile) => void
+    onItemDoubleClick: (e: React.MouseEvent, file: FsFile) => void
     columns: FileColumnsConfig
-    files: C.File[]
+    files: FsFile[]
 
     getHeaderClass: (column: Column) => string
     orderBy: (column: Column) => void
@@ -104,7 +104,7 @@ export function Files(props: FilesProps) {
     } = props
 
     return (
-        <GrdFiles<C.File, Columns>
+        <GrdFiles<FsFile, Columns>
             items={files}
             titles={{ [Columns.type]: "" }}
             head={head}

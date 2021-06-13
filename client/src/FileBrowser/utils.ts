@@ -1,5 +1,5 @@
-import * as C from "../../../shared/src/contracts"
-import { toDefaultDate, toFriendlyRelative2, removeLast } from "../../../shared/src"
+import { removeLast, toDefaultDate, toFriendlyRelative2 } from "../../../shared/src"
+import { FsFile } from "../../../shared/src/contracts"
 import { toFriendlySize } from "../utils/toFriendlySize"
 
 export function TryParse(s: string): number | null {
@@ -18,7 +18,7 @@ export function FormatFriendlySize(value: number | null | undefined): string {
     return toFriendlySize(value)
 }
 
-export function getFileNameWithoutExtension(file: C.File): string {
+export function getFileNameWithoutExtension(file: FsFile): string {
     if (file.IsFolder) return file.Name
     let s = file.Name
     const index = s.lastIndexOf(".")
@@ -69,12 +69,12 @@ export function GetFilenameForSearch(s: string): string {
     return s2
 }
 
-export function GetSubtitleSearchLink(file: C.File): string {
+export function GetSubtitleSearchLink(file: FsFile): string {
     const s = GetFilenameForSearch(file.Name)
     return "https://www.google.com/search?q=" + encodeURIComponent(s + " eng subscene")
 }
 
-export function GetGoogleSearchLink(file: C.File): string {
+export function GetGoogleSearchLink(file: FsFile): string {
     const s = GetFilenameForSearch(file.Name)
     return "https://www.google.com/search?q=" + encodeURIComponent(s)
 }
