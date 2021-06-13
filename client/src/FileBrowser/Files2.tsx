@@ -43,13 +43,13 @@ export function Files2({
 
     const onItemClick = useCallback(
         (e: React.MouseEvent, file: C.File) => {
-            const selection = new Selection(allFiles, selectedFiles)
+            // const selection = new Selection(allFiles, selectedFiles)
             const target = e.target as HTMLElement
             if (!target.matches("a.Name")) return
             e.preventDefault()
             Open(file)
         },
-        [Open, allFiles, selectedFiles]
+        [Open]
     )
 
     const onItemDoubleClick = useCallback(
