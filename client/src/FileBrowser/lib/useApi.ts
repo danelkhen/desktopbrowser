@@ -68,5 +68,5 @@ export function useApi({
     return x
 }
 function isExecutable(extension: string) {
-    return [".exe", ".bat", ".com"].includes(extension.toLowerCase())
+    return [".exe", ".bat", ".com", ".cmd"].includes(extension.toLowerCase())
 }
