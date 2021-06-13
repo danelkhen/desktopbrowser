@@ -1,9 +1,9 @@
-import * as C from "../../../../shared/src/FileService"
-import { useState, useMemo, useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { FileInfo } from "../../../../shared/src/FileService"
 import { App } from "../../App"
 
 export function useFileMetadata(): FileMetadata {
-    const [filesMd, setFilesMd] = useState<{ [key: string]: C.FileInfo } | undefined>()
+    const [filesMd, setFilesMd] = useState<{ [key: string]: FileInfo } | undefined>()
 
     const fileMetadata = useMemo(() => {
         const app = App.current
@@ -17,17 +17,18 @@ export function useFileMetadata(): FileMetadata {
             return x.selectedFiles[0]
         }
 
-        function getFileMetadata(key: string): C.FileInfo | null {
+        function getFileMetadata(key: string): FileInfo | null {
             const x = filesMd?.[key]
             if (!x) return null
             return x
         }
 
-        async function setFileMetadata(value: C.FileInfo) {
+        async function setFileMetadata(value: FileInfo) {
             if (value.selectedFiles == null || value.selectedFiles.length == 0) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { [value.key]: removed, ...rest } = filesMd ?? {}
                 setFilesMd(rest)
-                app.fileService.deleteFileMetadata({ key: value.key })
+                await app.fileService.deleteFileMetadata({ key: value.key })
                 return
             }
             setFilesMd({ ...filesMd, [value.key]: value })
@@ -47,7 +48,7 @@ export function useFileMetadata(): FileMetadata {
     useEffect(() => {
         ;(async () => {
             const x = await App.current.getAllFilesMetadata()
-            const obj: { [key: string]: C.FileInfo } = {}
+            const obj: { [key: string]: FileInfo } = {}
             x.map(t => (obj[t.key] = t))
             setFilesMd(obj)
         })()
@@ -56,9 +57,9 @@ export function useFileMetadata(): FileMetadata {
 }
 
 export interface FileMetadata {
-    setFileMetadata: (value: C.FileInfo) => Promise<void>
-    getFileMetadata: (key: string) => C.FileInfo | null
+    setFileMetadata: (value: FileInfo) => Promise<void>
+    getFileMetadata: (key: string) => FileInfo | null
     getSavedSelectedFile: (folder: string) => string | null
     saveSelectedFile: (folderName: string, filename: string) => Promise<void>
-    filesMd: { [key: string]: C.FileInfo } | undefined
+    filesMd: { [key: string]: FileInfo } | undefined
 }

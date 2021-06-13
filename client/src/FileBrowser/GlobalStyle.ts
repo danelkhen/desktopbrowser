@@ -139,12 +139,7 @@ button {
 
 a {
     color: inherit;
-    /*cursor: default;*/
 }
-
-/* .active {
-    background-color: ${colors.__bg2};
-} */
 
 header {
     position: sticky;
