@@ -1,6 +1,5 @@
 import React from "react"
-import * as C from "../../../shared/src/FileService"
-import { FsFile } from "../../../shared/src/FileService"
+import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
 import { Api } from "./lib/useApi"
@@ -41,8 +40,8 @@ export function Menu({
     gotoPath,
 }: {
     reloadFiles: () => Promise<void>
-    req: C.ListFilesRequest
-    res: C.ListFilesResponse
+    req: ListFilesRequest
+    res: ListFilesResponse
     selectedFile?: FsFile
     path: string
     api: Api

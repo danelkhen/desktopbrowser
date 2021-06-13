@@ -1,15 +1,15 @@
-import * as C from "../../../../shared/src/FileService"
 import { useCallback, useMemo } from "react"
 import { useHistory, useLocation } from "react-router-dom"
+import { ListFilesRequest } from "../../../../shared/src/FileService"
 
-function parse(s: string | null): C.ListFilesRequest {
-    const req: C.ListFilesRequest = s ? JSON.parse(s) : {}
+function parse(s: string | null): ListFilesRequest {
+    const req: ListFilesRequest = s ? JSON.parse(s) : {}
     return req
 }
 function parseCurrent() {
     return parse(new URLSearchParams(location.search).get("p"))
 }
-export type SetRequest = (v: C.ListFilesRequest | ((prev: C.ListFilesRequest) => C.ListFilesRequest)) => void
+export type SetRequest = (v: ListFilesRequest | ((prev: ListFilesRequest) => ListFilesRequest)) => void
 export function useReq() {
     const history = useHistory()
 
@@ -18,8 +18,8 @@ export function useReq() {
     // console.log("REQ", req)
 
     const setReq: SetRequest = useCallback(
-        (v: C.ListFilesRequest | ((prev: C.ListFilesRequest) => C.ListFilesRequest)) => {
-            function navigateToReq(req: C.ListFilesRequest) {
+        (v: ListFilesRequest | ((prev: ListFilesRequest) => ListFilesRequest)) => {
+            function navigateToReq(req: ListFilesRequest) {
                 console.log("navigateToReq", req)
                 const q = new URLSearchParams()
                 q.set("p", JSON.stringify(req))

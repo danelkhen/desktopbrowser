@@ -1,10 +1,9 @@
-import * as C from "../../../../shared/src/FileService"
 import { useCallback, useMemo } from "react"
+import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { App } from "../../App"
 import { Column, Columns } from "../Columns"
-import { SortConfig } from "./useSorting"
 import { SetRequest } from "./useReq"
-import { FsFile } from "../../../../shared/src/FileService"
+import { SortConfig } from "./useSorting"
 
 export interface Api {
     Execute(file: FsFile): Promise<void>
@@ -19,7 +18,7 @@ export function useApi({
     sorting,
     setReq,
 }: {
-    req: C.ListFilesRequest
+    req: ListFilesRequest
     sorting: SortConfig<FsFile, Columns>
     setReq: SetRequest
 }): Api {

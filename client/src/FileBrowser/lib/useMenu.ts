@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react"
-import * as C from "../../../../shared/src/FileService"
-import { FsFile } from "../../../../shared/src/FileService"
+import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Column, Columns } from "../Columns"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 import { Api } from "./useApi"
@@ -47,8 +46,8 @@ export function useMenu({
     gotoPath: gotoPath2,
 }: {
     reloadFiles: () => Promise<void>
-    req: C.ListFilesRequest
-    res: C.ListFilesResponse
+    req: ListFilesRequest
+    res: ListFilesResponse
     selectedFile?: FsFile
     path: string
     api: Api
@@ -61,7 +60,7 @@ export function useMenu({
 }): MenuItems {
     const commands = useCommands(reloadFiles)
 
-    function useReqToggle(prop: keyof C.ListFilesRequest) {
+    function useReqToggle(prop: keyof ListFilesRequest) {
         const setReq2 = setReq
         const value = req[prop]
         const action = useCallback(() => setReq2(req => ({ ...req, [prop]: !value })), [prop, setReq2, value])

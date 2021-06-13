@@ -1,10 +1,9 @@
-import * as C from "../../../../shared/src/FileService"
 import { useMemo } from "react"
-import { Columns, Column } from "../Columns"
-import { SortConfig, IsDescending } from "./useSorting"
+import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
+import { Column, Columns } from "../Columns"
 import { FileColumnsConfig } from "./useCommands"
 import { FileMetadata } from "./useFileMetadata"
-import { FsFile } from "../../../../shared/src/FileService"
+import { IsDescending, SortConfig } from "./useSorting"
 
 export function useColumns({ fileMetadata }: { fileMetadata: FileMetadata }) {
     const columns = useMemo<FileColumnsConfig>(
@@ -58,7 +57,7 @@ export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata 
     return sortingDefaults
 }
 
-export function useReqSorting(req: C.ListFilesRequest) {
+export function useReqSorting(req: ListFilesRequest) {
     const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = useMemo(() => {
         const key = req.sortBy as Column
         const active: Column[] = []
