@@ -3,6 +3,7 @@ import log from "electron-log"
 import path from "path"
 import { main } from "../../server/src/main"
 import { dataDir, rootDir } from "../../server/src/rootDir"
+import { checkForUpdates } from "./checkForUpdates"
 
 Object.assign(console, log.functions)
 
@@ -44,7 +45,7 @@ async function main2() {
         // Create a new window
         myWindow = new BrowserWindow({
             width: 300,
-            height: 450,
+            height: 300,
             show: false,
             frame: false,
             fullscreenable: false,
@@ -114,11 +115,20 @@ const showWindow = () => {
 ipcMain.handle("main", async (e, name, ...args) => {
     log.log("main message", args)
     const x = {
+        inspect() {
+            myWindow.webContents.openDevTools({ mode: "detach" })
+        },
         open() {
-            shell.openExternal("http://localhost:7777")
+            return shell.openExternal("http://localhost:7777")
         },
         exit() {
-            app.quit()
+            return app.quit()
+        },
+        checkForUpdates() {
+            return checkForUpdates()
+        },
+        getVersion() {
+            return app.getVersion()
         },
     }
     const res = await (x as any)?.[name](...args)
