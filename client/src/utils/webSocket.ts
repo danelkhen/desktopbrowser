@@ -37,8 +37,8 @@ export interface InvokeInfo {
     args: any[]
 }
 export function getWebSocketInvoker<T>(...target: string[]): Invoker<T> {
-    return (method, prms) => {
-        return invoke({ target, funcName: method, args: prms as any }) as any
+    return (method, ...prms) => {
+        return invoke({ target, funcName: method, args: prms }) as any
     }
 }
 export async function invoke<T>(pc: InvokeInfo): Promise<T> {

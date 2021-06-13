@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Invoker } from "./Proxy"
 
-async function httpInvoke(baseURL: string, action: string, prms?: any): Promise<any> {
+async function httpInvoke(url: string, prms?: any): Promise<any> {
     const req: RequestInit = {
         method: "GET",
     }
-    const url = baseURL + "/" + action
     if (prms != null) {
         const json = JSON.stringify(prms)
         req.method = "POST"
@@ -17,5 +16,5 @@ async function httpInvoke(baseURL: string, action: string, prms?: any): Promise<
     return resObj
 }
 export function getHttpInvoker<T>(url: string): Invoker<T> {
-    return (method, prms) => httpInvoke(url, method, prms?.[0]) as any
+    return (method, ...prms) => httpInvoke(`${url}/${method}`, prms[0]) as any
 }

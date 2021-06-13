@@ -1,5 +1,6 @@
 import * as C from "../../../shared/src/contracts"
 import { toDefaultDate, toFriendlyRelative2, removeLast } from "../../../shared/src"
+import { toFriendlySize } from "../utils/global"
 
 export function TryParse(s: string): number | null {
     const x = parseInt(s)
@@ -14,7 +15,7 @@ export function FormatFriendlyDate(value: string | null): string {
 
 export function FormatFriendlySize(value: number | null | undefined): string {
     if (!value) return ""
-    return value.ToFriendlySize()
+    return toFriendlySize(value)
 }
 
 export function getFileNameWithoutExtension(file: C.File): string {
