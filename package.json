@@ -71,7 +71,6 @@
             "packagerConfig": {
                 "ignore": [
                     "\\.github",
-                    "(?<!dist)/server",
                     "(?<!dist)/shared",
                     "scripts"
                 ],
