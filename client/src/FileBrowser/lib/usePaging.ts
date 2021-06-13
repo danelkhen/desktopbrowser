@@ -25,8 +25,8 @@ export function usePaging<T>(
             let pageIndex2 = pageIndex
             if (pageIndex2 >= totalPages) pageIndex2 = totalPages - 1
             if (pageIndex2 < 0) pageIndex2 = 0
-            var from = pageIndex2 * pageSize
-            var until = from + pageSize
+            const from = pageIndex2 * pageSize
+            const until = from + pageSize
             const paged = target.slice(from, until)
             return { paged, totalPages, pageIndex: pageIndex2 }
         }

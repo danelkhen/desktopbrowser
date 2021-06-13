@@ -9,7 +9,7 @@ export class EventEmitter<T> {
         this.listeners[remove](listener)
     }
     emit(arg?: T) {
-        let list = [...this.listeners]
+        const list = [...this.listeners]
         list.forEach(func => func(arg))
     }
 }

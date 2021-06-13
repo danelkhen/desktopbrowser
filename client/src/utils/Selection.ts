@@ -5,7 +5,7 @@ export class Selection<T> {
     constructor(public readonly AllItems: T[], public readonly SelectedItems: T[]) {}
 
     Toggle(list: T[], item: T): void {
-        var index = list.indexOf(item)
+        const index = list.indexOf(item)
         if (index < 0) list.push(item)
         else list.splice(index, 1)
     }
@@ -15,18 +15,18 @@ export class Selection<T> {
     }
 
     Click(item: T, ctrl: boolean, shift: boolean): T[] {
-        var sel = [...this.SelectedItems]
-        var anchor = this.SelectedItems[0]
+        let sel = [...this.SelectedItems]
+        const anchor = this.SelectedItems[0]
 
         if (ctrl) {
             this.Toggle(sel, item)
         } else if (shift && anchor != null) {
-            var index1 = this.AllItems.indexOf(anchor)
-            var index2 = this.AllItems.indexOf(item)
+            const index1 = this.AllItems.indexOf(anchor)
+            const index2 = this.AllItems.indexOf(item)
 
-            var minIndex = Math.min(index1, index2)
-            var maxIndex = Math.max(index1, index2)
-            var slice = this.AllItems.slice(minIndex, maxIndex + 1)
+            const minIndex = Math.min(index1, index2)
+            const maxIndex = Math.max(index1, index2)
+            const slice = this.AllItems.slice(minIndex, maxIndex + 1)
             sel = [anchor, ...slice.filter(t => t != anchor)]
         } else {
             sel = [item]
@@ -38,10 +38,10 @@ export class Selection<T> {
         return sel
     }
     KeyDown(e: KeyboardEvent): T[] {
-        var keyCode = e.keyCode
-        var ctrl = e.ctrlKey
+        const keyCode = e.keyCode
+        const ctrl = e.ctrlKey
         // var sel = this.SelectedItems.toArray();
-        var lastActive = this.selectedItem
+        const lastActive = this.selectedItem
         if (lastActive == null) {
             if (this.AllItems.length > 0 && [Keys.Down, Keys.Up, Keys.PageDown, Keys.PageUp].includes(keyCode)) {
                 this.SetSelection([this.AllItems[0]])
@@ -49,12 +49,12 @@ export class Selection<T> {
             }
             return this.SelectedItems
         }
-        var offset = 0
+        let offset = 0
         if (keyCode == Keys.Down) offset = 1
         else if (keyCode == Keys.Up) offset = -1
         else if (keyCode == Keys.PageDown) offset = this.AllItems.length
         else if (keyCode == Keys.PageUp) offset = this.AllItems.length * -1
-        var sibling = GetSiblingOrEdge(this.AllItems, lastActive, offset)
+        const sibling = GetSiblingOrEdge(this.AllItems, lastActive, offset)
         if (sibling == null || sibling === lastActive) {
             return this.SelectedItems
         }
@@ -68,7 +68,7 @@ export class Selection<T> {
 
     AddToSelection(item: T): T[] {
         if (this.SelectedItems.includes(item)) return this.SelectedItems
-        var sel = [...this.SelectedItems]
+        const sel = [...this.SelectedItems]
         sel.push(item)
         return this.SetSelection(sel)
     }
@@ -87,8 +87,8 @@ export interface SelectionChangedEventArgs<T> {
 
 function GetSiblingOrEdge<T>(list: T[], item: T, offset: number): T {
     if (offset == null || offset == 0) return item
-    var index = list.indexOf(item)
-    var newIndex = (index += offset)
+    let index = list.indexOf(item)
+    const newIndex = (index += offset)
     if (newIndex < 0 || newIndex >= list.length) {
         if (offset > 0) return list[list.length - 1]
         return list[0]

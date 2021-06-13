@@ -40,31 +40,31 @@ export function getWebSocketInvoker<T>(...target: string[]): Invoker<T> {
     }
 }
 export async function invoke<T>(pc: InvokeInfo): Promise<T> {
-    for await (let res of invokeStreaming(pc)) return res as any
+    for await (const res of invokeStreaming(pc)) return res as any
     return undefined!
 }
 
 export async function* invokeStreaming<T>(pc: InvokeInfo): AsyncIterableIterator<T> {
     // let pc = extractInstanceFunctionCall2(func)
     console.log(pc)
-    let cmd = `${pc!.target.join(".")}.${pc!.funcName}(${pc!.args!.map(t => JSON.stringify(t)).join(",")})`
-    let events = send(cmd)
-    for await (let data of events) {
+    const cmd = `${pc!.target.join(".")}.${pc!.funcName}(${pc!.args!.map(t => JSON.stringify(t)).join(",")})`
+    const events = send(cmd)
+    for await (const data of events) {
         if (0) {
         } else if (data.startsWith("ERROR: ")) {
-            let json = data.substr("ERROR ".length)
+            const json = data.substr("ERROR ".length)
             if (json.length > 0) {
-                let x = JSON.parse(json)
+                const x = JSON.parse(json)
             }
             throw new Error(data)
         } else if (data == "[") {
         } else if (data.endsWith(",")) {
-            let item = JSON.parse(data.substr(0, data.length - 1))
+            const item = JSON.parse(data.substr(0, data.length - 1))
             yield item
         } else if (data == "]") {
             break
         } else {
-            let item = JSON.parse(data) as T
+            const item = JSON.parse(data) as T
             yield item
         }
     }
@@ -72,10 +72,10 @@ export async function* invokeStreaming<T>(pc: InvokeInfo): AsyncIterableIterator
 
 export async function* send(cmd: string): AsyncIterableIterator<string> {
     webSocket.send(cmd)
-    let events = iterateDomEvent<MessageEvent>(webSocket as any, "message") // TODO:
+    const events = iterateDomEvent<MessageEvent>(webSocket as any, "message") // TODO:
     let iterable: boolean | null = null
     for await (const e of events) {
-        let data = e.data
+        const data = e.data
         if (data == "[") {
             if (iterable != null) throw new Error()
             iterable = true
@@ -88,7 +88,7 @@ export async function* send(cmd: string): AsyncIterableIterator<string> {
             yield data
             break
         } else if (data.startsWith == "ERROR: ") {
-            let err = JSON.parse(data.substr("ERROR: ".length))
+            const err = JSON.parse(data.substr("ERROR: ".length))
             throw new Error(err.message || err)
         } else {
             if (iterable === true) throw new Error()

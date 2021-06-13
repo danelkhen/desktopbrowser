@@ -59,11 +59,11 @@ declare global {
     }
 }
 Number.prototype.ToFriendlySize = function (this: number): string {
-    let bytes = this
-    var kb = bytes / 1024.0
-    var mb = kb / 1024.0
-    var gb = mb / 1024.0
-    var tb = gb / 1024.0
+    const bytes = this
+    const kb = bytes / 1024.0
+    const mb = kb / 1024.0
+    const gb = mb / 1024.0
+    const tb = gb / 1024.0
     if (kb < 1) return bytes.toFriendlyNumber()
     if (mb < 1) return kb.toFriendlyNumber() + " kb"
     if (mb < 1) return kb.toFriendlyNumber() + " kb"
@@ -73,7 +73,7 @@ Number.prototype.ToFriendlySize = function (this: number): string {
 }
 
 Number.prototype.toFriendlyNumber = function (this: number): string {
-    let x: number = this
+    const x: number = this
     let s: string
     if (x == 0) return "0"
     if (x > 0 && x < 10) s = x.toFixed(2)

@@ -6,7 +6,7 @@ async function httpInvoke(baseURL: string, action: string, prms?: any): Promise<
     }
     const url = baseURL + "/" + action
     if (prms != null) {
-        let json = JSON.stringify(prms)
+        const json = JSON.stringify(prms)
         req.method = "POST"
         req.headers = { "Content-Type": "application/json" }
         req.body = json

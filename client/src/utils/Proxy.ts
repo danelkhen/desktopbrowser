@@ -23,14 +23,14 @@ export interface ProxyCall<T> {
 }
 
 function extractInstanceFunctionCall(func: Function): ProxyCall<any> {
-    let code = func.toString()
-    let index = code.indexOf(".")
-    let index2 = code.indexOf("(", index)
-    let res: ProxyCall<any> = {
+    const code = func.toString()
+    const index = code.indexOf(".")
+    const index2 = code.indexOf("(", index)
+    const res: ProxyCall<any> = {
         name: code.substring(index + 1, index2),
         args: null,
     }
-    let fake: any = {}
+    const fake: any = {}
     fake[res.name] = function() {
         res.args = Array.from(arguments)
     }
@@ -44,18 +44,18 @@ export function extractInstanceFunctionCall2(
 ): { target: string[]; funcName: string | null; args: any[] | null } | null {
     let code = func.toString()
     code = code.replace(/^\s*([a-zA-Z0-9_]+)\s*\=\>\s*\1\s*\.\s*/, "")
-    let parsed = parseFunctionCall(code)
+    const parsed = parseFunctionCall(code)
     if (!parsed || !parsed.funcName) return null
     // let index = code.indexOf(".")
     // let index2 = code.indexOf("(", index)
-    let res: { target: string[]; funcName: string | null; args: any[] | null } = {
+    const res: { target: string[]; funcName: string | null; args: any[] | null } = {
         funcName: parsed.funcName,
         target: parsed.target,
         args: null,
     }
-    let fake: any = {}
+    const fake: any = {}
     let lastTarget = fake
-    for (let target of parsed.target) {
+    for (const target of parsed.target) {
         lastTarget = {}
         fake[target] = lastTarget
     }
@@ -74,9 +74,9 @@ function parseFunctionCall(code: string): { target: string[]; funcName: string |
     console.log("extractFunctionCall", code)
     if (!match) return null
     console.log("extractFunctionCall", match[0], match[1], match[2])
-    let target = match[1].split(".") //.slice(1);
-    let args = match[2]
-    let funcName = target.pop() ?? null
-    let res = { target, funcName, args }
+    const target = match[1].split(".") //.slice(1);
+    const args = match[2]
+    const funcName = target.pop() ?? null
+    const res = { target, funcName, args }
     return res
 }
