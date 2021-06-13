@@ -2,7 +2,7 @@
 import open from "open"
 import * as os from "os"
 import trash2 from "trash"
-import { FileService } from "../../../shared/src/contracts"
+import { FileService } from "../../../shared/src/FileService"
 import { quote } from "./ListFiles"
 import { IoDir } from "../io/IoDir"
 import { IoFile } from "../io/IoFile"

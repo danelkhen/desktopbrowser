@@ -1,6 +1,6 @@
 import { useMemo } from "react"
-import * as C from "../../../../shared/src/contracts"
-import { FsFile } from "../../../../shared/src/contracts"
+import * as C from "../../../../shared/src/FileService"
+import { FsFile } from "../../../../shared/src/FileService"
 import { App } from "../../App"
 import { Columns } from "../Columns"
 import { ColumnsConfig } from "../Grid/Grid"

@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { FsFile } from "../../../../shared/src/contracts"
+import { FsFile } from "../../../../shared/src/FileService"
 
 export function useFiltering(search: string, list: FsFile[]) {
     return useMemo(() => {

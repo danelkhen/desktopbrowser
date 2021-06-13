@@ -1,10 +1,10 @@
-import * as C from "../../../../shared/src/contracts"
+import * as C from "../../../../shared/src/FileService"
 import { useCallback, useMemo } from "react"
 import { App } from "../../App"
 import { Column, Columns } from "../Columns"
 import { SortConfig } from "./useSorting"
 import { SetRequest } from "./useReq"
-import { FsFile } from "../../../../shared/src/contracts"
+import { FsFile } from "../../../../shared/src/FileService"
 
 export interface Api {
     Execute(file: FsFile): Promise<void>

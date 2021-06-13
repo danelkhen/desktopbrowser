@@ -1,6 +1,6 @@
 import React from "react"
-import * as C from "../../../shared/src/contracts"
-import { FsFile } from "../../../shared/src/contracts"
+import * as C from "../../../shared/src/FileService"
+import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
 import { Api } from "./lib/useApi"

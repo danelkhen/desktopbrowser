@@ -1,9 +1,9 @@
-import * as C from "../../../../shared/src/contracts"
+import * as C from "../../../../shared/src/FileService"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
 import { Selection } from "../../utils/Selection"
 import { FileMetadata } from "./useFileMetadata"
-import { FsFile } from "../../../../shared/src/contracts"
+import { FsFile } from "../../../../shared/src/FileService"
 
 export function useSelection({
     res,

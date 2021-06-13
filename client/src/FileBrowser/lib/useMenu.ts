@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react"
-import * as C from "../../../../shared/src/contracts"
-import { FsFile } from "../../../../shared/src/contracts"
+import * as C from "../../../../shared/src/FileService"
+import { FsFile } from "../../../../shared/src/FileService"
 import { Column, Columns } from "../Columns"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 import { Api } from "./useApi"

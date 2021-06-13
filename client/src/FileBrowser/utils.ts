@@ -1,5 +1,5 @@
 import { removeLast, toDefaultDate, toFriendlyRelative2 } from "../../../shared/src"
-import { FsFile } from "../../../shared/src/contracts"
+import { FsFile } from "../../../shared/src/FileService"
 import { toFriendlySize } from "../utils/toFriendlySize"
 
 export function TryParse(s: string): number | null {

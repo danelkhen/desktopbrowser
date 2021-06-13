@@ -1,4 +1,4 @@
-import * as C from "../../../../shared/src/contracts"
+import * as C from "../../../../shared/src/FileService"
 import { useCallback, useMemo } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 

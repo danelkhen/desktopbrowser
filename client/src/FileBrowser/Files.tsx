@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { FsFile } from "../../../shared/src/contracts"
+import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
 import { fileEmpty, layers, link } from "./lib/Linearicons"

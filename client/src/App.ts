@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { FileInfo, FsFile } from "../../shared/src/contracts"
+import { FileInfo, FsFile } from "../../shared/src/FileService"
 import { proxyForFileService } from "./FileBrowser/lib/proxyForFileService"
 
 export function useApp() {

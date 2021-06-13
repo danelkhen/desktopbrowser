@@ -1,4 +1,4 @@
-import { FileService } from "../../../shared/src/contracts"
+import { FileService } from "../../../shared/src/FileService"
 import { ListFiles } from "./ListFiles"
 import { AppDb } from "../AppDb"
 import { Delete, Execute, Explore, trash } from "./api"

@@ -1,10 +1,10 @@
-import * as C from "../../../../shared/src/contracts"
+import * as C from "../../../../shared/src/FileService"
 import { useMemo } from "react"
 import { Columns, Column } from "../Columns"
 import { SortConfig, IsDescending } from "./useSorting"
 import { FileColumnsConfig } from "./useCommands"
 import { FileMetadata } from "./useFileMetadata"
-import { FsFile } from "../../../../shared/src/contracts"
+import { FsFile } from "../../../../shared/src/FileService"
 
 export function useColumns({ fileMetadata }: { fileMetadata: FileMetadata }) {
     const columns = useMemo<FileColumnsConfig>(
