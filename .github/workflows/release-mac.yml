@@ -1,3 +1,5 @@
+name: release-mac
+
 on:
     create:
         tags:
