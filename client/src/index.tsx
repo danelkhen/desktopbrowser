@@ -1,5 +1,4 @@
 import "./FileBrowser/GlobalStyle.ts"
-import "./utils/global"
 import { App } from "./App"
 import ReactDOM from "react-dom"
 import React from "react"
