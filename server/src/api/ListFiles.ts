@@ -137,7 +137,7 @@ export async function ApplyRequest(files: FsFile[], req: ListFilesRequest): Prom
         files = _.orderBy(
             files,
             req.Sort.Columns.map(t => t.Name),
-            req.Sort.Columns.map(t => !!t.Descending)
+            req.Sort.Columns.map(t => (t.Descending ? "desc" : "asc"))
         )
     }
     if (req.FolderSize && !req.HideFolders) {

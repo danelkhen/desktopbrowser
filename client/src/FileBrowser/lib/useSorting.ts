@@ -31,7 +31,11 @@ export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>
         const by = getOrderBy()
 
         // const sorted = items[orderBy](...by)
-        const sorted = _.orderBy(items, by.keys, by.order)
+        const sorted = _.orderBy(
+            items,
+            by.keys,
+            by.order.map(t => (t ? "desc" : "asc"))
+        )
         const y = { isSortedBy, sorted }
         return y
     }, [config, items])
