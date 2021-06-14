@@ -9,7 +9,7 @@ export async function checkForUpdates() {
     const current = app.getVersion()
     const latest = rel.name.substr(1)
     console.log(current, latest)
-    const isLatest = !semver.gt(current, latest)
+    const isLatest = semver.gte(current, latest)
     if (!isLatest) {
         await shell.openExternal(rel.browser_download_url)
     }
