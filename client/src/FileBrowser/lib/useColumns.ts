@@ -39,7 +39,7 @@ export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata 
                 Size: t => t.Size,
                 Modified: t => t.Modified,
                 Extension: t => t.Extension,
-                hasInnerSelection: file => !!file?.IsFolder && !!fileMetadata.getSavedSelectedFile(file.Name),
+                hasInnerSelection: file => !!file.IsFolder && !!fileMetadata.getSavedSelectedFile(file.Name),
             },
             descendingFirst: {
                 Size: true,

@@ -18,7 +18,7 @@ export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>
         function getOrderBy() {
             const keys = config.active
             return {
-                keys: keys.map(key => config.sortGetters[key] ?? key),
+                keys: keys.map(key => config.sortGetters[key] ?? config.getters[key] ?? key),
                 order: keys.map(key => !!config.isDescending[key]),
             }
         }
