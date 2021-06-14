@@ -7,42 +7,39 @@ export function useFileMetadata(): FileMetadata {
 
     const fileMetadata = useMemo(() => {
         const app = App.current
-        async function saveSelectedFile(folderName: string, filename: string) {
-            await setFileMetadata({ key: folderName, selectedFiles: filename ? [filename] : undefined, collection: "" })
-        }
 
-        function getSavedSelectedFile(folder: string): string | null {
-            const x = getFileMetadata(folder)
-            if (x == null || x.selectedFiles == null) return null
-            return x.selectedFiles[0]
-        }
-
-        function getFileMetadata(key: string): FileInfo | null {
-            const x = filesMd?.[key]
-            if (!x) return null
-            return x
-        }
-
-        async function setFileMetadata(value: FileInfo) {
-            if (value.selectedFiles == null || value.selectedFiles.length == 0) {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { [value.key]: removed, ...rest } = filesMd ?? {}
-                setFilesMd(rest)
-                await app.fileService.deleteFileMetadata({ key: value.key })
-                return
-            }
-            setFilesMd({ ...filesMd, [value.key]: value })
-            await app.fileService.saveFileMetadata(value)
-        }
-
-        const x: FileMetadata = {
-            setFileMetadata,
-            getFileMetadata,
-            getSavedSelectedFile,
-            saveSelectedFile,
+        const xx: FileMetadata = {
+            async setFileMetadata(value) {
+                if (value.selectedFiles == null || value.selectedFiles.length == 0) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { [value.key]: removed, ...rest } = filesMd ?? {}
+                    setFilesMd(rest)
+                    await app.fileService.deleteFileMetadata({ key: value.key })
+                    return
+                }
+                setFilesMd({ ...filesMd, [value.key]: value })
+                await app.fileService.saveFileMetadata(value)
+            },
+            getFileMetadata(key) {
+                const x = filesMd?.[key]
+                if (!x) return null
+                return x
+            },
+            getSavedSelectedFile(folder) {
+                const x = xx.getFileMetadata(folder)
+                if (x == null || x.selectedFiles == null) return null
+                return x.selectedFiles[0]
+            },
+            async saveSelectedFile(folderName, filename) {
+                await xx.setFileMetadata({
+                    key: folderName,
+                    selectedFiles: filename ? [filename] : undefined,
+                    collection: "",
+                })
+            },
             filesMd,
         }
-        return x
+        return xx
     }, [filesMd])
 
     useEffect(() => {
