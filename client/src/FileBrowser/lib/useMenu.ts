@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react"
-import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
+import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
@@ -32,16 +32,13 @@ export interface MenuItems {
     nextPageMenuItem: MenuItem
 }
 export function useMenu({
-    req,
-    res,
     selectedFile,
     prevPage,
     nextPage,
     gotoPath: gotoPath2,
     dispatcher,
+    state,
 }: {
-    req: ListFilesRequest
-    res: ListFilesResponse
     selectedFile?: FsFile
     path: string
     prevPage(): void
@@ -50,18 +47,43 @@ export function useMenu({
     state: State
     dispatcher: Helper
 }): MenuItems {
-    const commands = dispatcher
     const { orderBy, isSortedBy } = dispatcher
 
-    function useReqToggle(prop: keyof ListFilesRequest) {
-        const value = req[prop]
-        const action = useCallback(() => dispatcher.updateReq({ [prop]: !value }), [prop, value])
-        const isActive = useCallback(() => !!value, [value])
-        return useToggle(action, isActive)
-    }
+    const toggles = useMemo(() => {
+        function getReqToggle(prop: keyof ListFilesRequest) {
+            const value = state.req[prop]
+            const mi: ToggleMenuItem = {
+                action: () => dispatcher.updateReq({ [prop]: !value }),
+                isActive: () => !!value,
+            }
+            return mi
+        }
+
+        const FolderSize = getReqToggle("FolderSize")
+        const foldersFirst = getReqToggle("foldersFirst")
+        const Folders = getReqToggle("HideFolders")
+        const Files = getReqToggle("HideFiles")
+        const Recursive = getReqToggle("IsRecursive")
+        const Keep = getReqToggle("KeepView")
+        const Hidden = getReqToggle("ShowHiddenFiles")
+
+        const disableSorting: ToggleMenuItem = {
+            action: () =>
+                dispatcher.updateReq({
+                    sortBy: undefined,
+                    sortByDesc: false,
+                    foldersFirst: false,
+                    ByInnerSelection: false,
+                }),
+
+            isActive: () => !state.req.sortBy && !state.req.foldersFirst && state.req.ByInnerSelection == null,
+        }
+
+        return { FolderSize, foldersFirst, Folders, Files, Recursive, Keep, Hidden, disableSorting }
+    }, [dispatcher, state.req])
 
     const { GotoFolder } = dispatcher
-    const { ParentFolder, PreviousSibling, NextSibling } = res?.Relatives ?? {}
+    const { ParentFolder, PreviousSibling, NextSibling } = state.res?.Relatives ?? {}
     function useGotoFolder(folder: FsFile | undefined) {
         return useAction(useCallback(() => folder && GotoFolder(folder), [folder]))
     }
@@ -71,8 +93,7 @@ export function useMenu({
 
     const gotoPath = useAction(gotoPath2)
 
-    const currentFolder = res?.File
-    const { deleteOrTrash, explore } = commands
+    const currentFolder = state.res?.File
 
     const google = useAction(
         useCallback(() => currentFolder && openInNewWindow(GetGoogleSearchLink(currentFolder)), [currentFolder])
@@ -84,14 +105,16 @@ export function useMenu({
             [currentFolder]
         )
     )
-    const Explore = useAction(useCallback(() => currentFolder && explore(currentFolder), [explore, currentFolder]))
+    const Explore = useAction(
+        useCallback(() => currentFolder && dispatcher.explore(currentFolder), [dispatcher, currentFolder])
+    )
 
     const Delete = useAction(
         useCallback(
             (e?: React.KeyboardEvent) =>
-                selectedFile && deleteOrTrash({ file: selectedFile, isShiftDown: e?.shiftKey ?? false }),
+                selectedFile && dispatcher.deleteOrTrash({ file: selectedFile, isShiftDown: e?.shiftKey ?? false }),
 
-            [deleteOrTrash, selectedFile]
+            [dispatcher, selectedFile]
         )
     )
     const OrderByInnerSelection = useMemo<ToggleMenuItem>(
@@ -102,30 +125,6 @@ export function useMenu({
         [isSortedBy, orderBy]
     )
 
-    const FolderSize = useReqToggle("FolderSize")
-    const foldersFirst = useReqToggle("foldersFirst")
-    const disableSorting = useToggle(
-        useCallback(
-            () =>
-                dispatcher.updateReq({
-                    sortBy: undefined,
-                    sortByDesc: false,
-                    foldersFirst: false,
-                    ByInnerSelection: false,
-                }),
-            [dispatcher]
-        ),
-        useCallback(
-            () => !req.sortBy && !req.foldersFirst && req.ByInnerSelection == null,
-            [req.ByInnerSelection, req.foldersFirst, req.sortBy]
-        )
-    )
-
-    const Folders = useReqToggle("HideFolders")
-    const Files = useReqToggle("HideFiles")
-    const Recursive = useReqToggle("IsRecursive")
-    const Keep = useReqToggle("KeepView")
-    const Hidden = useReqToggle("ShowHiddenFiles")
     const prevPageMenuItem = useAction(prevPage)
     const nextPageMenuItem = useAction(nextPage)
 
@@ -139,30 +138,15 @@ export function useMenu({
             Explore,
             Delete,
             OrderByInnerSelection,
-            FolderSize,
-            foldersFirst,
-            disableSorting,
-            Folders,
-            Files,
-            Recursive,
-            Keep,
-            Hidden,
             gotoPath,
             prevPageMenuItem,
             nextPageMenuItem,
+            ...toggles,
         }),
         [
             Delete,
             Explore,
-            Files,
-            FolderSize,
-            Folders,
-            Hidden,
-            Keep,
             OrderByInnerSelection,
-            Recursive,
-            disableSorting,
-            foldersFirst,
             google,
             gotoPath,
             next,
@@ -170,6 +154,7 @@ export function useMenu({
             prev,
             prevPageMenuItem,
             subs,
+            toggles,
             up,
         ]
     )
@@ -186,14 +171,5 @@ function useAction(action: () => void): MenuItem {
             action,
         }),
         [action]
-    )
-}
-function useToggle(action: () => void, isActive: () => boolean): ToggleMenuItem {
-    return useMemo<ToggleMenuItem>(
-        () => ({
-            action,
-            isActive,
-        }),
-        [action, isActive]
     )
 }

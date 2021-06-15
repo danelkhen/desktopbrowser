@@ -24,8 +24,6 @@ export interface MenuProps {
     children: MenuItems
 }
 export function Menu({
-    req,
-    res,
     selectedFile,
     path,
     prevPage,
@@ -65,8 +63,6 @@ export function Menu({
         selectedFile,
         prevPage,
         nextPage,
-        req,
-        res,
         path,
         gotoPath,
         state,
