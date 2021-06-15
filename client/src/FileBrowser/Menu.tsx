@@ -1,7 +1,7 @@
 import React from "react"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { Dropdown } from "./Dropdown"
-import { Helper, State } from "./Helper"
+import { Helper } from "./Helper"
 import { MenuItems, useMenu } from "./lib/useMenu"
 import {
     ButtonGroup,
@@ -26,29 +26,20 @@ export interface MenuProps {
 export function Menu({
     selectedFile,
     path,
-    prevPage,
-    nextPage,
     gotoPath,
-    state,
     dispatcher,
 }: {
     req: ListFilesRequest
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
-    prevPage(): void
-    nextPage(): void
     gotoPath(): void
-    state: State
     dispatcher: Helper
 }) {
-    const { google, subs, Explore, Delete } = useMenu({
+    const { Delete } = useMenu({
         selectedFile,
-        prevPage,
-        nextPage,
         path,
         gotoPath,
-        state,
         dispatcher,
     })
 
@@ -63,9 +54,9 @@ export function Menu({
                 </ButtonGroup>
                 <ButtonGroup>
                     <Size action={toggle.FolderSize} isActive={isToggled.FolderSize} label="Folder" />
-                    <Google action={google.action} label="Google" />
-                    <Subs action={subs.action} label="Subs" />
-                    <ExploreButton action={Explore.action} label="Explore" />
+                    <Google action={dispatcher.google} label="Google" />
+                    <Subs action={dispatcher.subs} label="Subs" />
+                    <ExploreButton action={dispatcher.Explore} label="Explore" />
                 </ButtonGroup>
                 <ButtonGroup>
                     <DeleteButton action={Delete.action} label="Delete" />

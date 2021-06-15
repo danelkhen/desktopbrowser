@@ -8,6 +8,7 @@ import { Column, Columns } from "./Columns"
 import { isExecutable } from "./lib/isExecutable"
 import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 import { IsDescending, SortConfig } from "./lib/useSorting"
+import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export interface State {
@@ -296,6 +297,12 @@ export class Helper {
 
     OrderByInnerSelection = () => this.orderBy(Columns.hasInnerSelection)
     isOrderedByInnerSelection = () => this.isSortedBy(Columns.hasInnerSelection)
+
+    google = () => this._state.res?.File && openInNewWindow(GetGoogleSearchLink(this._state.res?.File))
+
+    subs = () => this._state.res?.File && openInNewWindow(GetSubtitleSearchLink(this._state.res?.File))
+
+    Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
 
 export function useHelper() {
@@ -308,4 +315,8 @@ export function useHelper() {
     const history = useHistory()
     helper.history = history
     return [state, helper] as const
+}
+
+function openInNewWindow(p: string): void {
+    window.open(p, "_blank")
 }

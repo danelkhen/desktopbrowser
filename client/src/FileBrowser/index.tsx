@@ -75,13 +75,10 @@ export function FileBrowser() {
                 <Nav>
                     <Menu
                         selectedFile={selectedFile}
-                        prevPage={prevPage}
-                        nextPage={nextPage}
                         req={req}
                         res={res}
                         path={path}
                         gotoPath={gotoPath}
-                        state={state}
                         dispatcher={dispatcher}
                     />
                     <Clock />
