@@ -13,7 +13,7 @@
         "start": "electron-forge start",
         "package": "electron-forge package",
         "make": "electron-forge make",
-        "release": "npm version patch && git push --tags"
+        "release": "npm version patch && git push && git push --tags"
     },
     "dependencies": {
         "electron-log": "^4.3.5",
