@@ -56,12 +56,8 @@ export function useMenu({
     const { orderBy, isSortedBy } = dispatcher
 
     function useReqToggle(prop: keyof ListFilesRequest) {
-        const history2 = history
         const value = req[prop]
-        const action = useCallback(
-            () => dispatcher.setReq({ history: history2, v: req => ({ ...req, [prop]: !value }) }),
-            [history2, prop, value]
-        )
+        const action = useCallback(() => dispatcher.setReq({ v: req => ({ ...req, [prop]: !value }) }), [prop, value])
         const isActive = useCallback(() => !!value, [value])
         return useToggle(action, isActive)
     }
@@ -115,7 +111,6 @@ export function useMenu({
         useCallback(
             () =>
                 dispatcher.setReq({
-                    history,
                     v: req => ({
                         ...req,
                         sortBy: undefined,
@@ -124,7 +119,7 @@ export function useMenu({
                         ByInnerSelection: false,
                     }),
                 }),
-            [dispatcher, history]
+            [dispatcher]
         ),
         useCallback(
             () => !req.sortBy && !req.foldersFirst && req.ByInnerSelection == null,

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { History } from "history"
 import { useMemo, useState } from "react"
+import { useHistory } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { App } from "./App"
 import { Column, Columns } from "./Columns"
@@ -21,6 +22,7 @@ export interface State {
 
 export class Helper {
     _state: State
+    history?: History
     constructor(state?: State) {
         if (!state) {
             state = {
@@ -110,12 +112,12 @@ export class Helper {
     app = App.current
     server = this.app.fileService
 
-    setReq({ v, history }: { history: History; v: ListFilesRequest | ((prev: ListFilesRequest) => ListFilesRequest) }) {
-        function navigateToReq(req: ListFilesRequest) {
+    setReq({ v }: { v: ListFilesRequest | ((prev: ListFilesRequest) => ListFilesRequest) }) {
+        const navigateToReq = (req: ListFilesRequest) => {
             console.log("navigateToReq", req)
             const q = new URLSearchParams()
             q.set("p", JSON.stringify(req))
-            history.push({ pathname: "/", search: q.toString() })
+            this.history?.push({ pathname: "/", search: q.toString() })
         }
         const prev = this._state.req
         const req2 = typeof v === "function" ? v(prev) : v
@@ -205,7 +207,7 @@ export class Helper {
     }
 
     GotoPath(history: History, path: string): void {
-        this.setReq({ history, v: req => ({ ...req, Path: path }) })
+        this.setReq({ v: req => ({ ...req, Path: path }) })
     }
 
     async Open(history: History, file: FsFile): Promise<void> {
@@ -231,11 +233,10 @@ export class Helper {
         const sorting = this._state.sorting
         const sortBy = this._state.req.sortBy as Column
         if (sortBy == column) {
-            this.setReq({ history, v: req => ({ ...req, sortByDesc: !req.sortByDesc }) })
+            this.setReq({ v: req => ({ ...req, sortByDesc: !req.sortByDesc }) })
             return
         }
         this.setReq({
-            history,
             v: req => ({ ...req, sortBy: column, sortByDesc: sorting.descendingFirst[column] }),
         })
     }
@@ -249,11 +250,13 @@ export class Helper {
 
 export function useHelper() {
     const [state, setState] = useState<State>(() => new Helper()._state)
+    const history = useHistory()
     const helper = useMemo(() => {
         const helper = new Helper()
         helper.onChanged = (from, to) => setState(to)
         return helper
     }, [])
+    helper.history = history
     return [state, helper] as const
 }
 
