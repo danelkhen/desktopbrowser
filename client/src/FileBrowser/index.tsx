@@ -93,7 +93,6 @@ export function FileBrowser() {
                         res={res}
                         path={path}
                         orderBy={orderBy}
-                        api={api}
                         reloadFiles={reloadFiles}
                         gotoPath={gotoPath}
                         state={state}

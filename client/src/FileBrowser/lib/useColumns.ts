@@ -1,9 +1,7 @@
 import { useMemo } from "react"
-import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
-import { Column, Columns } from "../Columns"
+import { Columns } from "../Columns"
 import { FileColumnsConfig } from "./useCommands"
 import { FileMetadata } from "./useFileMetadata"
-import { IsDescending, SortConfig } from "./useSorting"
 
 export function useColumns({ fileMetadata }: { fileMetadata: FileMetadata }) {
     const columns = useMemo<FileColumnsConfig>(
@@ -57,23 +55,23 @@ export function useColumns({ fileMetadata }: { fileMetadata: FileMetadata }) {
 //     return sortingDefaults
 // }
 
-export function useReqSorting(req: ListFilesRequest) {
-    const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = useMemo(() => {
-        const key = req.sortBy as Column
-        const active: Column[] = []
-        const isDescending: IsDescending<Columns> = {}
-        if (req.foldersFirst && key !== Columns.type) {
-            active.push(Columns.type)
-        }
-        if (req.ByInnerSelection && key !== Columns.hasInnerSelection) {
-            active.push(Columns.hasInnerSelection)
-        }
-        if (key != null) {
-            isDescending[key] = req.sortByDesc
-            active.push(key)
-        }
-        console.log("setSorting", active)
-        return { active, isDescending }
-    }, [req])
-    return sorting
-}
+// export function useReqSorting(req: ListFilesRequest) {
+//     const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = useMemo(() => {
+//         const key = req.sortBy as Column
+//         const active: Column[] = []
+//         const isDescending: IsDescending<Columns> = {}
+//         if (req.foldersFirst && key !== Columns.type) {
+//             active.push(Columns.type)
+//         }
+//         if (req.ByInnerSelection && key !== Columns.hasInnerSelection) {
+//             active.push(Columns.hasInnerSelection)
+//         }
+//         if (key != null) {
+//             isDescending[key] = req.sortByDesc
+//             active.push(key)
+//         }
+//         console.log("setSorting", active)
+//         return { active, isDescending }
+//     }, [req])
+//     return sorting
+// }

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
-import { Column, Columns } from "../Columns"
+import { Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 
@@ -39,7 +39,6 @@ export function useMenu({
     prevPage,
     nextPage,
     gotoPath: gotoPath2,
-    state,
     dispatcher,
 }: {
     reloadFiles: () => unknown

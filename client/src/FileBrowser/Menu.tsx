@@ -3,7 +3,6 @@ import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src
 import { Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
 import { Helper, State } from "./Helper"
-import { Api } from "./lib/useApi"
 import { MenuItems, useMenu } from "./lib/useMenu"
 import {
     ButtonGroup,
@@ -33,7 +32,6 @@ export function Menu({
     selectedFile,
     path,
     orderBy,
-    api,
     prevPage,
     nextPage,
     gotoPath,
@@ -45,7 +43,6 @@ export function Menu({
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
-    api: Api
     orderBy: Helper["orderBy"]
     prevPage(): void
     nextPage(): void
