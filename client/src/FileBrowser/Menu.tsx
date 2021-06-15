@@ -2,7 +2,7 @@ import React from "react"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
-import { State, Dispatcher } from "./Helper"
+import { State, Helper } from "./Helper"
 import { Api } from "./lib/useApi"
 import { MenuItems, useMenu } from "./lib/useMenu"
 import {
@@ -52,7 +52,7 @@ export function Menu({
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
     gotoPath(): void
     state: State
-    dispatcher: Dispatcher
+    dispatcher: Helper
 }) {
     const {
         up,

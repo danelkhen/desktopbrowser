@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
-import { Dispatcher, State } from "../Helper"
+import { Helper, State } from "../Helper"
 
-export function useReq(state: State, dispatcher: Dispatcher) {
+export function useReq(state: State, dispatcher: Helper) {
     const p = useQuery().get("p") ?? ""
     useEffect(() => {
         dispatcher.updateReq(p)

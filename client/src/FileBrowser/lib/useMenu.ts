@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react"
 import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Column, Columns } from "../Columns"
-import { Dispatcher, setReq, State } from "../Helper"
+import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 import { Api } from "./useApi"
 
@@ -56,17 +56,17 @@ export function useMenu({
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
     gotoPath(): void
     state: State
-    dispatcher: Dispatcher
+    dispatcher: Helper
 }): MenuItems {
     const commands = dispatcher
     const history = useHistory()
 
     function useReqToggle(prop: keyof ListFilesRequest) {
-        const setReq2 = setReq
+        const history2 = history
         const value = req[prop]
         const action = useCallback(
-            () => setReq2({ state, history, v: req => ({ ...req, [prop]: !value }) }),
-            [prop, setReq2, value]
+            () => dispatcher.setReq({ history: history2, v: req => ({ ...req, [prop]: !value }) }),
+            [history2, prop, value]
         )
         const isActive = useCallback(() => !!value, [value])
         return useToggle(action, isActive)
@@ -119,8 +119,7 @@ export function useMenu({
     const disableSorting = useToggle(
         useCallback(
             () =>
-                setReq({
-                    state,
+                dispatcher.setReq({
                     history,
                     v: req => ({
                         ...req,
@@ -130,7 +129,7 @@ export function useMenu({
                         ByInnerSelection: false,
                     }),
                 }),
-            [state, history]
+            [dispatcher, history]
         ),
         useCallback(
             () => !req.sortBy && !req.foldersFirst && req.ByInnerSelection == null,

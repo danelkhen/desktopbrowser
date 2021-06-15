@@ -3,7 +3,7 @@ import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { App } from "../../App"
 import { Column, Columns } from "../Columns"
-import { Dispatcher, setReq, State } from "../Helper"
+import { Helper, State } from "../Helper"
 import { SortConfig } from "./useSorting"
 
 export interface Api {
@@ -22,7 +22,7 @@ export function useApi({
 }: {
     req: ListFilesRequest
     sorting: SortConfig<FsFile, Columns>
-    dispatcher: Dispatcher
+    dispatcher: Helper
     state: State
 }): Api {
     const history = useHistory()
@@ -30,16 +30,15 @@ export function useApi({
         (column: Column) => {
             const sortBy = req.sortBy as Column
             if (sortBy == column) {
-                setReq({ state, history, v: req => ({ ...req, sortByDesc: !req.sortByDesc }) })
+                dispatcher.setReq({ history, v: req => ({ ...req, sortByDesc: !req.sortByDesc }) })
                 return
             }
-            setReq({
-                state,
+            dispatcher.setReq({
                 history,
                 v: req => ({ ...req, sortBy: column, sortByDesc: sorting.descendingFirst[column] }),
             })
         },
-        [req.sortBy, state, history, sorting.descendingFirst]
+        [req.sortBy, dispatcher, history, sorting.descendingFirst]
     )
 
     const x = useMemo(() => {
@@ -48,7 +47,7 @@ export function useApi({
         }
 
         function GotoPath(path: string): void {
-            setReq({ state, history, v: req => ({ ...req, Path: path }) })
+            dispatcher.setReq({ history, v: req => ({ ...req, Path: path }) })
         }
 
         async function Open(file: FsFile): Promise<void> {
@@ -72,7 +71,7 @@ export function useApi({
 
         const api: Api = { Execute, GotoFolder, Open, GotoPath, orderBy }
         return api
-    }, [orderBy, state, history])
+    }, [orderBy, dispatcher, history])
     return x
 }
 function isExecutable(extension: string) {
