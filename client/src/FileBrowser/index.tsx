@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { useHistory } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
@@ -51,9 +50,8 @@ export function FileBrowser() {
     }, [req.Path])
 
     const { GotoFolder } = dispatcher
-    const history = useHistory()
     const { ParentFolder } = res?.Relatives ?? {}
-    const up = useCallback(() => ParentFolder && GotoFolder(history, ParentFolder), [GotoFolder, ParentFolder, history])
+    const up = useCallback(() => ParentFolder && GotoFolder(ParentFolder), [GotoFolder, ParentFolder])
 
     const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
         res,
@@ -64,7 +62,7 @@ export function FileBrowser() {
 
     const ready = !!fileMetadata.filesMd
     const { GotoPath } = dispatcher
-    const gotoPath = useCallback(() => GotoPath(history, path), [GotoPath, path, history])
+    const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
 
     const hasInnerSelection = useCallback(
         (file: FsFile) => fileMetadata.getSavedSelectedFile(file.Name) != null,

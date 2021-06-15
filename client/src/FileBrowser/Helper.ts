@@ -203,18 +203,18 @@ export class Helper {
         await this.fetchFiles(this._state.req)
     }
 
-    GotoFolder(history: History, file: FsFile): void {
-        file.Path && this.GotoPath(history, file.Path)
+    GotoFolder(file: FsFile): void {
+        file.Path && this.GotoPath(file.Path)
     }
 
-    GotoPath(history: History, path: string): void {
+    GotoPath(path: string): void {
         this.setReq({ v: req => ({ ...req, Path: path }) })
     }
 
-    async Open(history: History, file: FsFile): Promise<void> {
+    async Open(file: FsFile): Promise<void> {
         if (file == null) return
         if (file.IsFolder || file.type == "link") {
-            this.GotoFolder(history, file)
+            this.GotoFolder(file)
             return
         }
         const prompt = file.Extension ? isExecutable(file.Extension) : true
@@ -250,13 +250,13 @@ export class Helper {
 }
 
 export function useHelper() {
-    const [state, setState] = useState<State>(() => new Helper()._state)
-    const history = useHistory()
     const helper = useMemo(() => {
         const helper = new Helper()
         helper.onChanged = (from, to) => setState(to)
         return helper
     }, [])
+    const [state, setState] = useState<State>(helper._state)
+    const history = useHistory()
     helper.history = history
     return [state, helper] as const
 }

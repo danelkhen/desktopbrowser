@@ -1,13 +1,14 @@
 import { useCallback, useMemo } from "react"
-import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 
 interface MenuItem {
-    action?(): void
-    isActive?(): boolean
+    action(): void
+}
+export interface ToggleMenuItem extends MenuItem {
+    isActive(): boolean
 }
 export interface MenuItems {
     up: MenuItem
@@ -17,15 +18,15 @@ export interface MenuItems {
     subs: MenuItem
     Explore: MenuItem
     Delete: MenuItem
-    OrderByInnerSelection: MenuItem
-    FolderSize: MenuItem
-    foldersFirst: MenuItem
-    disableSorting: MenuItem
-    Folders: MenuItem
-    Files: MenuItem
-    Recursive: MenuItem
-    Keep: MenuItem
-    Hidden: MenuItem
+    OrderByInnerSelection: ToggleMenuItem
+    FolderSize: ToggleMenuItem
+    foldersFirst: ToggleMenuItem
+    disableSorting: ToggleMenuItem
+    Folders: ToggleMenuItem
+    Files: ToggleMenuItem
+    Recursive: ToggleMenuItem
+    Keep: ToggleMenuItem
+    Hidden: ToggleMenuItem
     gotoPath: MenuItem
     prevPageMenuItem: MenuItem
     nextPageMenuItem: MenuItem
@@ -51,8 +52,6 @@ export function useMenu({
     dispatcher: Helper
 }): MenuItems {
     const commands = dispatcher
-    const history = useHistory()
-    const api = dispatcher
     const { orderBy, isSortedBy } = dispatcher
 
     function useReqToggle(prop: keyof ListFilesRequest) {
@@ -62,11 +61,10 @@ export function useMenu({
         return useToggle(action, isActive)
     }
 
-    const { GotoFolder } = api
+    const { GotoFolder } = dispatcher
     const { ParentFolder, PreviousSibling, NextSibling } = res?.Relatives ?? {}
     function useGotoFolder(folder: FsFile | undefined) {
-        const history2 = history
-        return useAction(useCallback(() => folder && GotoFolder(history2, folder), [history2, folder]))
+        return useAction(useCallback(() => folder && GotoFolder(folder), [folder]))
     }
     const up = useGotoFolder(ParentFolder)
     const prev = useGotoFolder(PreviousSibling)
@@ -97,7 +95,7 @@ export function useMenu({
             [deleteOrTrash, selectedFile]
         )
     )
-    const OrderByInnerSelection = useMemo<MenuItem>(
+    const OrderByInnerSelection = useMemo<ToggleMenuItem>(
         () => ({
             action: () => orderBy(Columns.hasInnerSelection),
             isActive: () => isSortedBy(Columns.hasInnerSelection),
@@ -194,8 +192,8 @@ function useAction(action: () => void): MenuItem {
         [action]
     )
 }
-function useToggle(action: () => void, isActive: () => boolean): MenuItem {
-    return useMemo<MenuItem>(
+function useToggle(action: () => void, isActive: () => boolean): ToggleMenuItem {
+    return useMemo<ToggleMenuItem>(
         () => ({
             action,
             isActive,

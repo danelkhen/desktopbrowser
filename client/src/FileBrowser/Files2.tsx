@@ -1,6 +1,5 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
-import { useHistory } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
@@ -34,7 +33,6 @@ export function Files2({
     orderBy: Helper["orderBy"]
     dispatcher: Helper
 }) {
-    const history = useHistory()
     const { isSortedBy } = dispatcher
     const onItemMouseDown = useCallback(
         (e: React.MouseEvent, file: FsFile) => {
@@ -53,9 +51,9 @@ export function Files2({
                 return
             }
             e.preventDefault()
-            Open(history, file)
+            Open(file)
         },
-        [history, Open]
+        [Open]
     )
 
     const onItemDoubleClick = useCallback(
@@ -64,9 +62,9 @@ export function Files2({
                 return
             }
             e.preventDefault()
-            Open(history, file)
+            Open(file)
         },
-        [history, Open]
+        [Open]
     )
 
     const GetRowClass = useCallback(

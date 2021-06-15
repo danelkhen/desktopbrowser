@@ -65,7 +65,7 @@ export function useSelection({
                 const file = selectedFile
                 if (!file) return
                 e.preventDefault()
-                Open(history, selectedFile)
+                Open(selectedFile)
             } else if (e.key == "Backspace") {
                 up()
             }

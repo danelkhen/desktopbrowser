@@ -27,19 +27,27 @@ export const StyledButton = styled.button<{ active?: boolean }>`
 `}
 `
 
-export function MenuButton({
+export function MenuButton({ action, label, className }: { action(): void; label?: string; className?: string }) {
+    return (
+        <StyledButton className={className} onClick={action}>
+            {label}
+        </StyledButton>
+    )
+}
+
+export function ToggleMenuButton({
     action,
     isActive,
     label,
     className,
 }: {
-    action?(): void
-    isActive?(): boolean
+    action(): void
+    isActive(): boolean
     label?: string
     className?: string
 }) {
     return (
-        <StyledButton className={className} active={isActive?.()} onClick={action}>
+        <StyledButton className={className} active={isActive()} onClick={action}>
             {label}
         </StyledButton>
     )

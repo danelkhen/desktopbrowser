@@ -18,7 +18,7 @@ import {
     SortButton,
     Subs,
 } from "./Menu.styles"
-import { MenuButton } from "./MenuButton"
+import { ToggleMenuButton } from "./MenuButton"
 
 export interface MenuProps {
     children: MenuItems
@@ -80,32 +80,32 @@ export function Menu({
         <MenuDiv>
             <ButtonsDiv>
                 <ButtonGroup>
-                    <GotoParentDir action={up.action} isActive={up.isActive} label="Up" />
-                    <GotoPrevSibling action={prev.action} isActive={prev.isActive} label="Prev" />
-                    <GotoNextSibling action={next.action} isActive={next.isActive} label="Next" />
+                    <GotoParentDir action={up.action} label="Up" />
+                    <GotoPrevSibling action={prev.action} label="Prev" />
+                    <GotoNextSibling action={next.action} label="Next" />
                 </ButtonGroup>
                 <ButtonGroup>
                     <Size action={FolderSize.action} isActive={FolderSize.isActive} label="Folder" />
-                    <Google action={google.action} isActive={google.isActive} label="Google" />
-                    <Subs action={subs.action} isActive={subs.isActive} label="Subs" />
-                    <ExploreButton action={Explore.action} isActive={Explore.isActive} label="Explore" />
+                    <Google action={google.action} label="Google" />
+                    <Subs action={subs.action} label="Subs" />
+                    <ExploreButton action={Explore.action} label="Explore" />
                 </ButtonGroup>
                 <ButtonGroup>
-                    <DeleteButton action={Delete.action} isActive={Delete.isActive} label="Delete" />
+                    <DeleteButton action={Delete.action} label="Delete" />
                     <Dropdown>
                         <SortButton>Sort</SortButton>
                         <div className="menu">
-                            <MenuButton
+                            <ToggleMenuButton
                                 action={OrderByInnerSelection.action}
                                 isActive={OrderByInnerSelection.isActive}
                                 label="Watched"
                             />
-                            <MenuButton
+                            <ToggleMenuButton
                                 action={foldersFirst.action}
                                 isActive={foldersFirst.isActive}
                                 label="Folders first"
                             />
-                            <MenuButton
+                            <ToggleMenuButton
                                 action={disableSorting.action}
                                 isActive={disableSorting.isActive}
                                 label="Disable sort"
@@ -115,11 +115,19 @@ export function Menu({
                     <Dropdown>
                         <MoreButton>More</MoreButton>
                         <div className="menu">
-                            <MenuButton action={Folders.action} isActive={Folders.isActive} label="Hide Folders" />
-                            <MenuButton action={Files.action} isActive={Files.isActive} label="Hide Files" />
-                            <MenuButton action={Recursive.action} isActive={Recursive.isActive} label="Recursive" />
-                            <MenuButton action={Keep.action} isActive={Keep.isActive} label="Keep" />
-                            <MenuButton action={Hidden.action} isActive={Hidden.isActive} label="Hidden" />
+                            <ToggleMenuButton
+                                action={Folders.action}
+                                isActive={Folders.isActive}
+                                label="Hide Folders"
+                            />
+                            <ToggleMenuButton action={Files.action} isActive={Files.isActive} label="Hide Files" />
+                            <ToggleMenuButton
+                                action={Recursive.action}
+                                isActive={Recursive.isActive}
+                                label="Recursive"
+                            />
+                            <ToggleMenuButton action={Keep.action} isActive={Keep.isActive} label="Keep" />
+                            <ToggleMenuButton action={Hidden.action} isActive={Hidden.isActive} label="Hidden" />
                         </div>
                     </Dropdown>
                 </ButtonGroup>

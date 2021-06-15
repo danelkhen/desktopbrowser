@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { MenuButton, StyledButton } from "./MenuButton"
+import { MenuButton, StyledButton, ToggleMenuButton } from "./MenuButton"
 
 export const ButtonGroup = styled.div`
     display: flex;
@@ -41,7 +41,7 @@ export const GotoPrevSibling = styled(MenuButton)`
 export const GotoNextSibling = styled(MenuButton)`
     background: url(../../img/icons/next.svg) no-repeat 13px 46%;
 `
-export const Size = styled(MenuButton)`
+export const Size = styled(ToggleMenuButton)`
     background: url(../../img/icons/folder.svg) no-repeat 13px 46%;
     padding-left: 40px;
 `
