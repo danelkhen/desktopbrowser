@@ -7,11 +7,10 @@ import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
 import { useHelper } from "./Helper"
 import { Nav } from "./index.styles"
-import { useColumns } from "./lib/useColumns"
 import { useFileMetadata } from "./lib/useFileMetadata"
 import { useFiltering } from "./lib/useFiltering"
 import { usePaging } from "./lib/usePaging"
-import { useReq } from "./lib/useReq"
+import { useQuery } from "./lib/useQuery"
 import { useSelection } from "./lib/useSelection"
 import { useSorting } from "./lib/useSorting"
 import { Menu } from "./Menu"
@@ -22,25 +21,25 @@ export function FileBrowser() {
 
     const fileMetadata = useFileMetadata()
     const [state, dispatcher] = useHelper()
-    useReq(state, dispatcher)
+    const p = useQuery().get("p") ?? ""
+    useEffect(() => {
+        dispatcher.updateReq(p)
+    }, [dispatcher, p])
+
     const { req } = state
     const [pageIndex, setPageIndex] = useState(0)
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
     const [theme, setTheme] = useState("dark")
-    const columns = useColumns({ fileMetadata })
+    const { columns } = state
     const { res } = state
     const { reloadFiles } = dispatcher
-    // const { res, reloadFiles } = useListFiles(req)
-    // const sortingDefaults = useColumnSorting({ fileMetadata })
-    // const reqSorting = useReqSorting(req)
-    // const reqSorting
-    const { sorting } = state // useMemo(() => ({ ...sortingDefaults, ...reqSorting }), [reqSorting, sortingDefaults])
+    const { sorting } = state
 
     const allFiles = res.Files ?? []
     const pageSize = 200
 
-    const { sorted } = useSorting(allFiles, sorting)
+    const sorted = useSorting(allFiles, sorting)
     const filtered = useFiltering(search, sorted)
     const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
     const files = paged

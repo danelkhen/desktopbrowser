@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { App } from "./App"
 import { Column, Columns } from "./Columns"
+import { FileColumnsConfig } from "./lib/useCommands"
 import { IsDescending, SortConfig } from "./lib/useSorting"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
@@ -15,6 +16,7 @@ export interface State {
     reqSorting: Pick<FileSortConfig, "active" | "isDescending">
     sorting: FileSortConfig
     filesMd: { [key: string]: FileInfo }
+    columns: FileColumnsConfig
 }
 
 export class Helper {
@@ -48,6 +50,18 @@ export class Helper {
                 reqSorting: { active: [], isDescending: {} },
                 sorting: {} as any,
                 filesMd: {},
+                columns: {
+                    keys: Columns,
+                    getters: {
+                        type: t => t.type,
+                        Name: t => t.Name,
+                        Size: t => t.Size,
+                        Modified: t => t.Modified,
+                        Extension: t => t.Extension,
+                        hasInnerSelection: t => !!t?.IsFolder && !!this.getSavedSelectedFile(t.Name),
+                    },
+                    visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
+                },
             }
             state.sorting = { ...state.sortingDefaults, ...state.reqSorting }
         }

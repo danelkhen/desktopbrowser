@@ -31,7 +31,6 @@ export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>
             by.keys,
             by.order.map(t => (t ? "desc" : "asc"))
         )
-        const y = { sorted }
-        return y
+        return sorted
     }, [config, items])
 }

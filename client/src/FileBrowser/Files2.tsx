@@ -4,7 +4,7 @@ import { useHistory } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
-import { Column, Columns } from "./Columns"
+import { Column } from "./Columns"
 import { Files } from "./Files"
 import { Helper } from "./Helper"
 import { FileColumnsConfig } from "./lib/useCommands"
@@ -49,7 +49,9 @@ export function Files2({
         (e: React.MouseEvent, file: FsFile) => {
             // const selection = new Selection(allFiles, selectedFiles)
             const target = e.target as HTMLElement
-            if (!target.matches("a.Name")) return
+            if (!target.matches("a.Name")) {
+                return
+            }
             e.preventDefault()
             Open(history, file)
         },
@@ -58,7 +60,9 @@ export function Files2({
 
     const onItemDoubleClick = useCallback(
         (e: React.MouseEvent, file: FsFile) => {
-            if (file == null) return
+            if (file == null) {
+                return
+            }
             e.preventDefault()
             Open(history, file)
         },

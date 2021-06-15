@@ -41,17 +41,10 @@ export function usePaging<T>(
     }, [pageIndex, pageSize, items, setPageIndex])
 }
 
-// interface PageInfo<T> {
-//     pageIndex: number
-//     totalPages: number
-//     paged: T[]
-// }
 export interface Pager<T> {
     pageIndex: number
     totalPages: number
     paged: T[]
-    // page: PageInfo<T>
-    // applyPaging(list: T[]): PageInfo<T>
     setPageIndex: (v: number) => void
     prevPage: () => void
     nextPage: () => void
