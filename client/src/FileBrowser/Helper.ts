@@ -293,6 +293,9 @@ export class Helper {
 
     isSortingDisabled = () =>
         !this._state.req.sortBy && !this._state.req.foldersFirst && this._state.req.ByInnerSelection == null
+
+    OrderByInnerSelection = () => this.orderBy(Columns.hasInnerSelection)
+    isOrderedByInnerSelection = () => this.isSortedBy(Columns.hasInnerSelection)
 }
 
 export function useHelper() {

@@ -42,7 +42,7 @@ export function Menu({
     state: State
     dispatcher: Helper
 }) {
-    const { google, subs, Explore, Delete, OrderByInnerSelection } = useMenu({
+    const { google, subs, Explore, Delete } = useMenu({
         selectedFile,
         prevPage,
         nextPage,
@@ -73,8 +73,8 @@ export function Menu({
                         <SortButton>Sort</SortButton>
                         <div className="menu">
                             <ToggleMenuButton
-                                action={OrderByInnerSelection.action}
-                                isActive={OrderByInnerSelection.isActive}
+                                action={dispatcher.OrderByInnerSelection}
+                                isActive={dispatcher.isOrderedByInnerSelection}
                                 label="Watched"
                             />
                             <ToggleMenuButton

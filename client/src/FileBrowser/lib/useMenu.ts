@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react"
 import { FsFile } from "../../../../shared/src/FileService"
-import { Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 
@@ -15,7 +14,6 @@ export interface MenuItems {
     subs: MenuItem
     Explore: MenuItem
     Delete: MenuItem
-    OrderByInnerSelection: ToggleMenuItem
     gotoPath: MenuItem
     prevPageMenuItem: MenuItem
     nextPageMenuItem: MenuItem
@@ -36,16 +34,6 @@ export function useMenu({
     state: State
     dispatcher: Helper
 }): MenuItems {
-    const { orderBy, isSortedBy } = dispatcher
-
-    //    const { ParentFolder, PreviousSibling, NextSibling } = state.res?.Relatives ?? {}
-    // function useGotoFolder(folder: FsFile | undefined) {
-    //     return useAction(useCallback(() => folder && dispatcher.GotoFolder(folder), [folder]))
-    // }
-    // const up = useGotoFolder(ParentFolder)
-    // const prev = useGotoFolder(PreviousSibling)
-    // const next = useGotoFolder(NextSibling)
-
     const gotoPath = useAction(gotoPath2)
 
     const currentFolder = state.res?.File
@@ -72,13 +60,6 @@ export function useMenu({
             [dispatcher, selectedFile]
         )
     )
-    const OrderByInnerSelection = useMemo<ToggleMenuItem>(
-        () => ({
-            action: () => orderBy(Columns.hasInnerSelection),
-            isActive: () => isSortedBy(Columns.hasInnerSelection),
-        }),
-        [isSortedBy, orderBy]
-    )
 
     const prevPageMenuItem = useAction(prevPage)
     const nextPageMenuItem = useAction(nextPage)
@@ -89,12 +70,11 @@ export function useMenu({
             subs,
             Explore,
             Delete,
-            OrderByInnerSelection,
             gotoPath,
             prevPageMenuItem,
             nextPageMenuItem,
         }),
-        [Delete, Explore, OrderByInnerSelection, google, gotoPath, nextPageMenuItem, prevPageMenuItem, subs]
+        [Delete, Explore, google, gotoPath, nextPageMenuItem, prevPageMenuItem, subs]
     )
     return allMenuItems
 }
