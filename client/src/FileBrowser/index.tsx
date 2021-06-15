@@ -44,14 +44,13 @@ export function FileBrowser() {
     const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
     const files = paged
 
-    const api = dispatcher
-    const { Open, orderBy } = api
+    const { Open, orderBy } = dispatcher
 
     useEffect(() => {
         setPath(req.Path ?? "")
     }, [req.Path])
 
-    const { GotoFolder } = api
+    const { GotoFolder } = dispatcher
     const history = useHistory()
     const { ParentFolder } = res?.Relatives ?? {}
     const up = useCallback(() => ParentFolder && GotoFolder(history, ParentFolder), [GotoFolder, ParentFolder, history])
@@ -64,7 +63,7 @@ export function FileBrowser() {
     })
 
     const ready = !!fileMetadata.filesMd
-    const { GotoPath } = api
+    const { GotoPath } = dispatcher
     const gotoPath = useCallback(() => GotoPath(history, path), [GotoPath, path, history])
 
     const hasInnerSelection = useCallback(

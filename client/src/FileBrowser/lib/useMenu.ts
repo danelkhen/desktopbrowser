@@ -99,10 +99,10 @@ export function useMenu({
     )
     const OrderByInnerSelection = useMemo<MenuItem>(
         () => ({
-            action: () => orderBy(history, Columns.hasInnerSelection),
+            action: () => orderBy(Columns.hasInnerSelection),
             isActive: () => isSortedBy(Columns.hasInnerSelection),
         }),
-        [history, isSortedBy, orderBy]
+        [isSortedBy, orderBy]
     )
 
     const FolderSize = useReqToggle("FolderSize")

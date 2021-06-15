@@ -229,7 +229,7 @@ export class Helper {
         await App.current.fileService.execute({ Path: file.Path })
     }
 
-    orderBy(history: History, column: Column) {
+    orderBy(column: Column) {
         const sorting = this._state.sorting
         const sortBy = this._state.req.sortBy as Column
         if (sortBy == column) {

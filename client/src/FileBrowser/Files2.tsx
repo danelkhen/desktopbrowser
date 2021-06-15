@@ -108,7 +108,6 @@ export function Files2({
             head={head}
             files={files}
             orderBy={orderBy}
-            dispatcher={dispatcher}
         />
     )
 }
