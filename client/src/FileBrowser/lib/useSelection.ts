@@ -1,25 +1,23 @@
-import * as C from "../../../../shared/src/FileService"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
 import { Selection } from "../../utils/Selection"
-import { FileMetadata } from "./useFileMetadata"
-import { FsFile } from "../../../../shared/src/FileService"
+import { FsFile, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Helper } from "../Helper"
 import { useHistory } from "react-router"
 
 export function useSelection({
     res,
-    fileMetadata,
+    dispatcher,
     Open,
     up,
 }: {
-    res: C.ListFilesResponse
-    fileMetadata: FileMetadata
+    res: ListFilesResponse
+    dispatcher: Helper
     Open: Helper["Open"]
     up: () => void
 }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
-    const { getSavedSelectedFile, saveSelectedFile } = fileMetadata
+    const { getSavedSelectedFile, saveSelectedFile } = dispatcher
     const history = useHistory()
 
     // restore selection
@@ -28,7 +26,7 @@ export function useSelection({
         const files = res?.Files?.filter(t => t.Name == selectedFileName) ?? []
         const selection = files
         _setSelectedFiles(selection)
-    }, [res, fileMetadata, getSavedSelectedFile])
+    }, [res, dispatcher, getSavedSelectedFile])
 
     const setSelectedFiles = useCallback(
         (v: FsFile[]) => {

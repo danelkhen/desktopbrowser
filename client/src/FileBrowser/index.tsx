@@ -6,7 +6,6 @@ import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
 import { useHelper } from "./Helper"
 import { Nav } from "./index.styles"
-import { useFileMetadata } from "./lib/useFileMetadata"
 import { useFiltering } from "./lib/useFiltering"
 import { usePaging } from "./lib/usePaging"
 import { useQuery } from "./lib/useQuery"
@@ -18,22 +17,24 @@ import { QuickFind } from "./QuickFind"
 export function FileBrowser() {
     console.log("FileBrowser render")
 
-    const fileMetadata = useFileMetadata()
     const [state, dispatcher] = useHelper()
     const p = useQuery().get("p") ?? ""
     useEffect(() => {
         dispatcher.updateReq(p)
     }, [dispatcher, p])
 
-    const { req } = state
+    useEffect(() => {
+        ;(async () => {
+            await dispatcher.fetchAllFilesMetadata()
+        })()
+    }, [dispatcher])
+
+    const { req, columns, res, sorting } = state
     const [pageIndex, setPageIndex] = useState(0)
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
     const [theme, setTheme] = useState("dark")
-    const { columns } = state
-    const { res } = state
     const { reloadFiles } = dispatcher
-    const { sorting } = state
 
     const allFiles = res.Files ?? []
     const pageSize = 200
@@ -55,18 +56,18 @@ export function FileBrowser() {
 
     const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
         res,
-        fileMetadata,
+        dispatcher,
         Open,
         up,
     })
 
-    const ready = !!fileMetadata.filesMd
+    const ready = true // !!state.filesMd
     const { GotoPath } = dispatcher
     const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
 
     const hasInnerSelection = useCallback(
-        (file: FsFile) => fileMetadata.getSavedSelectedFile(file.Name) != null,
-        [fileMetadata]
+        (file: FsFile) => dispatcher.getSavedSelectedFile(file.Name) != null,
+        [dispatcher]
     )
 
     useEffect(() => {

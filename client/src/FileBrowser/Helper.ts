@@ -79,6 +79,13 @@ export class Helper {
         }
     }
 
+    async fetchAllFilesMetadata() {
+        const x = await this.server.getAllFilesMetadata()
+        const obj: { [key: string]: FileInfo } = {}
+        x.map(t => (obj[t.key] = t))
+        this.set({ filesMd: obj })
+    }
+
     async setFileMetadata(value: FileInfo) {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars

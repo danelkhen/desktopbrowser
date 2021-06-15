@@ -29,10 +29,6 @@ export class App {
 
     fileService = proxyForFileService()
 
-    async getAllFilesMetadata(): Promise<FileInfo[]> {
-        return await this.fileService.getAllFilesMetadata()
-    }
-
     async getFileMetadata(file: FsFile | string): Promise<FileInfo> {
         let name = file as string
         if (file instanceof File) name = (file as FsFile).Name
