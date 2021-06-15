@@ -56,7 +56,7 @@ export function useMenu({
 
     function useReqToggle(prop: keyof ListFilesRequest) {
         const value = req[prop]
-        const action = useCallback(() => dispatcher.setReq({ v: req => ({ ...req, [prop]: !value }) }), [prop, value])
+        const action = useCallback(() => dispatcher.updateReq({ [prop]: !value }), [prop, value])
         const isActive = useCallback(() => !!value, [value])
         return useToggle(action, isActive)
     }
@@ -108,14 +108,11 @@ export function useMenu({
     const disableSorting = useToggle(
         useCallback(
             () =>
-                dispatcher.setReq({
-                    v: req => ({
-                        ...req,
-                        sortBy: undefined,
-                        sortByDesc: false,
-                        foldersFirst: false,
-                        ByInnerSelection: false,
-                    }),
+                dispatcher.updateReq({
+                    sortBy: undefined,
+                    sortByDesc: false,
+                    foldersFirst: false,
+                    ByInnerSelection: false,
                 }),
             [dispatcher]
         ),

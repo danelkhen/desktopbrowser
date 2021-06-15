@@ -120,7 +120,10 @@ export class Helper {
         return order.indexOf(type)
     }
 
-    setReq({ v }: { v: ListFilesRequest | ((prev: ListFilesRequest) => ListFilesRequest) }) {
+    updateReq(v: Partial<ListFilesRequest>) {
+        return this.setReq({ ...this._state.req, ...v })
+    }
+    setReq(v: ListFilesRequest) {
         const navigateToReq = (req: ListFilesRequest) => {
             console.log("navigateToReq", req)
             const q = new URLSearchParams()
@@ -128,13 +131,12 @@ export class Helper {
             this.history?.push({ pathname: "/", search: q.toString() })
         }
         const prev = this._state.req
-        const req2 = typeof v === "function" ? v(prev) : v
-        if (req2 === prev) return
+        if (v === prev) return
         const p1 = JSON.stringify(prev)
-        const p2 = JSON.stringify(req2)
+        const p2 = JSON.stringify(v)
         if (p1 === p2) return
-        console.log({ prev, req2 })
-        navigateToReq(req2)
+        console.log({ prev, v })
+        navigateToReq(v)
     }
 
     useReqSorting(req: ListFilesRequest) {
@@ -156,7 +158,7 @@ export class Helper {
         return sorting
     }
 
-    async updateReq(s: string) {
+    async parseRequest(s: string) {
         const req: ListFilesRequest = s ? JSON.parse(s) : {}
         const reqSorting = this.useReqSorting(req)
         this.set({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
@@ -215,7 +217,7 @@ export class Helper {
     }
 
     GotoPath(path: string): void {
-        this.setReq({ v: req => ({ ...req, Path: path }) })
+        this.updateReq({ Path: path })
     }
 
     async Open(file: FsFile): Promise<void> {
@@ -241,12 +243,10 @@ export class Helper {
         const sorting = this._state.sorting
         const sortBy = this._state.req.sortBy as Column
         if (sortBy == column) {
-            this.setReq({ v: req => ({ ...req, sortByDesc: !req.sortByDesc }) })
+            this.updateReq({ sortByDesc: !this._state.req.sortByDesc })
             return
         }
-        this.setReq({
-            v: req => ({ ...req, sortBy: column, sortByDesc: sorting.descendingFirst[column] }),
-        })
+        this.updateReq({ sortBy: column, sortByDesc: sorting.descendingFirst[column] })
     }
 
     isSortedBy(key: Column, desc?: boolean): boolean {

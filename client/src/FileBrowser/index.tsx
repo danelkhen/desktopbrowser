@@ -20,7 +20,7 @@ export function FileBrowser() {
     const [state, dispatcher] = useHelper()
     const p = useQuery().get("p") ?? ""
     useEffect(() => {
-        dispatcher.updateReq(p)
+        dispatcher.parseRequest(p)
     }, [dispatcher, p])
 
     useEffect(() => {
