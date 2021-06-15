@@ -2,9 +2,9 @@ import React from "react"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
+import { State, Dispatcher } from "./Helper"
 import { Api } from "./lib/useApi"
 import { MenuItems, useMenu } from "./lib/useMenu"
-import { SetRequest } from "./lib/useReq"
 import {
     ButtonGroup,
     ButtonsDiv,
@@ -33,24 +33,26 @@ export function Menu({
     selectedFile,
     path,
     orderBy,
-    setReq,
     api,
     prevPage,
     nextPage,
     gotoPath,
+    state,
+    dispatcher,
 }: {
-    reloadFiles: () => Promise<void>
+    reloadFiles: () => unknown
     req: ListFilesRequest
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
     api: Api
     orderBy(x: Column): void
-    setReq: SetRequest
     prevPage(): void
     nextPage(): void
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
     gotoPath(): void
+    state: State
+    dispatcher: Dispatcher
 }) {
     const {
         up,
@@ -78,10 +80,11 @@ export function Menu({
         res,
         path,
         orderBy,
-        setReq,
         api,
         reloadFiles,
         gotoPath,
+        state,
+        dispatcher,
     })
 
     return (

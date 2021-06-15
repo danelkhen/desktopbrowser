@@ -4,12 +4,12 @@ import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
+import { useHelper } from "./Helper"
 import { Nav } from "./index.styles"
 import { useApi } from "./lib/useApi"
 import { useColumns, useColumnSorting, useReqSorting } from "./lib/useColumns"
 import { useFileMetadata } from "./lib/useFileMetadata"
 import { useFiltering } from "./lib/useFiltering"
-import { useListFiles } from "./lib/useListFiles"
 import { usePaging } from "./lib/usePaging"
 import { useReq } from "./lib/useReq"
 import { useSelection } from "./lib/useSelection"
@@ -21,13 +21,17 @@ export function FileBrowser() {
     console.log("FileBrowser render")
 
     const fileMetadata = useFileMetadata()
-    const [req, setReq] = useReq()
+    const [state, dispatcher] = useHelper()
+    useReq(state, dispatcher)
+    const { req } = state
     const [pageIndex, setPageIndex] = useState(0)
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
     const [theme, setTheme] = useState("dark")
     const columns = useColumns({ fileMetadata })
-    const { res, reloadFiles } = useListFiles(req)
+    const { res } = state
+    const { reloadFiles } = dispatcher
+    // const { res, reloadFiles } = useListFiles(req)
     const sortingDefaults = useColumnSorting({ fileMetadata })
     const reqSorting = useReqSorting(req)
     const sorting = useMemo(() => ({ ...sortingDefaults, ...reqSorting }), [reqSorting, sortingDefaults])
@@ -40,7 +44,7 @@ export function FileBrowser() {
     const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
     const files = paged
 
-    const api = useApi({ req, sorting, setReq })
+    const api = useApi({ req, sorting, dispatcher, state })
     const { Open, orderBy } = api
 
     useEffect(() => {
@@ -67,6 +71,10 @@ export function FileBrowser() {
         [fileMetadata]
     )
 
+    useEffect(() => {
+        reloadFiles()
+    }, [reloadFiles])
+
     if (!ready) return null
 
     return (
@@ -83,10 +91,11 @@ export function FileBrowser() {
                         res={res}
                         path={path}
                         orderBy={orderBy}
-                        setReq={setReq}
                         api={api}
                         reloadFiles={reloadFiles}
                         gotoPath={gotoPath}
+                        state={state}
+                        dispatcher={dispatcher}
                     />
                     <Clock />
                 </Nav>

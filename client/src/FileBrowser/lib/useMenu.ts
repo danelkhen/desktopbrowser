@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from "react"
+import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Column, Columns } from "../Columns"
+import { Dispatcher, setReq, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 import { Api } from "./useApi"
-import { useCommands } from "./useCommands"
-import { SetRequest } from "./useReq"
 
 interface MenuItem {
     action?(): void
@@ -33,37 +33,41 @@ export interface MenuItems {
 }
 export function useMenu({
     isSortedBy,
-    reloadFiles,
     req,
     res,
     selectedFile,
-    path,
     orderBy,
-    setReq,
     api,
     prevPage,
     nextPage,
     gotoPath: gotoPath2,
+    state,
+    dispatcher,
 }: {
-    reloadFiles: () => Promise<void>
+    reloadFiles: () => unknown
     req: ListFilesRequest
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
     api: Api
     orderBy(x: Column): void
-    setReq: SetRequest
     prevPage(): void
     nextPage(): void
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
     gotoPath(): void
+    state: State
+    dispatcher: Dispatcher
 }): MenuItems {
-    const commands = useCommands(reloadFiles)
+    const commands = dispatcher
+    const history = useHistory()
 
     function useReqToggle(prop: keyof ListFilesRequest) {
         const setReq2 = setReq
         const value = req[prop]
-        const action = useCallback(() => setReq2(req => ({ ...req, [prop]: !value })), [prop, setReq2, value])
+        const action = useCallback(
+            () => setReq2({ state, history, v: req => ({ ...req, [prop]: !value }) }),
+            [prop, setReq2, value]
+        )
         const isActive = useCallback(() => !!value, [value])
         return useToggle(action, isActive)
     }
@@ -96,7 +100,8 @@ export function useMenu({
 
     const Delete = useAction(
         useCallback(
-            (e?: React.KeyboardEvent) => selectedFile && deleteOrTrash(selectedFile, e?.shiftKey ?? false),
+            (e?: React.KeyboardEvent) =>
+                selectedFile && deleteOrTrash({ file: selectedFile, isShiftDown: e?.shiftKey ?? false }),
 
             [deleteOrTrash, selectedFile]
         )
@@ -114,14 +119,18 @@ export function useMenu({
     const disableSorting = useToggle(
         useCallback(
             () =>
-                setReq(req => ({
-                    ...req,
-                    sortBy: undefined,
-                    sortByDesc: false,
-                    foldersFirst: false,
-                    ByInnerSelection: false,
-                })),
-            [setReq]
+                setReq({
+                    state,
+                    history,
+                    v: req => ({
+                        ...req,
+                        sortBy: undefined,
+                        sortByDesc: false,
+                        foldersFirst: false,
+                        ByInnerSelection: false,
+                    }),
+                }),
+            [state, history]
         ),
         useCallback(
             () => !req.sortBy && !req.foldersFirst && req.ByInnerSelection == null,

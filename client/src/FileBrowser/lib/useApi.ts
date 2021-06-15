@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from "react"
+import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { App } from "../../App"
 import { Column, Columns } from "../Columns"
-import { SetRequest } from "./useReq"
+import { Dispatcher, setReq, State } from "../Helper"
 import { SortConfig } from "./useSorting"
 
 export interface Api {
@@ -16,22 +17,29 @@ export interface Api {
 export function useApi({
     req,
     sorting,
-    setReq,
+    dispatcher,
+    state,
 }: {
     req: ListFilesRequest
     sorting: SortConfig<FsFile, Columns>
-    setReq: SetRequest
+    dispatcher: Dispatcher
+    state: State
 }): Api {
+    const history = useHistory()
     const orderBy = useCallback(
         (column: Column) => {
             const sortBy = req.sortBy as Column
             if (sortBy == column) {
-                setReq(req => ({ ...req, sortByDesc: !req.sortByDesc }))
+                setReq({ state, history, v: req => ({ ...req, sortByDesc: !req.sortByDesc }) })
                 return
             }
-            setReq(req => ({ ...req, sortBy: column, sortByDesc: sorting.descendingFirst[column] }))
+            setReq({
+                state,
+                history,
+                v: req => ({ ...req, sortBy: column, sortByDesc: sorting.descendingFirst[column] }),
+            })
         },
-        [req.sortBy, setReq, sorting.descendingFirst]
+        [req.sortBy, state, history, sorting.descendingFirst]
     )
 
     const x = useMemo(() => {
@@ -40,7 +48,7 @@ export function useApi({
         }
 
         function GotoPath(path: string): void {
-            setReq(req => ({ ...req, Path: path }))
+            setReq({ state, history, v: req => ({ ...req, Path: path }) })
         }
 
         async function Open(file: FsFile): Promise<void> {
@@ -64,7 +72,7 @@ export function useApi({
 
         const api: Api = { Execute, GotoFolder, Open, GotoPath, orderBy }
         return api
-    }, [setReq, orderBy])
+    }, [orderBy, state, history])
     return x
 }
 function isExecutable(extension: string) {
