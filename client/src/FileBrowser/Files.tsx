@@ -5,7 +5,7 @@ import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
 import { Helper } from "./Helper"
 import { fileEmpty, layers, link } from "./lib/Linearicons"
-import { FileColumnsConfig } from "./lib/useCommands"
+import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 import { LinearIcon, LinearIconName } from "./LinearIcon"
 import { FormatFriendlyDate, FormatFriendlySize } from "./utils"
 

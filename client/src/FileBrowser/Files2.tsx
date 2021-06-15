@@ -7,7 +7,7 @@ import { Classes } from "./Classes"
 import { Column } from "./Columns"
 import { Files } from "./Files"
 import { Helper } from "./Helper"
-import { FileColumnsConfig } from "./lib/useCommands"
+import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 
 export function Files2({
     selectedFiles,

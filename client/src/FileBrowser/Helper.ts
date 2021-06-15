@@ -5,7 +5,8 @@ import { useHistory } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
 import { App } from "./App"
 import { Column, Columns } from "./Columns"
-import { FileColumnsConfig } from "./lib/useCommands"
+import { isExecutable } from "./lib/isExecutable"
+import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 import { IsDescending, SortConfig } from "./lib/useSorting"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
@@ -23,6 +24,9 @@ export interface State {
 export class Helper {
     _state: State
     history?: History
+    app = App.current
+    server = this.app.fileService
+
     constructor(state?: State) {
         if (!state) {
             state = {
@@ -108,9 +112,6 @@ export class Helper {
         const order = ["folder", "link", "file"].reverse()
         return order.indexOf(type)
     }
-
-    app = App.current
-    server = this.app.fileService
 
     setReq({ v }: { v: ListFilesRequest | ((prev: ListFilesRequest) => ListFilesRequest) }) {
         const navigateToReq = (req: ListFilesRequest) => {
@@ -258,39 +259,4 @@ export function useHelper() {
     }, [])
     helper.history = history
     return [state, helper] as const
-}
-
-// // {
-// //     [P in FunctionKeys<Helper>]: (arg: Parameters<Helper[P]>[0]) => void
-// // }
-
-// type Actions = {
-//     [P in FunctionKeys<Helper>]: {
-//         type: P
-//         payload: Parameters<Helper[P]>[0]
-//     }
-// }[FunctionKeys<Helper>]
-
-// let _dispatch: Dispatcher = null!
-// function reducer(state: State, action: Actions): State {
-//     const helper = new Helper(state) as Helper
-//     const res = (helper[action.type] as any)(action.payload)
-//     const newState = (helper as any as { state: State }).state
-//     if (newState !== state) {
-//         console.log("state changed")
-//     }
-//     if (isPromise(res)) {
-//         ;(async () => {
-//             await res
-//             const newState2 = (helper as any as { state: State }).state
-//             if (newState !== newState2) {
-//                 _dispatch.set(newState2)
-//             }
-//         })()
-//     }
-//     return newState
-// }
-
-function isExecutable(extension: string) {
-    return [".exe", ".bat", ".com", ".cmd"].includes(extension.toLowerCase())
 }
