@@ -225,6 +225,12 @@ export class Helper {
             v: req => ({ ...req, sortBy: column, sortByDesc: sorting.descendingFirst[column] }),
         })
     }
+
+    isSortedBy(key: Column, desc?: boolean): boolean {
+        if (!this._state.sorting.active.includes(key)) return false
+        if (desc !== undefined) return !!this._state.sorting.isDescending[key] === desc
+        return true
+    }
 }
 
 export function useHelper() {

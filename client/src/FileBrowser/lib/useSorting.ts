@@ -22,11 +22,6 @@ export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>
                 order: keys.map(key => !!config.isDescending[key]),
             }
         }
-        function isSortedBy(key: keyof K, desc?: boolean): boolean {
-            if (!config.active.includes(key)) return false
-            if (desc !== undefined) return !!config.isDescending[key] === desc
-            return true
-        }
 
         const by = getOrderBy()
 
@@ -36,7 +31,7 @@ export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>
             by.keys,
             by.order.map(t => (t ? "desc" : "asc"))
         )
-        const y = { isSortedBy, sorted }
+        const y = { sorted }
         return y
     }, [config, items])
 }

@@ -31,11 +31,9 @@ export interface MenuItems {
     nextPageMenuItem: MenuItem
 }
 export function useMenu({
-    isSortedBy,
     req,
     res,
     selectedFile,
-    orderBy,
     prevPage,
     nextPage,
     gotoPath: gotoPath2,
@@ -46,10 +44,8 @@ export function useMenu({
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
-    orderBy: Helper["orderBy"]
     prevPage(): void
     nextPage(): void
-    isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
     gotoPath(): void
     state: State
     dispatcher: Helper
@@ -57,6 +53,7 @@ export function useMenu({
     const commands = dispatcher
     const history = useHistory()
     const api = dispatcher
+    const { orderBy, isSortedBy } = dispatcher
 
     function useReqToggle(prop: keyof ListFilesRequest) {
         const history2 = history

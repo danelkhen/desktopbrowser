@@ -10,7 +10,6 @@ import { Helper } from "./Helper"
 import { FileColumnsConfig } from "./lib/useCommands"
 
 export function Files2({
-    isSortedBy,
     selectedFiles,
     allFiles,
     setSelectedFiles,
@@ -28,7 +27,6 @@ export function Files2({
     allFiles: FsFile[]
     Open: Helper["Open"]
     hasInnerSelection(file: FsFile): boolean
-    isSortedBy: (key: keyof Columns, desc?: boolean | undefined) => boolean
     columns: FileColumnsConfig
     head?: boolean
     body?: boolean
@@ -37,6 +35,7 @@ export function Files2({
     dispatcher: Helper
 }) {
     const history = useHistory()
+    const { isSortedBy } = dispatcher
     const onItemMouseDown = useCallback(
         (e: React.MouseEvent, file: FsFile) => {
             const selection = new Selection(allFiles, selectedFiles)

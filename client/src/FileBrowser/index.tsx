@@ -40,7 +40,7 @@ export function FileBrowser() {
     const allFiles = res.Files ?? []
     const pageSize = 200
 
-    const { sorted, isSortedBy } = useSorting(allFiles, sorting)
+    const { sorted } = useSorting(allFiles, sorting)
     const filtered = useFiltering(search, sorted)
     const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
     const files = paged
@@ -86,13 +86,11 @@ export function FileBrowser() {
                 <Nav>
                     <Menu
                         selectedFile={selectedFile}
-                        isSortedBy={isSortedBy}
                         prevPage={prevPage}
                         nextPage={nextPage}
                         req={req}
                         res={res}
                         path={path}
-                        orderBy={orderBy}
                         reloadFiles={reloadFiles}
                         gotoPath={gotoPath}
                         state={state}
@@ -115,7 +113,6 @@ export function FileBrowser() {
                 />
                 <QuickFind allFiles={allFiles} onFindFiles={setSelectedFiles} />
                 <Files2
-                    isSortedBy={isSortedBy}
                     hasInnerSelection={hasInnerSelection}
                     selectedFiles={selectedFiles}
                     allFiles={allFiles}
@@ -129,7 +126,6 @@ export function FileBrowser() {
                 />
             </header>
             <Files2
-                isSortedBy={isSortedBy}
                 hasInnerSelection={hasInnerSelection}
                 selectedFiles={selectedFiles}
                 allFiles={allFiles}

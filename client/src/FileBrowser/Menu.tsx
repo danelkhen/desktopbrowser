@@ -1,6 +1,5 @@
 import React from "react"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
-import { Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
 import { Helper, State } from "./Helper"
 import { MenuItems, useMenu } from "./lib/useMenu"
@@ -25,13 +24,11 @@ export interface MenuProps {
     children: MenuItems
 }
 export function Menu({
-    isSortedBy,
     reloadFiles,
     req,
     res,
     selectedFile,
     path,
-    orderBy,
     prevPage,
     nextPage,
     gotoPath,
@@ -43,10 +40,8 @@ export function Menu({
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
-    orderBy: Helper["orderBy"]
     prevPage(): void
     nextPage(): void
-    isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
     gotoPath(): void
     state: State
     dispatcher: Helper
@@ -70,13 +65,11 @@ export function Menu({
         disableSorting,
     } = useMenu({
         selectedFile,
-        isSortedBy,
         prevPage,
         nextPage,
         req,
         res,
         path,
-        orderBy,
         reloadFiles,
         gotoPath,
         state,
