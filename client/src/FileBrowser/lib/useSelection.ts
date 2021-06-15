@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
 import { Selection } from "../../utils/Selection"
 import { FsFile, ListFilesResponse } from "../../../../shared/src/FileService"
-import { Helper } from "../Helper"
+import { Helper } from "./Helper"
 import { useHistory } from "react-router"
 
 export function useSelection({

@@ -2,13 +2,13 @@
 import { History } from "history"
 import { useMemo, useState } from "react"
 import { useHistory } from "react-router"
-import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
-import { App } from "./App"
-import { Column, Columns } from "./Columns"
-import { isExecutable } from "./lib/isExecutable"
-import { FileColumnsConfig } from "./lib/FileColumnsConfig"
-import { IsDescending, SortConfig } from "./lib/useSorting"
-import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
+import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
+import { App } from "../App"
+import { Column, Columns } from "../Columns"
+import { isExecutable } from "./isExecutable"
+import { FileColumnsConfig } from "./FileColumnsConfig"
+import { IsDescending, SortConfig } from "./useSorting"
+import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export interface State {

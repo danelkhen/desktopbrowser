@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from "lodash"
 import { useMemo } from "react"
-import { Meta } from "../Meta"
+import { Meta } from "../../utils/Meta"
 
 export type IsDescending<K extends {}> = Partial<Meta<K, boolean>>
 export type IsActive<K extends {}> = readonly (keyof K)[]

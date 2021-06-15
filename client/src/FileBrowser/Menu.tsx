@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import { FsFile } from "../../../shared/src/FileService"
 import { Dropdown } from "./Dropdown"
-import { Helper, State } from "./Helper"
+import { Helper, State } from "./lib/Helper"
 import {
     ButtonGroup,
     ButtonsDiv,

@@ -2,7 +2,7 @@ import cx from "classnames"
 import React, { ReactElement, ReactNode } from "react"
 import styled from "styled-components"
 import { colors } from "../GlobalStyle"
-import { Meta } from "../Meta"
+import { Meta } from "../../utils/Meta"
 
 const GridDiv = styled.div`
     > table {
