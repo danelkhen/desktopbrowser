@@ -8,7 +8,7 @@ import { Column, Columns } from "../Columns"
 import { isExecutable } from "./isExecutable"
 import { FileColumnsConfig } from "./FileColumnsConfig"
 import { IsDescending, SortConfig } from "./useSorting"
-import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
+import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export interface State {

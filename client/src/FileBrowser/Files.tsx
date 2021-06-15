@@ -7,7 +7,7 @@ import { Helper } from "./lib/Helper"
 import { fileEmpty, layers, link } from "./lib/Linearicons"
 import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 import { LinearIcon, LinearIconName } from "./LinearIcon"
-import { FormatFriendlyDate, FormatFriendlySize } from "./utils"
+import { FormatFriendlyDate, FormatFriendlySize } from "./lib/utils"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;

@@ -1,6 +1,6 @@
-import { removeLast, toDefaultDate, toFriendlyRelative2 } from "../../../shared/src"
-import { FsFile } from "../../../shared/src/FileService"
-import { toFriendlySize } from "../utils/toFriendlySize"
+import { removeLast, toDefaultDate, toFriendlyRelative2 } from "../../../../shared/src"
+import { FsFile } from "../../../../shared/src/FileService"
+import { toFriendlySize } from "../../utils/toFriendlySize"
 
 export function TryParse(s: string): number | null {
     const x = parseInt(s)
