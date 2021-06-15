@@ -1,8 +1,7 @@
-import React from "react"
-import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
+import React, { useCallback } from "react"
+import { FsFile } from "../../../shared/src/FileService"
 import { Dropdown } from "./Dropdown"
-import { Helper } from "./Helper"
-import { MenuItems, useMenu } from "./lib/useMenu"
+import { Helper, State } from "./Helper"
 import {
     ButtonGroup,
     ButtonsDiv,
@@ -20,30 +19,26 @@ import {
 } from "./Menu.styles"
 import { ToggleMenuButton } from "./MenuButton"
 
-export interface MenuProps {
-    children: MenuItems
-}
-export function Menu({
-    selectedFile,
-    path,
-    gotoPath,
-    dispatcher,
-}: {
-    req: ListFilesRequest
-    res: ListFilesResponse
-    selectedFile?: FsFile
-    path: string
-    gotoPath(): void
-    dispatcher: Helper
-}) {
-    const { Delete } = useMenu({
-        selectedFile,
-        path,
-        gotoPath,
-        dispatcher,
-    })
+export function Menu({ selectedFile, dispatcher }: { state: State; selectedFile?: FsFile; dispatcher: Helper }) {
+    const Delete = useCallback(
+        (e?: React.KeyboardEvent) =>
+            selectedFile && dispatcher.deleteOrTrash({ file: selectedFile, isShiftDown: e?.shiftKey ?? false }),
 
-    const { isToggled, toggle, goto } = dispatcher
+        [dispatcher, selectedFile]
+    )
+
+    const {
+        isToggled,
+        toggle,
+        goto,
+        google,
+        subs,
+        Explore,
+        OrderByInnerSelection,
+        isOrderedByInnerSelection,
+        disableSorting,
+        isSortingDisabled,
+    } = dispatcher
     return (
         <MenuDiv>
             <ButtonsDiv>
@@ -54,18 +49,18 @@ export function Menu({
                 </ButtonGroup>
                 <ButtonGroup>
                     <Size action={toggle.FolderSize} isActive={isToggled.FolderSize} label="Folder" />
-                    <Google action={dispatcher.google} label="Google" />
-                    <Subs action={dispatcher.subs} label="Subs" />
-                    <ExploreButton action={dispatcher.Explore} label="Explore" />
+                    <Google action={google} label="Google" />
+                    <Subs action={subs} label="Subs" />
+                    <ExploreButton action={Explore} label="Explore" />
                 </ButtonGroup>
                 <ButtonGroup>
-                    <DeleteButton action={Delete.action} label="Delete" />
+                    <DeleteButton action={Delete} label="Delete" />
                     <Dropdown>
                         <SortButton>Sort</SortButton>
                         <div className="menu">
                             <ToggleMenuButton
-                                action={dispatcher.OrderByInnerSelection}
-                                isActive={dispatcher.isOrderedByInnerSelection}
+                                action={OrderByInnerSelection}
+                                isActive={isOrderedByInnerSelection}
                                 label="Watched"
                             />
                             <ToggleMenuButton
@@ -74,8 +69,8 @@ export function Menu({
                                 label="Folders first"
                             />
                             <ToggleMenuButton
-                                action={dispatcher.disableSorting}
-                                isActive={dispatcher.isSortingDisabled}
+                                action={disableSorting}
+                                isActive={isSortingDisabled}
                                 label="Disable sort"
                             />
                         </div>

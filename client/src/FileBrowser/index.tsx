@@ -73,14 +73,7 @@ export function FileBrowser() {
             <GlobalStyle />
             <header>
                 <Nav>
-                    <Menu
-                        selectedFile={selectedFile}
-                        req={req}
-                        res={res}
-                        path={path}
-                        gotoPath={gotoPath}
-                        dispatcher={dispatcher}
-                    />
+                    <Menu selectedFile={selectedFile} state={state} dispatcher={dispatcher} />
                     <Clock />
                 </Nav>
                 <AddressBar
