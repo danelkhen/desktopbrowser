@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useHistory } from "react-router"
 import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
-import { App } from "../../App"
+import { App } from "../App"
 import { Column, Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { SortConfig } from "./useSorting"

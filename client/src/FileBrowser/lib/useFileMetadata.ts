@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { FileInfo } from "../../../../shared/src/FileService"
-import { App } from "../../App"
+import { App } from "../App"
 
 export function useFileMetadata(): FileMetadata {
     const [filesMd, setFilesMd] = useState<{ [key: string]: FileInfo } | undefined>()

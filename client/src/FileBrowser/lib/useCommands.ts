@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { FsFile } from "../../../../shared/src/FileService"
-import { App } from "../../App"
+import { App } from "../App"
 import { Columns } from "../Columns"
 import { ColumnsConfig } from "../Grid/Grid"
 

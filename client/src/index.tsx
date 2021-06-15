@@ -1,11 +1,9 @@
-import "./FileBrowser/GlobalStyle.ts"
-import { App } from "./App"
-import ReactDOM from "react-dom"
 import React from "react"
+import ReactDOM from "react-dom"
 import { AppComponent } from "./AppComponent"
+import "./FileBrowser/GlobalStyle.ts"
 
 export async function main() {
-    await App.init()
     ReactDOM.render(<AppComponent />, document.querySelector("#root"))
 }
 

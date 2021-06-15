@@ -2,7 +2,7 @@
 import { History } from "history"
 import { useMemo, useState } from "react"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
-import { App } from "../App"
+import { App } from "./App"
 
 export interface State {
     path: string

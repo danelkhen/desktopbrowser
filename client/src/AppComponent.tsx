@@ -1,6 +1,6 @@
 import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
-import { useApp } from "./App"
+import { useApp } from "./FileBrowser/App"
 import { FileBrowser } from "./FileBrowser/index"
 import { Tray } from "./Tray/Tray"
 

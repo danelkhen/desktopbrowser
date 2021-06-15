@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { FileInfo, FsFile } from "../../shared/src/FileService"
-import { proxyForFileService } from "./FileBrowser/lib/proxyForFileService"
+import { FileInfo, FsFile } from "../../../shared/src/FileService"
+import { proxyForFileService } from "./lib/proxyForFileService"
 
 export function useApp() {
     const [app, setApp] = useState<App | null>(null)
     useEffect(() => {
-        async function main() {
-            const app = await App.init()
+        function main() {
+            const app = App.init()
             setApp(app)
         }
         main()
@@ -15,7 +15,7 @@ export function useApp() {
 }
 export class App {
     static current: App
-    static async init() {
+    static init() {
         if (App.current) return App.current
         App.current = new App()
         return App.current
