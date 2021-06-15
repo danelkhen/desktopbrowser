@@ -3,7 +3,7 @@ name: release-win
 on:
     create:
         tags:
-            - "*"
+            - "v*.*.*"
 
 jobs:
     build:

@@ -3,7 +3,7 @@ name: release-mac
 on:
     create:
         tags:
-            - "*"
+            - "v*.*.*"
 
 jobs:
     build:
