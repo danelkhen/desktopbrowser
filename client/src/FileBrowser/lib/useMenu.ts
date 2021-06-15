@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react"
-import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
+import { FsFile } from "../../../../shared/src/FileService"
 import { Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
@@ -11,22 +11,11 @@ export interface ToggleMenuItem extends MenuItem {
     isActive(): boolean
 }
 export interface MenuItems {
-    up: MenuItem
-    prev: MenuItem
-    next: MenuItem
     google: MenuItem
     subs: MenuItem
     Explore: MenuItem
     Delete: MenuItem
     OrderByInnerSelection: ToggleMenuItem
-    FolderSize: ToggleMenuItem
-    foldersFirst: ToggleMenuItem
-    disableSorting: ToggleMenuItem
-    Folders: ToggleMenuItem
-    Files: ToggleMenuItem
-    Recursive: ToggleMenuItem
-    Keep: ToggleMenuItem
-    Hidden: ToggleMenuItem
     gotoPath: MenuItem
     prevPageMenuItem: MenuItem
     nextPageMenuItem: MenuItem
@@ -49,47 +38,13 @@ export function useMenu({
 }): MenuItems {
     const { orderBy, isSortedBy } = dispatcher
 
-    const toggles = useMemo(() => {
-        function getReqToggle(prop: keyof ListFilesRequest) {
-            const value = state.req[prop]
-            const mi: ToggleMenuItem = {
-                action: () => dispatcher.updateReq({ [prop]: !value }),
-                isActive: () => !!value,
-            }
-            return mi
-        }
-
-        const FolderSize = getReqToggle("FolderSize")
-        const foldersFirst = getReqToggle("foldersFirst")
-        const Folders = getReqToggle("HideFolders")
-        const Files = getReqToggle("HideFiles")
-        const Recursive = getReqToggle("IsRecursive")
-        const Keep = getReqToggle("KeepView")
-        const Hidden = getReqToggle("ShowHiddenFiles")
-
-        const disableSorting: ToggleMenuItem = {
-            action: () =>
-                dispatcher.updateReq({
-                    sortBy: undefined,
-                    sortByDesc: false,
-                    foldersFirst: false,
-                    ByInnerSelection: false,
-                }),
-
-            isActive: () => !state.req.sortBy && !state.req.foldersFirst && state.req.ByInnerSelection == null,
-        }
-
-        return { FolderSize, foldersFirst, Folders, Files, Recursive, Keep, Hidden, disableSorting }
-    }, [dispatcher, state.req])
-
-    const { GotoFolder } = dispatcher
-    const { ParentFolder, PreviousSibling, NextSibling } = state.res?.Relatives ?? {}
-    function useGotoFolder(folder: FsFile | undefined) {
-        return useAction(useCallback(() => folder && GotoFolder(folder), [folder]))
-    }
-    const up = useGotoFolder(ParentFolder)
-    const prev = useGotoFolder(PreviousSibling)
-    const next = useGotoFolder(NextSibling)
+    //    const { ParentFolder, PreviousSibling, NextSibling } = state.res?.Relatives ?? {}
+    // function useGotoFolder(folder: FsFile | undefined) {
+    //     return useAction(useCallback(() => folder && dispatcher.GotoFolder(folder), [folder]))
+    // }
+    // const up = useGotoFolder(ParentFolder)
+    // const prev = useGotoFolder(PreviousSibling)
+    // const next = useGotoFolder(NextSibling)
 
     const gotoPath = useAction(gotoPath2)
 
@@ -130,9 +85,6 @@ export function useMenu({
 
     const allMenuItems = useMemo<MenuItems>(
         () => ({
-            up,
-            prev,
-            next,
             google,
             subs,
             Explore,
@@ -141,22 +93,8 @@ export function useMenu({
             gotoPath,
             prevPageMenuItem,
             nextPageMenuItem,
-            ...toggles,
         }),
-        [
-            Delete,
-            Explore,
-            OrderByInnerSelection,
-            google,
-            gotoPath,
-            next,
-            nextPageMenuItem,
-            prev,
-            prevPageMenuItem,
-            subs,
-            toggles,
-            up,
-        ]
+        [Delete, Explore, OrderByInnerSelection, google, gotoPath, nextPageMenuItem, prevPageMenuItem, subs]
     )
     return allMenuItems
 }

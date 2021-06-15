@@ -210,7 +210,8 @@ export class Helper {
         await this.fetchFiles(this._state.req)
     }
 
-    GotoFolder(file: FsFile): void {
+    GotoFolder(file?: FsFile): void {
+        if (!file) return
         file.Path && this.GotoPath(file.Path)
     }
 
@@ -252,6 +253,46 @@ export class Helper {
         if (desc !== undefined) return !!this._state.sorting.isDescending[key] === desc
         return true
     }
+
+    goto = {
+        up: () => this.GotoFolder(this._state.res?.Relatives?.ParentFolder),
+        prev: () => this.GotoFolder(this._state.res?.Relatives?.PreviousSibling),
+        next: () => this.GotoFolder(this._state.res?.Relatives?.NextSibling),
+    }
+    canGoto = {
+        up: () => !!this._state.res?.Relatives?.ParentFolder,
+        prev: () => !!this._state.res?.Relatives?.PreviousSibling,
+        next: () => !!this._state.res?.Relatives?.NextSibling,
+    }
+    toggle = {
+        FolderSize: () => this.updateReq({ FolderSize: !this._state.req.FolderSize }),
+        foldersFirst: () => this.updateReq({ foldersFirst: !this._state.req.foldersFirst }),
+        Folders: () => this.updateReq({ HideFolders: !this._state.req.HideFolders }),
+        Files: () => this.updateReq({ HideFiles: !this._state.req.HideFiles }),
+        Recursive: () => this.updateReq({ IsRecursive: !this._state.req.IsRecursive }),
+        Keep: () => this.updateReq({ KeepView: !this._state.req.KeepView }),
+        Hidden: () => this.updateReq({ ShowHiddenFiles: !this._state.req.ShowHiddenFiles }),
+    }
+    isToggled = {
+        FolderSize: () => !!this._state.req.FolderSize,
+        foldersFirst: () => !!this._state.req.foldersFirst,
+        Folders: () => !!this._state.req.HideFolders,
+        Files: () => !!this._state.req.HideFiles,
+        Recursive: () => !!this._state.req.IsRecursive,
+        Keep: () => !!this._state.req.KeepView,
+        Hidden: () => !!this._state.req.ShowHiddenFiles,
+    }
+
+    disableSorting = () =>
+        this.updateReq({
+            sortBy: undefined,
+            sortByDesc: false,
+            foldersFirst: false,
+            ByInnerSelection: false,
+        })
+
+    isSortingDisabled = () =>
+        !this._state.req.sortBy && !this._state.req.foldersFirst && this._state.req.ByInnerSelection == null
 }
 
 export function useHelper() {
