@@ -1,8 +1,10 @@
-import React from "react"
+import React, { useCallback } from "react"
+import { useHistory } from "react-router"
 import styled from "styled-components"
 import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
+import { Helper } from "./Helper"
 import { fileEmpty, layers, link } from "./lib/Linearicons"
 import { FileColumnsConfig } from "./lib/useCommands"
 import { LinearIcon, LinearIconName } from "./LinearIcon"
@@ -81,7 +83,8 @@ export interface FilesProps {
     files: FsFile[]
 
     getHeaderClass: (column: Column) => string
-    orderBy: (column: Column) => void
+    orderBy: Helper["orderBy"]
+    dispatcher: Helper
 }
 const icons: { [key: string]: LinearIconName } = {
     folder: layers,
@@ -100,9 +103,12 @@ export function Files(props: FilesProps) {
         head = true,
         body = true,
         getHeaderClass,
-        orderBy,
+        //  orderBy,
+        dispatcher,
     } = props
 
+    const history = useHistory()
+    const orderBy = useCallback((column: Column) => dispatcher.orderBy(history, column), [dispatcher, history])
     return (
         <GrdFiles<FsFile, Columns>
             items={files}

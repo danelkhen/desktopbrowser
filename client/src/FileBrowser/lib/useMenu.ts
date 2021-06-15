@@ -4,7 +4,6 @@ import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/
 import { Column, Columns } from "../Columns"
 import { Helper, State } from "../Helper"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "../utils"
-import { Api } from "./useApi"
 
 interface MenuItem {
     action?(): void
@@ -37,7 +36,6 @@ export function useMenu({
     res,
     selectedFile,
     orderBy,
-    api,
     prevPage,
     nextPage,
     gotoPath: gotoPath2,
@@ -49,8 +47,7 @@ export function useMenu({
     res: ListFilesResponse
     selectedFile?: FsFile
     path: string
-    api: Api
-    orderBy(x: Column): void
+    orderBy: Helper["orderBy"]
     prevPage(): void
     nextPage(): void
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
@@ -60,6 +57,7 @@ export function useMenu({
 }): MenuItems {
     const commands = dispatcher
     const history = useHistory()
+    const api = dispatcher
 
     function useReqToggle(prop: keyof ListFilesRequest) {
         const history2 = history
@@ -75,7 +73,8 @@ export function useMenu({
     const { GotoFolder } = api
     const { ParentFolder, PreviousSibling, NextSibling } = res?.Relatives ?? {}
     function useGotoFolder(folder: FsFile | undefined) {
-        return useAction(useCallback(() => folder && GotoFolder(folder), [folder]))
+        const history2 = history
+        return useAction(useCallback(() => folder && GotoFolder(history2, folder), [history2, folder]))
     }
     const up = useGotoFolder(ParentFolder)
     const prev = useGotoFolder(PreviousSibling)
@@ -108,10 +107,10 @@ export function useMenu({
     )
     const OrderByInnerSelection = useMemo<MenuItem>(
         () => ({
-            action: () => orderBy(Columns.hasInnerSelection),
+            action: () => orderBy(history, Columns.hasInnerSelection),
             isActive: () => isSortedBy(Columns.hasInnerSelection),
         }),
-        [isSortedBy, orderBy]
+        [history, isSortedBy, orderBy]
     )
 
     const FolderSize = useReqToggle("FolderSize")

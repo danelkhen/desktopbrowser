@@ -25,37 +25,37 @@ export function useColumns({ fileMetadata }: { fileMetadata: FileMetadata }) {
     return columns
 }
 
-export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata }) {
-    const sortingDefaults = useMemo(() => {
-        function getFileTypeOrder(type: string): number {
-            const order = ["folder", "link", "file"].reverse()
-            return order.indexOf(type)
-        }
+// export function useColumnSorting({ fileMetadata }: { fileMetadata: FileMetadata }) {
+//     const sortingDefaults = useMemo(() => {
+//         function getFileTypeOrder(type: string): number {
+//             const order = ["folder", "link", "file"].reverse()
+//             return order.indexOf(type)
+//         }
 
-        const x: SortConfig<FsFile, Columns> = {
-            getters: {
-                type: t => t.type,
-                Name: t => t.Name,
-                Size: t => t.Size,
-                Modified: t => t.Modified,
-                Extension: t => t.Extension,
-                hasInnerSelection: file => !!file.IsFolder && !!fileMetadata.getSavedSelectedFile(file.Name),
-            },
-            descendingFirst: {
-                Size: true,
-                Modified: true,
-                hasInnerSelection: true,
-            },
-            sortGetters: {
-                type: x => (x.type && getFileTypeOrder(x.type)) ?? 0,
-            },
-            isDescending: {},
-            active: [Columns.type],
-        }
-        return x
-    }, [fileMetadata])
-    return sortingDefaults
-}
+//         const x: SortConfig<FsFile, Columns> = {
+//             getters: {
+//                 type: t => t.type,
+//                 Name: t => t.Name,
+//                 Size: t => t.Size,
+//                 Modified: t => t.Modified,
+//                 Extension: t => t.Extension,
+//                 hasInnerSelection: file => !!file.IsFolder && !!fileMetadata.getSavedSelectedFile(file.Name),
+//             },
+//             descendingFirst: {
+//                 Size: true,
+//                 Modified: true,
+//                 hasInnerSelection: true,
+//             },
+//             sortGetters: {
+//                 type: x => (x.type && getFileTypeOrder(x.type)) ?? 0,
+//             },
+//             isDescending: {},
+//             active: [Columns.type],
+//         }
+//         return x
+//     }, [fileMetadata])
+//     return sortingDefaults
+// }
 
 export function useReqSorting(req: ListFilesRequest) {
     const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = useMemo(() => {

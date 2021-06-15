@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
+import { useHistory } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
@@ -6,8 +7,7 @@ import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
 import { useHelper } from "./Helper"
 import { Nav } from "./index.styles"
-import { useApi } from "./lib/useApi"
-import { useColumns, useColumnSorting, useReqSorting } from "./lib/useColumns"
+import { useColumns } from "./lib/useColumns"
 import { useFileMetadata } from "./lib/useFileMetadata"
 import { useFiltering } from "./lib/useFiltering"
 import { usePaging } from "./lib/usePaging"
@@ -32,9 +32,10 @@ export function FileBrowser() {
     const { res } = state
     const { reloadFiles } = dispatcher
     // const { res, reloadFiles } = useListFiles(req)
-    const sortingDefaults = useColumnSorting({ fileMetadata })
-    const reqSorting = useReqSorting(req)
-    const sorting = useMemo(() => ({ ...sortingDefaults, ...reqSorting }), [reqSorting, sortingDefaults])
+    // const sortingDefaults = useColumnSorting({ fileMetadata })
+    // const reqSorting = useReqSorting(req)
+    // const reqSorting
+    const { sorting } = state // useMemo(() => ({ ...sortingDefaults, ...reqSorting }), [reqSorting, sortingDefaults])
 
     const allFiles = res.Files ?? []
     const pageSize = 200
@@ -44,7 +45,7 @@ export function FileBrowser() {
     const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
     const files = paged
 
-    const api = useApi({ req, sorting, dispatcher, state })
+    const api = dispatcher
     const { Open, orderBy } = api
 
     useEffect(() => {
@@ -52,8 +53,9 @@ export function FileBrowser() {
     }, [req.Path])
 
     const { GotoFolder } = api
+    const history = useHistory()
     const { ParentFolder } = res?.Relatives ?? {}
-    const up = useCallback(() => ParentFolder && GotoFolder(ParentFolder), [GotoFolder, ParentFolder])
+    const up = useCallback(() => ParentFolder && GotoFolder(history, ParentFolder), [GotoFolder, ParentFolder, history])
 
     const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
         res,
@@ -64,7 +66,7 @@ export function FileBrowser() {
 
     const ready = !!fileMetadata.filesMd
     const { GotoPath } = api
-    const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
+    const gotoPath = useCallback(() => GotoPath(history, path), [GotoPath, path, history])
 
     const hasInnerSelection = useCallback(
         (file: FsFile) => fileMetadata.getSavedSelectedFile(file.Name) != null,
@@ -124,6 +126,7 @@ export function FileBrowser() {
                     files={files}
                     orderBy={orderBy}
                     body={false}
+                    dispatcher={dispatcher}
                 />
             </header>
             <Files2
@@ -137,6 +140,7 @@ export function FileBrowser() {
                 files={files}
                 orderBy={orderBy}
                 head={false}
+                dispatcher={dispatcher}
             />
         </>
     )

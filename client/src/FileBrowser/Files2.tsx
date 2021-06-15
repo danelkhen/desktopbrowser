@@ -1,10 +1,12 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
+import { useHistory } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
 import { Column, Columns } from "./Columns"
 import { Files } from "./Files"
+import { Helper } from "./Helper"
 import { FileColumnsConfig } from "./lib/useCommands"
 
 export function Files2({
@@ -19,19 +21,22 @@ export function Files2({
     head,
     files,
     orderBy,
+    dispatcher,
 }: {
     setSelectedFiles: (v: FsFile[]) => void
     selectedFiles: FsFile[]
     allFiles: FsFile[]
-    Open: (file: FsFile) => void
+    Open: Helper["Open"]
     hasInnerSelection(file: FsFile): boolean
     isSortedBy: (key: keyof Columns, desc?: boolean | undefined) => boolean
     columns: FileColumnsConfig
     head?: boolean
     body?: boolean
     files: FsFile[]
-    orderBy: (column: Column) => void
+    orderBy: Helper["orderBy"]
+    dispatcher: Helper
 }) {
+    const history = useHistory()
     const onItemMouseDown = useCallback(
         (e: React.MouseEvent, file: FsFile) => {
             const selection = new Selection(allFiles, selectedFiles)
@@ -47,18 +52,18 @@ export function Files2({
             const target = e.target as HTMLElement
             if (!target.matches("a.Name")) return
             e.preventDefault()
-            Open(file)
+            Open(history, file)
         },
-        [Open]
+        [history, Open]
     )
 
     const onItemDoubleClick = useCallback(
         (e: React.MouseEvent, file: FsFile) => {
             if (file == null) return
             e.preventDefault()
-            Open(file)
+            Open(history, file)
         },
-        [Open]
+        [history, Open]
     )
 
     const GetRowClass = useCallback(
@@ -100,6 +105,7 @@ export function Files2({
             head={head}
             files={files}
             orderBy={orderBy}
+            dispatcher={dispatcher}
         />
     )
 }

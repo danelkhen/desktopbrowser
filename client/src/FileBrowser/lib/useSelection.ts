@@ -4,6 +4,8 @@ import { itemsAre, last, sleep } from "../../../../shared/src"
 import { Selection } from "../../utils/Selection"
 import { FileMetadata } from "./useFileMetadata"
 import { FsFile } from "../../../../shared/src/FileService"
+import { Helper } from "../Helper"
+import { useHistory } from "react-router"
 
 export function useSelection({
     res,
@@ -13,11 +15,12 @@ export function useSelection({
 }: {
     res: C.ListFilesResponse
     fileMetadata: FileMetadata
-    Open: (file: FsFile) => void
+    Open: Helper["Open"]
     up: () => void
 }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
     const { getSavedSelectedFile, saveSelectedFile } = fileMetadata
+    const history = useHistory()
 
     // restore selection
     useEffect(() => {
@@ -62,14 +65,14 @@ export function useSelection({
                 const file = selectedFile
                 if (!file) return
                 e.preventDefault()
-                Open(selectedFile)
+                Open(history, selectedFile)
             } else if (e.key == "Backspace") {
                 up()
             }
         }
         window.addEventListener("keydown", Win_keydown)
         return () => window.removeEventListener("keydown", Win_keydown)
-    }, [Open, res, selectedFiles, setSelectedFiles, up])
+    }, [Open, history, res, selectedFiles, setSelectedFiles, up])
 
     const service = useMemo(() => {
         return {

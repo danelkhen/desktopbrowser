@@ -1,8 +1,8 @@
 import React from "react"
 import { FsFile, ListFilesRequest, ListFilesResponse } from "../../../shared/src/FileService"
-import { Column, Columns } from "./Columns"
+import { Columns } from "./Columns"
 import { Dropdown } from "./Dropdown"
-import { State, Helper } from "./Helper"
+import { Helper, State } from "./Helper"
 import { Api } from "./lib/useApi"
 import { MenuItems, useMenu } from "./lib/useMenu"
 import {
@@ -46,7 +46,7 @@ export function Menu({
     selectedFile?: FsFile
     path: string
     api: Api
-    orderBy(x: Column): void
+    orderBy: Helper["orderBy"]
     prevPage(): void
     nextPage(): void
     isSortedBy(key: keyof Columns, desc?: boolean | undefined): boolean
@@ -80,7 +80,6 @@ export function Menu({
         res,
         path,
         orderBy,
-        api,
         reloadFiles,
         gotoPath,
         state,
