@@ -34,7 +34,6 @@ export function FileBrowser() {
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
     const [theme, setTheme] = useState("dark")
-    const { reloadFiles } = dispatcher
 
     const allFiles = res.Files ?? []
     const pageSize = 200
@@ -61,7 +60,6 @@ export function FileBrowser() {
         up,
     })
 
-    const ready = true // !!state.filesMd
     const { GotoPath } = dispatcher
     const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
 
@@ -69,12 +67,6 @@ export function FileBrowser() {
         (file: FsFile) => dispatcher.getSavedSelectedFile(file.Name) != null,
         [dispatcher]
     )
-
-    useEffect(() => {
-        reloadFiles()
-    }, [reloadFiles])
-
-    if (!ready) return null
 
     return (
         <>
@@ -88,7 +80,6 @@ export function FileBrowser() {
                         req={req}
                         res={res}
                         path={path}
-                        reloadFiles={reloadFiles}
                         gotoPath={gotoPath}
                         state={state}
                         dispatcher={dispatcher}

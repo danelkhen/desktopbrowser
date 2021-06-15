@@ -24,7 +24,6 @@ export interface MenuProps {
     children: MenuItems
 }
 export function Menu({
-    reloadFiles,
     req,
     res,
     selectedFile,
@@ -35,7 +34,6 @@ export function Menu({
     state,
     dispatcher,
 }: {
-    reloadFiles: () => unknown
     req: ListFilesRequest
     res: ListFilesResponse
     selectedFile?: FsFile
@@ -70,7 +68,6 @@ export function Menu({
         req,
         res,
         path,
-        reloadFiles,
         gotoPath,
         state,
         dispatcher,

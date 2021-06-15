@@ -40,7 +40,6 @@ export function useMenu({
     gotoPath: gotoPath2,
     dispatcher,
 }: {
-    reloadFiles: () => unknown
     req: ListFilesRequest
     res: ListFilesResponse
     selectedFile?: FsFile

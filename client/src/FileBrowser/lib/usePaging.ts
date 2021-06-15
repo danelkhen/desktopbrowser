@@ -11,7 +11,7 @@ export function usePaging<T>(
         pageIndex: number
         setPageIndex: (v: number) => void
     }
-) {
+): Pager<T> {
     return useMemo(() => {
         function nextPage() {
             setPageIndex(pageIndex + 1)

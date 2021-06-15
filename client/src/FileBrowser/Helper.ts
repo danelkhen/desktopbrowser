@@ -11,7 +11,6 @@ import { IsDescending, SortConfig } from "./lib/useSorting"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export interface State {
-    path: string
     res: ListFilesResponse
     req: ListFilesRequest
     sortingDefaults: FileSortConfig
@@ -30,7 +29,6 @@ export class Helper {
     constructor(state?: State) {
         if (!state) {
             state = {
-                path: "",
                 res: { Relatives: {} },
                 req: {},
                 sortingDefaults: {
