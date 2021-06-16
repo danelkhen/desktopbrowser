@@ -10,7 +10,7 @@ export interface FileService {
     trash(req: PathRequest): Promise<void>
 
     appInspect(): Promise<void>
-    checkForUpdates(): Promise<{ isLatest: boolean; latest: string }>
+    checkForUpdates(): Promise<{ isLatest: boolean; latest: string; current: string }>
     appOpen(): Promise<void>
     appExit(): Promise<void>
     appGetVersion(): Promise<string>
