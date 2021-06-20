@@ -69,6 +69,11 @@ export const SortButton = styled(StyledButton)`
     background: url(../../img/icons/sort.svg) no-repeat 13px 46%;
     padding-left: 40px;
 `
+export const NewButton = styled(ToggleMenuButton)`
+    background: url(../../img/icons/new.svg) no-repeat 13px 46%;
+    background-size: 19px 19px;
+    padding-left: 40px;
+`
 export const MoreButton = styled(StyledButton)`
     background: url(../../img/icons/more.svg) no-repeat 13px 46%;
     padding-left: 40px;

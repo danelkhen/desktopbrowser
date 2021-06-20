@@ -42,6 +42,7 @@ export interface ListFilesRequest {
     ShowHiddenFiles?: boolean
     NoCache?: boolean
     View?: string
+    hideWatched?: boolean
     // TODO:
     KeepView?: boolean
     /** Number of columns in ImageListView mode */

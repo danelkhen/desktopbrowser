@@ -273,6 +273,7 @@ export class Helper {
         Recursive: () => this.updateReq({ IsRecursive: !this._state.req.IsRecursive }),
         Keep: () => this.updateReq({ KeepView: !this._state.req.KeepView }),
         Hidden: () => this.updateReq({ ShowHiddenFiles: !this._state.req.ShowHiddenFiles }),
+        hideWatched: () => this.updateReq({ hideWatched: !this._state.req.hideWatched }),
     }
     isToggled = {
         FolderSize: () => !!this._state.req.FolderSize,
@@ -282,6 +283,7 @@ export class Helper {
         Recursive: () => !!this._state.req.IsRecursive,
         Keep: () => !!this._state.req.KeepView,
         Hidden: () => !!this._state.req.ShowHiddenFiles,
+        hideWatched: () => !!this._state.req.hideWatched,
     }
 
     disableSorting = () =>

@@ -13,6 +13,7 @@ import {
     GotoPrevSibling,
     MenuDiv,
     MoreButton,
+    NewButton,
     Size,
     SortButton,
     Subs,
@@ -52,6 +53,7 @@ export function Menu({ selectedFile, dispatcher }: { state: State; selectedFile?
                     <Google action={google} label="Google" />
                     <Subs action={subs} label="Subs" />
                     <ExploreButton action={Explore} label="Explore" />
+                    <NewButton action={toggle.hideWatched} isActive={isToggled.hideWatched} label="New" />
                 </ButtonGroup>
                 <ButtonGroup>
                     <DeleteButton action={Delete} label="Delete" />

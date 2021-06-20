@@ -6,7 +6,7 @@ import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
 import { useHelper } from "./lib/Helper"
 import { Nav } from "./index.styles"
-import { useFiltering } from "./lib/useFiltering"
+import { useFiltering, useFiltering2 } from "./lib/useFiltering"
 import { usePaging } from "./lib/usePaging"
 import { useQuery } from "./lib/useQuery"
 import { useSelection } from "./lib/useSelection"
@@ -39,7 +39,8 @@ export function FileBrowser() {
     const pageSize = 200
 
     const sorted = useSorting(allFiles, sorting)
-    const filtered = useFiltering(search, sorted)
+    const filtered2 = useFiltering2(req, dispatcher, sorted)
+    const filtered = useFiltering(search, filtered2)
     const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
     const files = paged
 
