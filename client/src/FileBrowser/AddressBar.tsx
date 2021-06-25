@@ -96,17 +96,19 @@ export function AddressBar({
                 />
             </form>
             <div className="right-side">
-                <span id="pager" className="Pager btn-group btn-group-sm">
-                    <button className="btn btn-default navbar-btn PrevPage" onMouseDown={prevPage}>
-                        {"<"}
-                    </button>
-                    <button className="btn btn-default navbar-btn PagerInfo">
-                        {pageIndex + 1} / {totalPages}
-                    </button>
-                    <button className="btn btn-default navbar-btn NextPage" onMouseDown={nextPage}>
-                        {">"}
-                    </button>
-                </span>
+                {(totalPages || 0) > 1 && (
+                    <span id="pager" className="Pager btn-group btn-group-sm">
+                        <button className="btn btn-default navbar-btn PrevPage" onMouseDown={prevPage}>
+                            {"<"}
+                        </button>
+                        <button className="btn btn-default navbar-btn PagerInfo">
+                            {pageIndex + 1} / {totalPages}
+                        </button>
+                        <button className="btn btn-default navbar-btn NextPage" onMouseDown={nextPage}>
+                            {">"}
+                        </button>
+                    </span>
+                )}
                 <span className="find">
                     <input
                         type="text"

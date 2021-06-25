@@ -41,7 +41,17 @@ export function FileBrowser() {
     const sorted = useSorting(allFiles, sorting)
     const filtered2 = useFiltering2(req, dispatcher, sorted)
     const filtered = useFiltering(search, filtered2)
-    const { paged, nextPage, prevPage, totalPages } = usePaging(filtered, { pageSize, pageIndex, setPageIndex })
+    const {
+        paged,
+        nextPage,
+        prevPage,
+        totalPages,
+        pageIndex: pageIndex2,
+    } = usePaging(filtered, {
+        pageSize,
+        pageIndex,
+        setPageIndex,
+    })
     const files = paged
 
     const { Open, orderBy } = dispatcher
@@ -87,7 +97,7 @@ export function FileBrowser() {
                     setTheme={setTheme}
                     search={search}
                     setSearch={setSearch}
-                    pageIndex={pageIndex}
+                    pageIndex={pageIndex2}
                     totalPages={totalPages}
                 />
                 <QuickFind allFiles={allFiles} onFindFiles={setSelectedFiles} />

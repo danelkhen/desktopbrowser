@@ -4,99 +4,82 @@ import styled from "styled-components"
 import { colors } from "../GlobalStyle"
 import { Meta } from "../../utils/Meta"
 
+const GridTable = styled.table`
+    border-collapse: collapse;
+    table-layout: fixed;
+    border-spacing: 0;
+
+    > thead {
+        > tr {
+            border-bottom: 1px solid ${colors.__bg2};
+            > th {
+                padding: 4px 8px;
+                white-space: nowrap;
+                cursor: default;
+                font-weight: normal;
+                text-align: left;
+                vertical-align: top;
+                box-sizing: border-box;
+                &:hover {
+                    background-color: ${colors.__bg2};
+                }
+                &.sorted {
+                    &.asc {
+                        background-color: ${colors.__bg2};
+                    }
+                    &.desc {
+                        background-color: ${colors.__bg3};
+                    }
+                }
+            }
+        }
+    }
+
+    > tfoot {
+        > tr {
+            > th {
+                padding: 4px 8px;
+                white-space: nowrap;
+                cursor: pointer;
+                font-weight: bold;
+                > button {
+                    width: 100%;
+                    min-height: 100%;
+                    border: none;
+                    background-color: inherit;
+                    padding: 4px;
+                }
+            }
+            &:hover {
+                outline: 1px solid #ccc;
+            }
+        }
+    }
+`
 const GridDiv = styled.div`
-    > table {
-        border-collapse: collapse;
-        table-layout: fixed;
-        border-spacing: 0;
-    }
-
-    > table > thead > tr {
-        border-bottom: 1px solid ${colors.__bg2};
-    }
-
-    > table > thead > tr > th {
-        padding: 4px 8px;
-        white-space: nowrap;
-        cursor: default;
-        font-weight: normal;
-        text-align: left;
-        vertical-align: top;
-        box-sizing: border-box;
-    }
-
-    > table > thead > tr > th:hover {
-        background-color: ${colors.__bg2};
-    }
-
-    > table > thead > tr > th.sorted.asc {
-        background-color: ${colors.__bg2};
-    }
-
-    > table > thead > tr > th.sorted.desc {
-        background-color: ${colors.__bg3};
-    }
-
-    > table > tfoot > tr > th {
-        padding: 4px 8px;
-        white-space: nowrap;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    > table > thead > tr > th > button {
-        width: 100%;
-        min-height: 100%;
-        border: none;
-        background-color: inherit;
-        padding: 4px;
-    }
-    > table > tfoot > tr:hover {
-        outline: 1px solid #ccc;
-    }
-
-    > .Pager > .Pages > .Page {
+    > .Pager {
         display: inline-block;
-        width: 20px;
-        line-height: 20px;
+        margin: 0 5px;
+        > .Pages > .Page {
+            display: inline-block;
+            width: 20px;
+            line-height: 20px;
+        }
+        > .PagerInfo {
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        > .NextPage {
+            visibility: hidden;
+        }
+        > .PrevPage {
+            visibility: hidden;
+        }
     }
 
     > .Search {
         display: inline-block;
-    }
-
-    > .Pager {
-        display: inline-block;
-        margin: 0 5px;
-    }
-
-    > .Pager > .PagerInfo {
-        display: inline-block;
-        margin: 0 5px;
-    }
-
-    > .Pager > .NextPage {
-        visibility: hidden;
-    }
-
-    &.HasNoPages > .Pager {
-        visibility: hidden;
-    }
-
-    &.HasOnePage > .Pager {
-        visibility: hidden;
-    }
-
-    &.HasNextPage > .Pager > .NextPage {
-        visibility: visible;
-    }
-
-    > .Pager > .PrevPage {
-        visibility: hidden;
-    }
-
-    &.HasPrevPage > .Pager > .PrevPage {
-        visibility: visible;
     }
 `
 export interface ColumnsConfig<T, K extends {}> {
@@ -149,7 +132,7 @@ export function Grid<T, K extends {}>({
 
     return (
         <GridDiv className={className}>
-            <table>
+            <GridTable>
                 {head && (
                     <thead>
                         <tr>
@@ -190,7 +173,7 @@ export function Grid<T, K extends {}>({
                         ))}
                     </tbody>
                 )}
-            </table>
+            </GridTable>
         </GridDiv>
     )
 }

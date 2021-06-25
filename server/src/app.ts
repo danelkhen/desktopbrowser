@@ -33,7 +33,7 @@ async function main2() {
 
         await app.whenReady()
 
-        app.dock.hide()
+        app.dock?.hide()
 
         tray = new Tray(path.join(rootDir, "client/img/clapperboard-16x16.png"))
         tray.on("right-click", toggleWindow)
