@@ -126,8 +126,9 @@ export class Helper {
         const navigateToReq = (req: ListFilesRequest) => {
             console.log("navigateToReq", req)
             const q = new URLSearchParams()
-            q.set("p", JSON.stringify(req))
-            this.history?.push({ pathname: "/", search: q.toString() })
+            const { Path, ...rest } = req
+            q.set("p", JSON.stringify(rest))
+            this.history?.push({ pathname: `/${pathToUrl(Path)}`, search: q.toString() })
         }
         const prev = this._state.req
         if (v === prev) return
@@ -157,8 +158,9 @@ export class Helper {
         return sorting
     }
 
-    async parseRequest(s: string) {
+    async parseRequest(path: string, s: string) {
         const req: ListFilesRequest = s ? JSON.parse(s) : {}
+        req.Path = path
         const reqSorting = this.useReqSorting(req)
         this.set({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
         await this.reloadFiles()
@@ -321,4 +323,17 @@ export function useHelper() {
 
 function openInNewWindow(p: string): void {
     window.open(p, "_blank")
+}
+
+export function pathToUrl(p: string | undefined) {
+    if (!p) return ""
+    let s = p.replaceAll("\\", "/").replace(":", "")
+    if (s[0] === "/") {
+        s = s.substr(1)
+    }
+    return s
+}
+
+export function urlToPath(p: string | undefined) {
+    return `/${p ?? ""}`
 }

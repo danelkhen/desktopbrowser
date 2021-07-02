@@ -9,6 +9,7 @@
     "license": "MIT",
     "scripts": {
         "dev": "npx concurrently --names \"server,client,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd client; npx tsc -w --noEmit --preserveWatchOutput\" \"cd client; npx webpack serve\"",
+        "dev2": "npx concurrently --names \"server,client,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd client; npx tsc -w --noEmit --preserveWatchOutput\" \"cd client; npx webpack --watch\"",
         "build": "cd server; npx tsc && cd ../client; npx webpack --mode production",
         "start": "electron-forge start",
         "package": "electron-forge package",

@@ -12,11 +12,11 @@ export function AppComponent() {
         <BrowserRouter>
             <div>
                 <Switch>
-                    <Route path="/" exact>
-                        <FileBrowser />
-                    </Route>
                     <Route path="/tray" exact>
                         <Tray />
+                    </Route>
+                    <Route path="/:path*">
+                        <FileBrowser />
                     </Route>
                 </Switch>
             </div>

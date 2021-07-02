@@ -84,11 +84,34 @@ export interface ListFilesOptions {
 }
 
 export async function _listFiles({ path, recursive, files, folders }: ListFilesOptions): Promise<FsFile[]> {
+    console.log(path)
     //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
     let isFiltered = false
     let files2: FsFile[]
-    if (!path && !isWindows()) path = "/"
     if (!path) {
+        path = "/"
+    }
+    if (isWindows() && path.startsWith("/") && path !== "/") {
+        path = path.substring(1)
+        const list = [
+            // Drive letter, /C -> C:
+            [/^\/([a-zA-Z])$/, "$1:/$2"],
+            // Drive letter, /C/ggg -> C:/ggg
+            [/^\/([a-zA-Z])\/(.*)$/, "$1:/$2"],
+            // Network share: /mycomp -> //mycomp
+            [/^\/([a-zA-Z0-9_\-][a-zA-Z0-9_\-\.]+)$/, "//$1"],
+            // Network share: /mycomp/myshare -> //mycomp/myshare
+            [/^\/([a-zA-Z0-9_\-][a-zA-Z0-9_\-\.]+)\/(.*)$/, "//$1/$2"],
+        ] as const
+        for (const regex of list) {
+            const path2 = path.replace(regex[0], regex[1])
+            if (path2 !== path) {
+                path = path2
+                break
+            }
+        }
+    }
+    if (path === "/" && isWindows()) {
         files2 = await GetHomeFiles()
     } else if (!files && !folders) {
         files2 = []

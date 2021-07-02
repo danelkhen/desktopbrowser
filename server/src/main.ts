@@ -37,9 +37,13 @@ export async function main() {
 
     exp.use("/api/:service/:action", handleServiceRequest(services))
 
-    exp.get(["/", "/tray"], (req: express.Request, res: express.Response) => {
-        res.sendFile(path.join(rootDir, "client/dist/index.html"))
-    })
+    exp.get(
+        "/*",
+        //["/", "/tray"],
+        (req: express.Request, res: express.Response) => {
+            res.sendFile(path.join(rootDir, "client/dist/index.html"))
+        }
+    )
 
     const server = http.createServer(exp)
     setupWebsockets(server, { fileService })
