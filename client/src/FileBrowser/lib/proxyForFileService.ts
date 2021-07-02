@@ -21,6 +21,7 @@ export function proxyForFileService() {
         appExit: () => http("appExit"),
         checkForUpdates: () => http("checkForUpdates"),
         appGetVersion: () => http("appGetVersion"),
+        appHide: () => http("appHide"),
     }
 
     return proxy

@@ -32,19 +32,24 @@ async function main2() {
         })
 
         await app.whenReady()
+        let quitting = false
+        app.on("before-quit", () => {
+            console.log("before-quit")
+            quitting = true
+        })
 
         app.dock?.hide()
 
         tray = new Tray(path.join(rootDir, "client/img/clapperboard-16x16.png"))
-        tray.on("right-click", toggleWindow)
-        tray.on("double-click", toggleWindow)
-        tray.on("click", toggleWindow)
+        // tray.on("right-click", toggleWindow)
+        // tray.on("double-click", toggleWindow)
+        tray.on("click", showWindow)
 
         myWindow = new BrowserWindow({
             width: 300,
             height: 300,
             show: false,
-            frame: false,
+            frame: true,
             fullscreenable: false,
         })
 
@@ -52,7 +57,18 @@ async function main2() {
 
         myWindow.once("ready-to-show", () => {
             const position = getWindowPosition()
-            myWindow.setPosition(position.x, position.y, false)
+            console.log(position, myWindow.getPosition())
+            // myWindow.setPosition(position.x, position.y, false)
+        })
+        myWindow.on("close", e => {
+            if (quitting) {
+                return
+            }
+            e.preventDefault()
+            myWindow.hide()
+            // const position = getWindowPosition()
+            // console.log(position, myWindow.getPosition())
+            // myWindow.setPosition(position.x, position.y, false)
         })
 
         // Hide the window when it loses focus
@@ -88,7 +104,8 @@ const toggleWindow = () => {
 
 const showWindow = () => {
     const position = getWindowPosition()
-    myWindow.setPosition(position.x, position.y, false)
+    console.log(position, myWindow.getPosition())
+    // myWindow.setPosition(position.x, position.y, false)
     myWindow.show()
     myWindow.focus()
 }

@@ -37,6 +37,7 @@ export function Tray() {
             <TrayDiv>
                 {false && <button onClick={() => proxy.appInspect()}>Inspect</button>}
                 <button onClick={() => open()}>Open</button>
+                <button onClick={() => proxy.appHide()}>Close</button>
                 <button onClick={() => exit()}>Exit</button>
                 <button onClick={() => checkForUpdates()}>Check for updates</button>
                 <div>{version}</div>

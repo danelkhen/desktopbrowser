@@ -14,6 +14,7 @@ export interface FileService {
     appOpen(): Promise<void>
     appExit(): Promise<void>
     appGetVersion(): Promise<string>
+    appHide(): Promise<void>
 }
 
 export interface FileInfo {

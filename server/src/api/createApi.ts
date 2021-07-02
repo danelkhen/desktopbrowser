@@ -41,5 +41,8 @@ export function createApi(db: AppDb): FileService {
         async appGetVersion() {
             return app.getVersion()
         },
+        async appHide() {
+            BrowserWindow.getAllWindows().forEach(t => t.hide())
+        },
     }
 }
