@@ -125,10 +125,8 @@ export class Helper {
     setReq(v: ListFilesRequest) {
         const navigateToReq = (req: ListFilesRequest) => {
             console.log("navigateToReq", req)
-            const q = new URLSearchParams()
             const { Path, ...rest } = req
-            q.set("p", JSON.stringify(rest))
-            this.history?.push({ pathname: `/${pathToUrl(Path)}`, search: q.toString() })
+            this.history?.push({ pathname: `/${pathToUrl(Path)}`, search: reqToQuery(rest) })
         }
         const prev = this._state.req
         if (v === prev) return
@@ -159,7 +157,7 @@ export class Helper {
     }
 
     async parseRequest(path: string, s: string) {
-        const req: ListFilesRequest = s ? JSON.parse(s) : {}
+        const req: ListFilesRequest = queryToReq(s)
         req.Path = path
         const reqSorting = this.useReqSorting(req)
         this.set({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
@@ -336,4 +334,31 @@ export function pathToUrl(p: string | undefined) {
 
 export function urlToPath(p: string | undefined) {
     return `/${p ?? ""}`
+}
+
+export function reqToQuery(rest: ListFilesRequest) {
+    const rest2 = rest as any
+    for (const key of Object.keys(rest2)) {
+        if (!rest2[key]) {
+            delete rest2[key]
+            continue
+        }
+        if (typeof rest2[key] == "boolean") {
+            rest2[key] = "1"
+        }
+    }
+    const q = new URLSearchParams(rest2)
+    return q.toString()
+}
+export function queryToReq(s: string): ListFilesRequest {
+    const x = Object.fromEntries(new URLSearchParams(s).entries()) as any
+    for (const key of Object.keys(x)) {
+        if (!x[key] || x[key] === "0") {
+            delete x[key]
+        }
+        if (x[key] === "1") {
+            x[key] = true
+        }
+    }
+    return x
 }

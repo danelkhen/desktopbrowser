@@ -13,17 +13,17 @@ import { useSelection } from "./lib/useSelection"
 import { useSorting } from "./lib/useSorting"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
-import { useHistory, useRouteMatch } from "react-router"
+import { useRouteMatch } from "react-router"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
 
     const [state, dispatcher] = useHelper()
-    const history = useHistory()
+    // const history = useHistory()
     const match = useRouteMatch<{ path?: string }>()
     const reqPath = urlToPath(match.params.path)
     console.log("match", match, match.params.path, reqPath)
-    const p = useQuery().get("p") ?? ""
+    const p = useQuery().toString() // get("p") ?? ""
     useEffect(() => {
         dispatcher.parseRequest(reqPath, p)
     }, [dispatcher, p, reqPath])
