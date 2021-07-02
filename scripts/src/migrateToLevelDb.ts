@@ -4,16 +4,21 @@ import { LevelDb } from "../../server/src/utils/LevelDb"
 import { AppDb } from "../../server/src/AppDb"
 import { Db } from "./db"
 import path from "path"
+import os from "os"
 
 export async function migrateToLevelDb(database: string, database2: string) {
     const db2 = new AppDb(new LevelDb(database2)).files
     const db = await Db.create(database)
     const list = await db.byFilename.find()
     for (const file of list) {
+        console.log(`${file.key}`)
+        try{
         if (await db2.get(file.key)) {
             console.log(`${file.key} already exists, skipping`)
             continue
         }
+    }
+    catch(err){}
         const rest = { ...file, collection: "files" }
         const rest2 = rest as any
         for (const prop of Object.keys(rest2)) {
@@ -36,7 +41,8 @@ export async function pathExists(path: string) {
 }
 
 async function main() {
-    const dir = `${process.env.HOME}/Library/Application Support/desktopbrowser`
+    const dir = os.platform()==="win32" ? `${process.env.USERPROFILE}\\AppData\\Roaming\\Desktop Browser` : `${process.env.HOME}/Library/Application Support/desktopbrowser`
+    
     const src = path.join(dir, "db.sqlite")
     const dst = path.join(dir, "db.level")
 
