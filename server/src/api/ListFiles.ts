@@ -10,16 +10,6 @@ import { isWindows } from "../utils/isWindows"
 import _ from "lodash"
 
 export const ListFiles: FileService["listFiles"] = async req => {
-    //if (req.Path == null) {
-    //    return {
-    //        Relatives: { ParentFolder: null, NextSibling: null, PreviousSibling: null },
-    //        File: { Name: "", IsFolder: true },
-    //        Files: GetHomeFiles(),
-    //    };
-    //}
-    // if (req.Path != null && req.Path.endsWith(":")) {
-    //     req.Path += "\\"
-    // }
     const Relatives = await GetFileRelatives(req.Path!)
     const File = await GetFile({ Path: req.Path! })
     let Files: FsFile[] | undefined

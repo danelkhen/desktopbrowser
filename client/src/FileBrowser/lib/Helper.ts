@@ -338,27 +338,30 @@ export function urlToPath(p: string | undefined) {
 
 export function reqToQuery(rest: ListFilesRequest) {
     const rest2 = rest as any
+    const obj = {} as any
     for (const key of Object.keys(rest2)) {
         if (!rest2[key]) {
-            delete rest2[key]
             continue
         }
         if (typeof rest2[key] == "boolean") {
-            rest2[key] = "1"
+            obj[key] = ""
+            continue
         }
+        obj[key] = rest2[key] ?? ""
     }
-    const q = new URLSearchParams(rest2)
-    return q.toString()
+    const q = new URLSearchParams(obj)
+    return sanitizeQuery(q.toString())
 }
 export function queryToReq(s: string): ListFilesRequest {
     const x = Object.fromEntries(new URLSearchParams(s).entries()) as any
     for (const key of Object.keys(x)) {
-        if (!x[key] || x[key] === "0") {
-            delete x[key]
-        }
-        if (x[key] === "1") {
+        if (x[key] === "") {
             x[key] = true
         }
     }
     return x
+}
+
+function sanitizeQuery(s: string): string {
+    return s.replace(/=&/g, "").replace(/=$/g, "")
 }
