@@ -17,9 +17,9 @@ export const ListFiles: FileService["listFiles"] = async req => {
     //        Files: GetHomeFiles(),
     //    };
     //}
-    if (req.Path != null && req.Path.endsWith(":")) {
-        req.Path += "\\"
-    }
+    // if (req.Path != null && req.Path.endsWith(":")) {
+    //     req.Path += "\\"
+    // }
     const Relatives = await GetFileRelatives(req.Path!)
     const File = await GetFile({ Path: req.Path! })
     let Files: FsFile[] | undefined
@@ -46,7 +46,8 @@ async function GetFiles(req: ListFilesRequest): Promise<FsFile[]> {
 }
 
 async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
-    if (!path) return {}
+    path = normalizePath(path)
+    if (!path || path === "/") return {}
     const pathInfo = new IoPath(path)
     const info: FileRelativesInfo = {}
     info.ParentFolder = await GetFile({ Path: pathInfo.ParentPath.Value })
@@ -63,7 +64,7 @@ async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
 }
 
 async function GetFile(req: PathRequest): Promise<FsFile> {
-    const path = req.Path
+    const path = normalizePath(req.Path)
     if (!path) {
         return /*new File*/ { IsFolder: true, Path: "", Name: "Home" }
     }
@@ -83,19 +84,15 @@ export interface ListFilesOptions {
     folders?: boolean
 }
 
-export async function _listFiles({ path, recursive, files, folders }: ListFilesOptions): Promise<FsFile[]> {
-    console.log(path)
-    //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
-    let isFiltered = false
-    let files2: FsFile[]
+function normalizePath(path: string | undefined): string {
     if (!path) {
         path = "/"
+        return path
     }
     if (isWindows() && path.startsWith("/") && path !== "/") {
-        path = path.substring(1)
         const list = [
             // Drive letter, /C -> C:
-            [/^\/([a-zA-Z])$/, "$1:/$2"],
+            [/^\/([a-zA-Z])$/, "$1:/"],
             // Drive letter, /C/ggg -> C:/ggg
             [/^\/([a-zA-Z])\/(.*)$/, "$1:/$2"],
             // Network share: /mycomp -> //mycomp
@@ -104,13 +101,22 @@ export async function _listFiles({ path, recursive, files, folders }: ListFilesO
             [/^\/([a-zA-Z0-9_\-][a-zA-Z0-9_\-\.]+)\/(.*)$/, "//$1/$2"],
         ] as const
         for (const regex of list) {
-            const path2 = path.replace(regex[0], regex[1])
+            const path2 = path.replace(regex[0], regex[1]) as string // TODO:
             if (path2 !== path) {
                 path = path2
                 break
             }
         }
     }
+    return path
+}
+
+export async function _listFiles({ path, recursive, files, folders }: ListFilesOptions): Promise<FsFile[]> {
+    console.log(path)
+    path = normalizePath(path)
+    //: string, searchPattern: string, recursive: boolean, files: boolean, folders: boolean
+    let isFiltered = false
+    let files2: FsFile[]
     if (path === "/" && isWindows()) {
         files2 = await GetHomeFiles()
     } else if (!files && !folders) {
