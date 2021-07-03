@@ -388,5 +388,5 @@ export function queryToReq(s: string): ListFilesRequest {
 }
 
 function sanitizeQuery(s: string): string {
-    return s.replace(/=&/g, "").replace(/=$/g, "").replaceAll("%2C", ",")
+    return s.replace(/=&/g, "&").replace(/=$/g, "").replaceAll("%2C", ",")
 }
