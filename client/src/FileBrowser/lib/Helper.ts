@@ -149,7 +149,6 @@ export class Helper {
         const active: Column[] = []
         const isDescending: IsDescending<Columns> = {}
         const cols = req.sort ?? []
-        // const key = req.sortBy as Column
         if (req.foldersFirst && !cols.find(t => t.Name === Columns.type)) {
             active.push(Columns.type)
         }
@@ -162,10 +161,6 @@ export class Helper {
                 isDescending[col.Name] = true
             }
         }
-        // if (key != null) {
-        //     isDescending[key] = req.sortByDesc
-        //     active.push(key)
-        // }
         console.log("setSorting", active)
         const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = { active, isDescending }
         return sorting
@@ -256,14 +251,23 @@ export class Helper {
 
     orderBy(column: Column) {
         const sorting = this._state.sorting
-        const sort = _.cloneDeep(this._state.req.sort)
-        const last = _.last(sort)
-        if (last?.Name === column) {
-            last.Descending = !last.Descending
-            this.updateReq({ sort })
-            return
+        let sort = _.cloneDeep(this._state.req.sort ?? [])
+        const index = sort.findIndex(t => t.Name === column)
+        if (index === 0) {
+            if (!!sort[index].Descending === !!sorting.descendingFirst[column]) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sort[index].Descending = !sort[index].Descending
+            } else {
+                sort.shift()
+            }
+        } else if (index > 0) {
+            sort = [{ Name: column, Descending: sorting.descendingFirst[column] }]
+        } else {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            sort.unshift({ Name: column, Descending: sorting.descendingFirst[column] })
         }
-        this.updateReq({ sort: [{ Name: column, Descending: sorting.descendingFirst[column] }] })
+
+        this.updateReq({ sort })
     }
 
     isSortedBy(key: Column, desc?: boolean): boolean {
@@ -384,5 +388,5 @@ export function queryToReq(s: string): ListFilesRequest {
 }
 
 function sanitizeQuery(s: string): string {
-    return s.replace(/=&/g, "").replace(/=$/g, "")
+    return s.replace(/=&/g, "").replace(/=$/g, "").replaceAll("%2C", ",")
 }
