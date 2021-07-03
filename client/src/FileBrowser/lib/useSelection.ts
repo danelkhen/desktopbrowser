@@ -17,16 +17,16 @@ export function useSelection({
     up: () => void
 }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
-    const { getSavedSelectedFile, saveSelectedFile } = dispatcher
+    const { getSavedSelectedFile, saveSelectedFile, _state } = dispatcher
     const history = useHistory()
 
     // restore selection
     useEffect(() => {
-        const selectedFileName = res.File?.Name ? getSavedSelectedFile(res.File.Name) : null
+        const selectedFileName = res.File?.Name ? _state.filesMd?.[res.File.Name]?.selectedFiles?.[0] : null
         const files = res?.Files?.filter(t => t.Name == selectedFileName) ?? []
         const selection = files
         _setSelectedFiles(selection)
-    }, [res, dispatcher, getSavedSelectedFile])
+    }, [res, dispatcher, getSavedSelectedFile, _state.filesMd])
 
     const setSelectedFiles = useCallback(
         (v: FsFile[]) => {
