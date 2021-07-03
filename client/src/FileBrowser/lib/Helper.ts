@@ -2,13 +2,21 @@
 import { History } from "history"
 import { useMemo, useState } from "react"
 import { useHistory } from "react-router"
-import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
+import {
+    FileInfo,
+    FsFile,
+    ListFilesRequest,
+    ListFilesResponse,
+    sortToUrl,
+    urlToSort,
+} from "../../../../shared/src/FileService"
 import { App } from "../App"
 import { Column, Columns } from "../Columns"
 import { isExecutable } from "./isExecutable"
 import { FileColumnsConfig } from "./FileColumnsConfig"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
+import _ from "lodash"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export interface State {
@@ -138,19 +146,26 @@ export class Helper {
     }
 
     useReqSorting(req: ListFilesRequest) {
-        const key = req.sortBy as Column
         const active: Column[] = []
         const isDescending: IsDescending<Columns> = {}
-        if (req.foldersFirst && key !== Columns.type) {
+        const cols = req.sort ?? []
+        // const key = req.sortBy as Column
+        if (req.foldersFirst && !cols.find(t => t.Name === Columns.type)) {
             active.push(Columns.type)
         }
-        if (req.ByInnerSelection && key !== Columns.hasInnerSelection) {
+        if (req.ByInnerSelection && !cols.find(t => t.Name === Columns.hasInnerSelection)) {
             active.push(Columns.hasInnerSelection)
         }
-        if (key != null) {
-            isDescending[key] = req.sortByDesc
-            active.push(key)
+        for (const col of cols ?? []) {
+            active.push(col.Name)
+            if (col.Descending) {
+                isDescending[col.Name] = true
+            }
         }
+        // if (key != null) {
+        //     isDescending[key] = req.sortByDesc
+        //     active.push(key)
+        // }
         console.log("setSorting", active)
         const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = { active, isDescending }
         return sorting
@@ -241,12 +256,14 @@ export class Helper {
 
     orderBy(column: Column) {
         const sorting = this._state.sorting
-        const sortBy = this._state.req.sortBy as Column
-        if (sortBy == column) {
-            this.updateReq({ sortByDesc: !this._state.req.sortByDesc })
+        const sort = _.cloneDeep(this._state.req.sort)
+        const last = _.last(sort)
+        if (last?.Name === column) {
+            last.Descending = !last.Descending
+            this.updateReq({ sort })
             return
         }
-        this.updateReq({ sortBy: column, sortByDesc: sorting.descendingFirst[column] })
+        this.updateReq({ sort: [{ Name: column, Descending: sorting.descendingFirst[column] }] })
     }
 
     isSortedBy(key: Column, desc?: boolean): boolean {
@@ -288,14 +305,13 @@ export class Helper {
 
     disableSorting = () =>
         this.updateReq({
-            sortBy: undefined,
-            sortByDesc: false,
+            sort: undefined,
             foldersFirst: false,
             ByInnerSelection: false,
         })
 
     isSortingDisabled = () =>
-        !this._state.req.sortBy && !this._state.req.foldersFirst && this._state.req.ByInnerSelection == null
+        !this._state.req.sort && !this._state.req.foldersFirst && this._state.req.ByInnerSelection == null
 
     OrderByInnerSelection = () => this.orderBy(Columns.hasInnerSelection)
     isOrderedByInnerSelection = () => this.isSortedBy(Columns.hasInnerSelection)
@@ -338,6 +354,9 @@ export function urlToPath(p: string | undefined) {
 
 export function reqToQuery(rest: ListFilesRequest) {
     const rest2 = rest as any
+    if (rest.sort) {
+        rest2.sort = sortToUrl(rest.sort)
+    }
     const obj = {} as any
     for (const key of Object.keys(rest2)) {
         if (!rest2[key]) {
@@ -359,7 +378,9 @@ export function queryToReq(s: string): ListFilesRequest {
             x[key] = true
         }
     }
-    return x
+    const y = x as ListFilesRequest
+    y.sort = urlToSort(x.sort)
+    return y
 }
 
 function sanitizeQuery(s: string): string {

@@ -1,3 +1,5 @@
+import { removeLast } from "./String"
+
 export interface FileService {
     saveFileMetadata(md: FileInfo): Promise<void>
     deleteFileMetadata(req: { key: string }): Promise<void>
@@ -29,8 +31,7 @@ export interface FileInfo {
 }
 
 export interface ListFilesRequest {
-    sortBy?: string
-    sortByDesc?: boolean
+    sort?: SortColumn[]
     foldersFirst?: boolean
     ByInnerSelection?: boolean
     SearchPattern?: string
@@ -46,13 +47,7 @@ export interface ListFilesRequest {
     hideWatched?: boolean
     // TODO:
     KeepView?: boolean
-    /** Number of columns in ImageListView mode */
-    //ImageListColumns?: number;
-    /** Number of rows in ImageListView mode */
-    //ImageListRows?: number;
-    /** How many items to skip, null means no skipping */
     skip?: number
-    /** How many items to take after skipping, null means all of them */
     take?: number
 }
 
@@ -87,8 +82,9 @@ export interface SortRequest {
     Columns: SortColumn[]
 }
 
+export type Column = "Name" | "Modified" | "Extension" | "Size" | "type" | "hasInnerSelection"
 export interface SortColumn {
-    Name: "Name" | "Modified" | "Extension" | "Size"
+    Name: Column
     Descending?: boolean
 }
 
@@ -96,4 +92,19 @@ export interface ListFilesResponse {
     File?: FsFile
     Files?: FsFile[]
     Relatives: FileRelativesInfo
+}
+
+export function sortToUrl(cols: SortColumn[]): string {
+    return cols.map(t => (t.Descending ? `${t.Name}_` : t.Name)).join(",")
+}
+export function urlToSort(sort: string | undefined): SortColumn[] {
+    return (
+        sort
+            ?.split(",")
+            .map(t =>
+                t.endsWith("_")
+                    ? ({ Name: t[removeLast](1) as Column, Descending: true } as SortColumn)
+                    : ({ Name: t as Column } as SortColumn)
+            ) ?? []
+    )
 }
