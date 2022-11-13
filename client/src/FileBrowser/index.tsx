@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { useMatch } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
-import { urlToPath, useHelper } from "./lib/Helper"
 import { Nav } from "./index.styles"
+import { urlToPath, useHelper } from "./lib/Helper"
 import { useFiltering, useFiltering2 } from "./lib/useFiltering"
 import { usePaging } from "./lib/usePaging"
 import { useQuery } from "./lib/useQuery"
@@ -13,16 +14,16 @@ import { useSelection } from "./lib/useSelection"
 import { useSorting } from "./lib/useSorting"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
-import { useRouteMatch } from "react-router"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
 
     const [state, dispatcher] = useHelper()
+
     // const history = useHistory()
-    const match = useRouteMatch<{ path?: string }>()
-    const reqPath = urlToPath(match.params.path)
-    console.log("match", match, match.params.path, reqPath)
+    const match = useMatch("/*")
+    const reqPath = urlToPath(match?.params["*"] ?? "")
+    console.log("match", match, match?.params["*"] ?? "", reqPath)
     const p = useQuery().toString() // get("p") ?? ""
     useEffect(() => {
         dispatcher.parseRequest(reqPath, p)

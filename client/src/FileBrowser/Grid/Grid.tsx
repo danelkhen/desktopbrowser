@@ -166,7 +166,7 @@ export function Grid<T, K extends {}>({
                                         key={keys[column]}
                                         className={cx(classNames?.[column], getCellClass?.(column, item))}
                                     >
-                                        {cells?.[column]?.(item, itemIndex) ?? <span>{getters?.[column]}</span>}
+                                        {cells?.[column]?.(item, itemIndex) ?? <span>{getters?.[column] as any}</span>}
                                     </td>
                                 ))}
                             </tr>

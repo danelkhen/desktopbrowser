@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { History } from "history"
+import _ from "lodash"
 import { useMemo, useState } from "react"
-import { useHistory } from "react-router"
+import { NavigateFunction, useNavigate } from "react-router"
 import {
     FileInfo,
     FsFile,
@@ -12,11 +12,10 @@ import {
 } from "../../../../shared/src/FileService"
 import { App } from "../App"
 import { Column, Columns } from "../Columns"
-import { isExecutable } from "./isExecutable"
 import { FileColumnsConfig } from "./FileColumnsConfig"
+import { isExecutable } from "./isExecutable"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
-import _ from "lodash"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export interface State {
@@ -31,9 +30,9 @@ export interface State {
 
 export class Helper {
     _state: State
-    history?: History
     app = App.current
     server = this.app.fileService
+    navigate?: NavigateFunction
 
     constructor(state?: State) {
         if (!state) {
@@ -134,7 +133,7 @@ export class Helper {
         const navigateToReq = (req: ListFilesRequest) => {
             console.log("navigateToReq", req)
             const { Path, ...rest } = req
-            this.history?.push({ pathname: `/${pathToUrl(Path)}`, search: reqToQuery(rest) })
+            this.navigate?.({ pathname: `/${pathToUrl(Path)}`, search: reqToQuery(rest) })
         }
         const prev = this._state.req
         if (v === prev) return
@@ -334,8 +333,8 @@ export function useHelper() {
         return helper
     }, [])
     const [state, setState] = useState<State>(helper._state)
-    const history = useHistory()
-    helper.history = history
+    const navigate = useNavigate()
+    helper.navigate = navigate
     return [state, helper] as const
 }
 

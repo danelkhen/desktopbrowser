@@ -1,10 +1,7 @@
-import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import { AppComponent } from "./AppComponent"
 import "./FileBrowser/GlobalStyle.ts"
 
-export async function main() {
-    ReactDOM.render(<AppComponent />, document.querySelector("#root"))
-}
-
-main()
+const container = document.querySelector("#root") as HTMLElement
+const root = createRoot(container)
+root.render(<AppComponent />)

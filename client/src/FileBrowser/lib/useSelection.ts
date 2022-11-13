@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
-import { Selection } from "../../utils/Selection"
 import { FsFile, ListFilesResponse } from "../../../../shared/src/FileService"
+import { Selection } from "../../utils/Selection"
 import { Helper } from "./Helper"
-import { useHistory } from "react-router"
 
 export function useSelection({
     res,
@@ -18,7 +17,8 @@ export function useSelection({
 }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
     const { getSavedSelectedFile, saveSelectedFile, _state } = dispatcher
-    const history = useHistory()
+    // const location = useLocation()
+    // const history = useHistory()
 
     // restore selection
     useEffect(() => {
@@ -70,7 +70,7 @@ export function useSelection({
         }
         window.addEventListener("keydown", Win_keydown)
         return () => window.removeEventListener("keydown", Win_keydown)
-    }, [Open, history, res, selectedFiles, setSelectedFiles, up])
+    }, [Open, res, selectedFiles, setSelectedFiles, up])
 
     const service = useMemo(() => {
         return {
