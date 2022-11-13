@@ -13,7 +13,7 @@ export function setupWebsockets<T>(server: http.Server | https.Server, services:
         ws.on("message", async message => {
             try {
                 const data = String(message)
-                console.log("ws.message received: %s", message)
+                console.log("ws.message received", data)
                 const pc = extractFunctionCall(data)
                 const target = objectTryGet(services, pc.target)
                 const res = await target[pc.funcName](...pc.args)

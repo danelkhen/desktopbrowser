@@ -20,7 +20,7 @@ export function handleServiceRequest(services: {}) {
             res.json(result ?? null)
         } catch (e) {
             console.log("api action error", e)
-            res.status(500).json({ err: e.toString() }) ///
+            res.status(500).json({ err: (e as any).toString() }) ///
         }
     }
     return x

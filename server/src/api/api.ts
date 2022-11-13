@@ -1,7 +1,6 @@
 ﻿import * as child_process from "child_process"
 import open from "open"
 import * as os from "os"
-import trash2 from "trash"
 import { FileService } from "../../../shared/src/FileService"
 import { quote } from "./ListFiles"
 import { IoDir } from "../io/IoDir"
@@ -34,6 +33,7 @@ export const Delete: FileService["del"] = async req => {
 }
 
 export const trash: FileService["trash"] = async req => {
+    const trash2 = await import("trash")
     const path = req.Path
-    await trash2([path])
+    await trash2.default([path])
 }

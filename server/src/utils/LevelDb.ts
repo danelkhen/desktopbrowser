@@ -1,22 +1,22 @@
-import level, { LevelDB } from "level"
+import { Level } from "level"
 
 export interface LevelDbEntity {
     collection: string
     key: string
 }
 export class LevelDb {
-    db: LevelDB
+    db: Level<string, unknown>
     constructor(public dbPath: string) {
-        this.db = level(dbPath, { valueEncoding: "json" })
+        this.db = new Level<string, unknown>(dbPath, { valueEncoding: "json" })
     }
     async getAll<T extends LevelDbEntity>(collection: string): Promise<T[]> {
-        const stream = this.db.createReadStream({
+        const stream = this.db.iterator<string, T>({
             gt: `${collection}/`,
             lt: `${collection}0`,
-        }) as AsyncIterable<{ key: string; value: T }>
+        })
         const list: T[] = []
-        for await (const item of stream) {
-            const obj = { ...item.value, collection, key: item.key.replace(`${collection}/`, "") }
+        for await (const [key, value] of stream) {
+            const obj = { ...value, collection, key: key.replace(`${collection}/`, "") }
             list.push(obj as T)
         }
         return list
