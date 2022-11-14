@@ -1,6 +1,6 @@
 {
     "name": "desktopbrowser",
-    "version": "2.0.36",
+    "version": "2.0.37",
     "main": "server/dist/server/src/app.js",
     "productName": "Desktop Browser",
     "description": "Desktop Browser",
