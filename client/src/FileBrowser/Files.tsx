@@ -1,13 +1,15 @@
-import React from "react"
+import React, { ReactElement } from "react"
 import styled from "styled-components"
 import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
-import { Helper } from "./lib/Helper"
-import { fileEmpty, layers, link } from "./lib/Linearicons"
 import { FileColumnsConfig } from "./lib/FileColumnsConfig"
-import { LinearIcon, LinearIconName } from "./LinearIcon"
+import { Helper } from "./lib/Helper"
 import { FormatFriendlyDate, FormatFriendlySize } from "./lib/utils"
+
+import FileEmptyIcon from "../../linearicons/svg/file-empty.svg"
+import LayersIcon from "../../linearicons/svg/layers.svg"
+import LinkIcon from "../../linearicons/svg/link.svg"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;
@@ -84,10 +86,10 @@ export interface FilesProps {
     getHeaderClass: (column: Column) => string
     orderBy: Helper["orderBy"]
 }
-const icons: { [key: string]: LinearIconName } = {
-    folder: layers,
-    file: fileEmpty,
-    link: link,
+const icons: { [key: string]: ReactElement } = {
+    folder: <img src={LayersIcon} />,
+    file: <img src={FileEmptyIcon} />,
+    link: <img src={LinkIcon} />,
 }
 
 export function Files({
@@ -118,7 +120,7 @@ export function Files({
             columns={columns}
         >
             {{
-                type: file => file.type && icons[file.type] && <LinearIcon icon={icons[file.type]} />,
+                type: file => (file.type && icons[file.type] && icons[file.type]) || null,
                 Name: file => (
                     <span>
                         <a className="Name">{file.Name}</a>
