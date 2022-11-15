@@ -15,14 +15,15 @@ export namespace IoDrive {
         const drives = list.map(t => toDriveInfo(t))
         return drives
     }
-    function toDriveInfo(x: Drive) {
-        const di: IoDrive = {
-            path: x.mounted + "\\",
-            Name: x.mounted,
-            IsReady: true,
-            AvailableFreeSpace: x.available,
-            Capacity: x.capacity,
-        }
-        return di
+}
+
+function toDriveInfo(x: Drive) {
+    const di: IoDrive = {
+        path: x.mounted + "\\",
+        Name: x.mounted,
+        IsReady: true,
+        AvailableFreeSpace: x.available,
+        Capacity: x.capacity,
     }
+    return di
 }

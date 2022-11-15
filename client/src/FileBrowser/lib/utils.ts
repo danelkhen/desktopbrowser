@@ -34,7 +34,7 @@ export function Path_WinToLinux(path: string): string {
         //network share
         path = "net/" + path.substr(2)
     const tokens = path.split("\\") //.where(t=>t.length>0);
-    if (!isNetworkShare) tokens[0] = tokens[0].replace(/\:/g, "")
+    if (!isNetworkShare) tokens[0] = tokens[0].replace(/:/g, "")
     //tokens[0] = tokens[0].replaceAll(":", "");
     //tokens = tokens;
     path = tokens.join("/")

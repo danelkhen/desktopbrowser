@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
 import cx from "classnames"
 import React, { ReactElement, ReactNode } from "react"
 import styled from "styled-components"

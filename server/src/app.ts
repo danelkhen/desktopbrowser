@@ -94,13 +94,13 @@ const getWindowPosition = () => {
 }
 
 // toggle window
-const toggleWindow = () => {
-    if (myWindow.isVisible()) {
-        myWindow.hide()
-    } else {
-        showWindow()
-    }
-}
+// const toggleWindow = () => {
+//     if (myWindow.isVisible()) {
+//         myWindow.hide()
+//     } else {
+//         showWindow()
+//     }
+// }
 
 const showWindow = () => {
     const position = getWindowPosition()

@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { equalsIgnoreCase } from "../../../shared/src"
 import { FsFile, FileRelativesInfo, FileService, ListFilesRequest, PathRequest } from "../../../shared/src/FileService"
@@ -86,9 +87,9 @@ function normalizePath(path: string | undefined): string {
             // Drive letter, /C/ggg -> C:/ggg
             [/^\/([a-zA-Z])\/(.*)$/, "$1:/$2"],
             // Network share: /mycomp -> //mycomp
-            [/^\/([a-zA-Z0-9_\-][a-zA-Z0-9_\-\.]+)$/, "//$1"],
+            [/^\/([a-zA-Z0-9_-][a-zA-Z0-9_\-.]+)$/, "//$1"],
             // Network share: /mycomp/myshare -> //mycomp/myshare
-            [/^\/([a-zA-Z0-9_\-][a-zA-Z0-9_\-\.]+)\/(.*)$/, "//$1/$2"],
+            [/^\/([a-zA-Z0-9_-][a-zA-Z0-9_\-.]+)\/(.*)$/, "//$1/$2"],
         ] as const
         for (const regex of list) {
             const path2 = path.replace(regex[0], regex[1]) as string // TODO:
@@ -195,7 +196,7 @@ export function ApplyPaging(files: FsFile[], req: ListFilesRequest): FsFile[] {
 }
 
 export function quote(s: string): string {
-    return `\"${s}\"`
+    return `"${s}"`
 }
 
 async function GetHomeFiles(): Promise<FsFile[]> {

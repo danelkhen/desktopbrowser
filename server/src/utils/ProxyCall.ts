@@ -15,7 +15,7 @@ export function extractFunctionCall(code: string): { target: string[]; funcName:
 }
 
 function parseFunctionCall(code: string): { target: string[]; funcName: string; args: string } {
-    const match = /^([a-zA-Z0-9_\.]+)\((.*)\)$/.exec(code)
+    const match = /^([a-zA-Z0-9_.]+)\((.*)\)$/.exec(code)
     console.log("extractFunctionCall", code)
     if (!match) return null!
     if (match) console.log("extractFunctionCall", match[0], match[1], match[2])

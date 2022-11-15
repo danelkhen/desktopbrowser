@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable no-constant-condition */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { iterateDomEvent } from "./iterateEvent"

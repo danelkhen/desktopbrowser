@@ -1,4 +1,5 @@
-﻿export async function* map<T, R>(
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function* map<T, R>(
     list: AsyncIterableIterator<T>,
     cb: (item: T, index: number) => R
 ): AsyncIterableIterator<R> {

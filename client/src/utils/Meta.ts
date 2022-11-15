@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 export type Meta<T, V> = {
     [K in keyof T]: V
 }

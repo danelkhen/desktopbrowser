@@ -8,7 +8,7 @@ import { IoFile } from "../io/IoFile"
 
 export const Execute: FileService["execute"] = async req => {
     const filename = req.Path
-    const p = await open(filename)
+    await open(filename)
 }
 
 export const Explore: FileService["explore"] = async req => {
