@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "CommonJS",
         "target": "es2019",
-        "moduleResolution": "node",
+        "moduleResolution": "node16",
         "lib": ["esnext.asynciterable", "es2019", "DOM"],
         "sourceMap": true,
         "newLine": "LF",
@@ -10,7 +10,8 @@
         "strict": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "skipLibCheck": true
     },
     "include": ["src/**/*.ts", "typings/**/*"]
 }

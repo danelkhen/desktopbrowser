@@ -1,5 +1,4 @@
 ﻿import * as child_process from "child_process"
-import open from "open"
 import * as os from "os"
 import { FileService } from "../../../shared/src/FileService"
 import { quote } from "./ListFiles"
@@ -8,7 +7,8 @@ import { IoFile } from "../io/IoFile"
 
 export const Execute: FileService["execute"] = async req => {
     const filename = req.Path
-    await open(filename)
+    const open = await import("open")
+    await open.default(filename)
 }
 
 export const Explore: FileService["explore"] = async req => {

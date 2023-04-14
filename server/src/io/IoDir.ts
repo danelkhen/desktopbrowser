@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as fse from "fs-extra"
-import rimraf from "rimraf"
+import { rimraf } from "rimraf"
 import { IoFile } from "./IoFile"
 
 export namespace IoDir {
@@ -31,17 +31,17 @@ export namespace IoDir {
         return size
     }
     export async function del(path: string) {
-        return await rimrafAsync(path, { glob: false })
+        return await rimraf(path, { glob: false })
     }
 }
 
 export type DirSizeCache = { [path: string]: number }
 
-export function rimrafAsync(pattern: string, options: rimraf.Options = {}): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        rimraf(pattern, options, err => {
-            if (err) reject(err)
-            else resolve()
-        })
-    })
-}
+// export function rimrafAsync(pattern: string, options: rimraf.Options = {}): Promise<void> {
+//     return new Promise<void>((resolve, reject) => {
+//         rimraf(pattern, options, err => {
+//             if (err) reject(err)
+//             else resolve()
+//         })
+//     })
+// }

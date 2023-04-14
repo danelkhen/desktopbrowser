@@ -8,7 +8,7 @@ import { DirSizeCache, IoDir } from "../io/IoDir"
 import { IoDrive } from "../io/IoDrive"
 import { dateToDefaultString } from "../utils/dateToDefaultString"
 import { isWindows } from "../utils/isWindows"
-import _ from "lodash"
+import * as _ from "lodash"
 
 export const ListFiles: FileService["listFiles"] = async req => {
     const Relatives = await GetFileRelatives(req.Path!)
