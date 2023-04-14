@@ -69,6 +69,13 @@
     },
     "config": {
         "forge": {
+            "electronPackagerConfig": {
+                "version-string":{
+                  "FileDescription": "Desktop browser",
+                  "ProductName": "Desktop browser",
+                  "CompanyName": "Dan-el Khen"
+                }
+              },
             "packagerConfig": {
                 "ignore": [
                     "\\.github",
