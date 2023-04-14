@@ -49,23 +49,10 @@ export function Path_WinToLinux(path: string): string {
 }
 
 export function GetFilenameForSearch(s: string): string {
-    const tokens = s.split(/[ .-]/).map(t => t.toLowerCase())
-    const ignoreWords = new Set(["xvid", "720p", "1080p", "dimension", "sample", "nfo", "par2"])
-    const list: string[] = []
-    for (const token of tokens) {
-        if (ignoreWords.has(token)) break
-        if (token.length == 3) {
-            const season = TryParse(token.substr(0, 1))
-            const episode = TryParse(token.substr(1))
-            if (season != null && episode != null && episode < 30) {
-                const normalized = "S" + season.toString().padStart(2, "0") + "E" + episode.toString().padStart(2, "0")
-                list.push(normalized)
-                break
-            }
-        }
-        list.push(token)
-    }
-    const s2 = list.join(" ")
+    const s2 = s
+        .replace(/[ .-]/g, " ")
+        .replace(/([0-9][0-9][0-9][0-9]).*$/, "$1")
+        .replace(/(S[0-9][0-9]E[0-9][0-9]).*$/i, "$1")
     return s2
 }
 
