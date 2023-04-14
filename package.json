@@ -1,6 +1,6 @@
 {
     "name": "desktopbrowser",
-    "version": "2.0.38",
+    "version": "2.0.39",
     "main": "server/dist/server/src/app.js",
     "productName": "Desktop Browser",
     "description": "Desktop Browser",
@@ -70,12 +70,12 @@
     "config": {
         "forge": {
             "electronPackagerConfig": {
-                "version-string":{
-                  "FileDescription": "Desktop browser",
-                  "ProductName": "Desktop browser",
-                  "CompanyName": "Dan-el Khen"
+                "version-string": {
+                    "FileDescription": "Desktop browser",
+                    "ProductName": "Desktop browser",
+                    "CompanyName": "Dan-el Khen"
                 }
-              },
+            },
             "packagerConfig": {
                 "ignore": [
                     "\\.github",
