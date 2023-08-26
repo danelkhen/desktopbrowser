@@ -1,4 +1,0 @@
-{
-    "presets": ["@babel/react", "@babel/typescript"],
-    "plugins": ["@babel/plugin-proposal-export-default-from"]
-}
