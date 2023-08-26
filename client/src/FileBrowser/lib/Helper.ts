@@ -31,8 +31,8 @@ export interface State {
 
 export class Helper {
     _state: State
-    app = App.current
-    server = this.app.fileService
+    private app = App.current
+    private server = this.app.fileService
     navigate?: NavigateFunction
 
     constructor(state?: State) {
@@ -86,14 +86,14 @@ export class Helper {
         // }
     }
 
-    async fetchAllFilesMetadata() {
+    fetchAllFilesMetadata = async () => {
         const x = await this.server.getAllFilesMetadata()
         const obj: { [key: string]: FileInfo } = {}
         x.map(t => (obj[t.key] = t))
         this.set({ filesMd: obj })
     }
 
-    async setFileMetadata(value: FileInfo) {
+    private async setFileMetadata(value: FileInfo) {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { [value.key]: removed, ...rest } = this._state.filesMd ?? {}
@@ -104,17 +104,17 @@ export class Helper {
         this.set({ filesMd: { ...this._state.filesMd, [value.key]: value } })
         await this.app.fileService.saveFileMetadata(value)
     }
-    getFileMetadata(key: string): FileInfo | null {
+    getFileMetadata = (key: string): FileInfo | null => {
         const x = this._state.filesMd?.[key]
         if (!x) return null
         return x
     }
-    getSavedSelectedFile(folder: string) {
+    getSavedSelectedFile = (folder: string) => {
         const x = this.getFileMetadata(folder)
         if (x == null || x.selectedFiles == null) return null
         return x.selectedFiles[0]
     }
-    async saveSelectedFile(folderName: string, filename: string) {
+    saveSelectedFile = async (folderName: string, filename: string) => {
         await this.setFileMetadata({
             key: folderName,
             selectedFiles: filename ? [filename] : undefined,
@@ -122,15 +122,15 @@ export class Helper {
         })
     }
 
-    getFileTypeOrder(type: string): number {
+    private getFileTypeOrder(type: string): number {
         const order = ["folder", "link", "file"].reverse()
         return order.indexOf(type)
     }
 
-    updateReq(v: Partial<ListFilesRequest>) {
+    private updateReq(v: Partial<ListFilesRequest>) {
         return this.setReq({ ...this._state.req, ...v })
     }
-    setReq(v: ListFilesRequest) {
+    private setReq(v: ListFilesRequest) {
         const navigateToReq = (req: ListFilesRequest) => {
             console.log("navigateToReq", req)
             const { Path, ...rest } = req
@@ -145,7 +145,7 @@ export class Helper {
         navigateToReq(v)
     }
 
-    useReqSorting(req: ListFilesRequest) {
+    private useReqSorting(req: ListFilesRequest) {
         const active: Column[] = []
         const isDescending: IsDescending<Columns> = {}
         const cols = req.sort ?? []
@@ -166,7 +166,7 @@ export class Helper {
         return sorting
     }
 
-    async parseRequest(path: string, s: string) {
+    parseRequest = async (path: string, s: string) => {
         const req: ListFilesRequest = queryToReq(s)
         req.Path = path
         const reqSorting = this.useReqSorting(req)
@@ -174,7 +174,7 @@ export class Helper {
         await this.reloadFiles()
     }
 
-    async DeleteAndRefresh(file: FsFile): Promise<void> {
+    private async DeleteAndRefresh(file: FsFile) {
         if (!file.Path) return
         const fileOrFolder = file.IsFolder ? "folder" : "file"
         if (!window.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path)) return
@@ -182,13 +182,13 @@ export class Helper {
         await this.reloadFiles()
     }
 
-    async TrashAndRefresh(file: FsFile): Promise<void> {
+    private async TrashAndRefresh(file: FsFile) {
         if (!file.Path) return
         await this.server.trash({ Path: file.Path })
         await this.reloadFiles()
     }
 
-    async deleteOrTrash({ file, isShiftDown }: { file: FsFile; isShiftDown: boolean }): Promise<void> {
+    deleteOrTrash = async ({ file, isShiftDown }: { file: FsFile; isShiftDown: boolean }) => {
         if (isShiftDown) {
             await this.DeleteAndRefresh(file)
             return
@@ -196,7 +196,7 @@ export class Helper {
         await this.TrashAndRefresh(file)
     }
 
-    async explore(file: FsFile): Promise<void> {
+    async explore(file: FsFile) {
         if (!file?.Path) return
         await this.server.explore({ Path: file.Path })
     }
@@ -205,7 +205,7 @@ export class Helper {
         const res = await App.current.fileService.listFiles(req)
         this.set({ res })
     }
-    set(v: Partial<State>) {
+    private set(v: Partial<State>) {
         const from = this._state
         const to = { ...this._state, ...v }
         this._state = to
@@ -213,7 +213,7 @@ export class Helper {
     }
     onChanged?: (from: State, to: State) => void
 
-    async reloadFiles() {
+    private async reloadFiles() {
         if (this._state.req.FolderSize) {
             const req2 = { ...this._state.req, FolderSize: false }
             await this.fetchFiles(req2)
@@ -221,12 +221,12 @@ export class Helper {
         await this.fetchFiles(this._state.req)
     }
 
-    GotoFolder(file?: FsFile): void {
+    GotoFolder = (file?: FsFile) => {
         if (!file) return
         file.Path && this.GotoPath(file.Path)
     }
 
-    GotoPath(path: string): void {
+    GotoPath = (path: string) => {
         this.updateReq({ Path: path })
     }
 
@@ -244,12 +244,12 @@ export class Helper {
         console.info(res)
     }
 
-    async Execute(file: FsFile): Promise<void> {
+    private async Execute(file: FsFile) {
         if (!file.Path) return
         await App.current.fileService.execute({ Path: file.Path })
     }
 
-    orderBy(column: Column) {
+    orderBy = (column: Column) => {
         const sorting = this._state.sorting
         let sort = _.cloneDeep(this._state.req.sort ?? [])
         const index = sort.findIndex(t => t.Name === column)
