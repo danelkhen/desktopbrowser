@@ -30,7 +30,7 @@ export async function main() {
     const exp = express()
     exp.use(express.json())
     exp.use("/", express.static(path.join(rootDir, "client/dist")))
-    exp.use("/img", express.static(path.join(rootDir, "client/img")))
+    // exp.use("/img", express.static(path.join(rootDir, "client/dist/img")))
     exp.use("/tmdb", express.static(path.join(rootDir, "tmdb")))
     exp.use("/shared", express.static(path.join(rootDir, "shared")))
     exp.use("/tmdb_proxy", proxy("api.themoviedb.org", {}))

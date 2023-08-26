@@ -40,7 +40,7 @@ async function main2() {
 
         app.dock?.hide()
 
-        tray = new Tray(path.join(rootDir, "client/img/clapperboard-16x16.png"))
+        tray = new Tray(path.join(rootDir, "client/dist/img/clapperboard-16x16.png"))
         // tray.on("right-click", toggleWindow)
         // tray.on("double-click", toggleWindow)
         tray.on("click", showWindow)
