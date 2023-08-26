@@ -79,11 +79,6 @@ export class Helper {
             state.sorting = { ...state.sortingDefaults, ...state.reqSorting }
         }
         this._state = state
-        // for (const p in this) {
-        //     if (typeof this[p] === "function") {
-        //         this[p] = (this[p] as any as Function).bind(this)
-        //     }
-        // }
     }
 
     fetchAllFilesMetadata = async () => {
