@@ -1,7 +1,7 @@
 name: release-mac
 
 on:
-    create:
+    push:
         tags:
             - "v*.*.*"
 

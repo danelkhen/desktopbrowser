@@ -1,7 +1,7 @@
 name: release-win
 
 on:
-    create:
+    push:
         tags:
             - "v*.*.*"
 
