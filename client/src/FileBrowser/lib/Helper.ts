@@ -79,11 +79,11 @@ export class Helper {
             state.sorting = { ...state.sortingDefaults, ...state.reqSorting }
         }
         this._state = state
-        for (const p in this) {
-            if (typeof this[p] == "function") {
-                this[p] = (this[p] as any as Function).bind(this)
-            }
-        }
+        // for (const p in this) {
+        //     if (typeof this[p] === "function") {
+        //         this[p] = (this[p] as any as Function).bind(this)
+        //     }
+        // }
     }
 
     async fetchAllFilesMetadata() {
@@ -230,7 +230,7 @@ export class Helper {
         this.updateReq({ Path: path })
     }
 
-    async Open(file: FsFile): Promise<void> {
+    Open = async (file: FsFile) => {
         if (file == null) return
         if (file.IsFolder || file.type == "link") {
             this.GotoFolder(file)
@@ -270,7 +270,7 @@ export class Helper {
         this.updateReq({ sort })
     }
 
-    isSortedBy(key: Column, desc?: boolean): boolean {
+    isSortedBy = (key: Column, desc?: boolean): boolean => {
         if (!this._state.sorting.active.includes(key)) return false
         if (desc !== undefined) return !!this._state.sorting.isDescending[key] === desc
         return true
@@ -330,7 +330,7 @@ export class Helper {
 export function useHelper() {
     const helper = useMemo(() => {
         const helper = new Helper()
-        helper.onChanged = (from, to) => setState(to)
+        helper.onChanged = (_from, to) => setState(to)
         return helper
     }, [])
     const [state, setState] = useState<State>(helper._state)
@@ -345,7 +345,7 @@ function openInNewWindow(p: string): void {
 
 export function pathToUrl(p: string | undefined) {
     if (!p) return ""
-    let s = p.replaceAll("\\", "/").replace(":", "")
+    let s = p.replace(/\\/g, "/").replace(":", "")
     if (s[0] === "/") {
         s = s.substr(1)
     }
@@ -388,5 +388,5 @@ export function queryToReq(s: string): ListFilesRequest {
 }
 
 function sanitizeQuery(s: string): string {
-    return s.replace(/=&/g, "&").replace(/=$/g, "").replaceAll("%2C", ",")
+    return s.replace(/=&/g, "&").replace(/=$/g, "").replace(/%2C/g, ",")
 }

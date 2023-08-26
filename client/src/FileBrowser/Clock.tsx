@@ -1,6 +1,6 @@
-import React, { useEffect } from "react"
-import { sleep } from "../../../shared/src"
 import moment from "moment"
+import { useEffect } from "react"
+import { sleep } from "../../../shared/src"
 import { useForceUpdate } from "../utils/useForceUpdate"
 
 export function Clock() {

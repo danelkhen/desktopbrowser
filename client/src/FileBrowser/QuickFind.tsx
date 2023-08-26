@@ -1,5 +1,5 @@
 import cx from "classnames"
-import React, { useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { sleep } from "../../../shared/src"
 import { FsFile } from "../../../shared/src/FileService"
 

@@ -1,0 +1,28 @@
+module.exports = {
+    root: true,
+    env: { browser: true, es2020: true },
+    extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react-hooks/recommended",
+        "prettier",
+    ],
+    ignorePatterns: ["dist", ".eslintrc.cjs"],
+    parser: "@typescript-eslint/parser",
+    plugins: ["react-refresh"],
+    rules: {
+        "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+        "react/react-in-jsx-scope": "off",
+        // "@typescript-eslint/explicit-function-return-type": "off",
+        "react-hooks/rules-of-hooks": "warn",
+        "react-hooks/exhaustive-deps": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+        "prefer-const": "warn",
+        "@typescript-eslint/no-floating-promises": "warn",
+    },
+}
