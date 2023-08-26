@@ -16,6 +16,7 @@
         "reconnecting-websocket": "^4.4.0"
     },
     "devDependencies": {
+        "@swc/plugin-styled-components": "^1.5.73",
         "@types/lodash": "^4.14.170",
         "@types/luxon": "^3.3.1",
         "@types/react": "^18.0.25",

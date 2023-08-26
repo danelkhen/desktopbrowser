@@ -4,17 +4,15 @@ import { colors } from "./GlobalStyle"
 import cx from "classnames"
 
 export const DropdownDiv = styled.div<{ show: boolean }>`
-    display: inline-block;
+    display: flex;
 
     .menu {
-        display: ${props => (props.show ? "block" : "none")};
+        display: ${props => (props.show ? "flex" : "none")};
+        flex-direction: column;
         position: absolute;
         border: 1px solid ${colors.__bg2};
         background-color: ${colors.__bg1};
-    }
-
-    .menu button {
-        display: block;
+        top: 40px;
     }
 `
 export interface DropdownProps {

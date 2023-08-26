@@ -14,3 +14,4 @@ tsconfig.tsbuildinfo
 desktopbrowser-win.exe
 desktopbrowser-macos
 db.level
+.swc/

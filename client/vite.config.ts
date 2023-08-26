@@ -4,7 +4,19 @@ import svgr from "vite-plugin-svgr"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [svgr(), react()],
+    plugins: [
+        svgr(),
+        react({
+            plugins: [
+                [
+                    "@swc/plugin-styled-components",
+                    {
+                        displayName: true,
+                    },
+                ],
+            ],
+        }),
+    ],
     server: {
         proxy: {
             "/api": {

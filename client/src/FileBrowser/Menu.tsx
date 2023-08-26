@@ -1,24 +1,32 @@
 import React, { useCallback } from "react"
 import { FsFile } from "../../../shared/src/FileService"
+import { ReactComponent as ExploreIcon } from "../assets/icons/explore.svg"
+import { ReactComponent as FolderIcon } from "../assets/icons/folder.svg"
+import { ReactComponent as GoogleIcon } from "../assets/icons/google.svg"
+import { ReactComponent as MoreIcon } from "../assets/icons/more.svg"
+import { ReactComponent as NextIcon } from "../assets/icons/next.svg"
+import { ReactComponent as PrevIcon } from "../assets/icons/prev.svg"
+import { ReactComponent as SortIcon } from "../assets/icons/sort.svg"
+import { ReactComponent as SubtitleIcon } from "../assets/icons/subtitle.svg"
+import { ReactComponent as TrashIcon } from "../assets/icons/trash.svg"
+import { ReactComponent as UpIcon } from "../assets/icons/up.svg"
+import { ReactComponent as NewIcon } from "../assets/icons/new.svg"
 import { Dropdown } from "./Dropdown"
-import { Helper, State } from "./lib/Helper"
 import {
     ButtonGroup,
     ButtonsDiv,
-    DeleteButton,
-    ExploreButton,
-    Google,
-    GotoNextSibling,
-    GotoParentDir,
-    GotoPrevSibling,
+    // DeleteButton,
+    // ExploreButton,
+    // Google,
+    // GotoNextSibling,
+    // GotoParentDir,
+    // GotoPrevSibling,
     MenuDiv,
-    MoreButton,
-    NewButton,
-    Size,
-    SortButton,
-    Subs,
+    // MoreButton,
+    // NewButton,
 } from "./Menu.styles"
-import { ToggleMenuButton } from "./MenuButton"
+import { MenuButton, ToggleMenuButton } from "./MenuButton"
+import { Helper, State } from "./lib/Helper"
 
 export function Menu({ selectedFile, dispatcher }: { state: State; selectedFile?: FsFile; dispatcher: Helper }) {
     const Delete = useCallback(
@@ -44,21 +52,31 @@ export function Menu({ selectedFile, dispatcher }: { state: State; selectedFile?
         <MenuDiv>
             <ButtonsDiv>
                 <ButtonGroup>
-                    <GotoParentDir action={goto.up} label="Up" />
-                    <GotoPrevSibling action={goto.prev} label="Prev" />
-                    <GotoNextSibling action={goto.next} label="Next" />
+                    <MenuButton icon={<UpIcon />} action={goto.up} label="Up" />
+                    <MenuButton icon={<PrevIcon />} action={goto.prev} label="Prev" />
+                    <MenuButton icon={<NextIcon />} action={goto.next} label="Next" />
                 </ButtonGroup>
                 <ButtonGroup>
-                    <Size action={toggle.FolderSize} isActive={isToggled.FolderSize} label="Folder" />
-                    <Google action={google} label="Google" />
-                    <Subs action={subs} label="Subs" />
-                    <ExploreButton action={Explore} label="Explore" />
-                    <NewButton action={toggle.hideWatched} isActive={isToggled.hideWatched} label="New" />
+                    <ToggleMenuButton
+                        icon={<FolderIcon />}
+                        action={toggle.FolderSize}
+                        isActive={isToggled.FolderSize}
+                        label="Folder"
+                    />
+                    <MenuButton icon={<GoogleIcon />} action={google} label="Google" />
+                    <MenuButton icon={<SubtitleIcon />} action={subs} label="Subs" />
+                    <MenuButton icon={<ExploreIcon />} action={Explore} label="Explore" />
+                    <ToggleMenuButton
+                        icon={<NewIcon />}
+                        action={toggle.hideWatched}
+                        isActive={isToggled.hideWatched}
+                        label="New"
+                    />
                 </ButtonGroup>
                 <ButtonGroup>
-                    <DeleteButton action={Delete} label="Delete" />
+                    <MenuButton icon={<TrashIcon />} action={Delete} label="Delete" />
                     <Dropdown>
-                        <SortButton>Sort</SortButton>
+                        <MenuButton icon={<SortIcon />} label="Sort" />
                         <div className="menu">
                             <ToggleMenuButton
                                 action={OrderByInnerSelection}
@@ -78,7 +96,7 @@ export function Menu({ selectedFile, dispatcher }: { state: State; selectedFile?
                         </div>
                     </Dropdown>
                     <Dropdown>
-                        <MoreButton>More</MoreButton>
+                        <MenuButton icon={<MoreIcon />} label="More" />
                         <div className="menu">
                             <ToggleMenuButton
                                 action={toggle.Folders}
