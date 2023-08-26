@@ -12,19 +12,7 @@ import { ReactComponent as TrashIcon } from "../assets/icons/trash.svg"
 import { ReactComponent as UpIcon } from "../assets/icons/up.svg"
 import { ReactComponent as NewIcon } from "../assets/icons/new.svg"
 import { Dropdown } from "./Dropdown"
-import {
-    ButtonGroup,
-    ButtonsDiv,
-    // DeleteButton,
-    // ExploreButton,
-    // Google,
-    // GotoNextSibling,
-    // GotoParentDir,
-    // GotoPrevSibling,
-    MenuDiv,
-    // MoreButton,
-    // NewButton,
-} from "./Menu.styles"
+import { ButtonGroup, ButtonsDiv, MenuDiv } from "./Menu.styles"
 import { MenuButton, ToggleMenuButton } from "./MenuButton"
 import { Helper, State } from "./lib/Helper"
 

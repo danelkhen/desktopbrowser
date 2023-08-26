@@ -42,12 +42,12 @@ export const GlobalStyle = createGlobalStyle`
 
 @font-face {
     font-family: "FreightSansProBook-Regular";
-    src: url("../fonts/FreightSansProBook-Regular.eot");
+    src: url("/fonts/FreightSansProBook-Regular.eot");
 }
 
 @font-face {
     font-family: "FreightTextBold";
-    src: url("../fonts/FreightTextBold.eot");
+    src: url("/fonts/FreightTextBold.eot");
 }
 
 body {
