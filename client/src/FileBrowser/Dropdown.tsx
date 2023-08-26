@@ -3,11 +3,11 @@ import styled from "styled-components"
 import { colors } from "./GlobalStyle"
 import cx from "classnames"
 
-export const DropdownDiv = styled.div<{ show: boolean }>`
+export const DropdownDiv = styled.div<{ $show: boolean }>`
     display: flex;
 
     .menu {
-        display: ${props => (props.show ? "flex" : "none")};
+        display: ${({ $show }) => ($show ? "flex" : "none")};
         flex-direction: column;
         position: absolute;
         border: 1px solid ${colors.__bg2};
@@ -48,7 +48,7 @@ export function Dropdown(props: DropdownProps) {
 
     const updatedToggler = React.cloneElement(toggler, { className: cx(toggler.props.className, "dropdown-toggle") })
     return (
-        <DropdownDiv show={show} onClick={toggle}>
+        <DropdownDiv $show={show} onClick={toggle}>
             {updatedToggler}
             {popup}
         </DropdownDiv>

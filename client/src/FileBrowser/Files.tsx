@@ -7,9 +7,9 @@ import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 import { Helper } from "./lib/Helper"
 import { FormatFriendlyDate, FormatFriendlySize } from "./lib/utils"
 
-import FileEmptyIcon from "../assets/linearicons/svg/file-empty.svg"
-import LayersIcon from "../assets/linearicons/svg/layers.svg"
-import LinkIcon from "../assets/linearicons/svg/link.svg"
+import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
+import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
+import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;
@@ -87,9 +87,9 @@ export interface FilesProps {
     orderBy: Helper["orderBy"]
 }
 const icons: { [key: string]: ReactElement } = {
-    folder: <img src={LayersIcon} />,
-    file: <img src={FileEmptyIcon} />,
-    link: <img src={LinkIcon} />,
+    folder: <LayersIcon />,
+    file: <FileEmptyIcon />,
+    link: <LinkIcon />,
 }
 
 export function Files({
