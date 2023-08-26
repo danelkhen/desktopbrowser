@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import moment from "moment"
-import { Moment } from "moment"
+import { DateTime } from "luxon"
 
 export function tryParseInt(s: string | null | undefined): number | null {
     if (!s) return null
@@ -13,15 +12,15 @@ export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms || 0))
 }
 
-export function tryParseExactMoment(s: string, format: string): Moment | null {
-    const x = moment(s, format)
-    if (!x.isValid()) return null
+export function tryParseExactLuxon(s: string, format: string) {
+    const x = DateTime.fromFormat(s, format)
+    if (!x.isValid) return null
     return x
 }
 export function tryParseExactDate(s: string, format: string): Date | null {
-    const x = tryParseExactMoment(s, format)
+    const x = tryParseExactLuxon(s, format)
     if (!x) return null
-    return x.toDate()
+    return x.toJSDate()
 }
 
 const DefaultDateFormat = "YYYY-MM-DD hh:mm:ss"
@@ -32,17 +31,17 @@ export function toDefaultDate(s: string): Date | null {
 
 export function toFriendlyRelative2(dt2: Date | null, rel2?: Date): string {
     if (!dt2) return ""
-    const dt = moment(dt2)
+    const dt = DateTime.fromJSDate(dt2)
     if (rel2 == null) rel2 = new Date()
-    const rel = moment(rel2)
-    if (dt.year() == rel.year()) {
-        if (dt.month() == rel.month()) {
-            if (dt.day() == rel.day()) {
-                return dt.format("HH:mm")
+    const rel = DateTime.fromJSDate(rel2)
+    if (dt.year == rel.year) {
+        if (dt.month == rel.month) {
+            if (dt.day == rel.day) {
+                return dt.toFormat("HH:mm")
             }
-            return dt.format("MMM D")
+            return dt.toFormat("MMM D")
         }
-        return dt.format("MMM D")
+        return dt.toFormat("MMM D")
     }
-    return dt.format("YYYY-MM-DD")
+    return dt.toFormat("YYYY-MM-DD")
 }
