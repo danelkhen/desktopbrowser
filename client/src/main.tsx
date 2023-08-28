@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client"
-import { AppComponent } from "./AppComponent"
+import { RouterProvider } from "react-router-dom"
+import { router } from "./router"
 
 const container = document.querySelector("#root") as HTMLElement
 const root = createRoot(container)
-root.render(<AppComponent />)
+root.render(<RouterProvider router={router} />)
