@@ -8,7 +8,7 @@
     "author": "Dan-el Khen",
     "license": "MIT",
     "scripts": {
-        "dev": "npx concurrently --names \"server,client,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd client; npx tsc -w --noEmit --preserveWatchOutput\" \"cd client; npx webpack serve\"",
+        "dev": "npx concurrently --names \"server,client,server\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd client; npm start\" \"npm run server\"",
         "dev2": "npx concurrently --names \"server,client,client\" \"cd server; npx tsc -w --preserveWatchOutput\" \"cd client; npx tsc -w --noEmit --preserveWatchOutput\" \"cd client; npx webpack --watch\"",
         "server": "node server/dist/server/src/server.js",
         "build": "cd server; npx tsc && cd ../client; npx webpack --mode production",
@@ -52,6 +52,7 @@
         "@types/ws": "^8.5.3",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
+        "concurrently": "^8.2.1",
         "electron": "^26.1.0",
         "eslint": "^8.27.0",
         "eslint-config-prettier": "^9.0.0",
