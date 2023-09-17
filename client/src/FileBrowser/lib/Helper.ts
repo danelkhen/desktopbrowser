@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from "lodash"
-import { useMemo, useState } from "react"
+import { produce } from "immer"
+import { useSyncExternalStore } from "react"
 import { NavigateFunction, useNavigate } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest, sortToUrl, urlToSort } from "../../../../shared/src/FileService"
 import { app } from "../App"
 import { Column, Columns } from "../Columns"
+import { AppState } from "./AppState"
 import { isExecutable } from "./isExecutable"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
-import { AppState } from "./AppState"
-import { produce } from "immer"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export class Helper {
@@ -188,7 +187,19 @@ export class Helper {
         this._state = to
         this.onChanged?.(from, to)
     }
-    onChanged?: (from: AppState, to: AppState) => void
+    onChanged(_from: AppState, _to: AppState) {
+        this.listeners.forEach(t => t())
+    }
+    private listeners: (() => void)[] = []
+    subscribe(listener: () => void) {
+        this.listeners = [...this.listeners, listener]
+        return () => {
+            this.listeners = this.listeners.filter(t => t !== listener)
+        }
+    }
+    getSnapshot() {
+        return this._state
+    }
 
     private async reloadFiles() {
         if (this._state.req.FolderSize) {
@@ -305,14 +316,10 @@ export class Helper {
 
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
+const helper = new Helper()
 
 export function useHelper() {
-    const helper = useMemo(() => {
-        const helper = new Helper()
-        helper.onChanged = (_from, to) => setState(to)
-        return helper
-    }, [])
-    const [state, setState] = useState<AppState>(helper._state)
+    const state = useSyncExternalStore(helper.subscribe, helper.getSnapshot)
     const navigate = useNavigate()
     helper.navigate = navigate
     return [state, helper] as const
