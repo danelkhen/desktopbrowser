@@ -54,6 +54,8 @@ const GrdFiles: typeof Grid = styled(Grid)`
             }
         }
         > thead {
+            position: sticky;
+            top: 83px;
             > tr {
                 background-color: #060606;
                 border-bottom: 1px solid #333;

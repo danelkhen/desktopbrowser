@@ -6,84 +6,6 @@ import styled from "styled-components"
 import { colors } from "../lib/GlobalStyle"
 import { Meta } from "../lib/Meta"
 
-const GridTable = styled.table`
-    border-collapse: collapse;
-    table-layout: fixed;
-    border-spacing: 0;
-
-    > thead {
-        > tr {
-            border-bottom: 1px solid ${colors.__bg2};
-            > th {
-                padding: 4px 8px;
-                white-space: nowrap;
-                cursor: default;
-                font-weight: normal;
-                text-align: left;
-                vertical-align: top;
-                box-sizing: border-box;
-                &:hover {
-                    background-color: ${colors.__bg2};
-                }
-                &.sorted {
-                    &.asc {
-                        background-color: ${colors.__bg2};
-                    }
-                    &.desc {
-                        background-color: ${colors.__bg3};
-                    }
-                }
-            }
-        }
-    }
-
-    > tfoot {
-        > tr {
-            > th {
-                padding: 4px 8px;
-                white-space: nowrap;
-                cursor: pointer;
-                font-weight: bold;
-                > button {
-                    width: 100%;
-                    min-height: 100%;
-                    border: none;
-                    background-color: inherit;
-                    padding: 4px;
-                }
-            }
-            &:hover {
-                outline: 1px solid #ccc;
-            }
-        }
-    }
-`
-const GridDiv = styled.div`
-    > .Pager {
-        display: inline-block;
-        margin: 0 5px;
-        > .Pages > .Page {
-            display: inline-block;
-            width: 20px;
-            line-height: 20px;
-        }
-        > .PagerInfo {
-            display: inline-block;
-            margin: 0 5px;
-        }
-
-        > .NextPage {
-            visibility: hidden;
-        }
-        > .PrevPage {
-            visibility: hidden;
-        }
-    }
-
-    > .Search {
-        display: inline-block;
-    }
-`
 export interface ColumnsConfig<T, K extends {}> {
     readonly keys: Meta<K, string>
     readonly getters?: Partial<Meta<K, (item: T, index: number) => unknown>>
@@ -179,3 +101,82 @@ export function Grid<T, K extends {}>({
         </GridDiv>
     )
 }
+
+const GridTable = styled.table`
+    border-collapse: collapse;
+    table-layout: fixed;
+    border-spacing: 0;
+
+    > thead {
+        > tr {
+            border-bottom: 1px solid ${colors.__bg2};
+            > th {
+                padding: 4px 8px;
+                white-space: nowrap;
+                cursor: default;
+                font-weight: normal;
+                text-align: left;
+                vertical-align: top;
+                box-sizing: border-box;
+                &:hover {
+                    background-color: ${colors.__bg2};
+                }
+                &.sorted {
+                    &.asc {
+                        background-color: ${colors.__bg2};
+                    }
+                    &.desc {
+                        background-color: ${colors.__bg3};
+                    }
+                }
+            }
+        }
+    }
+
+    > tfoot {
+        > tr {
+            > th {
+                padding: 4px 8px;
+                white-space: nowrap;
+                cursor: pointer;
+                font-weight: bold;
+                > button {
+                    width: 100%;
+                    min-height: 100%;
+                    border: none;
+                    background-color: inherit;
+                    padding: 4px;
+                }
+            }
+            &:hover {
+                outline: 1px solid #ccc;
+            }
+        }
+    }
+`
+const GridDiv = styled.div`
+    > .Pager {
+        display: inline-block;
+        margin: 0 5px;
+        > .Pages > .Page {
+            display: inline-block;
+            width: 20px;
+            line-height: 20px;
+        }
+        > .PagerInfo {
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        > .NextPage {
+            visibility: hidden;
+        }
+        > .PrevPage {
+            visibility: hidden;
+        }
+    }
+
+    > .Search {
+        display: inline-block;
+    }
+`

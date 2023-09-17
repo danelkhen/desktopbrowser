@@ -108,7 +108,7 @@ export function FileBrowser() {
                     totalPages={totalPages}
                 />
                 <QuickFind allFiles={allFiles} onFindFiles={setSelectedFiles} />
-                <Files2
+                {/* <Files2
                     hasInnerSelection={hasInnerSelection}
                     selectedFiles={selectedFiles}
                     allFiles={allFiles}
@@ -119,7 +119,7 @@ export function FileBrowser() {
                     orderBy={orderBy}
                     body={false}
                     dispatcher={dispatcher}
-                />
+                /> */}
             </header>
             <Files2
                 hasInnerSelection={hasInnerSelection}
@@ -130,7 +130,7 @@ export function FileBrowser() {
                 columns={columns}
                 files={files}
                 orderBy={orderBy}
-                head={false}
+                // head={false}
                 dispatcher={dispatcher}
             />
         </>
