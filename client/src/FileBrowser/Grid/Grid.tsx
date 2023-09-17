@@ -85,9 +85,9 @@ const GridDiv = styled.div`
     }
 `
 export interface ColumnsConfig<T, K extends {}> {
-    keys: Meta<K, string>
-    getters?: Partial<Meta<K, (item: T, index: number) => unknown>>
-    visibleColumns?: (keyof K)[]
+    readonly keys: Meta<K, string>
+    readonly getters?: Partial<Meta<K, (item: T, index: number) => unknown>>
+    readonly visibleColumns?: (keyof K)[]
 }
 
 export interface GridProps<T, K extends {}> {

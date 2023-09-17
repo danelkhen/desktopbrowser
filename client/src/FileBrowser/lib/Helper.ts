@@ -10,6 +10,7 @@ import { isExecutable } from "./isExecutable"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 import { AppState } from "./AppState"
+import { produce } from "immer"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
 export class Helper {
@@ -57,7 +58,7 @@ export class Helper {
                     visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
                 },
             }
-            state.sorting = { ...state.sortingDefaults, ...state.reqSorting }
+            state = { ...state, sorting: { ...state.sortingDefaults, ...state.reqSorting } }
         }
         this._state = state
     }
@@ -143,8 +144,8 @@ export class Helper {
     }
 
     parseRequest = async (path: string, s: string) => {
-        const req: ListFilesRequest = queryToReq(s)
-        req.Path = path
+        const req2: ListFilesRequest = queryToReq(s)
+        const req = { ...req2, Path: path }
         const reqSorting = this.useReqSorting(req)
         this.set({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
         await this.reloadFiles()
@@ -227,21 +228,23 @@ export class Helper {
 
     orderBy = (column: Column) => {
         const sorting = this._state.sorting
-        let sort = _.cloneDeep(this._state.req.sort ?? [])
-        const index = sort.findIndex(t => t.Name === column)
-        if (index === 0) {
-            if (!!sort[index].Descending === !!sorting.descendingFirst[column]) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                sort[index].Descending = !sort[index].Descending
+        const sort = produce(this._state.req.sort ?? [], sort => {
+            // let sort = _.cloneDeep(this._state.req.sort ?? [])
+            const index = sort.findIndex(t => t.Name === column)
+            if (index === 0) {
+                if (!!sort[index].Descending === !!sorting.descendingFirst[column]) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    sort[index].Descending = !sort[index].Descending
+                } else {
+                    sort.shift()
+                }
+            } else if (index > 0) {
+                sort = [{ Name: column, Descending: sorting.descendingFirst[column] }]
             } else {
-                sort.shift()
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sort.unshift({ Name: column, Descending: sorting.descendingFirst[column] })
             }
-        } else if (index > 0) {
-            sort = [{ Name: column, Descending: sorting.descendingFirst[column] }]
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            sort.unshift({ Name: column, Descending: sorting.descendingFirst[column] })
-        }
+        })
 
         this.updateReq({ sort })
     }
@@ -358,9 +361,8 @@ export function queryToReq(s: string): ListFilesRequest {
             x[key] = true
         }
     }
-    const y = x as ListFilesRequest
-    y.sort = urlToSort(x.sort)
-    return y
+    const z = { ...x, sort: urlToSort(x.sort) } as ListFilesRequest
+    return z
 }
 
 function sanitizeQuery(s: string): string {

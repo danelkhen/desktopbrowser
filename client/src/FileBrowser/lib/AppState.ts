@@ -3,11 +3,11 @@ import { FileColumnsConfig } from "./FileColumnsConfig"
 import { FileSortConfig } from "./Helper"
 
 export interface AppState {
-    res: ListFilesResponse
-    req: ListFilesRequest
-    sortingDefaults: FileSortConfig
-    reqSorting: Pick<FileSortConfig, "active" | "isDescending">
-    sorting: FileSortConfig
-    filesMd: { [key: string]: FileInfo }
-    columns: FileColumnsConfig
+    readonly res: ListFilesResponse
+    readonly req: ListFilesRequest
+    readonly sortingDefaults: FileSortConfig
+    readonly reqSorting: Pick<FileSortConfig, "active" | "isDescending">
+    readonly sorting: FileSortConfig
+    readonly filesMd: { [key: string]: FileInfo }
+    readonly columns: FileColumnsConfig
 }

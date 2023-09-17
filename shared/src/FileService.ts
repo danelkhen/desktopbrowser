@@ -20,41 +20,41 @@ export interface FileService {
 }
 
 export interface FileInfo {
-    key: string
-    collection: string
-    selectedFiles?: string[]
-    tmdbKey?: string
-    episodeKey?: string
-    watched?: boolean
-    lastKnownPath?: string
-    scanned?: string
+    readonly key: string
+    readonly collection: string
+    readonly selectedFiles?: string[]
+    readonly tmdbKey?: string
+    readonly episodeKey?: string
+    readonly watched?: boolean
+    readonly lastKnownPath?: string
+    readonly scanned?: string
 }
 
 export interface ListFilesRequest {
-    sort?: SortColumn[]
-    foldersFirst?: boolean
-    ByInnerSelection?: boolean
-    SearchPattern?: string
-    IsRecursive?: boolean
-    FolderSize?: boolean
-    HideFolders?: boolean
-    HideFiles?: boolean
-    Path?: string
-    Sort?: SortRequest
-    ShowHiddenFiles?: boolean
-    NoCache?: boolean
-    View?: string
-    hideWatched?: boolean
+    readonly sort?: SortColumn[]
+    readonly foldersFirst?: boolean
+    readonly ByInnerSelection?: boolean
+    readonly SearchPattern?: string
+    readonly IsRecursive?: boolean
+    readonly FolderSize?: boolean
+    readonly HideFolders?: boolean
+    readonly HideFiles?: boolean
+    readonly Path?: string
+    readonly Sort?: SortRequest
+    readonly ShowHiddenFiles?: boolean
+    readonly NoCache?: boolean
+    readonly View?: string
+    readonly hideWatched?: boolean
     // TODO:
-    KeepView?: boolean
-    skip?: number
-    take?: number
+    readonly KeepView?: boolean
+    readonly skip?: number
+    readonly take?: number
 }
 
 export interface ListFilesResponse {
-    File?: FsFile
-    Files?: FsFile[]
-    Relatives: FileRelativesInfo
+    readonly File?: FsFile
+    readonly Files?: FsFile[]
+    readonly Relatives: FileRelativesInfo
 }
 
 export interface FsFile {
@@ -84,14 +84,8 @@ export interface SortRequest {
 
 export type Column = "Name" | "Modified" | "Extension" | "Size" | "type" | "hasInnerSelection"
 export interface SortColumn {
-    Name: Column
-    Descending?: boolean
-}
-
-export interface ListFilesResponse {
-    File?: FsFile
-    Files?: FsFile[]
-    Relatives: FileRelativesInfo
+    readonly Name: Column
+    readonly Descending?: boolean
 }
 
 export function sortToUrl(cols: SortColumn[]): string {

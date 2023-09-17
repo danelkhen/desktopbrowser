@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "classnames": "^2.2.6",
+        "immer": "^10.0.2",
         "luxon": "^3.4.1",
         "reconnecting-websocket": "^4.4.0"
     },

@@ -7,11 +7,11 @@ import { Meta } from "../../utils/Meta"
 export type IsDescending<K extends {}> = Partial<Meta<K, boolean>>
 export type IsActive<K extends {}> = readonly (keyof K)[]
 export interface SortConfig<T, K extends {}> {
-    isDescending: IsDescending<K>
-    active: IsActive<K>
-    getters: Partial<Meta<K, (obj: T) => any>>
-    sortGetters: Partial<Meta<K, (obj: T) => any>>
-    descendingFirst: Partial<Meta<K, boolean>>
+    readonly isDescending: IsDescending<K>
+    readonly active: IsActive<K>
+    readonly getters: Partial<Meta<K, (obj: T) => any>>
+    readonly sortGetters: Partial<Meta<K, (obj: T) => any>>
+    readonly descendingFirst: Partial<Meta<K, boolean>>
 }
 
 export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>) {
