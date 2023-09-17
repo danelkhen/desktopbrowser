@@ -1,4 +1,4 @@
-import { toDefaultDate, toFriendlyRelative2 } from "../../../../shared/src"
+import { toDefaultDate, toFriendlyRelative2 } from "../../../../shared/src/utils"
 
 export function formatFriendlyDate(value: string | null): string {
     if (!value) return ""

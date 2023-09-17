@@ -1,4 +1,4 @@
-import { removeLast } from "../../../../shared/src"
+import { removeLast } from "../../../../shared/src/String"
 
 export function path_LinuxToWin(path: string): string {
     if (!path) return path

@@ -1,6 +1,6 @@
 import cx from "classnames"
 import { useRef, useState } from "react"
-import { sleep } from "../../../shared/src"
+import { sleep } from "../../../shared/src/utils"
 import { FsFile } from "../../../shared/src/FileService"
 
 export function QuickFind({ allFiles, onFindFiles }: QuickFindProps) {

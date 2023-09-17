@@ -1,8 +1,11 @@
 ﻿import { Keys } from "./Keys"
-import { itemsAre } from "../../../shared/src"
+import { itemsAre } from "../../../shared/src/Array"
 
 export class Selection<T> {
-    constructor(public readonly AllItems: T[], public readonly SelectedItems: T[]) {}
+    constructor(
+        public readonly AllItems: T[],
+        public readonly SelectedItems: T[]
+    ) {}
 
     Toggle(list: T[], item: T): void {
         const index = list.indexOf(item)
