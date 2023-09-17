@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { sleep } from "../shared/sleep"
-import { itemsAre } from "../shared/Array"
 import { FsFile, ListFilesResponse } from "../shared/FileService"
 import { Selection } from "../utils/Selection"
 import { Dispatcher, dispatcher } from "../FileBrowser/lib/Dispatcher"
 import { useAppState } from "./useAppState"
+import { arrayItemsEqual } from "../shared/arrayItemsEqual"
 
 export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: Dispatcher["Open"]; up: () => void }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
@@ -30,7 +30,7 @@ export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: 
             }
             console.log("selectedFiles", v)
             _setSelectedFiles(prev => {
-                if (prev[itemsAre](v)) {
+                if (arrayItemsEqual(prev, v)) {
                     return prev
                 }
                 return v

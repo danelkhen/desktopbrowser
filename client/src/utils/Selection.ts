@@ -1,5 +1,5 @@
-﻿import { Keys } from "./Keys"
-import { itemsAre } from "../shared/Array"
+﻿import { arrayItemsEqual } from "../shared/arrayItemsEqual"
+import { Keys } from "./Keys"
 
 export class Selection<T> {
     constructor(
@@ -35,7 +35,7 @@ export class Selection<T> {
             sel = [item]
         }
 
-        if (sel[itemsAre](this.SelectedItems)) {
+        if (arrayItemsEqual(sel, this.SelectedItems)) {
             return this.SelectedItems
         }
         return sel
@@ -76,7 +76,7 @@ export class Selection<T> {
         return this.SetSelection(sel)
     }
     SetSelection(sel: T[]): T[] {
-        if (sel[itemsAre](this.SelectedItems) || sel == this.SelectedItems) {
+        if (arrayItemsEqual(sel, this.SelectedItems) || sel == this.SelectedItems) {
             return this.SelectedItems
         }
         return sel

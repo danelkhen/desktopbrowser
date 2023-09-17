@@ -1,4 +1,4 @@
-import { removeLast } from "./String"
+import { removeLast } from "./removeLast"
 
 export interface FileService {
     saveFileMetadata(md: FileInfo): Promise<void>
