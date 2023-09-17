@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useState } from "react"
 import { useMatch, useNavigate } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
+import { urlToPath } from "../hooks/urlToPath"
+import { useAppState } from "../hooks/useAppState"
+import { useFiltering, useFiltering2 } from "../hooks/useFiltering"
+import { usePaging } from "../hooks/usePaging"
+import { useQuery } from "../hooks/useQuery"
+import { useSelection } from "../hooks/useSelection"
+import { useSorting } from "../hooks/useSorting"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
@@ -9,13 +16,6 @@ import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
 import { Nav } from "./index.styles"
 import { dispatcher } from "./lib/Dispatcher"
-import { urlToPath } from "../hooks/urlToPath"
-import { useFiltering, useFiltering2 } from "../hooks/useFiltering"
-import { useAppState } from "../hooks/useAppState"
-import { usePaging } from "../hooks/usePaging"
-import { useQuery } from "../hooks/useQuery"
-import { useSelection } from "../hooks/useSelection"
-import { useSorting } from "../hooks/useSorting"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
@@ -31,13 +31,13 @@ export function FileBrowser() {
     const p = useQuery().toString() // get("p") ?? ""
     useEffect(() => {
         dispatcher.parseRequest(reqPath, p)
-    }, [dispatcher, p, reqPath])
+    }, [p, reqPath])
 
     useEffect(() => {
         ;(async () => {
             await dispatcher.fetchAllFilesMetadata()
         })()
-    }, [dispatcher])
+    }, [])
 
     const { req, columns, res, sorting } = state
     const [pageIndex, setPageIndex] = useState(0)
@@ -83,10 +83,7 @@ export function FileBrowser() {
     const { GotoPath } = dispatcher
     const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
 
-    const hasInnerSelection = useCallback(
-        (file: FsFile) => dispatcher.getSavedSelectedFile(file.Name) != null,
-        [dispatcher]
-    )
+    const hasInnerSelection = useCallback((file: FsFile) => dispatcher.getSavedSelectedFile(file.Name) != null, [])
 
     return (
         <>
