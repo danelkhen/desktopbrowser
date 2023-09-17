@@ -5,7 +5,7 @@ import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
 import { Column } from "./Columns"
 import { Files } from "./Files"
-import { Helper } from "./lib/Helper"
+import { Dispatcher } from "./lib/Dispatcher"
 import { FileColumnsConfig } from "./lib/AppState"
 
 export function Files2({
@@ -24,14 +24,14 @@ export function Files2({
     setSelectedFiles: (v: FsFile[]) => void
     selectedFiles: FsFile[]
     allFiles: FsFile[]
-    Open: Helper["Open"]
+    Open: Dispatcher["Open"]
     hasInnerSelection(file: FsFile): boolean
     columns: FileColumnsConfig
     head?: boolean
     body?: boolean
     files: FsFile[]
-    orderBy: Helper["orderBy"]
-    dispatcher: Helper
+    orderBy: Dispatcher["orderBy"]
+    dispatcher: Dispatcher
 }) {
     const { isSortedBy } = dispatcher
     const onItemMouseDown = useCallback(

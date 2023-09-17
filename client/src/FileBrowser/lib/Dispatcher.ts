@@ -14,7 +14,7 @@ import { reqToQuery } from "./reqToQuery"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 
-export class Helper {
+export class Dispatcher {
     _state: AppState
     navigate?: NavigateFunction
 
@@ -278,6 +278,6 @@ export class Helper {
 
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
-export const helper = new Helper()
+export const dispatcher = new Dispatcher()
 
 export type Produce<T> = (v: Draft<T>) => Draft<T>

@@ -1,25 +1,28 @@
 import { useCallback, useEffect, useState } from "react"
-import { useMatch } from "react-router"
+import { useMatch, useNavigate } from "react-router"
 import { FsFile } from "../../../shared/src/FileService"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
 import { GlobalStyle } from "./GlobalStyle"
+import { Menu } from "./Menu"
+import { QuickFind } from "./QuickFind"
 import { Nav } from "./index.styles"
-import { useHelper } from "./lib/useHelper"
+import { dispatcher } from "./lib/Dispatcher"
 import { urlToPath } from "./lib/urlToPath"
 import { useFiltering, useFiltering2 } from "./lib/useFiltering"
+import { useAppState } from "./lib/useAppState"
 import { usePaging } from "./lib/usePaging"
 import { useQuery } from "./lib/useQuery"
 import { useSelection } from "./lib/useSelection"
 import { useSorting } from "./lib/useSorting"
-import { Menu } from "./Menu"
-import { QuickFind } from "./QuickFind"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
 
-    const [state, dispatcher] = useHelper()
+    const state = useAppState()
+    const navigate = useNavigate()
+    dispatcher.navigate = navigate
 
     // const history = useHistory()
     const match = useMatch("/*")

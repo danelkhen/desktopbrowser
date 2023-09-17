@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
 import { FsFile, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Selection } from "../../utils/Selection"
-import { Helper } from "./Helper"
+import { Dispatcher } from "./Dispatcher"
 
 export function useSelection({
     res,
@@ -11,8 +11,8 @@ export function useSelection({
     up,
 }: {
     res: ListFilesResponse
-    dispatcher: Helper
-    Open: Helper["Open"]
+    dispatcher: Dispatcher
+    Open: Dispatcher["Open"]
     up: () => void
 }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])

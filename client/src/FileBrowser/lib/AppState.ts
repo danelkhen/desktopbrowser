@@ -1,7 +1,7 @@
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Columns } from "../Columns"
 import { ColumnsConfig } from "../Grid/Grid"
-import { helper } from "./Helper"
+import { dispatcher } from "./Dispatcher"
 import { sortingDefaults } from "./sortingDefaults"
 import { SortConfig } from "./useSorting"
 
@@ -34,7 +34,7 @@ export const initialAppState: AppState = {
             Size: t => t.Size,
             Modified: t => t.Modified,
             Extension: t => t.Extension,
-            hasInnerSelection: t => !!t?.IsFolder && !!helper.getSavedSelectedFile(t.Name),
+            hasInnerSelection: t => !!t?.IsFolder && !!dispatcher.getSavedSelectedFile(t.Name),
         },
         visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
     },

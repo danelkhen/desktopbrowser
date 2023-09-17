@@ -14,10 +14,10 @@ import { ReactComponent as NewIcon } from "../assets/icons/new.svg"
 import { Dropdown } from "./Dropdown"
 import { ButtonGroup, ButtonsDiv, MenuDiv } from "./Menu.styles"
 import { MenuButton, ToggleMenuButton } from "./MenuButton"
-import { Helper } from "./lib/Helper"
+import { Dispatcher } from "./lib/Dispatcher"
 import { AppState } from "./lib/AppState"
 
-export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFile?: FsFile; dispatcher: Helper }) {
+export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFile?: FsFile; dispatcher: Dispatcher }) {
     const Delete = useCallback(
         (e?: React.KeyboardEvent) =>
             selectedFile && dispatcher.deleteOrTrash({ file: selectedFile, isShiftDown: e?.shiftKey ?? false }),

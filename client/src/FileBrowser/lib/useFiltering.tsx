@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
-import { Helper } from "./Helper"
+import { Dispatcher } from "./Dispatcher"
 
 export function useFiltering(search: string, list: FsFile[]) {
     return useMemo(() => {
@@ -10,7 +10,7 @@ export function useFiltering(search: string, list: FsFile[]) {
     }, [search, list])
 }
 
-export function useFiltering2(req: ListFilesRequest, dispatcher: Helper, list: FsFile[]) {
+export function useFiltering2(req: ListFilesRequest, dispatcher: Dispatcher, list: FsFile[]) {
     return useMemo(() => {
         if (!req.hideWatched) return list
         return list.filter(t => {

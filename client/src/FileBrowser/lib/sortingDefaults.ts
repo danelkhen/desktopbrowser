@@ -1,6 +1,6 @@
 import { Columns } from "../Columns"
 import { FileSortConfig } from "./AppState"
-import { helper } from "./Helper"
+import { dispatcher } from "./Dispatcher"
 
 export const sortingDefaults: FileSortConfig = {
     getters: {
@@ -9,7 +9,7 @@ export const sortingDefaults: FileSortConfig = {
         Size: t => t.Size,
         Modified: t => t.Modified,
         Extension: t => t.Extension,
-        hasInnerSelection: file => !!file.IsFolder && !!helper.getSavedSelectedFile(file.Name),
+        hasInnerSelection: file => !!file.IsFolder && !!dispatcher.getSavedSelectedFile(file.Name),
     },
     descendingFirst: {
         Size: true,
@@ -17,7 +17,7 @@ export const sortingDefaults: FileSortConfig = {
         hasInnerSelection: true,
     },
     sortGetters: {
-        type: x => (x.type && helper.getFileTypeOrder(x.type)) ?? 0,
+        type: x => (x.type && dispatcher.getFileTypeOrder(x.type)) ?? 0,
     },
     isDescending: {},
     active: [Columns.type],

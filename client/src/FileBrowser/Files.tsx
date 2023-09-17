@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
-import { Helper } from "./lib/Helper"
+import { Dispatcher } from "./lib/Dispatcher"
 import { FormatFriendlyDate, FormatFriendlySize } from "./lib/utils"
 
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
@@ -84,7 +84,7 @@ export interface FilesProps {
     files: FsFile[]
 
     getHeaderClass: (column: Column) => string
-    orderBy: Helper["orderBy"]
+    orderBy: Dispatcher["orderBy"]
 }
 const icons: { [key: string]: ReactElement } = {
     folder: <LayersIcon />,
