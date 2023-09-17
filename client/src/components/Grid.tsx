@@ -94,7 +94,7 @@ const Table = styled.table`
 
     > thead {
         > tr {
-            border-bottom: 1px solid ${colors.__bg2};
+            border-bottom: 1px solid ${colors.bg2};
             > th {
                 padding: 4px 8px;
                 white-space: nowrap;
@@ -104,14 +104,14 @@ const Table = styled.table`
                 vertical-align: top;
                 box-sizing: border-box;
                 &:hover {
-                    background-color: ${colors.__bg2};
+                    background-color: ${colors.bg2};
                 }
                 &.sorted {
                     &.asc {
-                        background-color: ${colors.__bg2};
+                        background-color: ${colors.bg2};
                     }
                     &.desc {
-                        background-color: ${colors.__bg3};
+                        background-color: ${colors.bg3};
                     }
                 }
             }

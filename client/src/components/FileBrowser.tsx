@@ -97,12 +97,12 @@ export function FileBrowser() {
 
 const Nav = styled.nav`
     font-size: 10px;
-    background-color: ${colors.__bg1};
+    background-color: ${colors.bg1};
     background-color: #181818;
     margin: 0;
     padding: 0;
     display: flex;
-    color: ${colors.__fg2};
+    color: ${colors.fg2};
     .find {
         display: flex;
     }

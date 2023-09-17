@@ -1,42 +1,35 @@
 import { createGlobalStyle } from "styled-components"
 
-const themes = {
-    __light_fg1: "#333",
-    __light_fg2: "#666",
-    __light_fg3: "#999",
-    __light_bg1: "#fff",
-    __light_bg2: "#eee",
-    __light_bg3: "#ccc",
-    __light_bg_sel1: "#8ac8ff",
-    __light_bg_sel2: "#c8dbea",
-    __light_bg_sel3: "#f9e24e",
-    __light_bg_sel4: "#fbec88",
-    __light_bg_sel5: "#fffbe7",
-    __dark_bg1: "#111",
-    __dark_bg2: "#333",
-    __dark_bg3: "#666",
-    __dark_fg1: "#eee",
-    __dark_fg2: "#ddd",
-    __dark_fg3: "#bbb",
-    __dark_bg_sel1: "#2468a2",
-    __dark_bg_sel2: "#164783",
-    __dark_bg_sel3: "#002552",
-    __dark_bg_sel4: "#5d5517",
-    __dark_bg_sel5: "#423e22",
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const lightTheme = {
+    fg1: "#333",
+    fg2: "#666",
+    fg3: "#999",
+    bg1: "#fff",
+    bg2: "#eee",
+    bg3: "#ccc",
+    bgSel1: "#8ac8ff",
+    bgSel2: "#c8dbea",
+    bgSel3: "#f9e24e",
+    bgSel4: "#fbec88",
+    bgSel5: "#fffbe7",
 } as const
-export const colors = {
-    __fg1: themes.__dark_fg1,
-    __fg2: themes.__dark_fg2,
-    __fg3: themes.__dark_fg3,
-    __bg1: themes.__dark_bg1,
-    __bg2: themes.__dark_bg2,
-    __bg3: themes.__dark_bg3,
-    __bg_sel1: themes.__dark_bg_sel1,
-    __bg_sel2: themes.__dark_bg_sel2,
-    __bg_sel3: themes.__dark_bg_sel3,
-    __bg_sel4: themes.__dark_bg_sel4,
-    __bg_sel5: themes.__dark_bg_sel5,
+
+export const darkTheme = {
+    bg1: "#111",
+    bg2: "#333",
+    bg3: "#666",
+    fg1: "#eee",
+    fg2: "#ddd",
+    fg3: "#bbb",
+    bgSel1: "#2468a2",
+    bgSel2: "#164783",
+    bgSel3: "#002552",
+    bgSel4: "#5d5517",
+    bgSel5: "#423e22",
 } as const
+
+export const colors = darkTheme
 
 export const GlobalStyle = createGlobalStyle`
 
@@ -50,6 +43,11 @@ export const GlobalStyle = createGlobalStyle`
     src: url("/fonts/FreightTextBold.eot");
 }
 
+html {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: #060606;
     font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
@@ -59,81 +57,21 @@ body {
     margin: 0;
     padding: 0 0 50px 0;
     cursor: default;
-    color: ${colors.__fg1};
+    color: ${colors.fg1};
 }
 
-.fg1 {
-    color: ${colors.__fg1};
-}
-
-.fg2 {
-    color: ${colors.__fg2};
-}
-
-.fg3 {
-    color: ${colors.__fg3};
-}
-
-.bg1 {
-    background-color: ${colors.__bg1};
-}
-
-.bg2 {
-    background-color: ${colors.__bg2};
-}
-
-.bg3 {
-    background-color: ${colors.__bg3};
-}
-
-.bg-sel1 {
-    background-color: ${colors.__bg_sel1};
-}
-
-.bg-sel2 {
-    background-color: ${colors.__bg_sel2};
-}
-
-.bg-sel3 {
-    background-color: ${colors.__bg_sel3};
-}
-
-.bg-sel4 {
-    background-color: ${colors.__bg_sel4};
-}
-
-.bg-sel5 {
-    background-color: ${colors.__bg_sel5};
-}
-
-.palette {
-    display: none;
-}
-
-.palette > div > div {
-    height: 100px;
-    width: 100px;
-    display: inline-block;
-    text-align: center;
-    vertical-align: top;
-}
-
-html {
-    margin: 0;
-    padding: 0;
-}
 
 input,
 select {
     box-sizing: border-box;
-    color: ${colors.__fg1};
-    background-color: ${colors.__bg1};
+    color: ${colors.fg1};
+    background-color: ${colors.bg1};
     font-size: inherit;
 }
 
 button {
-    color: ${colors.__fg1};
-    background-color: ${colors.__bg1};
+    color: ${colors.fg1};
+    background-color: ${colors.bg1};
     font-size: inherit;
 }
 
@@ -156,7 +94,7 @@ a.Name {
 }
 
 a.Name:hover {
-    border-bottom: 1px solid ${colors.__fg3};
+    border-bottom: 1px solid ${colors.fg3};
 }
 
 .container-fluid {

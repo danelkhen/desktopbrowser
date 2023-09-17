@@ -1,6 +1,82 @@
 import styled from "styled-components"
 
-const AddressBarDiv = styled.div`
+export interface AddressBarProps {
+    path: string
+    search: string
+    theme: string
+    pageIndex: number
+    totalPages: number | null
+    setTheme(theme: string, remember?: boolean): void
+    setPath(v: string): void
+    setSearch(v: string): void
+    gotoPath(): void
+    prevPage(): void
+    nextPage(): void
+}
+
+export function AddressBar({
+    gotoPath,
+    path,
+    search,
+    theme,
+    setTheme,
+    setPath,
+    setSearch,
+    prevPage,
+    nextPage,
+    pageIndex,
+    totalPages,
+}: AddressBarProps) {
+    return (
+        <Container>
+            <form onSubmit={gotoPath}>
+                <input
+                    type="text"
+                    name="path"
+                    id="tbPath"
+                    className="form-control"
+                    placeholder="Path"
+                    value={path}
+                    onChange={e => setPath(e.currentTarget.value)}
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                />
+            </form>
+            <div className="right-side">
+                {(totalPages || 0) > 1 && (
+                    <span id="pager" className="Pager btn-group btn-group-sm">
+                        <button className="btn btn-default navbar-btn PrevPage" onMouseDown={prevPage}>
+                            {"<"}
+                        </button>
+                        <button className="btn btn-default navbar-btn PagerInfo">
+                            {pageIndex + 1} / {totalPages}
+                        </button>
+                        <button className="btn btn-default navbar-btn NextPage" onMouseDown={nextPage}>
+                            {">"}
+                        </button>
+                    </span>
+                )}
+                <span className="find">
+                    <input
+                        type="text"
+                        id="tbSearch"
+                        value={search}
+                        onChange={e => setSearch(e.currentTarget.value)}
+                        className="form-control"
+                        placeholder="Find Something"
+                    />
+                </span>
+                <select id="ddThemes" className="form-control" value={theme} onChange={e => setTheme(e.target.value)}>
+                    <option value="light">light</option>
+                    <option value="dark">dark</option>
+                </select>
+            </div>
+        </Container>
+    )
+}
+
+const Container = styled.div`
     padding: 0.25em 0.5em;
     font-size: 14px;
     display: flex;
@@ -52,77 +128,3 @@ const AddressBarDiv = styled.div`
         outline: none;
     }
 `
-export interface AddressBarProps {
-    path: string
-    search: string
-    theme: string
-    pageIndex: number
-    totalPages: number | null
-    setTheme(theme: string, remember?: boolean): void
-    setPath(v: string): void
-    setSearch(v: string): void
-    gotoPath(): void
-    prevPage(): void
-    nextPage(): void
-}
-export function AddressBar({
-    gotoPath,
-    path,
-    search,
-    theme,
-    setTheme,
-    setPath,
-    setSearch,
-    prevPage,
-    nextPage,
-    pageIndex,
-    totalPages,
-}: AddressBarProps) {
-    return (
-        <AddressBarDiv>
-            <form onSubmit={gotoPath}>
-                <input
-                    type="text"
-                    name="path"
-                    id="tbPath"
-                    className="form-control"
-                    placeholder="Path"
-                    value={path}
-                    onChange={e => setPath(e.currentTarget.value)}
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                />
-            </form>
-            <div className="right-side">
-                {(totalPages || 0) > 1 && (
-                    <span id="pager" className="Pager btn-group btn-group-sm">
-                        <button className="btn btn-default navbar-btn PrevPage" onMouseDown={prevPage}>
-                            {"<"}
-                        </button>
-                        <button className="btn btn-default navbar-btn PagerInfo">
-                            {pageIndex + 1} / {totalPages}
-                        </button>
-                        <button className="btn btn-default navbar-btn NextPage" onMouseDown={nextPage}>
-                            {">"}
-                        </button>
-                    </span>
-                )}
-                <span className="find">
-                    <input
-                        type="text"
-                        id="tbSearch"
-                        value={search}
-                        onChange={e => setSearch(e.currentTarget.value)}
-                        className="form-control"
-                        placeholder="Find Something"
-                    />
-                </span>
-                <select id="ddThemes" className="form-control" value={theme} onChange={e => setTheme(e.target.value)}>
-                    <option value="light">light</option>
-                    <option value="dark">dark</option>
-                </select>
-            </div>
-        </AddressBarDiv>
-    )
-}

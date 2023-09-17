@@ -10,8 +10,8 @@ export const DropdownDiv = styled.div<{ $show: boolean }>`
         display: ${({ $show }) => ($show ? "flex" : "none")};
         flex-direction: column;
         position: absolute;
-        border: 1px solid ${colors.__bg2};
-        background-color: ${colors.__bg1};
+        border: 1px solid ${colors.bg2};
+        background-color: ${colors.bg1};
         top: 40px;
     }
 `
