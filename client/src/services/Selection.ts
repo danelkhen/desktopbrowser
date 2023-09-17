@@ -1,5 +1,5 @@
-﻿import { arrayItemsEqual } from "./arrayItemsEqual"
-import { Keys } from "./Keys"
+﻿import { arrayItemsEqual } from "../lib/arrayItemsEqual"
+import { Keys } from "../lib/Keys"
 
 export class Selection<T> {
     constructor(
