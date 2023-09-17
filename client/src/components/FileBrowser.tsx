@@ -14,7 +14,7 @@ import { GlobalStyle, colors } from "../lib/GlobalStyle"
 import { gridColumns } from "../lib/gridColumns"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
-import { Files2 } from "./Files2"
+import { Files } from "./Files"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
 
@@ -108,30 +108,16 @@ export function FileBrowser() {
                     totalPages={totalPages}
                 />
                 <QuickFind allFiles={allFiles} onFindFiles={setSelectedFiles} />
-                {/* <Files2
-                    hasInnerSelection={hasInnerSelection}
-                    selectedFiles={selectedFiles}
-                    allFiles={allFiles}
-                    setSelectedFiles={setSelectedFiles}
-                    Open={Open}
-                    columns={columns}
-                    files={files}
-                    orderBy={orderBy}
-                    body={false}
-                    dispatcher={dispatcher}
-                /> */}
             </header>
-            <Files2
+            <Files
                 hasInnerSelection={hasInnerSelection}
                 selectedFiles={selectedFiles}
                 allFiles={allFiles}
                 setSelectedFiles={setSelectedFiles}
                 Open={Open}
-                // columns={gridColumns}
                 columns={gridColumns}
                 files={files}
                 orderBy={orderBy}
-                // head={false}
                 dispatcher={dispatcher}
             />
         </>

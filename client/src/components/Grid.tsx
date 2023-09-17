@@ -25,7 +25,7 @@ export interface GridProps<T> {
     // children?: { [key: ColumnKey]: (item: T, index: number) => ReactNode }
     // columns: ColumnsConfig<T, K>
 
-    GetRowClass?: (item: T) => string
+    getRowClass?: (item: T) => string
     onItemClick?: (e: React.MouseEvent, item: T) => void
     onItemMouseDown?: (e: React.MouseEvent, item: T) => void
     onItemDoubleClick?: (e: React.MouseEvent, item: T) => void
@@ -40,7 +40,7 @@ export interface GridProps<T> {
 
 export function Grid<T>({
     columns,
-    GetRowClass,
+    getRowClass: GetRowClass,
     onItemClick,
     onItemMouseDown,
     onItemDoubleClick,

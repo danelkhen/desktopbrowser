@@ -9,7 +9,7 @@ import { Selection } from "../lib/Selection"
 import { visibleGridColumns } from "../lib/gridColumns"
 import { ColumnKey, Grid } from "./Grid"
 
-export function Files2({
+export function Files({
     selectedFiles,
     allFiles,
     setSelectedFiles,
@@ -64,7 +64,7 @@ export function Files2({
         [Open]
     )
 
-    const GetRowClass = useCallback(
+    const getRowClass = useCallback(
         (file: FsFile): string => {
             const { FileRow, IsFolder, HasInnerSelection, Selected, IsFile } = Classes
             const selection = new Selection(allFiles, selectedFiles)
@@ -99,7 +99,7 @@ export function Files2({
             onItemMouseDown={onItemMouseDown}
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}
-            GetRowClass={GetRowClass}
+            getRowClass={getRowClass}
             getCellClass={column => column}
             columns={columns}
             visibleColumns={visibleGridColumns}
