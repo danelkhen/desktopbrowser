@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from "immer"
-import { useSyncExternalStore } from "react"
-import { NavigateFunction, useNavigate } from "react-router"
-import { FileInfo, FsFile, ListFilesRequest, sortToUrl, urlToSort } from "../../../../shared/src/FileService"
+import { NavigateFunction } from "react-router"
+import { FileInfo, FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { app } from "../App"
 import { Column, Columns } from "../Columns"
 import { AppState } from "./AppState"
 import { isExecutable } from "./isExecutable"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
+import { reqToQuery } from "./reqToQuery"
+import { queryToReq } from "./queryToReq"
+import { pathToUrl } from "./pathToUrl"
+import { openInNewWindow } from "./openInNewWindow"
 
 export class Helper {
     _state: AppState
@@ -315,62 +318,4 @@ export class Helper {
 
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
-const helper = new Helper()
-
-export function useHelper() {
-    const state = useSyncExternalStore(helper.subscribe, helper.getSnapshot)
-    const navigate = useNavigate()
-    helper.navigate = navigate
-    return [state, helper] as const
-}
-
-function openInNewWindow(p: string): void {
-    window.open(p, "_blank")
-}
-
-export function pathToUrl(p: string | undefined) {
-    if (!p) return ""
-    let s = p.replace(/\\/g, "/").replace(":", "")
-    if (s[0] === "/") {
-        s = s.substr(1)
-    }
-    return s
-}
-
-export function urlToPath(p: string | undefined) {
-    return `/${p ?? ""}`
-}
-
-export function reqToQuery(rest: ListFilesRequest) {
-    const rest2 = rest as any
-    if (rest.sort) {
-        rest2.sort = sortToUrl(rest.sort)
-    }
-    const obj = {} as any
-    for (const key of Object.keys(rest2)) {
-        if (!rest2[key]) {
-            continue
-        }
-        if (typeof rest2[key] == "boolean") {
-            obj[key] = ""
-            continue
-        }
-        obj[key] = rest2[key] ?? ""
-    }
-    const q = new URLSearchParams(obj)
-    return sanitizeQuery(q.toString())
-}
-export function queryToReq(s: string): ListFilesRequest {
-    const x = Object.fromEntries(new URLSearchParams(s).entries()) as any
-    for (const key of Object.keys(x)) {
-        if (x[key] === "") {
-            x[key] = true
-        }
-    }
-    const z = { ...x, sort: urlToSort(x.sort) } as ListFilesRequest
-    return z
-}
-
-function sanitizeQuery(s: string): string {
-    return s.replace(/=&/g, "&").replace(/=$/g, "").replace(/%2C/g, ",")
-}
+export const helper = new Helper()
