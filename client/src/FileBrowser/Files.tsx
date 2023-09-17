@@ -3,13 +3,13 @@ import styled from "styled-components"
 import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
-import { FileColumnsConfig } from "./lib/FileColumnsConfig"
 import { Helper } from "./lib/Helper"
 import { FormatFriendlyDate, FormatFriendlySize } from "./lib/utils"
 
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
 import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
 import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
+import { FileColumnsConfig } from "./lib/AppState"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;

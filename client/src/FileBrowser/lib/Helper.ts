@@ -11,7 +11,6 @@ import { isExecutable } from "./isExecutable"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 
-export type FileSortConfig = SortConfig<FsFile, Columns>
 export class Helper {
     _state: AppState
     navigate?: NavigateFunction
