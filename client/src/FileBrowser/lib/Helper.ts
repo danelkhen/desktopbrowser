@@ -5,44 +5,21 @@ import { NavigateFunction } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { app } from "../App"
 import { Column, Columns } from "../Columns"
-import { AppState } from "./AppState"
+import { AppState, initialAppState } from "./AppState"
 import { isExecutable } from "./isExecutable"
 import { openInNewWindow } from "./openInNewWindow"
 import { pathToUrl } from "./pathToUrl"
 import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
-import { sortingDefaults } from "./sortingDefaults"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
-
-const reqSorting: AppState["reqSorting"] = { active: [], isDescending: {} }
-const initialState: AppState = {
-    res: { Relatives: {} },
-    req: {},
-    sortingDefaults,
-    reqSorting,
-    sorting: { ...sortingDefaults, ...reqSorting },
-    filesMd: {},
-    columns: {
-        keys: Columns,
-        getters: {
-            type: t => t.type,
-            Name: t => t.Name,
-            Size: t => t.Size,
-            Modified: t => t.Modified,
-            Extension: t => t.Extension,
-            hasInnerSelection: t => !!t?.IsFolder && !!helper.getSavedSelectedFile(t.Name),
-        },
-        visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
-    },
-}
 
 export class Helper {
     _state: AppState
     navigate?: NavigateFunction
 
     constructor(state?: AppState) {
-        this._state = state ?? initialState
+        this._state = state ?? initialAppState
     }
 
     fetchAllFilesMetadata = async () => {
