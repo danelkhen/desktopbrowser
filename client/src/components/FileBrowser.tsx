@@ -25,7 +25,6 @@ export function FileBrowser() {
     const navigate = useNavigate()
     dispatcher.navigate = navigate
 
-    // const history = useHistory()
     const match = useMatch("/*")
     const reqPath = urlToPath(match?.params["*"] ?? "")
     console.log("match", match, match?.params["*"] ?? "", reqPath)
@@ -35,13 +34,10 @@ export function FileBrowser() {
     }, [p, reqPath])
 
     useEffect(() => {
-        ;(async () => {
-            await dispatcher.fetchAllFilesMetadata()
-        })()
+        void dispatcher.fetchAllFilesMetadata()
     }, [])
 
     const { req, res, sorting } = state
-    const [pageIndex, setPageIndex] = useState(0)
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
     const [theme, setTheme] = useState("dark")
@@ -52,16 +48,8 @@ export function FileBrowser() {
     const sorted = useSorting(allFiles, sorting)
     const filtered2 = useFilter(req, sorted)
     const filtered = useSearch(search, filtered2)
-    const {
-        paged,
-        nextPage,
-        prevPage,
-        totalPages,
-        pageIndex: pageIndex2,
-    } = usePaging(filtered, {
+    const { paged, nextPage, prevPage, totalPages, pageIndex } = usePaging(filtered, {
         pageSize,
-        pageIndex,
-        setPageIndex,
     })
     const files = paged
 
@@ -75,12 +63,10 @@ export function FileBrowser() {
 
     const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
         res,
-        Open: dispatcher.Open,
         up,
     })
 
-    const { GotoPath } = dispatcher
-    const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
+    const gotoPath = useCallback(() => dispatcher.GotoPath(path), [path])
 
     return (
         <>
@@ -100,7 +86,7 @@ export function FileBrowser() {
                     setTheme={setTheme}
                     search={search}
                     setSearch={setSearch}
-                    pageIndex={pageIndex2}
+                    pageIndex={pageIndex}
                     totalPages={totalPages}
                 />
                 <QuickFind allFiles={allFiles} onFindFiles={setSelectedFiles} />

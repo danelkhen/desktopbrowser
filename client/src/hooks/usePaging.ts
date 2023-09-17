@@ -1,17 +1,15 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 
 export function usePaging<T>(
     items: T[],
     {
         pageSize = 100,
-        pageIndex,
-        setPageIndex,
     }: {
         pageSize: number
-        pageIndex: number
-        setPageIndex: (v: number) => void
     }
 ): Pager<T> {
+    const [pageIndex, setPageIndex] = useState(0)
+
     return useMemo(() => {
         function nextPage() {
             setPageIndex(pageIndex + 1)
@@ -36,7 +34,9 @@ export function usePaging<T>(
         }
         const page = applyPaging(items)
         const x: Pager<T> = {
-            ...page,
+            paged: page.paged,
+            pageIndex: page.pageIndex,
+            totalPages: page.totalPages,
             setPageIndex,
             prevPage,
             nextPage,

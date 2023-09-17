@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { sleep } from "../lib/sleep"
+import { dispatcher } from "../lib/Dispatcher"
 import { FsFile, ListFilesResponse } from "../lib/FileService"
 import { Selection } from "../lib/Selection"
-import { Dispatcher, dispatcher } from "../lib/Dispatcher"
-import { useAppState } from "./useAppState"
 import { arrayItemsEqual } from "../lib/arrayItemsEqual"
+import { sleep } from "../lib/sleep"
+import { useAppState } from "./useAppState"
 
-export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: Dispatcher["Open"]; up: () => void }) {
+export function useSelection({ res, up }: { res: ListFilesResponse; up: () => void }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
     const _state = useAppState()
     const { saveSelectedFile } = dispatcher
@@ -56,14 +56,14 @@ export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: 
                 const file = selectedFile
                 if (!file) return
                 e.preventDefault()
-                Open(selectedFile)
+                dispatcher.Open(selectedFile)
             } else if (e.key == "Backspace") {
                 up()
             }
         }
         window.addEventListener("keydown", Win_keydown)
         return () => window.removeEventListener("keydown", Win_keydown)
-    }, [Open, res, selectedFiles, setSelectedFiles, up])
+    }, [res, selectedFiles, setSelectedFiles, up])
 
     const service = useMemo(() => {
         return {
