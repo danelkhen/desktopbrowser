@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { sleep } from "../shared/sleep"
-import { FsFile, ListFilesResponse } from "../shared/FileService"
-import { Selection } from "../utils/Selection"
+import { sleep } from "../lib/sleep"
+import { FsFile, ListFilesResponse } from "../lib/FileService"
+import { Selection } from "../lib/Selection"
 import { Dispatcher, dispatcher } from "../lib/Dispatcher"
 import { useAppState } from "./useAppState"
-import { arrayItemsEqual } from "../shared/arrayItemsEqual"
+import { arrayItemsEqual } from "../lib/arrayItemsEqual"
 
 export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: Dispatcher["Open"]; up: () => void }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])

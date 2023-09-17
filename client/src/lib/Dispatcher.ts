@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from "immer"
 import { NavigateFunction } from "react-router"
-import { FileInfo, FsFile, ListFilesRequest } from "../shared/FileService"
+import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
 import { app } from "./App"
 import { Column, Columns } from "./Columns"
 import { AppState, initialAppState } from "./AppState"

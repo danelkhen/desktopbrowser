@@ -1,4 +1,4 @@
-import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../shared/FileService"
+import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "./FileService"
 import { Columns } from "./Columns"
 import { ColumnsConfig } from "../components/Grid"
 import { dispatcher } from "./Dispatcher"

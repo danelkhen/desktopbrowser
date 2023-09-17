@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react"
 import styled from "styled-components"
-import { FsFile } from "../shared/FileService"
+import { FsFile } from "../lib/FileService"
 import { Column, Columns } from "../lib/Columns"
 import { Grid } from "./Grid"
 import { Dispatcher } from "../lib/Dispatcher"

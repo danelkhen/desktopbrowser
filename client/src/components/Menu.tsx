@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { FsFile } from "../shared/FileService"
+import { FsFile } from "../lib/FileService"
 import { ReactComponent as ExploreIcon } from "../assets/icons/explore.svg"
 import { ReactComponent as FolderIcon } from "../assets/icons/folder.svg"
 import { ReactComponent as GoogleIcon } from "../assets/icons/google.svg"
@@ -12,10 +12,10 @@ import { ReactComponent as TrashIcon } from "../assets/icons/trash.svg"
 import { ReactComponent as UpIcon } from "../assets/icons/up.svg"
 import { ReactComponent as NewIcon } from "../assets/icons/new.svg"
 import { Dropdown } from "./Dropdown"
-import { ButtonGroup, ButtonsDiv, MenuDiv } from "./Menu.styles"
 import { MenuButton, ToggleMenuButton } from "./MenuButton"
 import { Dispatcher } from "../lib/Dispatcher"
 import { AppState } from "../lib/AppState"
+import { styled } from "styled-components"
 
 export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFile?: FsFile; dispatcher: Dispatcher }) {
     const Delete = useCallback(
@@ -107,3 +107,35 @@ export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFi
         </MenuDiv>
     )
 }
+
+const ButtonGroup = styled.div`
+    display: flex;
+    flex-direction: row;
+    background-color: #0c0c0c;
+    text-align: center;
+    margin-right: 1em;
+    border-radius: 20px;
+    > button:first-child {
+        border-left: none;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+    }
+    > button:last-child {
+        border-right: none;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+`
+const MenuDiv = styled.div`
+    display: flex;
+    flex: 1;
+    padding: 0.5em;
+    border-bottom: 1px solid #282828;
+    margin-right: 0;
+    max-width: 100%;
+`
+const ButtonsDiv = styled.div`
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+`

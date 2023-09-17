@@ -1,4 +1,4 @@
-import { removeLast } from "../shared/removeLast"
+import { removeLast } from "./removeLast"
 
 export function toFriendlyNumber(x: number): string {
     let s: string

@@ -1,4 +1,4 @@
-import { ListFilesRequest, sortToUrl } from "../shared/FileService"
+import { ListFilesRequest, sortToUrl } from "./FileService"
 
 export function reqToQuery(rest: ListFilesRequest) {
     const rest2 = rest as any

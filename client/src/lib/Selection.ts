@@ -1,4 +1,4 @@
-﻿import { arrayItemsEqual } from "../shared/arrayItemsEqual"
+﻿import { arrayItemsEqual } from "./arrayItemsEqual"
 import { Keys } from "./Keys"
 
 export class Selection<T> {
