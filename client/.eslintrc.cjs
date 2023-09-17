@@ -18,7 +18,7 @@ module.exports = {
         "react-hooks/exhaustive-deps": "warn",
         "@typescript-eslint/ban-types": "warn",
         "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-non-null-asserted-optional-chain": "off",

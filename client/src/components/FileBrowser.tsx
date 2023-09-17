@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { useMatch, useNavigate } from "react-router"
-import { FsFile } from "../lib/FileService"
+import styled from "styled-components"
 import { urlToPath } from "../hooks/urlToPath"
 import { useAppState } from "../hooks/useAppState"
 import { useFiltering, useFiltering2 } from "../hooks/useFiltering"
@@ -8,16 +8,15 @@ import { usePaging } from "../hooks/usePaging"
 import { useQuery } from "../hooks/useQuery"
 import { useSelection } from "../hooks/useSelection"
 import { useSorting } from "../hooks/useSorting"
+import { dispatcher } from "../lib/Dispatcher"
+import { FsFile } from "../lib/FileService"
+import { GlobalStyle, colors } from "../lib/GlobalStyle"
+import { gridColumns2 } from "../lib/gridColumns"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
-import { GlobalStyle } from "../lib/GlobalStyle"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
-import { dispatcher } from "../lib/Dispatcher"
-import styled from "styled-components"
-import { colors } from "../lib/GlobalStyle"
-import { gridColumns, gridColumns2 } from "../lib/AppState"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
@@ -128,7 +127,7 @@ export function FileBrowser() {
                 allFiles={allFiles}
                 setSelectedFiles={setSelectedFiles}
                 Open={Open}
-                columns={gridColumns}
+                // columns={gridColumns}
                 columns2={gridColumns2}
                 files={files}
                 orderBy={orderBy}

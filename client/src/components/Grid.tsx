@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import cx from "classnames"
-import React, { ReactElement, ReactNode } from "react"
+import React, { ReactNode } from "react"
 import styled from "styled-components"
 import { colors } from "../lib/GlobalStyle"
 import { Meta } from "../lib/Meta"
@@ -12,68 +12,67 @@ export interface ColumnsConfig<T, K extends {}> {
     readonly visibleColumns?: (keyof K)[]
 }
 export interface Column2<T, V> {
-    getter: (item: T, index: number) => V
+    getter?: (item: T, index: number) => V
+    cell?: (item: T, index: number) => ReactNode
+    header?: () => ReactNode
 }
 export type Columns2<T> = {
     [k: string]: Column2<T, unknown>
 }
 
+export type ColumnKey = string
 export interface GridProps<T, K extends {}> {
     columns2: Columns2<T>
     className?: string
     items: T[]
-    headers?: Partial<Meta<K, () => ReactElement>>
-    children?: Partial<Meta<K, (item: T, index: number) => ReactNode>>
-    columns: ColumnsConfig<T, K>
+    // headers?: Partial<Meta<K, () => ReactElement>>
+    // children?: { [key: ColumnKey]: (item: T, index: number) => ReactNode }
+    // columns: ColumnsConfig<T, K>
 
     GetRowClass?: (item: T) => string
     onItemClick?: (e: React.MouseEvent, item: T) => void
     onItemMouseDown?: (e: React.MouseEvent, item: T) => void
     onItemDoubleClick?: (e: React.MouseEvent, item: T) => void
 
-    getHeaderClass?: (column: keyof K) => string
-    getCellClass?: (column: keyof K, item: T) => string
-    orderBy?: (column: keyof K) => void
-    classNames?: Partial<Meta<K, string>>
+    getHeaderClass?: (column: ColumnKey) => string
+    getCellClass?: (column: ColumnKey, item: T) => string
+    orderBy?: (column: ColumnKey) => void
+    // classNames?: Partial<Meta<K, string>>
     titles?: Partial<Meta<K, string>>
+    visibleColumns: string[]
 }
 
 export function Grid<T, K extends {}>({
-    columns,
+    // columns,
+    columns2,
     GetRowClass,
     onItemClick,
     onItemMouseDown,
     onItemDoubleClick,
     items,
     orderBy,
-    children,
-    headers,
-    classNames,
-    titles,
+    // children,
+    // headers,
+    // classNames,
+    // titles,
     className,
     getHeaderClass,
     getCellClass,
+    visibleColumns,
 }: GridProps<T, K>) {
-    const { keys, visibleColumns, getters } = columns
-    const cells = children
+    // const { keys, visibleColumns, getters } = columns
+    // const cells = children
 
     return (
         <Container className={className}>
             <Table>
                 <thead>
                     <tr>
-                        {visibleColumns?.map(
-                            column =>
-                                headers?.[column]?.() ?? (
-                                    <th
-                                        key={keys[column]}
-                                        className={cx(classNames?.[column], getHeaderClass?.(column))}
-                                        onClick={() => orderBy?.(column)}
-                                    >
-                                        {headers?.[column]?.() ?? titles?.[column] ?? keys[column]}
-                                    </th>
-                                )
-                        )}
+                        {visibleColumns?.map(column => (
+                            <th key={column} className={cx(getHeaderClass?.(column))} onClick={() => orderBy?.(column)}>
+                                {columns2[column].header?.() ?? column}
+                            </th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
@@ -86,11 +85,10 @@ export function Grid<T, K extends {}>({
                             onDoubleClick={e => onItemDoubleClick?.(e, item)}
                         >
                             {visibleColumns?.map(column => (
-                                <td
-                                    key={keys[column]}
-                                    className={cx(classNames?.[column], getCellClass?.(column, item))}
-                                >
-                                    {cells?.[column]?.(item, itemIndex) ?? <span>{getters?.[column] as any}</span>}
+                                <td key={column} className={cx(getCellClass?.(column, item))}>
+                                    {columns2[column].cell?.(item, itemIndex) ?? (
+                                        <span>{columns2[column].getter?.(item, itemIndex) as any}</span>
+                                    )}
                                 </td>
                             ))}
                         </tr>

@@ -1,12 +1,12 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
-import { FsFile } from "../lib/FileService"
-import { Selection } from "../lib/Selection"
+import { FileColumns2 } from "../lib/AppState"
 import { Classes } from "../lib/Classes"
 import { Column } from "../lib/Columns"
-import { Files } from "./Files"
 import { Dispatcher } from "../lib/Dispatcher"
-import { FileColumns2, FileColumnsConfig } from "../lib/AppState"
+import { FsFile } from "../lib/FileService"
+import { Selection } from "../lib/Selection"
+import { Files } from "./Files"
 
 export function Files2({
     selectedFiles,
@@ -14,7 +14,7 @@ export function Files2({
     setSelectedFiles,
     Open,
     hasInnerSelection,
-    columns,
+    // columns,
     columns2,
     files,
     orderBy,
@@ -25,7 +25,7 @@ export function Files2({
     allFiles: FsFile[]
     Open: Dispatcher["Open"]
     hasInnerSelection(file: FsFile): boolean
-    columns: FileColumnsConfig
+    // columns: FileColumnsConfig
     columns2: FileColumns2
     files: FsFile[]
     orderBy: Dispatcher["orderBy"]
@@ -99,7 +99,7 @@ export function Files2({
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}
             onItemMouseDown={onItemMouseDown}
-            columns={columns}
+            // columns={columns}
             columns2={columns2}
             files={files}
             orderBy={orderBy}

@@ -1,16 +1,12 @@
-import React, { ReactElement } from "react"
+import React from "react"
 import styled from "styled-components"
-import { FsFile } from "../lib/FileService"
 import { Column, Columns } from "../lib/Columns"
-import { Grid } from "./Grid"
 import { Dispatcher } from "../lib/Dispatcher"
-import { formatFriendlySize } from "../lib/formatFriendlySize"
-import { formatFriendlyDate } from "../lib/formatFriendlyDate"
+import { FsFile } from "../lib/FileService"
+import { Grid } from "./Grid"
 
-import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
-import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
-import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
-import { FileColumns2, FileColumnsConfig } from "../lib/AppState"
+import { FileColumns2 } from "../lib/AppState"
+import { visibleGridColumns2 } from "../lib/gridColumns"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;
@@ -76,24 +72,16 @@ const GrdFiles: typeof Grid = styled(Grid)`
 `
 
 export interface FilesProps {
-    head?: boolean
-    body?: boolean
-
     GetRowClass: (file: FsFile) => string
     onItemClick: (e: React.MouseEvent, file: FsFile) => void
     onItemMouseDown: (e: React.MouseEvent, file: FsFile) => void
     onItemDoubleClick: (e: React.MouseEvent, file: FsFile) => void
-    columns: FileColumnsConfig
+    // columns: FileColumnsConfig
     columns2: FileColumns2
     files: FsFile[]
 
     getHeaderClass: (column: Column) => string
     orderBy: Dispatcher["orderBy"]
-}
-const icons: { [key: string]: ReactElement } = {
-    folder: <LayersIcon />,
-    file: <FileEmptyIcon />,
-    link: <LinkIcon />,
 }
 
 export function Files({
@@ -102,7 +90,7 @@ export function Files({
     onItemMouseDown,
     onItemDoubleClick,
     orderBy,
-    columns,
+    // columns,
     columns2,
     files,
     getHeaderClass,
@@ -111,27 +99,28 @@ export function Files({
         <GrdFiles<FsFile, Columns>
             items={files}
             titles={{ [Columns.type]: "" }}
-            getHeaderClass={getHeaderClass}
-            orderBy={orderBy}
+            getHeaderClass={getHeaderClass as any}
+            orderBy={orderBy as any}
             onItemMouseDown={onItemMouseDown}
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}
             GetRowClass={GetRowClass}
             getCellClass={column => column}
-            columns={columns}
+            // columns={columns}
             columns2={columns2}
-        >
-            {{
-                type: file => (file.type && icons[file.type] && icons[file.type]) || null,
-                Name: file => (
-                    <span>
-                        <a className="Name">{file.Name}</a>
-                    </span>
-                ),
-                Modified: file => <span>{formatFriendlyDate(file.Modified ?? null)}</span>,
-                Size: file => <span>{formatFriendlySize(file.Size)}</span>,
-                Extension: file => !file.IsFolder && <span>{file.Extension}</span>,
-            }}
-        </GrdFiles>
+            visibleColumns={visibleGridColumns2}
+        />
+        //     {{
+        //         type: file => (file.type && icons[file.type] && icons[file.type]) || null,
+        //         Name: file => (
+        //             <span>
+        //                 <a className="Name">{file.Name}</a>
+        //             </span>
+        //         ),
+        //         Modified: file => <span>{formatFriendlyDate(file.Modified ?? null)}</span>,
+        //         Size: file => <span>{formatFriendlySize(file.Size)}</span>,
+        //         Extension: file => !file.IsFolder && <span>{file.Extension}</span>,
+        //     }}
+        // </GrdFiles>
     )
 }
