@@ -1,8 +1,8 @@
 import { useMemo } from "react"
+import { dispatcher } from "../lib/Dispatcher"
 import { FsFile, ListFilesRequest } from "../lib/FileService"
-import { Dispatcher } from "../lib/Dispatcher"
 
-export function useFiltering(search: string, list: FsFile[]) {
+export function useSearch(search: string, list: FsFile[]) {
     return useMemo(() => {
         if (!search) return list
         const s = search.toLowerCase()
@@ -10,12 +10,12 @@ export function useFiltering(search: string, list: FsFile[]) {
     }, [search, list])
 }
 
-export function useFiltering2(req: ListFilesRequest, dispatcher: Dispatcher, list: FsFile[]) {
+export function useFilter(req: ListFilesRequest, list: FsFile[]) {
     return useMemo(() => {
         if (!req.hideWatched) return list
         return list.filter(t => {
             const md = dispatcher.getFileMetadata(t.Name)
             return !md?.watched && !md?.selectedFiles?.length
         })
-    }, [req.hideWatched, list, dispatcher])
+    }, [req.hideWatched, list])
 }

@@ -3,7 +3,7 @@ import { useMatch, useNavigate } from "react-router"
 import styled from "styled-components"
 import { urlToPath } from "../hooks/urlToPath"
 import { useAppState } from "../hooks/useAppState"
-import { useFiltering, useFiltering2 } from "../hooks/useFiltering"
+import { useSearch, useFilter } from "../hooks/useFiltering"
 import { usePaging } from "../hooks/usePaging"
 import { useQuery } from "../hooks/useQuery"
 import { useSelection } from "../hooks/useSelection"
@@ -49,8 +49,8 @@ export function FileBrowser() {
     const pageSize = 200
 
     const sorted = useSorting(allFiles, sorting)
-    const filtered2 = useFiltering2(req, dispatcher, sorted)
-    const filtered = useFiltering(search, filtered2)
+    const filtered2 = useFilter(req, sorted)
+    const filtered = useSearch(search, filtered2)
     const {
         paged,
         nextPage,
