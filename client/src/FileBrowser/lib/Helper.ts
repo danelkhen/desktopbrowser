@@ -1,85 +1,66 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { produce } from "immer"
+import { Draft, produce } from "immer"
 import { NavigateFunction } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { app } from "../App"
 import { Column, Columns } from "../Columns"
 import { AppState } from "./AppState"
 import { isExecutable } from "./isExecutable"
+import { openInNewWindow } from "./openInNewWindow"
+import { pathToUrl } from "./pathToUrl"
+import { queryToReq } from "./queryToReq"
+import { reqToQuery } from "./reqToQuery"
+import { sortingDefaults } from "./sortingDefaults"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
-import { reqToQuery } from "./reqToQuery"
-import { queryToReq } from "./queryToReq"
-import { pathToUrl } from "./pathToUrl"
-import { openInNewWindow } from "./openInNewWindow"
+
+const reqSorting: AppState["reqSorting"] = { active: [], isDescending: {} }
+const initialState: AppState = {
+    res: { Relatives: {} },
+    req: {},
+    sortingDefaults,
+    reqSorting,
+    sorting: { ...sortingDefaults, ...reqSorting },
+    filesMd: {},
+    columns: {
+        keys: Columns,
+        getters: {
+            type: t => t.type,
+            Name: t => t.Name,
+            Size: t => t.Size,
+            Modified: t => t.Modified,
+            Extension: t => t.Extension,
+            hasInnerSelection: t => !!t?.IsFolder && !!helper.getSavedSelectedFile(t.Name),
+        },
+        visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
+    },
+}
 
 export class Helper {
     _state: AppState
     navigate?: NavigateFunction
 
     constructor(state?: AppState) {
-        if (!state) {
-            state = {
-                res: { Relatives: {} },
-                req: {},
-                sortingDefaults: {
-                    getters: {
-                        type: t => t.type,
-                        Name: t => t.Name,
-                        Size: t => t.Size,
-                        Modified: t => t.Modified,
-                        Extension: t => t.Extension,
-                        hasInnerSelection: file => !!file.IsFolder && !!this.getSavedSelectedFile(file.Name),
-                    },
-                    descendingFirst: {
-                        Size: true,
-                        Modified: true,
-                        hasInnerSelection: true,
-                    },
-                    sortGetters: {
-                        type: x => (x.type && this.getFileTypeOrder(x.type)) ?? 0,
-                    },
-                    isDescending: {},
-                    active: [Columns.type],
-                },
-                reqSorting: { active: [], isDescending: {} },
-                sorting: {} as any,
-                filesMd: {},
-                columns: {
-                    keys: Columns,
-                    getters: {
-                        type: t => t.type,
-                        Name: t => t.Name,
-                        Size: t => t.Size,
-                        Modified: t => t.Modified,
-                        Extension: t => t.Extension,
-                        hasInnerSelection: t => !!t?.IsFolder && !!this.getSavedSelectedFile(t.Name),
-                    },
-                    visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
-                },
-            }
-            state = { ...state, sorting: { ...state.sortingDefaults, ...state.reqSorting } }
-        }
-        this._state = state
+        this._state = state ?? initialState
     }
 
     fetchAllFilesMetadata = async () => {
         const x = await app.fileService.getAllFilesMetadata()
         const obj: { [key: string]: FileInfo } = {}
         x.map(t => (obj[t.key] = t))
-        this.set({ filesMd: obj })
+        this.update({ filesMd: obj })
     }
 
     private async setFileMetadata(value: FileInfo) {
         if (value.selectedFiles == null || value.selectedFiles.length == 0) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { [value.key]: removed, ...rest } = this._state.filesMd ?? {}
-            this.set({ filesMd: rest })
+            this.update({ filesMd: rest })
             await app.fileService.deleteFileMetadata({ key: value.key })
             return
         }
-        this.set({ filesMd: { ...this._state.filesMd, [value.key]: value } })
+        this.update({ filesMd: { ...this._state.filesMd, [value.key]: value } })
         await app.fileService.saveFileMetadata(value)
     }
     getFileMetadata = (key: string): FileInfo | null => {
@@ -100,7 +81,7 @@ export class Helper {
         })
     }
 
-    private getFileTypeOrder(type: string): number {
+    getFileTypeOrder(type: string): number {
         const order = ["folder", "link", "file"].reverse()
         return order.indexOf(type)
     }
@@ -148,7 +129,7 @@ export class Helper {
         const req2: ListFilesRequest = queryToReq(s)
         const req = { ...req2, Path: path }
         const reqSorting = this.useReqSorting(req)
-        this.set({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
+        this.update({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
         await this.reloadFiles()
     }
 
@@ -181,15 +162,17 @@ export class Helper {
 
     async fetchFiles(req: ListFilesRequest) {
         const res = await app.fileService.listFiles(req)
-        this.set({ res })
+        this.update({ res })
     }
-    private set(v: Partial<AppState>) {
-        const from = this._state
+    private set(v: AppState | Produce<AppState>) {
+        this._state = typeof v === "function" ? produce(this._state, v) : v
+        this.onChanged()
+    }
+    private update(v: Partial<AppState>) {
         const to = { ...this._state, ...v }
-        this._state = to
-        this.onChanged?.(from, to)
+        this.set(to)
     }
-    onChanged(_from: AppState, _to: AppState) {
+    onChanged() {
         this.listeners.forEach(t => t())
     }
     private listeners: (() => void)[] = []
@@ -319,3 +302,5 @@ export class Helper {
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
 export const helper = new Helper()
+
+export type Produce<T> = (v: Draft<T>) => Draft<T>
