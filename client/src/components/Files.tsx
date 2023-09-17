@@ -94,9 +94,8 @@ export function Files({
     getHeaderClass,
 }: FilesProps) {
     return (
-        <GrdFiles<FsFile, FileColumnKeys>
+        <GrdFiles<FsFile>
             items={files}
-            titles={{ [FileColumnKeys.type]: "" }}
             getHeaderClass={getHeaderClass as any}
             orderBy={orderBy as any}
             onItemMouseDown={onItemMouseDown}

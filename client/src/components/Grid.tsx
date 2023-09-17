@@ -16,7 +16,7 @@ export type Columns<T> = {
 }
 
 export type ColumnKey = string
-export interface GridProps<T, K extends {}> {
+export interface GridProps<T> {
     columns: Columns<T>
     className?: string
     items: T[]
@@ -33,11 +33,11 @@ export interface GridProps<T, K extends {}> {
     getCellClass?: (column: ColumnKey, item: T) => string
     orderBy?: (column: ColumnKey) => void
     // classNames?: Partial<Meta<K, string>>
-    titles?: Partial<Meta<K, string>>
-    visibleColumns: string[]
+    // titles?: Partial<Meta<K, string>>
+    visibleColumns: ColumnKey[]
 }
 
-export function Grid<T, K extends {}>({
+export function Grid<T>({
     columns,
     GetRowClass,
     onItemClick,
@@ -49,7 +49,7 @@ export function Grid<T, K extends {}>({
     getHeaderClass,
     getCellClass,
     visibleColumns,
-}: GridProps<T, K>) {
+}: GridProps<T>) {
     return (
         <Container className={className}>
             <Table>
