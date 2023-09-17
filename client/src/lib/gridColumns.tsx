@@ -13,6 +13,7 @@ export const gridColumns: FileColumns = {
         getter: t => t.type,
         cell: file => (file.type && icons[file.type] && icons[file.type]) || null,
         header: () => "",
+        sortGetter: x => (x.type && dispatcher.getFileTypeOrder(x.type)) ?? 0,
     },
     Name: {
         getter: t => t.Name,

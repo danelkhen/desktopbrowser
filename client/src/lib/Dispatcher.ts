@@ -101,7 +101,7 @@ export class Dispatcher {
             }
         }
         console.log("setSorting", active)
-        const sorting: Pick<SortConfig<FsFile>, "active" | "isDescending"> = { active, isDescending }
+        const sorting: Pick<SortConfig, "active" | "isDescending"> = { active, isDescending }
         return sorting
     }
 

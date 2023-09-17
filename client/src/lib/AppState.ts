@@ -1,21 +1,33 @@
 import { Columns } from "../components/Grid"
 import { SortConfig } from "../hooks/useSorting"
+import { FileColumnKeys } from "./Columns"
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "./FileService"
-import { sortingDefaults } from "./sortingDefaults"
 
 export interface AppState {
     readonly res: ListFilesResponse
     readonly req: ListFilesRequest
-    readonly sortingDefaults: FileSortConfig
-    readonly reqSorting: Pick<FileSortConfig, "active" | "isDescending">
-    readonly sorting: FileSortConfig
+    readonly sortingDefaults: SortConfig
+    readonly reqSorting: Pick<SortConfig, "active" | "isDescending">
+    readonly sorting: SortConfig
     readonly filesMd: { [key: string]: FileInfo }
     // readonly columns: FileColumnsConfig
 }
 
-export type FileSortConfig = SortConfig<FsFile>
 // export type FileColumnsConfig = ColumnsConfig<FsFile, Columns>
 export type FileColumns = Columns<FsFile>
+
+const sortingDefaults: SortConfig = {
+    descendingFirst: {
+        Size: true,
+        Modified: true,
+        hasInnerSelection: true,
+    },
+    // sortGetters: {
+    //     type: x => (x.type && dispatcher.getFileTypeOrder(x.type)) ?? 0,
+    // },
+    isDescending: {},
+    active: [FileColumnKeys.type],
+}
 
 const reqSorting: AppState["reqSorting"] = { active: [], isDescending: {} }
 export const initialAppState: AppState = {
