@@ -17,11 +17,6 @@ export function main() {
     webSocket = new ReconnectingWebSocket(url.toString(), ["protocolOne", "protocolTwo"])
 }
 
-//TODO:
-//export function invoke2<T>(func: (server: App) => AsyncIterableIterator<T>): AsyncIterableIterator<T>
-//export function invoke2<T>(func: (server: App) => T): Promise<T> {
-//}
-
 export interface InvokeInfo {
     target: string[]
     funcName: string
@@ -45,7 +40,7 @@ export async function* invokeStreaming<T>(pc: InvokeInfo): AsyncIterableIterator
     for await (const data of events) {
         if (0) {
         } else if (data.startsWith("ERROR: ")) {
-            const json = data.substr("ERROR ".length)
+            const json = data.substring("ERROR ".length)
             if (json.length > 0) {
                 // TODO: const x = JSON.parse(json)
             }
@@ -90,10 +85,3 @@ export async function* send(cmd: string): AsyncIterableIterator<string> {
         }
     }
 }
-
-//export async function test() {
-//    let res = send2(t => t.testAsyncIterable());
-//    for await (let item of res) {
-//        console.log(item);
-//    }
-//}

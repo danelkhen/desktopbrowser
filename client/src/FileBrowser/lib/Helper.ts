@@ -3,39 +3,20 @@
 import _ from "lodash"
 import { useMemo, useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router"
-import {
-    FileInfo,
-    FsFile,
-    ListFilesRequest,
-    ListFilesResponse,
-    sortToUrl,
-    urlToSort,
-} from "../../../../shared/src/FileService"
-import { App } from "../App"
+import { FileInfo, FsFile, ListFilesRequest, sortToUrl, urlToSort } from "../../../../shared/src/FileService"
+import { app } from "../App"
 import { Column, Columns } from "../Columns"
-import { FileColumnsConfig } from "./FileColumnsConfig"
 import { isExecutable } from "./isExecutable"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
+import { AppState } from "./AppState"
 
 export type FileSortConfig = SortConfig<FsFile, Columns>
-export interface State {
-    res: ListFilesResponse
-    req: ListFilesRequest
-    sortingDefaults: FileSortConfig
-    reqSorting: Pick<FileSortConfig, "active" | "isDescending">
-    sorting: FileSortConfig
-    filesMd: { [key: string]: FileInfo }
-    columns: FileColumnsConfig
-}
-
 export class Helper {
-    _state: State
-    private app = App.current
-    private server = this.app.fileService
+    _state: AppState
     navigate?: NavigateFunction
 
-    constructor(state?: State) {
+    constructor(state?: AppState) {
         if (!state) {
             state = {
                 res: { Relatives: {} },
@@ -82,7 +63,7 @@ export class Helper {
     }
 
     fetchAllFilesMetadata = async () => {
-        const x = await this.server.getAllFilesMetadata()
+        const x = await app.fileService.getAllFilesMetadata()
         const obj: { [key: string]: FileInfo } = {}
         x.map(t => (obj[t.key] = t))
         this.set({ filesMd: obj })
@@ -93,11 +74,11 @@ export class Helper {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { [value.key]: removed, ...rest } = this._state.filesMd ?? {}
             this.set({ filesMd: rest })
-            await this.app.fileService.deleteFileMetadata({ key: value.key })
+            await app.fileService.deleteFileMetadata({ key: value.key })
             return
         }
         this.set({ filesMd: { ...this._state.filesMd, [value.key]: value } })
-        await this.app.fileService.saveFileMetadata(value)
+        await app.fileService.saveFileMetadata(value)
     }
     getFileMetadata = (key: string): FileInfo | null => {
         const x = this._state.filesMd?.[key]
@@ -173,13 +154,13 @@ export class Helper {
         if (!file.Path) return
         const fileOrFolder = file.IsFolder ? "folder" : "file"
         if (!window.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path)) return
-        await this.server.del({ Path: file.Path })
+        await app.fileService.del({ Path: file.Path })
         await this.reloadFiles()
     }
 
     private async TrashAndRefresh(file: FsFile) {
         if (!file.Path) return
-        await this.server.trash({ Path: file.Path })
+        await app.fileService.trash({ Path: file.Path })
         await this.reloadFiles()
     }
 
@@ -193,20 +174,20 @@ export class Helper {
 
     async explore(file: FsFile) {
         if (!file?.Path) return
-        await this.server.explore({ Path: file.Path })
+        await app.fileService.explore({ Path: file.Path })
     }
 
     async fetchFiles(req: ListFilesRequest) {
-        const res = await App.current.fileService.listFiles(req)
+        const res = await app.fileService.listFiles(req)
         this.set({ res })
     }
-    private set(v: Partial<State>) {
+    private set(v: Partial<AppState>) {
         const from = this._state
         const to = { ...this._state, ...v }
         this._state = to
         this.onChanged?.(from, to)
     }
-    onChanged?: (from: State, to: State) => void
+    onChanged?: (from: AppState, to: AppState) => void
 
     private async reloadFiles() {
         if (this._state.req.FolderSize) {
@@ -241,7 +222,7 @@ export class Helper {
 
     private async Execute(file: FsFile) {
         if (!file.Path) return
-        await App.current.fileService.execute({ Path: file.Path })
+        await app.fileService.execute({ Path: file.Path })
     }
 
     orderBy = (column: Column) => {
@@ -328,7 +309,7 @@ export function useHelper() {
         helper.onChanged = (_from, to) => setState(to)
         return helper
     }, [])
-    const [state, setState] = useState<State>(helper._state)
+    const [state, setState] = useState<AppState>(helper._state)
     const navigate = useNavigate()
     helper.navigate = navigate
     return [state, helper] as const
