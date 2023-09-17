@@ -6,7 +6,7 @@ import { ColumnKey } from "../components/Grid"
 import { SortConfig } from "../hooks/useSorting"
 import { app } from "./App"
 import { AppState, initialAppState } from "./AppState"
-import { FileColumnKey, FileColumnKeys } from "./Columns"
+import { FileColumnKeys } from "./Columns"
 import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
 import { Produce } from "./Produce"
 import { getGoogleSearchLink } from "./getGoogleSearchLink"
@@ -85,7 +85,7 @@ export class Dispatcher {
     }
 
     private useReqSorting(req: ListFilesRequest) {
-        const active: FileColumnKey[] = []
+        const active: ColumnKey[] = []
         const isDescending: Record<ColumnKey, boolean> = {}
         const cols = req.sort ?? []
         if (req.foldersFirst && !cols.find(t => t.Name === FileColumnKeys.type)) {
@@ -202,7 +202,7 @@ export class Dispatcher {
         await app.fileService.execute({ Path: file.Path })
     }
 
-    orderBy = (column: FileColumnKey) => {
+    orderBy = (column: ColumnKey) => {
         const sorting = this._state.sorting
         const sort = produce(this._state.req.sort ?? [], sort => {
             // let sort = _.cloneDeep(this._state.req.sort ?? [])

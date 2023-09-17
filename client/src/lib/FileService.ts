@@ -1,3 +1,4 @@
+import { ColumnKey } from "../components/Grid"
 import { removeLast } from "./removeLast"
 
 export interface FileService {
@@ -84,7 +85,7 @@ export interface SortRequest {
 
 export type Column = "Name" | "Modified" | "Extension" | "Size" | "type" | "hasInnerSelection"
 export interface SortColumn {
-    readonly Name: Column
+    readonly Name: ColumnKey
     readonly Descending?: boolean
 }
 

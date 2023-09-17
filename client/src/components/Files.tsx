@@ -96,7 +96,7 @@ export function Files({
         <GrdFiles<FsFile>
             items={files}
             getHeaderClass={getHeaderClass}
-            orderBy={orderBy as any}
+            orderBy={orderBy}
             onItemMouseDown={onItemMouseDown}
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}
