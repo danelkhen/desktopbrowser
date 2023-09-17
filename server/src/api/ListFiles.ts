@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { equalsIgnoreCase } from "../shared/String"
+import { equalsIgnoreCase } from "../shared/equalsIgnoreCase"
 import { FsFile, FileRelativesInfo, FileService, ListFilesRequest, PathRequest } from "../shared/FileService"
 import { IoFile } from "../io/IoFile"
 import { IoPath } from "../io/IoPath"
