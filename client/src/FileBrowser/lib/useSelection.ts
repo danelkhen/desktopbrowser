@@ -2,21 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { itemsAre, last, sleep } from "../../../../shared/src"
 import { FsFile, ListFilesResponse } from "../../../../shared/src/FileService"
 import { Selection } from "../../utils/Selection"
-import { Dispatcher } from "./Dispatcher"
+import { Dispatcher, dispatcher } from "./Dispatcher"
+import { useAppState } from "./useAppState"
 
-export function useSelection({
-    res,
-    dispatcher,
-    Open,
-    up,
-}: {
-    res: ListFilesResponse
-    dispatcher: Dispatcher
-    Open: Dispatcher["Open"]
-    up: () => void
-}) {
+export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: Dispatcher["Open"]; up: () => void }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
-    const { getSavedSelectedFile, saveSelectedFile, _state } = dispatcher
+    const _state = useAppState()
+    const { getSavedSelectedFile, saveSelectedFile } = dispatcher
     // const location = useLocation()
     // const history = useHistory()
 
@@ -26,7 +18,7 @@ export function useSelection({
         const files = res?.Files?.filter(t => t.Name == selectedFileName) ?? []
         const selection = files
         _setSelectedFiles(selection)
-    }, [res, dispatcher, getSavedSelectedFile, _state.filesMd])
+    }, [res, getSavedSelectedFile, _state.filesMd])
 
     const setSelectedFiles = useCallback(
         (v: FsFile[]) => {

@@ -76,7 +76,6 @@ export function FileBrowser() {
 
     const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
         res,
-        dispatcher,
         Open,
         up,
     })

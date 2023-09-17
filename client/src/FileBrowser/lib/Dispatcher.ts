@@ -15,7 +15,7 @@ import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 
 export class Dispatcher {
-    _state: AppState
+    private _state: AppState
     navigate?: NavigateFunction
 
     constructor(state?: AppState) {
