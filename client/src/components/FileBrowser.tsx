@@ -17,6 +17,7 @@ import { QuickFind } from "./QuickFind"
 import { dispatcher } from "../lib/Dispatcher"
 import styled from "styled-components"
 import { colors } from "../lib/GlobalStyle"
+import { gridColumns, gridColumns2 } from "../lib/AppState"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
@@ -40,7 +41,7 @@ export function FileBrowser() {
         })()
     }, [])
 
-    const { req, columns, res, sorting } = state
+    const { req, res, sorting } = state
     const [pageIndex, setPageIndex] = useState(0)
     const [search, setSearch] = useState("")
     const [path, setPath] = useState("")
@@ -127,7 +128,8 @@ export function FileBrowser() {
                 allFiles={allFiles}
                 setSelectedFiles={setSelectedFiles}
                 Open={Open}
-                columns={columns}
+                columns={gridColumns}
+                columns2={gridColumns2}
                 files={files}
                 orderBy={orderBy}
                 // head={false}

@@ -11,14 +11,19 @@ export interface ColumnsConfig<T, K extends {}> {
     readonly getters?: Partial<Meta<K, (item: T, index: number) => unknown>>
     readonly visibleColumns?: (keyof K)[]
 }
+export interface Column2<T, V> {
+    getter: (item: T, index: number) => V
+}
+export type Columns2<T> = {
+    [k: string]: Column2<T, unknown>
+}
 
 export interface GridProps<T, K extends {}> {
+    columns2: Columns2<T>
     className?: string
     items: T[]
     headers?: Partial<Meta<K, () => ReactElement>>
     children?: Partial<Meta<K, (item: T, index: number) => ReactNode>>
-    head?: boolean
-    body?: boolean
     columns: ColumnsConfig<T, K>
 
     GetRowClass?: (item: T) => string

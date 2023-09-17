@@ -10,7 +10,7 @@ import { formatFriendlyDate } from "../lib/formatFriendlyDate"
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
 import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
 import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
-import { FileColumnsConfig } from "../lib/AppState"
+import { FileColumns2, FileColumnsConfig } from "../lib/AppState"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;
@@ -84,6 +84,7 @@ export interface FilesProps {
     onItemMouseDown: (e: React.MouseEvent, file: FsFile) => void
     onItemDoubleClick: (e: React.MouseEvent, file: FsFile) => void
     columns: FileColumnsConfig
+    columns2: FileColumns2
     files: FsFile[]
 
     getHeaderClass: (column: Column) => string
@@ -102,17 +103,14 @@ export function Files({
     onItemDoubleClick,
     orderBy,
     columns,
+    columns2,
     files,
-    head = true,
-    body = true,
     getHeaderClass,
 }: FilesProps) {
     return (
         <GrdFiles<FsFile, Columns>
             items={files}
             titles={{ [Columns.type]: "" }}
-            head={head}
-            body={body}
             getHeaderClass={getHeaderClass}
             orderBy={orderBy}
             onItemMouseDown={onItemMouseDown}
@@ -121,6 +119,7 @@ export function Files({
             GetRowClass={GetRowClass}
             getCellClass={column => column}
             columns={columns}
+            columns2={columns2}
         >
             {{
                 type: file => (file.type && icons[file.type] && icons[file.type]) || null,

@@ -6,7 +6,7 @@ import { Classes } from "../lib/Classes"
 import { Column } from "../lib/Columns"
 import { Files } from "./Files"
 import { Dispatcher } from "../lib/Dispatcher"
-import { FileColumnsConfig } from "../lib/AppState"
+import { FileColumns2, FileColumnsConfig } from "../lib/AppState"
 
 export function Files2({
     selectedFiles,
@@ -15,8 +15,7 @@ export function Files2({
     Open,
     hasInnerSelection,
     columns,
-    body,
-    head,
+    columns2,
     files,
     orderBy,
     dispatcher,
@@ -27,8 +26,7 @@ export function Files2({
     Open: Dispatcher["Open"]
     hasInnerSelection(file: FsFile): boolean
     columns: FileColumnsConfig
-    head?: boolean
-    body?: boolean
+    columns2: FileColumns2
     files: FsFile[]
     orderBy: Dispatcher["orderBy"]
     dispatcher: Dispatcher
@@ -102,8 +100,7 @@ export function Files2({
             onItemDoubleClick={onItemDoubleClick}
             onItemMouseDown={onItemMouseDown}
             columns={columns}
-            body={body}
-            head={head}
+            columns2={columns2}
             files={files}
             orderBy={orderBy}
         />
