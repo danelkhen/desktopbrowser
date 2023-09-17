@@ -1,17 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DateTime } from "luxon"
 
-// export function tryParseInt(s: string | null | undefined): number | null {
-//     if (!s) return null
-//     const x = parseInt(s)
-//     if (isNaN(x)) return null
-//     return x
-// }
-
-export function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms || 0))
-}
-
 export function tryParseExactLuxon(s: string, format: string) {
     const x = DateTime.fromFormat(s, format)
     if (!x.isValid) return null

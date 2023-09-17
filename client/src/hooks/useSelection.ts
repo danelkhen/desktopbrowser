@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { sleep } from "../../../shared/src/utils"
+import { sleep } from "../../../shared/src/sleep"
 import { itemsAre } from "../../../shared/src/Array"
 import { FsFile, ListFilesResponse } from "../../../shared/src/FileService"
 import { Selection } from "../utils/Selection"
