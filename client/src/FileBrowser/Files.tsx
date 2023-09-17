@@ -4,7 +4,8 @@ import { FsFile } from "../../../shared/src/FileService"
 import { Column, Columns } from "./Columns"
 import { Grid } from "./Grid/Grid"
 import { Dispatcher } from "./lib/Dispatcher"
-import { FormatFriendlyDate, FormatFriendlySize } from "./lib/utils"
+import { formatFriendlySize } from "./lib/formatFriendlySize"
+import { formatFriendlyDate } from "./lib/formatFriendlyDate"
 
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
 import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
@@ -126,8 +127,8 @@ export function Files({
                         <a className="Name">{file.Name}</a>
                     </span>
                 ),
-                Modified: file => <span>{FormatFriendlyDate(file.Modified ?? null)}</span>,
-                Size: file => <span>{FormatFriendlySize(file.Size)}</span>,
+                Modified: file => <span>{formatFriendlyDate(file.Modified ?? null)}</span>,
+                Size: file => <span>{formatFriendlySize(file.Size)}</span>,
                 Extension: file => !file.IsFolder && <span>{file.Extension}</span>,
             }}
         </GrdFiles>

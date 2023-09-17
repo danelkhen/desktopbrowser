@@ -12,7 +12,8 @@ import { pathToUrl } from "./pathToUrl"
 import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
 import { IsDescending, SortConfig } from "../../hooks/useSorting"
-import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
+import { getGoogleSearchLink } from "./getGoogleSearchLink"
+import { getSubtitleSearchLink } from "./getSubtitleSearchLink"
 import { Produce } from "./Produce"
 
 export class Dispatcher {
@@ -273,9 +274,9 @@ export class Dispatcher {
     OrderByInnerSelection = () => this.orderBy(Columns.hasInnerSelection)
     isOrderedByInnerSelection = () => this.isSortedBy(Columns.hasInnerSelection)
 
-    google = () => this._state.res?.File && openInNewWindow(GetGoogleSearchLink(this._state.res?.File))
+    google = () => this._state.res?.File && openInNewWindow(getGoogleSearchLink(this._state.res?.File))
 
-    subs = () => this._state.res?.File && openInNewWindow(GetSubtitleSearchLink(this._state.res?.File))
+    subs = () => this._state.res?.File && openInNewWindow(getSubtitleSearchLink(this._state.res?.File))
 
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
