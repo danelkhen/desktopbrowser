@@ -11,13 +11,13 @@ export interface Column<T, V> {
     cell?: (item: T, index: number) => ReactNode
     header?: () => ReactNode
 }
-export type Columns2<T> = {
+export type Columns<T> = {
     [k: string]: Column<T, unknown>
 }
 
 export type ColumnKey = string
 export interface GridProps<T, K extends {}> {
-    columns2: Columns2<T>
+    columns: Columns<T>
     className?: string
     items: T[]
     // headers?: Partial<Meta<K, () => ReactElement>>
@@ -38,7 +38,7 @@ export interface GridProps<T, K extends {}> {
 }
 
 export function Grid<T, K extends {}>({
-    columns2,
+    columns,
     GetRowClass,
     onItemClick,
     onItemMouseDown,
@@ -57,7 +57,7 @@ export function Grid<T, K extends {}>({
                     <tr>
                         {visibleColumns?.map(column => (
                             <th key={column} className={cx(getHeaderClass?.(column))} onClick={() => orderBy?.(column)}>
-                                {columns2[column].header?.() ?? column}
+                                {columns[column].header?.() ?? column}
                             </th>
                         ))}
                     </tr>
@@ -73,8 +73,8 @@ export function Grid<T, K extends {}>({
                         >
                             {visibleColumns?.map(column => (
                                 <td key={column} className={cx(getCellClass?.(column, item))}>
-                                    {columns2[column].cell?.(item, itemIndex) ?? (
-                                        <span>{columns2[column].getter?.(item, itemIndex) as any}</span>
+                                    {columns[column].cell?.(item, itemIndex) ?? (
+                                        <span>{columns[column].getter?.(item, itemIndex) as any}</span>
                                     )}
                                 </td>
                             ))}

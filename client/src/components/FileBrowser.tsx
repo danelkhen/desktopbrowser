@@ -11,7 +11,7 @@ import { useSorting } from "../hooks/useSorting"
 import { dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { GlobalStyle, colors } from "../lib/GlobalStyle"
-import { gridColumns2 } from "../lib/gridColumns"
+import { gridColumns } from "../lib/gridColumns"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
@@ -128,7 +128,7 @@ export function FileBrowser() {
                 setSelectedFiles={setSelectedFiles}
                 Open={Open}
                 // columns={gridColumns}
-                columns2={gridColumns2}
+                columns={gridColumns}
                 files={files}
                 orderBy={orderBy}
                 // head={false}

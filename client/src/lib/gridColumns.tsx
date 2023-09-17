@@ -1,14 +1,14 @@
 import { ReactElement } from "react"
-import { FileColumns2 } from "./AppState"
+import { FileColumns } from "./AppState"
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
 import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
 import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
 import { formatFriendlySize } from "./formatFriendlySize"
 import { formatFriendlyDate } from "./formatFriendlyDate"
 import { dispatcher } from "./Dispatcher"
-import { ColumnKeys } from "./Columns"
+import { FileColumnKeys } from "./Columns"
 
-export const gridColumns2: FileColumns2 = {
+export const gridColumns: FileColumns = {
     type: {
         getter: t => t.type,
         cell: file => (file.type && icons[file.type] && icons[file.type]) || null,
@@ -28,12 +28,12 @@ export const gridColumns2: FileColumns2 = {
     hasInnerSelection: { getter: t => !!t?.IsFolder && !!dispatcher.getSavedSelectedFile(t.Name) },
 }
 
-export const visibleGridColumns2 = [
-    ColumnKeys.type,
-    ColumnKeys.Name,
-    ColumnKeys.Modified,
-    ColumnKeys.Size,
-    ColumnKeys.Extension,
+export const visibleGridColumns = [
+    FileColumnKeys.type,
+    FileColumnKeys.Name,
+    FileColumnKeys.Modified,
+    FileColumnKeys.Size,
+    FileColumnKeys.Extension,
 ]
 
 export const icons: { [key: string]: ReactElement } = {

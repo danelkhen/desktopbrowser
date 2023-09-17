@@ -1,12 +1,12 @@
 import React from "react"
 import styled from "styled-components"
-import { ColumnKey, ColumnKeys } from "../lib/Columns"
+import { FileColumnKey, FileColumnKeys } from "../lib/Columns"
 import { Dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { Grid } from "./Grid"
 
-import { FileColumns2 } from "../lib/AppState"
-import { visibleGridColumns2 } from "../lib/gridColumns"
+import { FileColumns } from "../lib/AppState"
+import { visibleGridColumns } from "../lib/gridColumns"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;
@@ -76,11 +76,10 @@ export interface FilesProps {
     onItemClick: (e: React.MouseEvent, file: FsFile) => void
     onItemMouseDown: (e: React.MouseEvent, file: FsFile) => void
     onItemDoubleClick: (e: React.MouseEvent, file: FsFile) => void
-    // columns: FileColumnsConfig
-    columns2: FileColumns2
+    columns: FileColumns
     files: FsFile[]
 
-    getHeaderClass: (column: ColumnKey) => string
+    getHeaderClass: (column: FileColumnKey) => string
     orderBy: Dispatcher["orderBy"]
 }
 
@@ -90,15 +89,14 @@ export function Files({
     onItemMouseDown,
     onItemDoubleClick,
     orderBy,
-    // columns,
-    columns2,
+    columns,
     files,
     getHeaderClass,
 }: FilesProps) {
     return (
-        <GrdFiles<FsFile, ColumnKeys>
+        <GrdFiles<FsFile, FileColumnKeys>
             items={files}
-            titles={{ [ColumnKeys.type]: "" }}
+            titles={{ [FileColumnKeys.type]: "" }}
             getHeaderClass={getHeaderClass as any}
             orderBy={orderBy as any}
             onItemMouseDown={onItemMouseDown}
@@ -107,8 +105,8 @@ export function Files({
             GetRowClass={GetRowClass}
             getCellClass={column => column}
             // columns={columns}
-            columns2={columns2}
-            visibleColumns={visibleGridColumns2}
+            columns={columns}
+            visibleColumns={visibleGridColumns}
         />
         //     {{
         //         type: file => (file.type && icons[file.type] && icons[file.type]) || null,

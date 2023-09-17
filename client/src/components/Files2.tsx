@@ -1,8 +1,8 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
-import { FileColumns2 } from "../lib/AppState"
+import { FileColumns } from "../lib/AppState"
 import { Classes } from "../lib/Classes"
-import { ColumnKey } from "../lib/Columns"
+import { FileColumnKey } from "../lib/Columns"
 import { Dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { Selection } from "../lib/Selection"
@@ -14,8 +14,7 @@ export function Files2({
     setSelectedFiles,
     Open,
     hasInnerSelection,
-    // columns,
-    columns2,
+    columns,
     files,
     orderBy,
     dispatcher,
@@ -25,8 +24,7 @@ export function Files2({
     allFiles: FsFile[]
     Open: Dispatcher["Open"]
     hasInnerSelection(file: FsFile): boolean
-    // columns: FileColumnsConfig
-    columns2: FileColumns2
+    columns: FileColumns
     files: FsFile[]
     orderBy: Dispatcher["orderBy"]
     dispatcher: Dispatcher
@@ -80,7 +78,7 @@ export function Files2({
     )
 
     const getHeaderClass = useCallback(
-        (column: ColumnKey): string => {
+        (column: FileColumnKey): string => {
             const { sorted, asc, desc } = Classes
             return cx(
                 column,
@@ -99,8 +97,7 @@ export function Files2({
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}
             onItemMouseDown={onItemMouseDown}
-            // columns={columns}
-            columns2={columns2}
+            columns={columns}
             files={files}
             orderBy={orderBy}
         />
