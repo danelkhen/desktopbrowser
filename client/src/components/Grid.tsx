@@ -41,12 +41,10 @@ export function Grid<T, K extends {}>({
     onItemDoubleClick,
     items,
     orderBy,
-    body = true,
     children,
     headers,
     classNames,
     titles,
-    head,
     className,
     getHeaderClass,
     getCellClass,
@@ -55,54 +53,50 @@ export function Grid<T, K extends {}>({
     const cells = children
 
     return (
-        <GridDiv className={className}>
-            <GridTable>
-                {head && (
-                    <thead>
-                        <tr>
-                            {visibleColumns?.map(
-                                column =>
-                                    headers?.[column]?.() ?? (
-                                        <th
-                                            key={keys[column]}
-                                            className={cx(classNames?.[column], getHeaderClass?.(column))}
-                                            onClick={() => orderBy?.(column)}
-                                        >
-                                            {headers?.[column]?.() ?? titles?.[column] ?? keys[column]}
-                                        </th>
-                                    )
-                            )}
-                        </tr>
-                    </thead>
-                )}
-                {body && (
-                    <tbody>
-                        {items?.map((item, itemIndex) => (
-                            <tr
-                                key={itemIndex}
-                                className={GetRowClass?.(item)}
-                                onMouseDown={e => onItemMouseDown?.(e, item)}
-                                onClick={e => onItemClick?.(e, item)}
-                                onDoubleClick={e => onItemDoubleClick?.(e, item)}
-                            >
-                                {visibleColumns?.map(column => (
-                                    <td
+        <Container className={className}>
+            <Table>
+                <thead>
+                    <tr>
+                        {visibleColumns?.map(
+                            column =>
+                                headers?.[column]?.() ?? (
+                                    <th
                                         key={keys[column]}
-                                        className={cx(classNames?.[column], getCellClass?.(column, item))}
+                                        className={cx(classNames?.[column], getHeaderClass?.(column))}
+                                        onClick={() => orderBy?.(column)}
                                     >
-                                        {cells?.[column]?.(item, itemIndex) ?? <span>{getters?.[column] as any}</span>}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                )}
-            </GridTable>
-        </GridDiv>
+                                        {headers?.[column]?.() ?? titles?.[column] ?? keys[column]}
+                                    </th>
+                                )
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {items?.map((item, itemIndex) => (
+                        <tr
+                            key={itemIndex}
+                            className={GetRowClass?.(item)}
+                            onMouseDown={e => onItemMouseDown?.(e, item)}
+                            onClick={e => onItemClick?.(e, item)}
+                            onDoubleClick={e => onItemDoubleClick?.(e, item)}
+                        >
+                            {visibleColumns?.map(column => (
+                                <td
+                                    key={keys[column]}
+                                    className={cx(classNames?.[column], getCellClass?.(column, item))}
+                                >
+                                    {cells?.[column]?.(item, itemIndex) ?? <span>{getters?.[column] as any}</span>}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+        </Container>
     )
 }
 
-const GridTable = styled.table`
+const Table = styled.table`
     border-collapse: collapse;
     table-layout: fixed;
     border-spacing: 0;
@@ -154,7 +148,7 @@ const GridTable = styled.table`
         }
     }
 `
-const GridDiv = styled.div`
+const Container = styled.div`
     > .Pager {
         display: inline-block;
         margin: 0 5px;
