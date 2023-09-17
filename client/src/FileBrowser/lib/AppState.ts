@@ -3,7 +3,7 @@ import { Columns } from "../Columns"
 import { ColumnsConfig } from "../Grid/Grid"
 import { dispatcher } from "./Dispatcher"
 import { sortingDefaults } from "./sortingDefaults"
-import { SortConfig } from "./useSorting"
+import { SortConfig } from "../../hooks/useSorting"
 
 export interface AppState {
     readonly res: ListFilesResponse

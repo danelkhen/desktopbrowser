@@ -2,7 +2,7 @@ import { removeLast, toDefaultDate, toFriendlyRelative2 } from "../../../../shar
 import { FsFile } from "../../../../shared/src/FileService"
 import { toFriendlySize } from "../../utils/toFriendlySize"
 
-export function TryParse(s: string): number | null {
+export function tryParseInt(s: string): number | null {
     const x = parseInt(s)
     if (isNaN(x)) return null
     return x

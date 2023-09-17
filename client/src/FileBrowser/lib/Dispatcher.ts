@@ -11,7 +11,7 @@ import { openInNewWindow } from "./openInNewWindow"
 import { pathToUrl } from "./pathToUrl"
 import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
-import { IsDescending, SortConfig } from "./useSorting"
+import { IsDescending, SortConfig } from "../../hooks/useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
 import { Produce } from "./Produce"
 
