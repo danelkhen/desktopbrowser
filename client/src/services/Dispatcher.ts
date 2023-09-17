@@ -3,21 +3,21 @@
 import { produce } from "immer"
 import { NavigateFunction } from "react-router"
 import { ColumnKey } from "../components/Grid"
+import { gridColumns } from "../components/gridColumns"
 import { SortConfig } from "../hooks/useSorting"
-import { app } from "./App"
-import { AppState, initialAppState, sortingDefaults } from "./AppState"
-import { FileColumnKeys } from "./Columns"
-import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
 import { Produce } from "../lib/Produce"
+import { arrayItemsEqual } from "../lib/arrayItemsEqual"
 import { getGoogleSearchLink } from "../lib/getGoogleSearchLink"
 import { getSubtitleSearchLink } from "../lib/getSubtitleSearchLink"
 import { isExecutable } from "../lib/isExecutable"
 import { openInNewWindow } from "../lib/openInNewWindow"
 import { pathToUrl } from "../lib/pathToUrl"
+import { api } from "./api"
 import { queryToReq } from "../lib/queryToReq"
 import { reqToQuery } from "../lib/reqToQuery"
-import { gridColumns } from "../components/gridColumns"
-import { arrayItemsEqual } from "../lib/arrayItemsEqual"
+import { AppState, initialAppState, sortingDefaults } from "./AppState"
+import { FileColumnKeys } from "./Columns"
+import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
 
 export class Dispatcher {
     private _state: AppState
@@ -28,7 +28,7 @@ export class Dispatcher {
     }
 
     fetchAllFilesMetadata = async () => {
-        const x = await app.fileService.getAllFilesMetadata()
+        const x = await api.getAllFilesMetadata()
         const obj: { [key: string]: FileInfo } = {}
         x.map(t => (obj[t.key] = t))
         this.update({ filesMd: obj })
@@ -39,11 +39,11 @@ export class Dispatcher {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { [value.key]: removed, ...rest } = this._state.filesMd ?? {}
             this.update({ filesMd: rest })
-            await app.fileService.deleteFileMetadata({ key: value.key })
+            await api.deleteFileMetadata({ key: value.key })
             return
         }
         this.update({ filesMd: { ...this._state.filesMd, [value.key]: value } })
-        await app.fileService.saveFileMetadata(value)
+        await api.saveFileMetadata(value)
     }
     getFileMetadata = (key: string): FileInfo | null => {
         const x = this._state.filesMd?.[key]
@@ -123,13 +123,13 @@ export class Dispatcher {
         if (!file.Path) return
         const fileOrFolder = file.IsFolder ? "folder" : "file"
         if (!window.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path)) return
-        await app.fileService.del({ Path: file.Path })
+        await api.del({ Path: file.Path })
         await this.reloadFiles()
     }
 
     private trashAndRefresh = async (file: FsFile) => {
         if (!file.Path) return
-        await app.fileService.trash({ Path: file.Path })
+        await api.trash({ Path: file.Path })
         await this.reloadFiles()
     }
 
@@ -143,11 +143,11 @@ export class Dispatcher {
 
     explore = async (file: FsFile) => {
         if (!file?.Path) return
-        await app.fileService.explore({ Path: file.Path })
+        await api.explore({ Path: file.Path })
     }
 
     async fetchFiles(req: ListFilesRequest) {
-        const res = await app.fileService.listFiles(req)
+        const res = await api.listFiles(req)
         this.update({ res })
     }
     private set(v: AppState | Produce<AppState>) {
@@ -208,7 +208,7 @@ export class Dispatcher {
 
     private Execute = async (file: FsFile) => {
         if (!file.Path) return
-        await app.fileService.execute({ Path: file.Path })
+        await api.execute({ Path: file.Path })
     }
 
     orderBy = (column: ColumnKey) => {

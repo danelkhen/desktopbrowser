@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { GlobalStyle } from "./GlobalStyle"
-import { proxyForFileService } from "../lib/proxyForFileService"
 import styled from "styled-components"
-const proxy = proxyForFileService()
+import { api } from "../services/api"
 
 const TrayDiv = styled.div`
     display: flex;
@@ -18,16 +17,16 @@ export function Tray() {
     useEffect(() => {
         document.body.addEventListener("keydown", e => {
             if (e.key === "F12") {
-                proxy.appInspect()
+                api.appInspect()
             }
         })
         ;(async () => {
-            setVersion(await proxy.appGetVersion())
+            setVersion(await api.appGetVersion())
         })()
     }, [])
 
     const checkForUpdates = useCallback(async () => {
-        const res = await proxy.checkForUpdates()
+        const res = await api.checkForUpdates()
         setStatus(res.isLatest ? "you have the latest version" : `there's a newer version ${res.latest}`)
     }, [])
 
@@ -35,9 +34,9 @@ export function Tray() {
         <>
             <GlobalStyle />
             <TrayDiv>
-                {false && <button onClick={() => proxy.appInspect()}>Inspect</button>}
+                {false && <button onClick={() => api.appInspect()}>Inspect</button>}
                 <button onClick={() => open()}>Open</button>
-                <button onClick={() => proxy.appHide()}>Close</button>
+                <button onClick={() => api.appHide()}>Close</button>
                 <button onClick={() => exit()}>Exit</button>
                 <button onClick={() => checkForUpdates()}>Check for updates</button>
                 <div>{version}</div>
@@ -48,8 +47,8 @@ export function Tray() {
 }
 
 async function open() {
-    await proxy.appOpen()
+    await api.appOpen()
 }
 async function exit() {
-    await proxy.appExit()
+    await api.appExit()
 }

@@ -1,8 +1,8 @@
-import { FileService } from "../services/FileService"
-import { getHttpInvoker } from "./getHttpInvoker"
-import { getWebSocketInvoker } from "./webSocket"
+import { FileService } from "./FileService"
+import { getHttpInvoker } from "../lib/getHttpInvoker"
+import { getWebSocketInvoker } from "../lib/webSocket"
 
-export function proxyForFileService() {
+function proxyForFileService() {
     const http = getHttpInvoker<FileService>("/api/fs")
     const ws = getWebSocketInvoker<FileService>("fileService")
 
@@ -26,3 +26,5 @@ export function proxyForFileService() {
 
     return proxy
 }
+
+export const api = proxyForFileService()
