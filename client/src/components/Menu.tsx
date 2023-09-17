@@ -15,7 +15,7 @@ import { Dropdown } from "./Dropdown"
 import { MenuButton, ToggleMenuButton } from "./MenuButton"
 import { Dispatcher } from "../services/Dispatcher"
 import { AppState } from "../services/AppState"
-import { styled } from "styled-components"
+import { css } from "@emotion/css"
 
 export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFile?: FsFile; dispatcher: Dispatcher }) {
     const Delete = useCallback(
@@ -38,14 +38,14 @@ export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFi
         isSortingDisabled,
     } = dispatcher
     return (
-        <MenuDiv>
-            <ButtonsDiv>
-                <ButtonGroup>
+        <div className={MenuDiv}>
+            <div className={ButtonsDiv}>
+                <div className={ButtonGroup}>
                     <MenuButton icon={<UpIcon />} action={goto.up} label="Up" />
                     <MenuButton icon={<PrevIcon />} action={goto.prev} label="Prev" />
                     <MenuButton icon={<NextIcon />} action={goto.next} label="Next" />
-                </ButtonGroup>
-                <ButtonGroup>
+                </div>
+                <div className={ButtonGroup}>
                     <ToggleMenuButton
                         icon={<FolderIcon />}
                         action={toggle.FolderSize}
@@ -61,8 +61,8 @@ export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFi
                         isActive={isToggled.hideWatched}
                         label="New"
                     />
-                </ButtonGroup>
-                <ButtonGroup>
+                </div>
+                <div className={ButtonGroup}>
                     <MenuButton icon={<TrashIcon />} action={Delete} label="Delete" />
                     <Dropdown>
                         <MenuButton icon={<SortIcon />} label="Sort" />
@@ -102,13 +102,13 @@ export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFi
                             <ToggleMenuButton action={toggle.Hidden} isActive={isToggled.Hidden} label="Hidden" />
                         </div>
                     </Dropdown>
-                </ButtonGroup>
-            </ButtonsDiv>
-        </MenuDiv>
+                </div>
+            </div>
+        </div>
     )
 }
 
-const ButtonGroup = styled.div`
+const ButtonGroup = css`
     display: flex;
     flex-direction: row;
     background-color: #0c0c0c;
@@ -126,7 +126,7 @@ const ButtonGroup = styled.div`
         border-bottom-right-radius: 20px;
     }
 `
-const MenuDiv = styled.div`
+const MenuDiv = css`
     display: flex;
     flex: 1;
     padding: 0.5em;
@@ -134,7 +134,7 @@ const MenuDiv = styled.div`
     margin-right: 0;
     max-width: 100%;
 `
-const ButtonsDiv = styled.div`
+const ButtonsDiv = css`
     display: flex;
     flex: 1;
     flex-direction: row;

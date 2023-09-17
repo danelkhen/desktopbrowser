@@ -1,18 +1,24 @@
 import React, { ReactComponentElement, ReactElement, useCallback, useEffect, useState } from "react"
-import styled from "styled-components"
 import { colors } from "../GlobalStyle"
 import cx from "classnames"
+import { css } from "@emotion/css"
 
-export const DropdownDiv = styled.div<{ $show: boolean }>`
+export const DropdownDiv = css`
     display: flex;
 
     .menu {
-        display: ${({ $show }) => ($show ? "flex" : "none")};
+        display: none;
         flex-direction: column;
         position: absolute;
         border: 1px solid ${colors.bg2};
         background-color: ${colors.bg1};
         top: 40px;
+        z-index: 10000;
+    }
+    &.show {
+        .menu {
+            display: flex;
+        }
     }
 `
 export interface DropdownProps {
@@ -48,10 +54,10 @@ export function Dropdown(props: DropdownProps) {
 
     const updatedToggler = React.cloneElement(toggler, { className: cx(toggler.props.className, "dropdown-toggle") })
     return (
-        <DropdownDiv $show={show} onClick={toggle}>
+        <div className={cx(DropdownDiv, { show })} onClick={toggle}>
             {updatedToggler}
             {popup}
-        </DropdownDiv>
+        </div>
     )
 }
 

@@ -1,22 +1,22 @@
+import { css } from "@emotion/css"
 import { useCallback, useEffect, useState } from "react"
 import { useMatch, useNavigate } from "react-router"
-import styled from "styled-components"
+import { colors } from "../GlobalStyle"
 import { urlToPath } from "../hooks/urlToPath"
 import { useAppState } from "../hooks/useAppState"
 import { useFilter } from "../hooks/useFilter"
-import { useSearch } from "../hooks/useSearch"
 import { usePaging } from "../hooks/usePaging"
 import { useQuery } from "../hooks/useQuery"
+import { useSearch } from "../hooks/useSearch"
 import { useSelection } from "../hooks/useSelection"
 import { useSorting } from "../hooks/useSorting"
 import { dispatcher } from "../services/Dispatcher"
-import { GlobalStyle, colors } from "../GlobalStyle"
-import { gridColumns } from "./gridColumns"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files } from "./Files"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
+import { gridColumns } from "./gridColumns"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
@@ -63,12 +63,11 @@ export function FileBrowser() {
 
     return (
         <>
-            <GlobalStyle />
             <header>
-                <Nav>
+                <div className={navStyle}>
                     <Menu selectedFile={selectedFile} state={state} dispatcher={dispatcher} />
                     <Clock />
-                </Nav>
+                </div>
                 <AddressBar
                     prevPage={prevPage}
                     nextPage={nextPage}
@@ -95,7 +94,7 @@ export function FileBrowser() {
     )
 }
 
-const Nav = styled.nav`
+const navStyle = css`
     font-size: 10px;
     background-color: ${colors.bg1};
     background-color: #181818;

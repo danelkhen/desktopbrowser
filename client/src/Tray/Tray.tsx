@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
 import { GlobalStyle } from "./GlobalStyle"
-import styled from "styled-components"
 import { api } from "../services/api"
+import { css } from "@emotion/css"
+import { Global } from "@emotion/react"
 
-const TrayDiv = styled.div`
+const TrayDiv = css`
     display: flex;
     flex-direction: column;
     > * {
@@ -32,8 +33,8 @@ export function Tray() {
 
     return (
         <>
-            <GlobalStyle />
-            <TrayDiv>
+            <Global styles={GlobalStyle} />
+            <div className={TrayDiv}>
                 {false && <button onClick={() => api.appInspect()}>Inspect</button>}
                 <button onClick={() => open()}>Open</button>
                 <button onClick={() => api.appHide()}>Close</button>
@@ -41,7 +42,7 @@ export function Tray() {
                 <button onClick={() => checkForUpdates()}>Check for updates</button>
                 <div>{version}</div>
                 <div>{status}</div>
-            </TrayDiv>
+            </div>
         </>
     )
 }

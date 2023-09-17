@@ -18,7 +18,15 @@
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+        "plugins": [
+            {
+                "name": "@styled/typescript-styled-plugin",
+                "lint": {
+                    "validProperties": ["label"]
+                }
+            }
+        ]
     },
     "include": ["src"],
     "references": [{ "path": "./tsconfig.node.json" }]

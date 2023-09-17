@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import cx from "classnames"
 import React, { ReactNode } from "react"
-import styled from "styled-components"
 import { colors } from "../GlobalStyle"
+import { css } from "@emotion/css"
 
 export interface Column<T, V> {
     getter?: (item: T, index: number) => V
@@ -52,8 +52,8 @@ export function Grid<T>({
     visibleColumns,
 }: GridProps<T>) {
     return (
-        <Container className={className}>
-            <Table>
+        <div className={cx(className, Container)}>
+            <table className={Table}>
                 <thead>
                     <tr>
                         {visibleColumns?.map(column => (
@@ -82,12 +82,12 @@ export function Grid<T>({
                         </tr>
                     ))}
                 </tbody>
-            </Table>
-        </Container>
+            </table>
+        </div>
     )
 }
 
-const Table = styled.table`
+const Table = css`
     border-collapse: collapse;
     table-layout: fixed;
     border-spacing: 0;
@@ -139,7 +139,7 @@ const Table = styled.table`
         }
     }
 `
-const Container = styled.div`
+const Container = css`
     > .Pager {
         display: inline-block;
         margin: 0 5px;

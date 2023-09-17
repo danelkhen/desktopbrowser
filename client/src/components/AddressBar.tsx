@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import { css } from "@emotion/css"
 
 export interface AddressBarProps {
     path: string
@@ -28,7 +28,7 @@ export function AddressBar({
     totalPages,
 }: AddressBarProps) {
     return (
-        <Container>
+        <div className={style}>
             <form onSubmit={gotoPath}>
                 <input
                     type="text"
@@ -72,11 +72,11 @@ export function AddressBar({
                     <option value="dark">dark</option>
                 </select>
             </div>
-        </Container>
+        </div>
     )
 }
 
-const Container = styled.div`
+const style = css`
     padding: 0.25em 0.5em;
     font-size: 14px;
     display: flex;

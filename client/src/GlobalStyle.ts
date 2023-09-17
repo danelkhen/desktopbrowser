@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components"
+import { css } from "@emotion/react"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const lightTheme = {
@@ -31,143 +31,138 @@ export const darkTheme = {
 
 export const colors = darkTheme
 
-export const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = css`
+    @font-face {
+        font-family: "FreightSansProBook-Regular";
+        src: url("/fonts/FreightSansProBook-Regular.eot");
+    }
 
-@font-face {
-    font-family: "FreightSansProBook-Regular";
-    src: url("/fonts/FreightSansProBook-Regular.eot");
-}
+    @font-face {
+        font-family: "FreightTextBold";
+        src: url("/fonts/FreightTextBold.eot");
+    }
 
-@font-face {
-    font-family: "FreightTextBold";
-    src: url("/fonts/FreightTextBold.eot");
-}
+    html {
+        margin: 0;
+        padding: 0;
+    }
 
-html {
-    margin: 0;
-    padding: 0;
-}
+    body {
+        background-color: #060606;
+        font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.5;
+        font-size: 1em;
+        margin: 0;
+        padding: 0 0 50px 0;
+        cursor: default;
+        color: ${colors.fg1};
+    }
 
-body {
-    background-color: #060606;
-    font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.5;
-    font-size: 1em;
-    margin: 0;
-    padding: 0 0 50px 0;
-    cursor: default;
-    color: ${colors.fg1};
-}
+    input,
+    select {
+        box-sizing: border-box;
+        color: ${colors.fg1};
+        background-color: ${colors.bg1};
+        font-size: inherit;
+    }
 
+    button {
+        color: ${colors.fg1};
+        background-color: ${colors.bg1};
+        font-size: inherit;
+    }
 
-input,
-select {
-    box-sizing: border-box;
-    color: ${colors.fg1};
-    background-color: ${colors.bg1};
-    font-size: inherit;
-}
+    a {
+        color: inherit;
+    }
 
-button {
-    color: ${colors.fg1};
-    background-color: ${colors.bg1};
-    font-size: inherit;
-}
+    header {
+        position: sticky;
+        top: 0;
+        background-color: #222;
+    }
+    #tbPath {
+        width: 100%;
+        font-size: inherit;
+    }
 
-a {
-    color: inherit;
-}
+    a.Name {
+        text-decoration: none;
+    }
 
-header {
-    position: sticky;
-    top: 0;
-    background-color: #222;
-}
-#tbPath {
-    width: 100%;
-    font-size: inherit;
-}
+    a.Name:hover {
+        border-bottom: 1px solid ${colors.fg3};
+    }
 
-a.Name {
-    text-decoration: none;
-}
+    .container-fluid {
+        padding-left: 0;
+    }
 
-a.Name:hover {
-    border-bottom: 1px solid ${colors.fg3};
-}
+    .form-group {
+        margin-bottom: 0;
+    }
 
-.container-fluid {
-    padding-left: 0;
-}
-
-.form-group {
-    margin-bottom: 0;
-}
-
-.lnr {
-    /*color: #0F52BA;*/
-    font-size: 20px;
-    /* To get crisp results, use sizes that are
+    .lnr {
+        /*color: #0F52BA;*/
+        font-size: 20px;
+        /* To get crisp results, use sizes that are
   a multiple of 20; because Linearicons was
   designed on a 20 by 20 grid. */
-}
+    }
 
-#tbQuickFind {
-    position: absolute;
-    top: 0;
-    right: 0;
-    border: 0;
-    background-color: transparent;
-    opacity: 0;
-}
+    #tbQuickFind {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 0;
+        background-color: transparent;
+        opacity: 0;
+    }
 
-#tbQuickFind.HasValue {
-    opacity: 1;
-}
+    #tbQuickFind.HasValue {
+        opacity: 1;
+    }
 
-.imdb label {
-    margin-right: 10px;
-}
+    .imdb label {
+        margin-right: 10px;
+    }
 
-.imdb .poster {
-    float: right;
-}
+    .imdb .poster {
+        float: right;
+    }
 
-.imdb .poster img {
-    max-width: 300px;
-    max-height: 300px;
-}
+    .imdb .poster img {
+        max-width: 300px;
+        max-height: 300px;
+    }
 
-.hidden {
-    display: none;
-}
+    .hidden {
+        display: none;
+    }
 
+    .FileRow {
+        transition: all 0.3s ease;
+        color: #999;
+        &:hover {
+            background-color: #000;
+            color: #a276f8;
+            td .Name {
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+        &.Selected {
+            color: #fff;
+            background-color: #a276f8;
+            transition: all 0.3s ease;
+        }
 
-.FileRow {
-    transition: all 0.3s ease;
-    color: #999;
-    &:hover {
-        background-color: #000;
-        color: #a276f8;
-        td .Name {
-            text-decoration: none;
-            cursor: pointer;
+        &.IsFolder.HasInnerSelection.Selected {
+            color: rgba(238, 238, 238, 0.7);
+        }
+        &.HasInnerSelection {
+            color: rgba(238, 238, 238, 0.3);
         }
     }
-    &.Selected {
-        color: #fff;
-        background-color: #a276f8;
-        transition: all 0.3s ease;
-    }
-
-    &.IsFolder.HasInnerSelection.Selected {
-        color: rgba(238, 238, 238, 0.7);
-    }
-    &.HasInnerSelection {
-        color: rgba(238, 238, 238, 0.3);
-    }
-}
-
-
 `

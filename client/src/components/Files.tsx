@@ -1,6 +1,5 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
-import { styled } from "styled-components"
 import { FileColumns } from "../services/AppState"
 import { Classes } from "../services/Classes"
 import { dispatcher } from "../services/Dispatcher"
@@ -8,6 +7,7 @@ import { FsFile } from "../services/FileService"
 import { Selection } from "../services/Selection"
 import { visibleGridColumns } from "./gridColumns"
 import { ColumnKey, Grid } from "./Grid"
+import { css } from "@emotion/css"
 
 export function Files({
     selectedFiles,
@@ -73,7 +73,8 @@ export function Files({
     }, [])
 
     return (
-        <GrdFiles<FsFile>
+        <Grid<FsFile>
+            className={GrdFiles}
             items={files}
             getHeaderClass={getHeaderClass}
             orderBy={dispatcher.orderBy}
@@ -88,7 +89,7 @@ export function Files({
     )
 }
 
-const GrdFiles: typeof Grid = styled(Grid)`
+const GrdFiles = css`
     user-select: none;
 
     > table {

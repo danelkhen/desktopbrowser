@@ -1,7 +1,7 @@
+import { css, cx } from "@emotion/css"
 import { ReactNode } from "react"
-import styled from "styled-components"
 
-export const StyledButton = styled.button<{ $active?: boolean }>`
+export const StyledButton = css`
     font-family: "PT Sans", "helvetica-neue", helvetica, sans-serif;
     border: none;
     border-right: 1px solid #282828;
@@ -20,12 +20,11 @@ export const StyledButton = styled.button<{ $active?: boolean }>`
         background-color: #a276f8;
         color: #fff;
     }
-    ${props =>
-        props.$active
-            ? `outline: none;
+    &.active {
+        outline: none;
         background-color: #a276f8;
-        color: #fff;`
-            : undefined}
+        color: #fff;
+    }
     > svg {
         margin-left: -12px;
         margin-right: 6px;
@@ -44,10 +43,10 @@ export function MenuButton({
     icon?: ReactNode
 }) {
     return (
-        <StyledButton className={className} onClick={action}>
+        <button className={cx(className, StyledButton)} onClick={action}>
             {icon}
             {label}
-        </StyledButton>
+        </button>
     )
 }
 
@@ -65,9 +64,9 @@ export function ToggleMenuButton({
     icon?: ReactNode
 }) {
     return (
-        <StyledButton className={className} $active={isActive()} onClick={action}>
+        <button className={cx(className, StyledButton, { active: isActive() })} onClick={action}>
             {icon}
             {label}
-        </StyledButton>
+        </button>
     )
 }
