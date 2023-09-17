@@ -8,7 +8,7 @@ import { useAppState } from "./useAppState"
 export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: Dispatcher["Open"]; up: () => void }) {
     const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
     const _state = useAppState()
-    const { getSavedSelectedFile, saveSelectedFile } = dispatcher
+    const { saveSelectedFile } = dispatcher
     // const location = useLocation()
     // const history = useHistory()
 
@@ -18,7 +18,7 @@ export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: 
         const files = res?.Files?.filter(t => t.Name == selectedFileName) ?? []
         const selection = files
         _setSelectedFiles(selection)
-    }, [res, getSavedSelectedFile, _state.filesMd])
+    }, [_state.filesMd, res?.File?.Name, res?.Files])
 
     const setSelectedFiles = useCallback(
         (v: FsFile[]) => {

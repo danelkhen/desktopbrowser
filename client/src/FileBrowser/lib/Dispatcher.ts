@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Draft, produce } from "immer"
+import { produce } from "immer"
 import { NavigateFunction } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest } from "../../../../shared/src/FileService"
 import { app } from "../App"
@@ -13,6 +13,7 @@ import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
 import { IsDescending, SortConfig } from "./useSorting"
 import { GetGoogleSearchLink, GetSubtitleSearchLink } from "./utils"
+import { Produce } from "./Produce"
 
 export class Dispatcher {
     private _state: AppState
@@ -278,6 +279,5 @@ export class Dispatcher {
 
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
 }
-export const dispatcher = new Dispatcher()
 
-export type Produce<T> = (v: Draft<T>) => Draft<T>
+export const dispatcher = new Dispatcher()
