@@ -3,14 +3,14 @@ import { useEffect, useState } from "react"
 import { sleep } from "../shared/sleep"
 
 export function Clock() {
-    const [time, setTime] = useState(DateTime.now().toFormat("HH:mm\n ddd, MMM D"))
+    const [time, setTime] = useState(DateTime.now().toFormat("HH:mm\n ccc, MMM d"))
     useEffect(() => {
         let run = true
         ;(async () => {
             while (run) {
                 await sleep(5000)
                 if (!run) return
-                setTime(DateTime.now().toFormat("HH:mm\n ddd, MMM D"))
+                setTime(DateTime.now().toFormat("HH:mm\n ccc, MMM d"))
             }
         })()
         return () => {

@@ -16,7 +16,7 @@ export function tryParseExactDate(s: string, format: string): Date | null {
     return x.toJSDate()
 }
 
-const DefaultDateFormat = "YYYY-MM-DD hh:mm:ss"
+const DefaultDateFormat = "yyyy-MM-dd HH:mm:ss"
 
 export function toDefaultDate(s: string): Date | null {
     return tryParseExactDate(s, DefaultDateFormat)
@@ -32,9 +32,9 @@ export function toFriendlyRelative2(dt2: Date | null, rel2?: Date): string {
             if (dt.day == rel.day) {
                 return dt.toFormat("HH:mm")
             }
-            return dt.toFormat("MMM D")
+            return dt.toFormat("MMM d")
         }
-        return dt.toFormat("MMM D")
+        return dt.toFormat("MMM d")
     }
-    return dt.toFormat("YYYY-MM-DD")
+    return dt.toFormat("yyyy-MM-dd")
 }
