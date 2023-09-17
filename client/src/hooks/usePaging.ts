@@ -1,13 +1,6 @@
 import { useMemo, useState } from "react"
 
-export function usePaging<T>(
-    items: T[],
-    {
-        pageSize = 100,
-    }: {
-        pageSize: number
-    }
-): Pager<T> {
+export function usePaging<T>(items: T[], { pageSize = 100 }: { pageSize: number }): Pager<T> {
     const [pageIndex, setPageIndex] = useState(0)
 
     return useMemo(() => {

@@ -1,25 +1,20 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { dispatcher } from "../lib/Dispatcher"
-import { FsFile, ListFilesResponse } from "../lib/FileService"
+import { FsFile } from "../lib/FileService"
 import { Selection } from "../lib/Selection"
-import { arrayItemsEqual } from "../lib/arrayItemsEqual"
 import { sleep } from "../lib/sleep"
 import { useAppState } from "./useAppState"
 
-export function useSelection({ res, up }: { res: ListFilesResponse; up: () => void }) {
-    const [selectedFiles, _setSelectedFiles] = useState<FsFile[]>([])
-    const _state = useAppState()
-    const { saveSelectedFile } = dispatcher
-    // const location = useLocation()
-    // const history = useHistory()
+export function useSelection() {
+    const { filesMd, res, selectedFiles } = useAppState()
+    const { saveSelectedFile, up, _setSelectedFiles } = dispatcher
 
-    // restore selection
     useEffect(() => {
-        const selectedFileName = res.File?.Name ? _state.filesMd?.[res.File.Name]?.selectedFiles?.[0] : null
+        const selectedFileName = res.File?.Name ? filesMd?.[res.File.Name]?.selectedFiles?.[0] : null
         const files = res?.Files?.filter(t => t.Name == selectedFileName) ?? []
         const selection = files
         _setSelectedFiles(selection)
-    }, [_state.filesMd, res?.File?.Name, res?.Files])
+    }, [_setSelectedFiles, filesMd, res?.File?.Name, res?.Files])
 
     const setSelectedFiles = useCallback(
         (v: FsFile[]) => {
@@ -29,15 +24,10 @@ export function useSelection({ res, up }: { res: ListFilesResponse; up: () => vo
                 saveSelectedFile(res.File.Name, file?.Name)
             }
             console.log("selectedFiles", v)
-            _setSelectedFiles(prev => {
-                if (arrayItemsEqual(prev, v)) {
-                    return prev
-                }
-                return v
-            })
+            _setSelectedFiles(v)
             verifySelectionInView()
         },
-        [res, saveSelectedFile]
+        [_setSelectedFiles, res?.File?.Name, saveSelectedFile]
     )
 
     // Keyboard selection

@@ -10,6 +10,7 @@ export interface AppState {
     readonly reqSorting: Pick<SortConfig, "active" | "isDescending">
     readonly sorting: SortConfig
     readonly filesMd: { [key: string]: FileInfo }
+    readonly selectedFiles: FsFile[]
 }
 
 export type FileColumns = Columns<FsFile>
@@ -27,4 +28,5 @@ export const initialAppState: AppState = {
     reqSorting,
     sorting: { ...sortingDefaults, ...reqSorting },
     filesMd: {},
+    selectedFiles: [],
 }

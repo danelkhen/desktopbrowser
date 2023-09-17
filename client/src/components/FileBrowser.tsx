@@ -57,14 +57,7 @@ export function FileBrowser() {
         setPath(req.Path ?? "")
     }, [req.Path])
 
-    const { GotoFolder } = dispatcher
-    const { ParentFolder } = res?.Relatives ?? {}
-    const up = useCallback(() => ParentFolder && GotoFolder(ParentFolder), [GotoFolder, ParentFolder])
-
-    const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
-        res,
-        up,
-    })
+    const { setSelectedFiles, selectedFiles, selectedFile } = useSelection()
 
     const gotoPath = useCallback(() => dispatcher.GotoPath(path), [path])
 

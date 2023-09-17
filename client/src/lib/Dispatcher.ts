@@ -17,6 +17,7 @@ import { pathToUrl } from "./pathToUrl"
 import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
 import { gridColumns } from "./gridColumns"
+import { arrayItemsEqual } from "./arrayItemsEqual"
 
 export class Dispatcher {
     private _state: AppState
@@ -179,6 +180,9 @@ export class Dispatcher {
         await this.fetchFiles(this._state.req)
     }
 
+    up = () => {
+        this._state.res?.Relatives?.ParentFolder && this.GotoFolder(this._state.res.Relatives.ParentFolder)
+    }
     GotoFolder = (file?: FsFile) => {
         if (!file) return
         file.Path && this.GotoPath(file.Path)
@@ -285,6 +289,10 @@ export class Dispatcher {
     subs = () => this._state.res?.File && openInNewWindow(getSubtitleSearchLink(this._state.res?.File))
 
     Explore = () => this._state.res?.File && this.explore(this._state.res?.File)
+    _setSelectedFiles = (v: FsFile[]) => {
+        if (arrayItemsEqual(v, this._state.selectedFiles)) return
+        this.update({ selectedFiles: v })
+    }
 }
 
 export const dispatcher = new Dispatcher()
