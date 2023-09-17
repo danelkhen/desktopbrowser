@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { itemsAre, last, sleep } from "../../../shared/src"
+import { itemsAre, sleep } from "../../../shared/src"
 import { FsFile, ListFilesResponse } from "../../../shared/src/FileService"
 import { Selection } from "../utils/Selection"
 import { Dispatcher, dispatcher } from "../FileBrowser/lib/Dispatcher"
@@ -68,7 +68,7 @@ export function useSelection({ res, Open, up }: { res: ListFilesResponse; Open: 
         return {
             setSelectedFiles,
             selectedFiles,
-            selectedFile: selectedFiles[last],
+            selectedFile: selectedFiles[selectedFiles.length - 1],
         }
     }, [selectedFiles, setSelectedFiles])
 

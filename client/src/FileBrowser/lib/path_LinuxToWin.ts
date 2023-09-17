@@ -14,7 +14,7 @@ export function path_LinuxToWin(path: string): string {
         path = tokens.join("\\")
     }
     if (path.endsWith("\\")) {
-        path = path[removeLast](1)
+        path = removeLast(path, 1)
     }
     return path
 }

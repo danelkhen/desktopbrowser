@@ -112,7 +112,7 @@ export class Dispatcher {
         await this.reloadFiles()
     }
 
-    private async DeleteAndRefresh(file: FsFile) {
+    private DeleteAndRefresh = async (file: FsFile) => {
         if (!file.Path) return
         const fileOrFolder = file.IsFolder ? "folder" : "file"
         if (!window.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path)) return
@@ -120,7 +120,7 @@ export class Dispatcher {
         await this.reloadFiles()
     }
 
-    private async TrashAndRefresh(file: FsFile) {
+    private TrashAndRefresh = async (file: FsFile) => {
         if (!file.Path) return
         await app.fileService.trash({ Path: file.Path })
         await this.reloadFiles()
@@ -134,7 +134,7 @@ export class Dispatcher {
         await this.TrashAndRefresh(file)
     }
 
-    async explore(file: FsFile) {
+    explore = async (file: FsFile) => {
         if (!file?.Path) return
         await app.fileService.explore({ Path: file.Path })
     }
@@ -151,21 +151,21 @@ export class Dispatcher {
         const to = { ...this._state, ...v }
         this.set(to)
     }
-    onChanged() {
+    onChanged = () => {
         this.listeners.forEach(t => t())
     }
     private listeners: (() => void)[] = []
-    subscribe(listener: () => void) {
+    subscribe = (listener: () => void) => {
         this.listeners = [...this.listeners, listener]
         return () => {
             this.listeners = this.listeners.filter(t => t !== listener)
         }
     }
-    getSnapshot() {
+    getSnapshot = () => {
         return this._state
     }
 
-    private async reloadFiles() {
+    private reloadFiles = async () => {
         if (this._state.req.FolderSize) {
             const req2 = { ...this._state.req, FolderSize: false }
             await this.fetchFiles(req2)
@@ -196,7 +196,7 @@ export class Dispatcher {
         console.info(res)
     }
 
-    private async Execute(file: FsFile) {
+    private Execute = async (file: FsFile) => {
         if (!file.Path) return
         await app.fileService.execute({ Path: file.Path })
     }

@@ -82,7 +82,7 @@ export class IoPath {
         if (this.IsEmpty) return this
         if (this.IsRoot) return new IoPath("")
         let x = this.Value
-        if (x.endsWith("\\")) x = x[removeLast](1)
+        if (x.endsWith("\\")) x = removeLast(x, 1)
         return new IoPath(IoPath.GetDirectoryName(x))
     }
 

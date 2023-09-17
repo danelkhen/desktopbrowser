@@ -97,7 +97,7 @@ export function urlToSort(sort: string | undefined): SortColumn[] {
             ?.split(",")
             .map(t =>
                 t.endsWith("_")
-                    ? ({ Name: t[removeLast](1) as Column, Descending: true } as SortColumn)
+                    ? ({ Name: removeLast(t, 1) as Column, Descending: true } as SortColumn)
                     : ({ Name: t as Column } as SortColumn)
             ) ?? []
     )

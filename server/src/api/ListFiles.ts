@@ -48,7 +48,7 @@ async function GetFileRelatives(path: string): Promise<FileRelativesInfo> {
         [t => t.Name]
     )
 
-    const index = parentFiles.findIndex(t => t.Name[equalsIgnoreCase](pathInfo.Name))
+    const index = parentFiles.findIndex(t => equalsIgnoreCase(t.Name, pathInfo.Name))
     info.NextSibling = index >= 0 && index + 1 < parentFiles.length ? parentFiles[index + 1] : undefined
     info.PreviousSibling = index > 0 ? parentFiles[index - 1] : undefined
     return info
