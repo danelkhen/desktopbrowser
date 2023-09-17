@@ -4,7 +4,6 @@ import cx from "classnames"
 import React, { ReactNode } from "react"
 import styled from "styled-components"
 import { colors } from "../lib/GlobalStyle"
-import { Meta } from "../lib/Meta"
 
 export interface Column<T, V> {
     getter?: (item: T, index: number) => V

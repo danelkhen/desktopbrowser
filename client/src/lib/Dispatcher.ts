@@ -2,19 +2,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from "immer"
 import { NavigateFunction } from "react-router"
-import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
+import { ColumnKey } from "../components/Grid"
+import { SortConfig } from "../hooks/useSorting"
 import { app } from "./App"
-import { FileColumnKey, FileColumnKeys } from "./Columns"
 import { AppState, initialAppState } from "./AppState"
+import { FileColumnKey, FileColumnKeys } from "./Columns"
+import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
+import { Produce } from "./Produce"
+import { getGoogleSearchLink } from "./getGoogleSearchLink"
+import { getSubtitleSearchLink } from "./getSubtitleSearchLink"
 import { isExecutable } from "./isExecutable"
 import { openInNewWindow } from "./openInNewWindow"
 import { pathToUrl } from "./pathToUrl"
 import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
-import { IsDescending, SortConfig } from "../hooks/useSorting"
-import { getGoogleSearchLink } from "./getGoogleSearchLink"
-import { getSubtitleSearchLink } from "./getSubtitleSearchLink"
-import { Produce } from "./Produce"
 
 export class Dispatcher {
     private _state: AppState
@@ -85,7 +86,7 @@ export class Dispatcher {
 
     private useReqSorting(req: ListFilesRequest) {
         const active: FileColumnKey[] = []
-        const isDescending: IsDescending<FileColumnKeys> = {}
+        const isDescending: Record<ColumnKey, boolean> = {}
         const cols = req.sort ?? []
         if (req.foldersFirst && !cols.find(t => t.Name === FileColumnKeys.type)) {
             active.push(FileColumnKeys.type)
@@ -100,7 +101,7 @@ export class Dispatcher {
             }
         }
         console.log("setSorting", active)
-        const sorting: Pick<SortConfig<FsFile, FileColumnKeys>, "active" | "isDescending"> = { active, isDescending }
+        const sorting: Pick<SortConfig<FsFile>, "active" | "isDescending"> = { active, isDescending }
         return sorting
     }
 
@@ -224,7 +225,7 @@ export class Dispatcher {
         this.updateReq({ sort })
     }
 
-    isSortedBy = (key: FileColumnKey, desc?: boolean): boolean => {
+    isSortedBy = (key: ColumnKey, desc?: boolean): boolean => {
         if (!this._state.sorting.active.includes(key)) return false
         if (desc !== undefined) return !!this._state.sorting.isDescending[key] === desc
         return true

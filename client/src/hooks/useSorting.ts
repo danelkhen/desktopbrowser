@@ -2,19 +2,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from "lodash"
 import { useMemo } from "react"
-import { Meta } from "../lib/Meta"
+import { ColumnKey } from "../components/Grid"
 
-export type IsDescending<K extends {}> = Partial<Meta<K, boolean>>
-export type IsActive<K extends {}> = readonly (keyof K)[]
-export interface SortConfig<T, K extends {}> {
-    readonly isDescending: IsDescending<K>
-    readonly active: IsActive<K>
-    readonly getters: Partial<Meta<K, (obj: T) => any>>
-    readonly sortGetters: Partial<Meta<K, (obj: T) => any>>
-    readonly descendingFirst: Partial<Meta<K, boolean>>
+export interface SortConfig<T> {
+    readonly isDescending: Record<ColumnKey, boolean>
+    readonly active: readonly ColumnKey[]
+    readonly getters: Record<ColumnKey, (obj: T) => any>
+    readonly sortGetters: Record<ColumnKey, (obj: T) => any>
+    readonly descendingFirst: Record<ColumnKey, boolean>
 }
 
-export function useSorting<T, K extends {}>(items: T[], config: SortConfig<T, K>) {
+export function useSorting<T>(items: T[], config: SortConfig<T>) {
     return useMemo(() => {
         function getOrderBy() {
             const keys = config.active

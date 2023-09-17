@@ -2,11 +2,11 @@ import cx from "classnames"
 import React, { useCallback } from "react"
 import { FileColumns } from "../lib/AppState"
 import { Classes } from "../lib/Classes"
-import { FileColumnKey } from "../lib/Columns"
 import { Dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { Selection } from "../lib/Selection"
 import { Files } from "./Files"
+import { ColumnKey } from "./Grid"
 
 export function Files2({
     selectedFiles,
@@ -78,7 +78,7 @@ export function Files2({
     )
 
     const getHeaderClass = useCallback(
-        (column: FileColumnKey): string => {
+        (column: ColumnKey): string => {
             const { sorted, asc, desc } = Classes
             return cx(
                 column,
