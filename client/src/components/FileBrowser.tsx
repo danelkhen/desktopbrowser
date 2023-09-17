@@ -9,7 +9,6 @@ import { useQuery } from "../hooks/useQuery"
 import { useSelection } from "../hooks/useSelection"
 import { useSorting } from "../hooks/useSorting"
 import { dispatcher } from "../lib/Dispatcher"
-import { FsFile } from "../lib/FileService"
 import { GlobalStyle, colors } from "../lib/GlobalStyle"
 import { gridColumns } from "../lib/gridColumns"
 import { AddressBar } from "./AddressBar"
@@ -65,8 +64,6 @@ export function FileBrowser() {
     })
     const files = paged
 
-    const { Open, orderBy } = dispatcher
-
     useEffect(() => {
         setPath(req.Path ?? "")
     }, [req.Path])
@@ -77,14 +74,12 @@ export function FileBrowser() {
 
     const { setSelectedFiles, selectedFiles, selectedFile } = useSelection({
         res,
-        Open,
+        Open: dispatcher.Open,
         up,
     })
 
     const { GotoPath } = dispatcher
     const gotoPath = useCallback(() => GotoPath(path), [GotoPath, path])
-
-    const hasInnerSelection = useCallback((file: FsFile) => dispatcher.getSavedSelectedFile(file.Name) != null, [])
 
     return (
         <>
@@ -110,15 +105,11 @@ export function FileBrowser() {
                 <QuickFind allFiles={allFiles} onFindFiles={setSelectedFiles} />
             </header>
             <Files
-                hasInnerSelection={hasInnerSelection}
                 selectedFiles={selectedFiles}
                 allFiles={allFiles}
                 setSelectedFiles={setSelectedFiles}
-                Open={Open}
                 columns={gridColumns}
                 files={files}
-                orderBy={orderBy}
-                dispatcher={dispatcher}
             />
         </>
     )

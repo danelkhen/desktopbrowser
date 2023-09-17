@@ -3,7 +3,7 @@ import React, { useCallback } from "react"
 import { styled } from "styled-components"
 import { FileColumns } from "../lib/AppState"
 import { Classes } from "../lib/Classes"
-import { Dispatcher } from "../lib/Dispatcher"
+import { dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { Selection } from "../lib/Selection"
 import { visibleGridColumns } from "../lib/gridColumns"
@@ -13,24 +13,15 @@ export function Files({
     selectedFiles,
     allFiles,
     setSelectedFiles,
-    Open,
-    hasInnerSelection,
     columns,
     files,
-    orderBy,
-    dispatcher,
 }: {
     setSelectedFiles: (v: FsFile[]) => void
     selectedFiles: FsFile[]
     allFiles: FsFile[]
-    Open: Dispatcher["Open"]
-    hasInnerSelection(file: FsFile): boolean
     columns: FileColumns
     files: FsFile[]
-    orderBy: Dispatcher["orderBy"]
-    dispatcher: Dispatcher
 }) {
-    const { isSortedBy } = dispatcher
     const onItemMouseDown = useCallback(
         (e: React.MouseEvent, file: FsFile) => {
             const selection = new Selection(allFiles, selectedFiles)
@@ -40,62 +31,52 @@ export function Files({
         [allFiles, selectedFiles, setSelectedFiles]
     )
 
-    const onItemClick = useCallback(
-        (e: React.MouseEvent, file: FsFile) => {
-            // const selection = new Selection(allFiles, selectedFiles)
-            const target = e.target as HTMLElement
-            if (!target.matches("a.Name")) {
-                return
-            }
-            e.preventDefault()
-            Open(file)
-        },
-        [Open]
-    )
+    const onItemClick = useCallback((e: React.MouseEvent, file: FsFile) => {
+        // const selection = new Selection(allFiles, selectedFiles)
+        const target = e.target as HTMLElement
+        if (!target.matches("a.Name")) {
+            return
+        }
+        e.preventDefault()
+        dispatcher.Open(file)
+    }, [])
 
-    const onItemDoubleClick = useCallback(
-        (e: React.MouseEvent, file: FsFile) => {
-            if (file == null) {
-                return
-            }
-            e.preventDefault()
-            Open(file)
-        },
-        [Open]
-    )
+    const onItemDoubleClick = useCallback((e: React.MouseEvent, file: FsFile) => {
+        if (file == null) {
+            return
+        }
+        e.preventDefault()
+        dispatcher.Open(file)
+    }, [])
 
     const getRowClass = useCallback(
         (file: FsFile): string => {
             const { FileRow, IsFolder, HasInnerSelection, Selected, IsFile } = Classes
-            const selection = new Selection(allFiles, selectedFiles)
             return cx(
                 FileRow,
                 file.IsFolder ? IsFolder : IsFile,
-                hasInnerSelection(file) && HasInnerSelection,
-                selection.SelectedItems.includes(file) && Selected
+                dispatcher.hasInnerSelection(file) && HasInnerSelection,
+                selectedFiles.includes(file) && Selected
             )
         },
-        [allFiles, hasInnerSelection, selectedFiles]
+        [selectedFiles]
     )
 
-    const getHeaderClass = useCallback(
-        (column: ColumnKey): string => {
-            const { sorted, asc, desc } = Classes
-            return cx(
-                column,
-                isSortedBy(column) && sorted,
-                isSortedBy(column, false) && asc,
-                isSortedBy(column, true) && desc
-            )
-        },
-        [isSortedBy]
-    )
+    const getHeaderClass = useCallback((column: ColumnKey): string => {
+        const { sorted, asc, desc } = Classes
+        return cx(
+            column,
+            dispatcher.isSortedBy(column) && sorted,
+            dispatcher.isSortedBy(column, false) && asc,
+            dispatcher.isSortedBy(column, true) && desc
+        )
+    }, [])
 
     return (
         <GrdFiles<FsFile>
             items={files}
             getHeaderClass={getHeaderClass}
-            orderBy={orderBy}
+            orderBy={dispatcher.orderBy}
             onItemMouseDown={onItemMouseDown}
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}

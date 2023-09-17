@@ -62,6 +62,10 @@ export class Dispatcher {
         })
     }
 
+    hasInnerSelection = (file: FsFile) => {
+        return dispatcher.getSavedSelectedFile(file.Name) != null
+    }
+
     getFileTypeOrder(type: string): number {
         const order = ["folder", "link", "file"].reverse()
         return order.indexOf(type)
@@ -223,8 +227,6 @@ export class Dispatcher {
             }
             sort.unshift({ Name: column, Descending: gridColumns[column].descendingFirst })
         })
-        console.log({ sort })
-
         this.updateReq({ sort })
     }
 
