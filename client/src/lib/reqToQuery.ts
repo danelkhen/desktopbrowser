@@ -1,4 +1,5 @@
-import { ListFilesRequest, sortToUrl } from "./FileService"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ListFilesRequest, sortToUrl } from "../services/FileService"
 
 export function reqToQuery(rest: ListFilesRequest) {
     const rest2 = rest as any

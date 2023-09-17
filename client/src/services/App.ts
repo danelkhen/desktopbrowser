@@ -1,5 +1,5 @@
 import { FileInfo, FsFile } from "./FileService"
-import { proxyForFileService } from "./proxyForFileService"
+import { proxyForFileService } from "../lib/proxyForFileService"
 
 export class App {
     fileService = proxyForFileService()

@@ -1,6 +1,6 @@
 import { useMemo } from "react"
-import { dispatcher } from "../lib/Dispatcher"
-import { FsFile, ListFilesRequest } from "../lib/FileService"
+import { dispatcher } from "../services/Dispatcher"
+import { FsFile, ListFilesRequest } from "../services/FileService"
 
 export function useFilter(req: ListFilesRequest, list: FsFile[]) {
     return useMemo(() => {

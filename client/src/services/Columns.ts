@@ -1,4 +1,4 @@
-import { MetaKeys } from "./Meta"
+import { MetaKeys } from "../lib/Meta"
 
 export interface FileColumnKeys {
     type: "type"

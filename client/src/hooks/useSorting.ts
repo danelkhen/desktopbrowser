@@ -3,7 +3,7 @@
 import _ from "lodash"
 import { useMemo } from "react"
 import { ColumnKey } from "../components/Grid"
-import { gridColumns } from "../lib/gridColumns"
+import { gridColumns } from "../components/gridColumns"
 
 export interface SortConfig {
     readonly isDescending: Record<ColumnKey, boolean>

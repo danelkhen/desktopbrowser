@@ -8,16 +8,16 @@ import { app } from "./App"
 import { AppState, initialAppState, sortingDefaults } from "./AppState"
 import { FileColumnKeys } from "./Columns"
 import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
-import { Produce } from "./Produce"
-import { getGoogleSearchLink } from "./getGoogleSearchLink"
-import { getSubtitleSearchLink } from "./getSubtitleSearchLink"
-import { isExecutable } from "./isExecutable"
-import { openInNewWindow } from "./openInNewWindow"
-import { pathToUrl } from "./pathToUrl"
-import { queryToReq } from "./queryToReq"
-import { reqToQuery } from "./reqToQuery"
-import { gridColumns } from "./gridColumns"
-import { arrayItemsEqual } from "./arrayItemsEqual"
+import { Produce } from "../lib/Produce"
+import { getGoogleSearchLink } from "../lib/getGoogleSearchLink"
+import { getSubtitleSearchLink } from "../lib/getSubtitleSearchLink"
+import { isExecutable } from "../lib/isExecutable"
+import { openInNewWindow } from "../lib/openInNewWindow"
+import { pathToUrl } from "../lib/pathToUrl"
+import { queryToReq } from "../lib/queryToReq"
+import { reqToQuery } from "../lib/reqToQuery"
+import { gridColumns } from "../components/gridColumns"
+import { arrayItemsEqual } from "../lib/arrayItemsEqual"
 
 export class Dispatcher {
     private _state: AppState
@@ -119,7 +119,7 @@ export class Dispatcher {
         await this.reloadFiles()
     }
 
-    private DeleteAndRefresh = async (file: FsFile) => {
+    private deleteAndRefresh = async (file: FsFile) => {
         if (!file.Path) return
         const fileOrFolder = file.IsFolder ? "folder" : "file"
         if (!window.confirm("Are you sure you wan to delete the " + fileOrFolder + "?\n" + file.Path)) return
@@ -127,7 +127,7 @@ export class Dispatcher {
         await this.reloadFiles()
     }
 
-    private TrashAndRefresh = async (file: FsFile) => {
+    private trashAndRefresh = async (file: FsFile) => {
         if (!file.Path) return
         await app.fileService.trash({ Path: file.Path })
         await this.reloadFiles()
@@ -135,10 +135,10 @@ export class Dispatcher {
 
     deleteOrTrash = async ({ file, isShiftDown }: { file: FsFile; isShiftDown: boolean }) => {
         if (isShiftDown) {
-            await this.DeleteAndRefresh(file)
+            await this.deleteAndRefresh(file)
             return
         }
-        await this.TrashAndRefresh(file)
+        await this.trashAndRefresh(file)
     }
 
     explore = async (file: FsFile) => {

@@ -1,4 +1,4 @@
-import { FileService } from "./FileService"
+import { FileService } from "../services/FileService"
 import { getHttpInvoker } from "./getHttpInvoker"
 import { getWebSocketInvoker } from "./webSocket"
 

@@ -1,12 +1,12 @@
 import { ReactElement } from "react"
-import { FileColumns } from "./AppState"
+import { FileColumns } from "../services/AppState"
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
 import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
 import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
-import { formatFriendlySize } from "./formatFriendlySize"
-import { formatFriendlyDate } from "./formatFriendlyDate"
-import { dispatcher } from "./Dispatcher"
-import { FileColumnKeys } from "./Columns"
+import { formatFriendlySize } from "../lib/formatFriendlySize"
+import { formatFriendlyDate } from "../lib/formatFriendlyDate"
+import { dispatcher } from "../services/Dispatcher"
+import { FileColumnKeys } from "../services/Columns"
 
 export const gridColumns: FileColumns = {
     type: {

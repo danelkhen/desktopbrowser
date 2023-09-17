@@ -1,5 +1,5 @@
 import { ColumnKey } from "../components/Grid"
-import { removeLast } from "./removeLast"
+import { stringRemoveLast } from "../lib/stringRemoveLast"
 
 export interface FileService {
     saveFileMetadata(md: FileInfo): Promise<void>
@@ -98,7 +98,7 @@ export function urlToSort(sort: string | undefined): SortColumn[] {
             ?.split(",")
             .map(t =>
                 t.endsWith("_")
-                    ? ({ Name: removeLast(t, 1) as Column, Descending: true } as SortColumn)
+                    ? ({ Name: stringRemoveLast(t, 1) as Column, Descending: true } as SortColumn)
                     : ({ Name: t as Column } as SortColumn)
             ) ?? []
     )

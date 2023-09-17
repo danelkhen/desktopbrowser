@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react"
-import { dispatcher } from "../lib/Dispatcher"
-import { FsFile } from "../lib/FileService"
+import { dispatcher } from "../services/Dispatcher"
+import { FsFile } from "../services/FileService"
 import { Selection } from "../lib/Selection"
 import { sleep } from "../lib/sleep"
 import { useAppState } from "./useAppState"

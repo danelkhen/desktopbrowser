@@ -1,4 +1,4 @@
-import { FsFile } from "./FileService"
+import { FsFile } from "../services/FileService"
 
 export function getFileNameWithoutExtension(file: FsFile): string {
     if (file.IsFolder) return file.Name

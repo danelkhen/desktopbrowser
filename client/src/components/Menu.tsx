@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { FsFile } from "../lib/FileService"
+import { FsFile } from "../services/FileService"
 import { ReactComponent as ExploreIcon } from "../assets/icons/explore.svg"
 import { ReactComponent as FolderIcon } from "../assets/icons/folder.svg"
 import { ReactComponent as GoogleIcon } from "../assets/icons/google.svg"
@@ -13,8 +13,8 @@ import { ReactComponent as UpIcon } from "../assets/icons/up.svg"
 import { ReactComponent as NewIcon } from "../assets/icons/new.svg"
 import { Dropdown } from "./Dropdown"
 import { MenuButton, ToggleMenuButton } from "./MenuButton"
-import { Dispatcher } from "../lib/Dispatcher"
-import { AppState } from "../lib/AppState"
+import { Dispatcher } from "../services/Dispatcher"
+import { AppState } from "../services/AppState"
 import { styled } from "styled-components"
 
 export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFile?: FsFile; dispatcher: Dispatcher }) {

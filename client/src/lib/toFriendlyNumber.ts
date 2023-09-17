@@ -1,4 +1,4 @@
-import { removeLast } from "./removeLast"
+import { stringRemoveLast } from "./stringRemoveLast"
 
 export function toFriendlyNumber(x: number): string {
     let s: string
@@ -8,7 +8,7 @@ export function toFriendlyNumber(x: number): string {
     else s = x.toFixed(0)
     //while (s.endsWith("0"))
     //    s = s.removeLast(1);
-    if (s.endsWith(".0")) s = removeLast(s, 2)
-    if (s.endsWith(".00")) s = removeLast(s, 3)
+    if (s.endsWith(".0")) s = stringRemoveLast(s, 2)
+    if (s.endsWith(".00")) s = stringRemoveLast(s, 3)
     return s
 }

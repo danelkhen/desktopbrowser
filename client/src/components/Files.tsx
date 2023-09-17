@@ -1,12 +1,12 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
 import { styled } from "styled-components"
-import { FileColumns } from "../lib/AppState"
-import { Classes } from "../lib/Classes"
-import { dispatcher } from "../lib/Dispatcher"
-import { FsFile } from "../lib/FileService"
+import { FileColumns } from "../services/AppState"
+import { Classes } from "../services/Classes"
+import { dispatcher } from "../services/Dispatcher"
+import { FsFile } from "../services/FileService"
 import { Selection } from "../lib/Selection"
-import { visibleGridColumns } from "../lib/gridColumns"
+import { visibleGridColumns } from "./gridColumns"
 import { ColumnKey, Grid } from "./Grid"
 
 export function Files({

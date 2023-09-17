@@ -1,6 +1,6 @@
 import React, { ReactComponentElement, ReactElement, useCallback, useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors } from "../lib/GlobalStyle"
+import { colors } from "../GlobalStyle"
 import cx from "classnames"
 
 export const DropdownDiv = styled.div<{ $show: boolean }>`
