@@ -1,12 +1,13 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
+import { styled } from "styled-components"
 import { FileColumns } from "../lib/AppState"
 import { Classes } from "../lib/Classes"
 import { Dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { Selection } from "../lib/Selection"
-import { Files } from "./Files"
-import { ColumnKey } from "./Grid"
+import { visibleGridColumns } from "../lib/gridColumns"
+import { ColumnKey, Grid } from "./Grid"
 
 export function Files2({
     selectedFiles,
@@ -91,15 +92,80 @@ export function Files2({
     )
 
     return (
-        <Files
-            GetRowClass={GetRowClass}
+        <GrdFiles<FsFile>
+            items={files}
             getHeaderClass={getHeaderClass}
+            orderBy={orderBy}
+            onItemMouseDown={onItemMouseDown}
             onItemClick={onItemClick}
             onItemDoubleClick={onItemDoubleClick}
-            onItemMouseDown={onItemMouseDown}
+            GetRowClass={GetRowClass}
+            getCellClass={column => column}
             columns={columns}
-            files={files}
-            orderBy={orderBy}
+            visibleColumns={visibleGridColumns}
         />
     )
 }
+
+const GrdFiles: typeof Grid = styled(Grid)`
+    user-select: none;
+
+    > table {
+        width: 100%;
+        > tbody > tr {
+            transition: all 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            border: 1px solid #0c0c0c;
+            color: #999;
+            > td {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                box-sizing: border-box;
+                padding: 10px 0px;
+            }
+        }
+        > thead > tr,
+        > tbody > tr {
+            > .type {
+                width: 35px;
+                text-overflow: clip;
+                padding: 10px 5px;
+                > .lnr {
+                    font-size: 18px;
+                }
+            }
+
+            > .Modified {
+                width: 150px;
+            }
+
+            > .Size {
+                width: 150px;
+            }
+
+            > .Extension {
+                width: 150px;
+            }
+        }
+        > thead {
+            position: sticky;
+            top: 83px;
+            > tr {
+                background-color: #060606;
+                border-bottom: 1px solid #333;
+                text-align: left;
+                > th {
+                    padding: 10px;
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    -webkit-font-smoothing: antialiased;
+                    letter-spacing: 1px;
+                    color: #999;
+                    font-weight: normal;
+                    text-align: left;
+                }
+            }
+        }
+    }
+`
