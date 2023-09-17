@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { FsFile, ListFilesRequest } from "../../../shared/src/FileService"
+import { FsFile, ListFilesRequest } from "../shared/FileService"
 import { Dispatcher } from "../FileBrowser/lib/Dispatcher"
 
 export function useFiltering(search: string, list: FsFile[]) {

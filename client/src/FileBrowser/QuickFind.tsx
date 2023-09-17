@@ -1,7 +1,7 @@
 import cx from "classnames"
 import { useRef, useState } from "react"
-import { sleep } from "../../../shared/src/sleep"
-import { FsFile } from "../../../shared/src/FileService"
+import { sleep } from "../shared/sleep"
+import { FsFile } from "../shared/FileService"
 
 export function QuickFind({ allFiles, onFindFiles }: QuickFindProps) {
     const [value, setValue] = useState("")

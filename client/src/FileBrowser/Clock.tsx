@@ -1,6 +1,6 @@
 import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
-import { sleep } from "../../../shared/src/sleep"
+import { sleep } from "../shared/sleep"
 
 export function Clock() {
     const [time, setTime] = useState(DateTime.now().toFormat("HH:mm\n ddd, MMM D"))

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as path from "path"
-import { removeLast } from "../../../shared/src/String"
+import { removeLast } from "../shared/String"
 import { IoFile } from "./IoFile"
 import { IoDir } from "./IoDir"
 

@@ -1,6 +1,6 @@
 import cx from "classnames"
 import React, { useCallback } from "react"
-import { FsFile } from "../../../shared/src/FileService"
+import { FsFile } from "../shared/FileService"
 import { Selection } from "../utils/Selection"
 import { Classes } from "./Classes"
 import { Column } from "./Columns"

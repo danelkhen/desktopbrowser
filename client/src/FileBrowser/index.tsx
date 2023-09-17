@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { useMatch, useNavigate } from "react-router"
-import { FsFile } from "../../../shared/src/FileService"
+import { FsFile } from "../shared/FileService"
 import { urlToPath } from "../hooks/urlToPath"
 import { useAppState } from "../hooks/useAppState"
 import { useFiltering, useFiltering2 } from "../hooks/useFiltering"

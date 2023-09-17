@@ -1,6 +1,6 @@
 ﻿import * as child_process from "child_process"
 import * as os from "os"
-import { FileService } from "../../../shared/src/FileService"
+import { FileService } from "../shared/FileService"
 import { quote } from "./ListFiles"
 import { IoDir } from "../io/IoDir"
 import { IoFile } from "../io/IoFile"

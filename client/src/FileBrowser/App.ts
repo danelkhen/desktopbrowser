@@ -1,4 +1,4 @@
-import { FileInfo, FsFile } from "../../../shared/src/FileService"
+import { FileInfo, FsFile } from "../shared/FileService"
 import { proxyForFileService } from "./lib/proxyForFileService"
 
 export class App {

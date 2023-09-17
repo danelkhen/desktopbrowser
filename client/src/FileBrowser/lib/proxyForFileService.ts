@@ -1,4 +1,4 @@
-import { FileService } from "../../../../shared/src/FileService"
+import { FileService } from "../../shared/FileService"
 import { getHttpInvoker } from "../../utils/getHttpInvoker"
 import { getWebSocketInvoker } from "../../utils/webSocket"
 

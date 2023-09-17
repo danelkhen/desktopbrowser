@@ -1,4 +1,4 @@
-import { FileInfo } from "../../shared/src/FileService"
+import { FileInfo } from "./shared/FileService"
 import { LevelDbCollection, LevelDb } from "./utils/LevelDb"
 
 export class AppDb {

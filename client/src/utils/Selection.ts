@@ -1,5 +1,5 @@
 ﻿import { Keys } from "./Keys"
-import { itemsAre } from "../../../shared/src/Array"
+import { itemsAre } from "../shared/Array"
 
 export class Selection<T> {
     constructor(

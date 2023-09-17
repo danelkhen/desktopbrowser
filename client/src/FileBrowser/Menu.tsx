@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { FsFile } from "../../../shared/src/FileService"
+import { FsFile } from "../shared/FileService"
 import { ReactComponent as ExploreIcon } from "../assets/icons/explore.svg"
 import { ReactComponent as FolderIcon } from "../assets/icons/folder.svg"
 import { ReactComponent as GoogleIcon } from "../assets/icons/google.svg"
