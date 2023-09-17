@@ -4,7 +4,7 @@ import { produce } from "immer"
 import { NavigateFunction } from "react-router"
 import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
 import { app } from "./App"
-import { Column, Columns } from "./Columns"
+import { ColumnKey, ColumnKeys } from "./Columns"
 import { AppState, initialAppState } from "./AppState"
 import { isExecutable } from "./isExecutable"
 import { openInNewWindow } from "./openInNewWindow"
@@ -84,14 +84,14 @@ export class Dispatcher {
     }
 
     private useReqSorting(req: ListFilesRequest) {
-        const active: Column[] = []
-        const isDescending: IsDescending<Columns> = {}
+        const active: ColumnKey[] = []
+        const isDescending: IsDescending<ColumnKeys> = {}
         const cols = req.sort ?? []
-        if (req.foldersFirst && !cols.find(t => t.Name === Columns.type)) {
-            active.push(Columns.type)
+        if (req.foldersFirst && !cols.find(t => t.Name === ColumnKeys.type)) {
+            active.push(ColumnKeys.type)
         }
-        if (req.ByInnerSelection && !cols.find(t => t.Name === Columns.hasInnerSelection)) {
-            active.push(Columns.hasInnerSelection)
+        if (req.ByInnerSelection && !cols.find(t => t.Name === ColumnKeys.hasInnerSelection)) {
+            active.push(ColumnKeys.hasInnerSelection)
         }
         for (const col of cols ?? []) {
             active.push(col.Name)
@@ -100,7 +100,7 @@ export class Dispatcher {
             }
         }
         console.log("setSorting", active)
-        const sorting: Pick<SortConfig<FsFile, Columns>, "active" | "isDescending"> = { active, isDescending }
+        const sorting: Pick<SortConfig<FsFile, ColumnKeys>, "active" | "isDescending"> = { active, isDescending }
         return sorting
     }
 
@@ -201,7 +201,7 @@ export class Dispatcher {
         await app.fileService.execute({ Path: file.Path })
     }
 
-    orderBy = (column: Column) => {
+    orderBy = (column: ColumnKey) => {
         const sorting = this._state.sorting
         const sort = produce(this._state.req.sort ?? [], sort => {
             // let sort = _.cloneDeep(this._state.req.sort ?? [])
@@ -224,7 +224,7 @@ export class Dispatcher {
         this.updateReq({ sort })
     }
 
-    isSortedBy = (key: Column, desc?: boolean): boolean => {
+    isSortedBy = (key: ColumnKey, desc?: boolean): boolean => {
         if (!this._state.sorting.active.includes(key)) return false
         if (desc !== undefined) return !!this._state.sorting.isDescending[key] === desc
         return true
@@ -271,8 +271,8 @@ export class Dispatcher {
     isSortingDisabled = () =>
         !this._state.req.sort && !this._state.req.foldersFirst && this._state.req.ByInnerSelection == null
 
-    OrderByInnerSelection = () => this.orderBy(Columns.hasInnerSelection)
-    isOrderedByInnerSelection = () => this.isSortedBy(Columns.hasInnerSelection)
+    OrderByInnerSelection = () => this.orderBy(ColumnKeys.hasInnerSelection)
+    isOrderedByInnerSelection = () => this.isSortedBy(ColumnKeys.hasInnerSelection)
 
     google = () => this._state.res?.File && openInNewWindow(getGoogleSearchLink(this._state.res?.File))
 

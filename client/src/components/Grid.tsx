@@ -6,18 +6,13 @@ import styled from "styled-components"
 import { colors } from "../lib/GlobalStyle"
 import { Meta } from "../lib/Meta"
 
-export interface ColumnsConfig<T, K extends {}> {
-    readonly keys: Meta<K, string>
-    readonly getters?: Partial<Meta<K, (item: T, index: number) => unknown>>
-    readonly visibleColumns?: (keyof K)[]
-}
-export interface Column2<T, V> {
+export interface Column<T, V> {
     getter?: (item: T, index: number) => V
     cell?: (item: T, index: number) => ReactNode
     header?: () => ReactNode
 }
 export type Columns2<T> = {
-    [k: string]: Column2<T, unknown>
+    [k: string]: Column<T, unknown>
 }
 
 export type ColumnKey = string
@@ -43,7 +38,6 @@ export interface GridProps<T, K extends {}> {
 }
 
 export function Grid<T, K extends {}>({
-    // columns,
     columns2,
     GetRowClass,
     onItemClick,
@@ -51,18 +45,11 @@ export function Grid<T, K extends {}>({
     onItemDoubleClick,
     items,
     orderBy,
-    // children,
-    // headers,
-    // classNames,
-    // titles,
     className,
     getHeaderClass,
     getCellClass,
     visibleColumns,
 }: GridProps<T, K>) {
-    // const { keys, visibleColumns, getters } = columns
-    // const cells = children
-
     return (
         <Container className={className}>
             <Table>

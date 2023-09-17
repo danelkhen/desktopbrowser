@@ -1,6 +1,6 @@
 import { Columns2 } from "../components/Grid"
 import { SortConfig } from "../hooks/useSorting"
-import { Columns } from "./Columns"
+import { ColumnKeys } from "./Columns"
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "./FileService"
 import { sortingDefaults } from "./sortingDefaults"
 
@@ -14,7 +14,7 @@ export interface AppState {
     // readonly columns: FileColumnsConfig
 }
 
-export type FileSortConfig = SortConfig<FsFile, Columns>
+export type FileSortConfig = SortConfig<FsFile, ColumnKeys>
 // export type FileColumnsConfig = ColumnsConfig<FsFile, Columns>
 export type FileColumns2 = Columns2<FsFile>
 

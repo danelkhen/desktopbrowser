@@ -1,4 +1,4 @@
-import { Columns } from "./Columns"
+import { ColumnKeys } from "./Columns"
 import { FileSortConfig } from "./AppState"
 import { dispatcher } from "./Dispatcher"
 
@@ -20,5 +20,5 @@ export const sortingDefaults: FileSortConfig = {
         type: x => (x.type && dispatcher.getFileTypeOrder(x.type)) ?? 0,
     },
     isDescending: {},
-    active: [Columns.type],
+    active: [ColumnKeys.type],
 }

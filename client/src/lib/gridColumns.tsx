@@ -6,7 +6,7 @@ import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
 import { formatFriendlySize } from "./formatFriendlySize"
 import { formatFriendlyDate } from "./formatFriendlyDate"
 import { dispatcher } from "./Dispatcher"
-import { Columns } from "./Columns"
+import { ColumnKeys } from "./Columns"
 
 export const gridColumns2: FileColumns2 = {
     type: {
@@ -28,7 +28,13 @@ export const gridColumns2: FileColumns2 = {
     hasInnerSelection: { getter: t => !!t?.IsFolder && !!dispatcher.getSavedSelectedFile(t.Name) },
 }
 
-export const visibleGridColumns2 = [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension]
+export const visibleGridColumns2 = [
+    ColumnKeys.type,
+    ColumnKeys.Name,
+    ColumnKeys.Modified,
+    ColumnKeys.Size,
+    ColumnKeys.Extension,
+]
 
 export const icons: { [key: string]: ReactElement } = {
     folder: <LayersIcon />,

@@ -1,6 +1,6 @@
 import { MetaKeys } from "./Meta"
 
-export interface Columns {
+export interface ColumnKeys {
     type: "type"
     Name: "Name"
     Size: "Size"
@@ -8,7 +8,7 @@ export interface Columns {
     Extension: "Extension"
     hasInnerSelection: "hasInnerSelection"
 }
-export const Columns: MetaKeys<Columns> = {
+export const ColumnKeys: MetaKeys<ColumnKeys> = {
     type: "type",
     Name: "Name",
     Size: "Size",
@@ -17,4 +17,4 @@ export const Columns: MetaKeys<Columns> = {
     hasInnerSelection: "hasInnerSelection",
 }
 
-export type Column = keyof Columns
+export type ColumnKey = keyof ColumnKeys

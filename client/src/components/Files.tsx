@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { Column, Columns } from "../lib/Columns"
+import { ColumnKey, ColumnKeys } from "../lib/Columns"
 import { Dispatcher } from "../lib/Dispatcher"
 import { FsFile } from "../lib/FileService"
 import { Grid } from "./Grid"
@@ -80,7 +80,7 @@ export interface FilesProps {
     columns2: FileColumns2
     files: FsFile[]
 
-    getHeaderClass: (column: Column) => string
+    getHeaderClass: (column: ColumnKey) => string
     orderBy: Dispatcher["orderBy"]
 }
 
@@ -96,9 +96,9 @@ export function Files({
     getHeaderClass,
 }: FilesProps) {
     return (
-        <GrdFiles<FsFile, Columns>
+        <GrdFiles<FsFile, ColumnKeys>
             items={files}
-            titles={{ [Columns.type]: "" }}
+            titles={{ [ColumnKeys.type]: "" }}
             getHeaderClass={getHeaderClass as any}
             orderBy={orderBy as any}
             onItemMouseDown={onItemMouseDown}
