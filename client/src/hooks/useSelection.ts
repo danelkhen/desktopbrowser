@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { sleep } from "../shared/sleep"
 import { FsFile, ListFilesResponse } from "../shared/FileService"
 import { Selection } from "../utils/Selection"
-import { Dispatcher, dispatcher } from "../FileBrowser/lib/Dispatcher"
+import { Dispatcher, dispatcher } from "../lib/Dispatcher"
 import { useAppState } from "./useAppState"
 import { arrayItemsEqual } from "../shared/arrayItemsEqual"
 

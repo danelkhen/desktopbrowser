@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { colors } from "./GlobalStyle"
+import { colors } from "../lib/GlobalStyle"
 
 export const Nav = styled.nav`
     font-size: 10px;

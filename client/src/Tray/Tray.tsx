@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { GlobalStyle } from "./GlobalStyle"
-import { proxyForFileService } from "../FileBrowser/lib/proxyForFileService"
+import { proxyForFileService } from "../lib/proxyForFileService"
 import styled from "styled-components"
 const proxy = proxyForFileService()
 

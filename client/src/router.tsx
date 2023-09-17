@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom"
-import { FileBrowser } from "./FileBrowser/index"
+import { FileBrowser } from "./components/FileBrowser"
 import { Tray } from "./Tray/Tray"
 import { AppComponent } from "./AppComponent"
 

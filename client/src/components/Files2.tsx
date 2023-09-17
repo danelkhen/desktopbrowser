@@ -2,11 +2,11 @@ import cx from "classnames"
 import React, { useCallback } from "react"
 import { FsFile } from "../shared/FileService"
 import { Selection } from "../utils/Selection"
-import { Classes } from "./Classes"
-import { Column } from "./Columns"
+import { Classes } from "../lib/Classes"
+import { Column } from "../lib/Columns"
 import { Files } from "./Files"
-import { Dispatcher } from "./lib/Dispatcher"
-import { FileColumnsConfig } from "./lib/AppState"
+import { Dispatcher } from "../lib/Dispatcher"
+import { FileColumnsConfig } from "../lib/AppState"
 
 export function Files2({
     selectedFiles,

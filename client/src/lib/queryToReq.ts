@@ -1,4 +1,4 @@
-import { ListFilesRequest, urlToSort } from "../../shared/FileService"
+import { ListFilesRequest, urlToSort } from "../shared/FileService"
 
 export function queryToReq(s: string): ListFilesRequest {
     const x = Object.fromEntries(new URLSearchParams(s).entries()) as any

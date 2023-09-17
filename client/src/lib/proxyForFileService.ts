@@ -1,6 +1,6 @@
-import { FileService } from "../../shared/FileService"
-import { getHttpInvoker } from "../../utils/getHttpInvoker"
-import { getWebSocketInvoker } from "../../utils/webSocket"
+import { FileService } from "../shared/FileService"
+import { getHttpInvoker } from "../utils/getHttpInvoker"
+import { getWebSocketInvoker } from "../utils/webSocket"
 
 export function proxyForFileService() {
     const http = getHttpInvoker<FileService>("/api/fs")

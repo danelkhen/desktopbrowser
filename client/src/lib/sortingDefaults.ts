@@ -1,4 +1,4 @@
-import { Columns } from "../Columns"
+import { Columns } from "./Columns"
 import { FileSortConfig } from "./AppState"
 import { dispatcher } from "./Dispatcher"
 

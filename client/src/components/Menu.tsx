@@ -14,8 +14,8 @@ import { ReactComponent as NewIcon } from "../assets/icons/new.svg"
 import { Dropdown } from "./Dropdown"
 import { ButtonGroup, ButtonsDiv, MenuDiv } from "./Menu.styles"
 import { MenuButton, ToggleMenuButton } from "./MenuButton"
-import { Dispatcher } from "./lib/Dispatcher"
-import { AppState } from "./lib/AppState"
+import { Dispatcher } from "../lib/Dispatcher"
+import { AppState } from "../lib/AppState"
 
 export function Menu({ selectedFile, dispatcher }: { state: AppState; selectedFile?: FsFile; dispatcher: Dispatcher }) {
     const Delete = useCallback(

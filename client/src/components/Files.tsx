@@ -1,16 +1,16 @@
 import React, { ReactElement } from "react"
 import styled from "styled-components"
 import { FsFile } from "../shared/FileService"
-import { Column, Columns } from "./Columns"
-import { Grid } from "./Grid/Grid"
-import { Dispatcher } from "./lib/Dispatcher"
-import { formatFriendlySize } from "./lib/formatFriendlySize"
-import { formatFriendlyDate } from "./lib/formatFriendlyDate"
+import { Column, Columns } from "../lib/Columns"
+import { Grid } from "./Grid"
+import { Dispatcher } from "../lib/Dispatcher"
+import { formatFriendlySize } from "../lib/formatFriendlySize"
+import { formatFriendlyDate } from "../lib/formatFriendlyDate"
 
 import { ReactComponent as FileEmptyIcon } from "../assets/linearicons/svg/file-empty.svg"
 import { ReactComponent as LayersIcon } from "../assets/linearicons/svg/layers.svg"
 import { ReactComponent as LinkIcon } from "../assets/linearicons/svg/link.svg"
-import { FileColumnsConfig } from "./lib/AppState"
+import { FileColumnsConfig } from "../lib/AppState"
 
 const GrdFiles: typeof Grid = styled(Grid)`
     user-select: none;

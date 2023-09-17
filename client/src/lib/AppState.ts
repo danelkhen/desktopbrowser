@@ -1,9 +1,9 @@
-import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../../shared/FileService"
-import { Columns } from "../Columns"
-import { ColumnsConfig } from "../Grid/Grid"
+import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "../shared/FileService"
+import { Columns } from "./Columns"
+import { ColumnsConfig } from "../components/Grid"
 import { dispatcher } from "./Dispatcher"
 import { sortingDefaults } from "./sortingDefaults"
-import { SortConfig } from "../../hooks/useSorting"
+import { SortConfig } from "../hooks/useSorting"
 
 export interface AppState {
     readonly res: ListFilesResponse

@@ -3,8 +3,8 @@
 import cx from "classnames"
 import React, { ReactElement, ReactNode } from "react"
 import styled from "styled-components"
-import { colors } from "../GlobalStyle"
-import { Meta } from "../../utils/Meta"
+import { colors } from "../lib/GlobalStyle"
+import { Meta } from "../utils/Meta"
 
 const GridTable = styled.table`
     border-collapse: collapse;

@@ -1,4 +1,4 @@
-import { FsFile } from "../../shared/FileService"
+import { FsFile } from "../shared/FileService"
 import { getFilenameForSearch } from "./getFilenameForSearch"
 
 export function getSubtitleSearchLink(file: FsFile): string {

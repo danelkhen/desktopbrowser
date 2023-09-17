@@ -11,11 +11,11 @@ import { useSorting } from "../hooks/useSorting"
 import { AddressBar } from "./AddressBar"
 import { Clock } from "./Clock"
 import { Files2 } from "./Files2"
-import { GlobalStyle } from "./GlobalStyle"
+import { GlobalStyle } from "../lib/GlobalStyle"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
-import { Nav } from "./index.styles"
-import { dispatcher } from "./lib/Dispatcher"
+import { Nav } from "./FileBrowser.styles"
+import { dispatcher } from "../lib/Dispatcher"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
