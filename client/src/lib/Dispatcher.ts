@@ -16,6 +16,7 @@ import { openInNewWindow } from "./openInNewWindow"
 import { pathToUrl } from "./pathToUrl"
 import { queryToReq } from "./queryToReq"
 import { reqToQuery } from "./reqToQuery"
+import { gridColumns } from "./gridColumns"
 
 export class Dispatcher {
     private _state: AppState
@@ -203,24 +204,26 @@ export class Dispatcher {
     }
 
     orderBy = (column: ColumnKey) => {
-        const sorting = this._state.sorting
+        // const sorting = this._state.sorting
         const sort = produce(this._state.req.sort ?? [], sort => {
             // let sort = _.cloneDeep(this._state.req.sort ?? [])
             const index = sort.findIndex(t => t.Name === column)
             if (index === 0) {
-                if (!!sort[index].Descending === !!sorting.descendingFirst[column]) {
+                if (!!sort[index].Descending === !!gridColumns[column].descendingFirst) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     sort[index].Descending = !sort[index].Descending
                 } else {
                     sort.shift()
                 }
-            } else if (index > 0) {
-                sort = [{ Name: column, Descending: sorting.descendingFirst[column] }]
-            } else {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                sort.unshift({ Name: column, Descending: sorting.descendingFirst[column] })
+                return
             }
+            if (index > 0) {
+                sort = [{ Name: column, Descending: gridColumns[column].descendingFirst }]
+                return sort
+            }
+            sort.unshift({ Name: column, Descending: gridColumns[column].descendingFirst })
         })
+        console.log({ sort })
 
         this.updateReq({ sort })
     }

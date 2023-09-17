@@ -9,7 +9,8 @@ export interface Column<T, V> {
     getter?: (item: T, index: number) => V
     cell?: (item: T, index: number) => ReactNode
     header?: () => ReactNode
-    sortGetter?(item: T): any
+    sortGetter?: (item: T) => any
+    descendingFirst?: boolean
 }
 export type Columns<T> = {
     [k: string]: Column<T, unknown>

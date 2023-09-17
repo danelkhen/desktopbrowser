@@ -8,12 +8,10 @@ import { gridColumns } from "../lib/gridColumns"
 export interface SortConfig {
     readonly isDescending: Record<ColumnKey, boolean>
     readonly active: readonly ColumnKey[]
-    // readonly getters: Record<ColumnKey, (obj: T) => any>
-    // readonly sortGetters: Record<ColumnKey, (obj: T) => any>
-    readonly descendingFirst: Record<ColumnKey, boolean>
 }
 
 export function useSorting<T>(items: T[], config: SortConfig) {
+    console.log("useSorting", config)
     return useMemo(() => {
         function getOrderBy() {
             const activeKeys = config.active

@@ -10,21 +10,11 @@ export interface AppState {
     readonly reqSorting: Pick<SortConfig, "active" | "isDescending">
     readonly sorting: SortConfig
     readonly filesMd: { [key: string]: FileInfo }
-    // readonly columns: FileColumnsConfig
 }
 
-// export type FileColumnsConfig = ColumnsConfig<FsFile, Columns>
 export type FileColumns = Columns<FsFile>
 
 const sortingDefaults: SortConfig = {
-    descendingFirst: {
-        Size: true,
-        Modified: true,
-        hasInnerSelection: true,
-    },
-    // sortGetters: {
-    //     type: x => (x.type && dispatcher.getFileTypeOrder(x.type)) ?? 0,
-    // },
     isDescending: {},
     active: [FileColumnKeys.type],
 }
@@ -38,16 +28,3 @@ export const initialAppState: AppState = {
     sorting: { ...sortingDefaults, ...reqSorting },
     filesMd: {},
 }
-
-// export const gridColumns: FileColumnsConfig = {
-//     keys: Columns,
-//     getters: {
-//         type: t => t.type,
-//         Name: t => t.Name,
-//         Size: t => t.Size,
-//         Modified: t => t.Modified,
-//         Extension: t => t.Extension,
-//         hasInnerSelection: t => !!t?.IsFolder && !!dispatcher.getSavedSelectedFile(t.Name),
-//     },
-//     visibleColumns: [Columns.type, Columns.Name, Columns.Modified, Columns.Size, Columns.Extension],
-// }

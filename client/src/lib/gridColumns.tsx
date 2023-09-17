@@ -23,10 +23,17 @@ export const gridColumns: FileColumns = {
             </span>
         ),
     },
-    Size: { getter: t => t.Size, cell: file => <span>{formatFriendlySize(file.Size)}</span> },
-    Modified: { getter: t => t.Modified, cell: file => <span>{formatFriendlyDate(file.Modified ?? null)}</span> },
+    Size: { getter: t => t.Size, cell: file => <span>{formatFriendlySize(file.Size)}</span>, descendingFirst: true },
+    Modified: {
+        getter: t => t.Modified,
+        cell: file => <span>{formatFriendlyDate(file.Modified ?? null)}</span>,
+        descendingFirst: true,
+    },
     Extension: { getter: t => t.Extension, cell: file => !file.IsFolder && <span>{file.Extension}</span> },
-    hasInnerSelection: { getter: t => !!t?.IsFolder && !!dispatcher.getSavedSelectedFile(t.Name) },
+    hasInnerSelection: {
+        getter: t => !!t?.IsFolder && !!dispatcher.getSavedSelectedFile(t.Name),
+        descendingFirst: true,
+    },
 }
 
 export const visibleGridColumns = [
