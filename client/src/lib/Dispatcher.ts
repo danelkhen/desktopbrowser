@@ -5,7 +5,7 @@ import { NavigateFunction } from "react-router"
 import { ColumnKey } from "../components/Grid"
 import { SortConfig } from "../hooks/useSorting"
 import { app } from "./App"
-import { AppState, initialAppState } from "./AppState"
+import { AppState, initialAppState, sortingDefaults } from "./AppState"
 import { FileColumnKeys } from "./Columns"
 import { FileInfo, FsFile, ListFilesRequest } from "./FileService"
 import { Produce } from "./Produce"
@@ -115,7 +115,7 @@ export class Dispatcher {
         const req2: ListFilesRequest = queryToReq(s)
         const req = { ...req2, Path: path }
         const reqSorting = this.useReqSorting(req)
-        this.update({ req, reqSorting, sorting: { ...this._state.sortingDefaults, ...reqSorting } })
+        this.update({ req, reqSorting, sorting: { ...sortingDefaults, ...reqSorting } })
         await this.reloadFiles()
     }
 

@@ -6,8 +6,7 @@ import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "./FileSer
 export interface AppState {
     readonly res: ListFilesResponse
     readonly req: ListFilesRequest
-    readonly sortingDefaults: SortConfig
-    readonly reqSorting: Pick<SortConfig, "active" | "isDescending">
+    readonly reqSorting: SortConfig
     readonly sorting: SortConfig
     readonly filesMd: { [key: string]: FileInfo }
     readonly selectedFiles: FsFile[]
@@ -15,7 +14,7 @@ export interface AppState {
 
 export type FileColumns = Columns<FsFile>
 
-const sortingDefaults: SortConfig = {
+export const sortingDefaults: SortConfig = {
     isDescending: {},
     active: [FileColumnKeys.type],
 }
@@ -24,7 +23,6 @@ const reqSorting: AppState["reqSorting"] = { active: [], isDescending: {} }
 export const initialAppState: AppState = {
     res: { Relatives: {} },
     req: {},
-    sortingDefaults,
     reqSorting,
     sorting: { ...sortingDefaults, ...reqSorting },
     filesMd: {},
