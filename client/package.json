@@ -11,14 +11,12 @@
         "lint:css": "stylelint src/**/*.ts*"
     },
     "dependencies": {
-        "classnames": "^2.2.6",
         "immer": "^10.0.2",
         "luxon": "^3.4.1",
         "reconnecting-websocket": "^4.4.0"
     },
     "devDependencies": {
         "@emotion/css": "^11.11.2",
-        "@emotion/react": "^11.11.1",
         "@styled/typescript-styled-plugin": "^1.0.0",
         "@swc/plugin-emotion": "^2.5.83",
         "@swc/plugin-styled-components": "^1.5.73",
@@ -29,6 +27,7 @@
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "@vitejs/plugin-react-swc": "^3.3.2",
+        "classnames": "^2.3.2",
         "eslint": "^8.45.0",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.3",

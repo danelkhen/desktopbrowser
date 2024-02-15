@@ -1,4 +1,4 @@
-import { Columns } from "../components/Grid"
+import { GridColumns } from "../components/Grid"
 import { SortConfig } from "../hooks/useSorting"
 import { FileColumnKeys } from "./Columns"
 import { FileInfo, FsFile, ListFilesRequest, ListFilesResponse } from "./FileService"
@@ -12,7 +12,7 @@ export interface AppState {
     readonly selectedFiles: FsFile[]
 }
 
-export type FileColumns = Columns<FsFile>
+export type FileColumns = GridColumns<FsFile>
 
 export const sortingDefaults: SortConfig = {
     isDescending: {},

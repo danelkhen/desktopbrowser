@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import cx from "classnames"
 import React, { ReactNode } from "react"
 import { colors } from "../GlobalStyle"
-import { css } from "@emotion/css"
+import { asc, desc, sorted } from "../services/Classes"
+import { css, cx } from "../lib/ref"
 
-export interface Column<T, V> {
+export interface GridColumn<T, V> {
     getter?: (item: T, index: number) => V
     cell?: (item: T, index: number) => ReactNode
     header?: () => ReactNode
     sortGetter?: (item: T) => any
     descendingFirst?: boolean
 }
-export type Columns<T> = {
-    [k: string]: Column<T, unknown>
+export type GridColumns<T> = {
+    [k: string]: GridColumn<T, unknown>
 }
 
 export type ColumnKey = string
 export interface GridProps<T> {
-    columns: Columns<T>
+    columns: GridColumns<T>
     className?: string
     items: T[]
     // headers?: Partial<Meta<K, () => ReactElement>>
@@ -33,14 +33,12 @@ export interface GridProps<T> {
     getHeaderClass?: (column: ColumnKey) => string
     getCellClass?: (column: ColumnKey, item: T) => string
     orderBy?: (column: ColumnKey) => void
-    // classNames?: Partial<Meta<K, string>>
-    // titles?: Partial<Meta<K, string>>
     visibleColumns: ColumnKey[]
 }
 
 export function Grid<T>({
     columns,
-    getRowClass: GetRowClass,
+    getRowClass,
     onItemClick,
     onItemMouseDown,
     onItemDoubleClick,
@@ -52,12 +50,12 @@ export function Grid<T>({
     visibleColumns,
 }: GridProps<T>) {
     return (
-        <div className={cx(className, Container)}>
+        <div className={cx(Container, className)}>
             <table className={Table}>
                 <thead>
                     <tr>
                         {visibleColumns?.map(column => (
-                            <th key={column} className={cx(getHeaderClass?.(column))} onClick={() => orderBy?.(column)}>
+                            <th key={column} className={getHeaderClass?.(column)} onClick={() => orderBy?.(column)}>
                                 {columns[column].header?.() ?? column}
                             </th>
                         ))}
@@ -67,13 +65,13 @@ export function Grid<T>({
                     {items?.map((item, itemIndex) => (
                         <tr
                             key={itemIndex}
-                            className={GetRowClass?.(item)}
+                            className={getRowClass?.(item)}
                             onMouseDown={e => onItemMouseDown?.(e, item)}
                             onClick={e => onItemClick?.(e, item)}
                             onDoubleClick={e => onItemDoubleClick?.(e, item)}
                         >
                             {visibleColumns?.map(column => (
-                                <td key={column} className={cx(getCellClass?.(column, item))}>
+                                <td key={column} className={getCellClass?.(column, item)}>
                                     {columns[column].cell?.(item, itemIndex) ?? (
                                         <span>{columns[column].getter?.(item, itemIndex) as any}</span>
                                     )}
@@ -106,11 +104,11 @@ const Table = css`
                 &:hover {
                     background-color: ${colors.bg2};
                 }
-                &.sorted {
-                    &.asc {
+                &.${sorted} {
+                    &.${asc} {
                         background-color: ${colors.bg2};
                     }
-                    &.desc {
+                    &.${desc} {
                         background-color: ${colors.bg3};
                     }
                 }

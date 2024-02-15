@@ -1,4 +1,3 @@
-import { css } from "@emotion/css"
 import { useCallback, useEffect, useState } from "react"
 import { useMatch, useNavigate } from "react-router"
 import { colors } from "../GlobalStyle"
@@ -17,6 +16,7 @@ import { Files } from "./Files"
 import { Menu } from "./Menu"
 import { QuickFind } from "./QuickFind"
 import { gridColumns } from "./gridColumns"
+import { css } from "../lib/ref"
 
 export function FileBrowser() {
     console.log("FileBrowser render")
@@ -96,7 +96,7 @@ export function FileBrowser() {
 
 const navStyle = css`
     font-size: 10px;
-    background-color: ${colors.bg1};
+    /* background-color: ${colors.bg1}; */
     background-color: #181818;
     margin: 0;
     padding: 0;

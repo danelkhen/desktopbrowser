@@ -1,13 +1,12 @@
-import cx from "classnames"
+import { css, cx } from "@emotion/css"
 import React, { useCallback } from "react"
 import { FileColumns } from "../services/AppState"
-import { Classes } from "../services/Classes"
+import { Classes, FileRow, HasInnerSelection, IsFile, IsFolder, Selected } from "../services/Classes"
 import { dispatcher } from "../services/Dispatcher"
 import { FsFile } from "../services/FileService"
 import { Selection } from "../services/Selection"
-import { visibleGridColumns } from "./gridColumns"
 import { ColumnKey, Grid } from "./Grid"
-import { css } from "@emotion/css"
+import { visibleGridColumns } from "./gridColumns"
 
 export function Files({
     selectedFiles,
@@ -50,19 +49,17 @@ export function Files({
     }, [])
 
     const getRowClass = useCallback(
-        (file: FsFile): string => {
-            const { FileRow, IsFolder, HasInnerSelection, Selected, IsFile } = Classes
-            return cx(
-                FileRow,
-                file.IsFolder ? IsFolder : IsFile,
-                dispatcher.hasInnerSelection(file) && HasInnerSelection,
-                selectedFiles.includes(file) && Selected
-            )
+        (file: FsFile) => {
+            const s = `${FileRow} ${file.IsFolder ? IsFolder : IsFile} ${
+                dispatcher.hasInnerSelection(file) && HasInnerSelection
+            } ${selectedFiles.includes(file) && Selected}`
+            console.log(s)
+            return s
         },
         [selectedFiles]
     )
 
-    const getHeaderClass = useCallback((column: ColumnKey): string => {
+    const getHeaderClass = useCallback((column: ColumnKey) => {
         const { sorted, asc, desc } = Classes
         return cx(
             column,

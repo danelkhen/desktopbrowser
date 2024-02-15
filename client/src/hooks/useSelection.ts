@@ -4,6 +4,7 @@ import { FsFile } from "../services/FileService"
 import { Selection } from "../services/Selection"
 import { sleep } from "../lib/sleep"
 import { useAppState } from "./useAppState"
+import { Selected } from "../services/Classes"
 
 export function useSelection() {
     const { filesMd, res, selectedFiles } = useAppState()
@@ -68,7 +69,7 @@ export function useSelection() {
 
 async function verifySelectionInView() {
     await sleep(10)
-    const el = document.querySelector(".Selected") as HTMLElement
+    const el = document.querySelector(`.${Selected}`) as HTMLElement
     if (el == null) return
     const container = document.body
     const containerHeight = container.clientHeight - 100

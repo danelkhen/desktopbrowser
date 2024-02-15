@@ -1,7 +1,6 @@
 import React, { ReactComponentElement, ReactElement, useCallback, useEffect, useState } from "react"
 import { colors } from "../GlobalStyle"
-import cx from "classnames"
-import { css } from "@emotion/css"
+import { cx, css } from "@emotion/css"
 
 export const DropdownDiv = css`
     display: flex;

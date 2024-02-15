@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react"
-import { GlobalStyle } from "./GlobalStyle"
-import { api } from "../services/api"
 import { css } from "@emotion/css"
-import { Global } from "@emotion/react"
+import { useCallback, useEffect, useState } from "react"
+import { api } from "../services/api"
+import { injectGlobalStyle } from "./GlobalStyle"
 
 const TrayDiv = css`
     display: flex;
@@ -12,6 +11,7 @@ const TrayDiv = css`
         padding: 6px;
     }
 `
+injectGlobalStyle()
 export function Tray() {
     const [version, setVersion] = useState<string | undefined>()
     const [status, setStatus] = useState<string | undefined>()
@@ -33,7 +33,6 @@ export function Tray() {
 
     return (
         <>
-            <Global styles={GlobalStyle} />
             <div className={TrayDiv}>
                 {false && <button onClick={() => api.appInspect()}>Inspect</button>}
                 <button onClick={() => open()}>Open</button>

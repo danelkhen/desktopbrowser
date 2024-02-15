@@ -1,9 +1,10 @@
-import { css } from "@emotion/react"
+import { injectGlobal } from "@emotion/css"
 
-export const GlobalStyle = css`
+injectGlobal`
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
             "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         -webkit-font-smoothing: antialiased;
     }
 `
+export function injectGlobalStyle() {}
