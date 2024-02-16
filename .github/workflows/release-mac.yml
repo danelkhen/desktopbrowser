@@ -21,7 +21,6 @@ jobs:
                   node-version: ${{ matrix.node-version }}
             - run: npm i -g npm
             - run: npm install
-            - run: cd shared; npm install
             - run: cd client; npm install
             - run: cd server; npx tsc
             - run: cd client; npm run build
