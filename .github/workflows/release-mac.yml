@@ -1,5 +1,4 @@
 name: release-mac
-
 on:
     push:
         tags:
@@ -14,9 +13,9 @@ jobs:
                 node-version: [20.x]
 
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
             - run: npm i -g npm
