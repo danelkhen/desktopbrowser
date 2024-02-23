@@ -5,6 +5,7 @@ Web based file explorer, runs locally on your browser, designed for media deskto
 ## A new version is available at:
 ## https://github.com/danelkhen/desktopbrowser2/
 
+
 ### Installation
 
 Install [Node.js](https://nodejs.org)
